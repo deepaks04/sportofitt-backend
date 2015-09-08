@@ -38,7 +38,7 @@
 
     * php artisan key:generate
 
-    * php artisan migrate --seed
+    * php artisan migrate:refresh --seed
  ```
   - Create a virtual host and point it to public directory of Project
   - Always create pull request on develop branch, don't do anything on master branch directly
