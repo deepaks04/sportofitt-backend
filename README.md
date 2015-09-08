@@ -1,5 +1,4 @@
 # sportofit
-# career-tag
 ### Developed using Laravel 5.1 LTS
 <img src="public/assets/logos/L5.png" alt="Image of Laravel" height="150" width="300"/>
 
@@ -36,7 +35,9 @@
  ```
  - Run following command to generate DB
  ```
+
     * php artisan key:generate
+
     * php artisan migrate --seed
  ```
   - Create a virtual host and point it to public directory of Project
