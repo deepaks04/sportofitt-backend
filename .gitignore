@@ -4,3 +4,6 @@ Homestead.yaml
 Homestead.json
 .env
 .idea/
+storage/
+bootstrap/cache/
+_ide_helper.php
