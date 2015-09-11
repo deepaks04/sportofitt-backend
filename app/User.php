@@ -55,10 +55,11 @@ class User extends Model implements AuthenticatableContract,
 
     /**
      * The attributes that are mass assignable.
+     * While $fillable serves as a "white list" of attributes that should be mass assignable,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    //protected $fillable = ['fname', 'lname', 'email', 'username', 'password', 'is_active', 'status_id', 'role_id', 'remember_token'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -66,4 +67,16 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * The $guarded property should contain an array of
+     * attributes that you do not want to be mass assignable.
+     * All other attributes not in the array will be mass assignable.
+     * So, $guarded functions like a "black list".
+     * Of course, you should use either $fillable or $guarded - not both:
+     *
+     * @var array
+     */
+    protected $guarded = ['email', 'is_active', 'status_id', 'role_id', 'remember_token'];
+
 }

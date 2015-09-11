@@ -7,6 +7,8 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Auth;
+use App\Http\Requests\LoginUserRequest;
 
 class AuthController extends Controller
 {
@@ -30,7 +32,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        $this->middleware('guest', ['except' => 'logout']);
     }
 
     /**
@@ -61,5 +63,32 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    protected function authenticate(LoginUserRequest $request){
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            // Authentication passed...
+            $status =200;
+            $user = Auth::User();
+            $response = [
+                "message" => "Login Successfull",
+                "user" =>$user
+            ];
+        }else{
+            $status =404;
+            $response = [
+                "message" => "Sorry!! Incorrect email or password",
+            ];
+        }
+        return response($response,$status);
+    }
+
+    protected function logout(){
+        Auth::logout();
+        $status =200;
+        $response = [
+            "message" => "Logout Successfull",
+        ];
+        return response($response,$status);
     }
 }
