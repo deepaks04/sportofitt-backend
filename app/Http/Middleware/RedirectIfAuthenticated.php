@@ -35,8 +35,17 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            return redirect('/home');
+            //return redirect('/home');
+            return response(['message'=>'Unauthorized.'], 401);
         }
+
+//        if ($this->auth->check()) {
+//            if ($request->ajax()) {
+//                return response('Unauthorized.', 401);
+//            } else {
+//                return redirect()->guest('/home');
+//            }
+//        }
 
         return $next($request);
     }
