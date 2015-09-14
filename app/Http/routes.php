@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 /* For Vendor Only */
-Route::group(['prefix' => 'api/vendor/'], function () {
+Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));
 });
 Route::controllers([
@@ -23,7 +23,7 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 /* Common to All Users */
-Route::group(['prefix' => 'api/user/'], function () {
+Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
     Route::post('authenticate',array('uses' => 'Auth\AuthController@authenticate'));
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));

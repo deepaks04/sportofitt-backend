@@ -86,7 +86,6 @@ class UsersController extends Controller
                 Mail::send('emails.activation', $userData, function($message) use ($userData){
                     $message->to($userData['email'])->subject('Account Confirmation');
                 });
-                return response($response,$status);
             }else{
                 User::destroy($userId);
                 throw new \Exception($result['message']);
@@ -97,8 +96,8 @@ class UsersController extends Controller
                 "message" => "Something Went Wrong",
                 //"message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
             ];
-            return response($response,$status);
         }
+        return response($response,$status);
     }
 
     /**

@@ -66,7 +66,18 @@ class AuthController extends Controller
     }
 
     protected function authenticate(LoginUserRequest $request){
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $user = User::where('email', $request->email)->first();
+        if($user == NULL){
+            $status =404;
+            $response = [
+                "message" => "Sorry!! Incorrect email or password",
+            ];
+        }elseif($user->is_active == 0){
+            $status =401;
+            $response = [
+                "message" => "Please confirm your email id first",
+            ];
+        }elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Authentication passed...
             $status =200;
             $user = Auth::User();
