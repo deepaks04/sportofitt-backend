@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Auth;
 use App\Http\Requests\LoginUserRequest;
+use App\Role;
+use App\Status;
 
 class AuthController extends Controller
 {
@@ -81,8 +83,12 @@ class AuthController extends Controller
             // Authentication passed...
             $status =200;
             $user = Auth::User();
+            $role = Role::find($user->role_id);
+            $currentStatus = Status::find($user->status_id);
+            $user['role'] = $role->slug;
+            $user['status'] = $currentStatus->slug;
             $response = [
-                "message" => "Login Successfull",
+                "message" => "Login Successful",
                 "user" =>$user
             ];
         }else{
@@ -98,7 +104,7 @@ class AuthController extends Controller
         Auth::logout();
         $status =200;
         $response = [
-            "message" => "Logout Successfull",
+            "message" => "Logout Successful",
         ];
         return response($response,$status);
     }

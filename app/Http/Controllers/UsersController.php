@@ -7,18 +7,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Vendor\VendorsController;
+use App\Http\Controllers\Customer\CustomersController;
 use DB;
 use Carbon\Carbon;
 use App\User;
 use Mail;
 use Auth;
+use App\Role;
+use App\Status;
 
 class UsersController extends Controller
 {
     public function __construct()
     {
         //$this->middleware('auth');
-        $this->middleware('guest',['only'=>['storeVendor', 'confirm']]);
+        $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer']]);
     }
     /**
      * Display a listing of the resource.
@@ -26,27 +29,6 @@ class UsersController extends Controller
      * @return Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function storeCustomer(Request $request)
     {
         //
     }
@@ -64,16 +46,18 @@ class UsersController extends Controller
             $response = [
                 "message" => "Vendor Registered Successfully! Please check your email for the instructions on how to confirm your account"
             ];
+            $role = Role::where('slug','vendor')->first();
+            $userStatus = Status::where('slug','pending')->first();
             $userData = $request->all();
             $userData['password'] = bcrypt($request->password);
             $userData['is_active'] = 0; //will be 1 after email verification
-            $userData['status_id'] = 4; //By Default Pending
-            $userData['role_id'] = 2; //Vendor Role Id
+            $userData['status_id'] = $userStatus->id; //By Default Pending
+            $userData['role_id'] = $role->id; //Vendor Role Id
             $userData['remember_token'] = csrf_token();
             $userData['updated_at'] = Carbon::now();
             $userData['created_at'] = Carbon::now();
             unset($userData['business_name']);
-            //$user = User::create($userData); Massassignment
+            //$user = User::create($userData); //Mass assignment
             //$user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);
             $vendorData['business_name'] = $request->business_name;
@@ -86,6 +70,64 @@ class UsersController extends Controller
                 Mail::send('emails.activation', $userData, function($message) use ($userData){
                     $message->to($userData['email'])->subject('Account Confirmation');
                 });
+            }else{
+                User::destroy($userId);
+                throw new \Exception($result['message']);
+            }
+        }catch (\Exception $e){
+            $status =500;
+            $response = [
+                "message" => "Something Went Wrong",
+                //"message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
+            ];
+        }
+        return response($response,$status);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function storeCustomer(Requests\CreateCustomerRequest $request)
+    {
+        try{
+            $status =200;
+            $response = [
+                "message" => "Registered Successfully! Please check your email for the instructions on how to confirm your account"
+            ];
+            $role = Role::where('slug','customer')->first();
+            $userStatus = Status::where('slug','pending')->first();
+            $userData = $request->all();
+            $userData['password'] = bcrypt($request->password);
+            $userData['is_active'] = 0; //will be 1 after email verification
+            $userData['status_id'] = (int)$userStatus->id; //By Default Pending
+            $userData['role_id'] = (int)$role->id; //User Role Id
+            $userData['remember_token'] = csrf_token();
+            $userData['updated_at'] = Carbon::now();
+            $userData['created_at'] = Carbon::now();
+            unset($userData['gender']);
+            unset($userData['area_id']);
+            //$user = User::create($userData); //Mass assignment
+            //$user->id; last inserted id
+            $userId = DB::table('users')->insertGetId($userData);
+            $customerData['gender'] = (int)$request->gender;
+            $customerData['area_id'] = (int)$request->area_id;
+            $customerData['user_id'] = (int)$userId;
+            $customerData['updated_at'] = Carbon::now();
+            $customerData['created_at'] = Carbon::now();
+            //Calling a method that is from the VendorsController
+            $result = (new CustomersController)->store($customerData);
+            if($result['status']){
+                //$environment = app()->environment();
+                //if ($environment=='production') {
+                    // The environment is local
+                    Mail::send('emails.activation', $userData, function($message) use ($userData){
+                        $message->to($userData['email'])->subject('Account Confirmation');
+                    });
+                //}
             }else{
                 User::destroy($userId);
                 throw new \Exception($result['message']);

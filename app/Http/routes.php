@@ -18,13 +18,19 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));
 });
-Route::controllers([
-    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+//Route::controllers([
+//    'auth' => 'Auth\AuthController',
+//    'password' => 'Auth\PasswordController',
+//]);
+
+/* For Customer Only */
+Route::group(['prefix' => 'api/v1/customer/'], function () {
+    Route::post('create/',array('uses' => 'UsersController@storeCustomer'));
+});
+
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
-    Route::post('authenticate',array('uses' => 'Auth\AuthController@authenticate'));
+    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
 });

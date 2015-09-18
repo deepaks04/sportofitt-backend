@@ -15,9 +15,9 @@ class CreateCustomerTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->date('birthdate')->nullable();
-            $table->string('gender',20);
-            $table->integer('pincode');
-            $table->string('phone_no',20);
+            $table->string('gender',20)->nullable();
+            $table->integer('pincode')->nullable();
+            $table->string('phone_no',20)->nullable();
             $table->integer('area_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamps();

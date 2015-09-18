@@ -16,15 +16,15 @@ class CreateVendorTable extends Migration
             $table->increments('id');
 
             $table->string('business_name',255);
-            $table->string('longitude',255);
-            $table->string('latitude',255);
-            $table->text('description');
-            $table->integer('commission');
-            $table->boolean('is_processed');
+            $table->string('longitude',255)->nullable();
+            $table->string('latitude',255)->nullable();
+            $table->text('description')->nullable();
+            $table->integer('commission')->nullable();
+            $table->boolean('is_processed')->default(0);
             $table->integer('user_id')->unsigned();
-            $table->integer('area_id')->unsigned();
-            $table->integer('billing_info_id')->unsigned();
-            $table->integer('bank_detail_id')->unsigned();
+            $table->integer('area_id')->unsigned()->nullable();
+            $table->integer('billing_info_id')->unsigned()->nullable();
+            $table->integer('bank_detail_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
