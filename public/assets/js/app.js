@@ -1,8 +1,8 @@
-/** 
+/**
   * declare 'clip-two' module with dependencies
 */
 'use strict';
-angular.module("clip-two", [
+angular.module("sportofit", [
 	'ngAnimate',
 	'ngCookies',
 	'ngStorage',

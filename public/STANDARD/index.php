@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-ng-app="clipApp">
+<html lang="en" data-ng-app="sportofitApp">
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta name="HandheldFriendly" content="true" />
 		<meta name="apple-touch-fullscreen" content="yes" />
-		<title data-ng-bind="pageTitle()">Clip-Two - Angular Bootstrap Admin Template</title>
+		<title data-ng-bind="pageTitle()">Sportofit</title>
 		<!-- Google fonts -->
 		<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
 		<!-- Bootstrap -->
@@ -82,7 +82,7 @@
 		<script src="assets/js/directives/sparkline.js"></script>
 		<script src="assets/js/directives/touchspin.js"></script>
 		<script src="assets/js/directives/file-upload.js"></script>
-		<!-- Clip-Two Controllers -->				
+		<!-- Clip-Two Controllers -->
 		<script src="assets/js/controllers/mainCtrl.js"></script>
 		<script src="assets/js/controllers/bootstrapCtrl.js"></script>
 		<!-- Google Apis -->
