@@ -10,9 +10,12 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+
+
 use App\Http\Controllers\Auth\AuthController;
 Route::get('/', function () {
-    return view('welcome');
+    return view('STANDARD/index');
 });
 /* For Vendor Only */
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
@@ -22,12 +25,10 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
 //    'auth' => 'Auth\AuthController',
 //    'password' => 'Auth\PasswordController',
 //]);
-
 /* For Customer Only */
 Route::group(['prefix' => 'api/v1/customer/'], function () {
     Route::post('create/',array('uses' => 'UsersController@storeCustomer'));
 });
-
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
