@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateVendorRequest extends Request
+class UpdateVendorProfileRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +26,13 @@ class CreateVendorRequest extends Request
         return [
             'fname' => 'required|min:3|max:20',
             'lname' => 'required|min:3|max:20',
-            'email' => 'required|email|min:5|max:255|unique:users',
-            'username' => 'required|min:5|max:50|unique:users',
-            'password' => 'required|min:5|max:60',
             'business_name' => 'required|min:3|max:255',
+            'address' => 'required|min:10|max:255',
+            'longitude' => 'required|min:3|max:20',
+            'latitude' => 'required|min:3|max:20',
+            'description' => 'required|min:3|max:500',
+            'area_id' => 'required|integer',
+            'profile_picture' => 'required|mimes:jpeg,png,jpg',
         ];
     }
 }
