@@ -23,6 +23,7 @@ class CreateBillingInfoTable extends Migration
             $table->string('contact_person_name',255)->nullable();
             $table->string('contact_person_email',255)->nullable();
             $table->string('contact_person_phone',255)->nullable();
+            $table->integer('vendor_id')->unsigned();
             $table->timestamps();
         });
     }

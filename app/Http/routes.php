@@ -17,6 +17,10 @@ Route::get('/', function () {
 /* For Vendor Only */
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));
+    Route::get('my-profile',array('uses' => 'Vendor\VendorsController@getProfile'));
+    Route::put('my-profile',array('uses' => 'Vendor\VendorsController@updateProfile'));
+    Route::get('billing-info',array('uses' => 'Vendor\VendorsController@getBillingInformation'));
+    Route::put('billing-info',array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
@@ -34,3 +38,5 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
 });
+
+Route::get('temp',array('uses' => 'Vendor\VendorsController@index'));

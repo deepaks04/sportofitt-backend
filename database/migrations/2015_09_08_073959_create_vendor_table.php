@@ -23,8 +23,6 @@ class CreateVendorTable extends Migration
             $table->boolean('is_processed')->default(0);
             $table->integer('user_id')->unsigned();
             $table->integer('area_id')->unsigned()->nullable();
-            $table->integer('billing_info_id')->unsigned()->nullable();
-            $table->integer('bank_detail_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

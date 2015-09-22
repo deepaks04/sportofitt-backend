@@ -22,6 +22,7 @@ class CreateBankDetailsTable extends Migration
             $table->string('beneficiary',255)->nullable();
             $table->string('account_number',255)->nullable();
             $table->string('vat',10)->nullable();
+            $table->integer('vendor_id')->unsigned();
             $table->timestamps();
         });
     }

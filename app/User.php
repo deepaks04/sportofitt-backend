@@ -79,4 +79,12 @@ class User extends Model implements AuthenticatableContract,
      */
     protected $guarded = ['email', 'is_active', 'status_id', 'role_id', 'remember_token'];
 
+    /**
+     * One User Can have One Vendor Only
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function vendor(){
+        return $this->hasOne('App\Vendor');
+    }
+
 }
