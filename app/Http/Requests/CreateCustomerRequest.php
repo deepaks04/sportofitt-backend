@@ -26,7 +26,7 @@ class CreateCustomerRequest extends Request
         return [
             'fname' => 'required|min:3|max:20',
             'lname' => 'required|min:3|max:20',
-            'email' => 'required|min:5|max:255|unique:users',
+            'email' => 'required|email|min:5|max:255|unique:users',
             'username' => 'required|min:5|max:50|unique:users',
             'password' => 'required|min:5|max:60',
             'gender' => 'required|integer',

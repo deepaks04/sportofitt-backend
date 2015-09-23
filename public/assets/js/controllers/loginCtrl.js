@@ -3,8 +3,8 @@
   * controllers used for the Login
 */
 
-app.controller('signCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login",
- function ($scope, $state, $timeout, SweetAlert,Login) {
+app.controller('signCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login","SessionService",
+ function ($scope, $state, $timeout, SweetAlert,Login,SessionService) {
 
     $scope.master = $scope.user;
     $scope.form = {
@@ -34,7 +34,11 @@ app.controller('signCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login"
 
                 var auth = Login.auth($scope.user);
 auth.success(function(response){
-  SweetAlert.swal("Good job!", "Your form is ready to be submitted!", "success");
+  if(response.user){
+    SessionService.set('auth',response.user);
+  }
+  SweetAlert.swal("Good job!", response.message, "success");
+  $state.go(response.user.role +'.dashboard')
 
 console.log(response);
 });

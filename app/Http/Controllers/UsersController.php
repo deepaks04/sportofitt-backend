@@ -20,8 +20,13 @@ class UsersController extends Controller
 {
     public function __construct()
     {
+<<<<<<< HEAD
         $this->middleware('auth',['except'=>['storeVendor', 'confirm','storeCustomer']]);
       //  $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer']]);
+=======
+        //$this->middleware('auth');
+        $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer','index']]);
+>>>>>>> f1694939b0350c90265e476deac5952fa49667eb
     }
     /**
      * Display a listing of the resource.
@@ -30,7 +35,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        dd(env('VENDOR_FILE_UPLOAD'));
     }
 
     /**

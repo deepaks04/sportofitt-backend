@@ -47,7 +47,24 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 	}).state('login.lockscreen', {
 	    url: '/lock',
 	    templateUrl: "assets/views/login_lock_screen.html"
-	});
+	})
+
+  //vendor routes
+
+  .state('vendor', {
+      url: "/vendor",
+      templateUrl: "assets/views/app.html",
+      resolve: loadSequence('modernizr', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
+      abstract: true
+  }).state('vendor.dashboard', {
+      url: "/dashboard",
+      templateUrl: "assets/views/dashboard.html",
+      resolve: loadSequence('jquery-sparkline', 'dashboardCtrl'),
+      title: 'Dashboard',
+      ncyBreadcrumb: {
+          label: 'Dashboard'
+      }
+  });
 
     // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)
     function loadSequence() {

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddForeignKeyToVendorsTable extends Migration
+class AddAddressToVendorTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddForeignKeyToVendorsTable extends Migration
     public function up()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('area_id')->references('id')->on('areas')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('contact',30)->nullable()->after('commission');
+            $table->string('address',255)->nullable()->after('contact');
         });
     }
 
@@ -26,8 +26,8 @@ class AddForeignKeyToVendorsTable extends Migration
     public function down()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->dropForeign('vendors_user_id_foreign');
-            $table->dropForeign('vendors_area_id_foreign');
+            $table->dropColumn('contact');
+            $table->dropColumn('address');
         });
     }
 }
