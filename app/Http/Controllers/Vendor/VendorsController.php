@@ -14,6 +14,8 @@ use App\User;
 use File;
 use URL;
 use App\Billing;
+use Carbon\Carbon;
+use App\AvailableFacility;
 
 class VendorsController extends Controller
 {
@@ -61,6 +63,25 @@ class VendorsController extends Controller
             return $result;
 
         }
+    }
+
+    /**
+     * Update First Time Login Flag
+     */
+    public function updateFirstLoginFlag(){
+        try{
+            $user = Auth::user();
+            $flag = $user->vendor()->update(array('is_processed'=>1));
+            $message = "Success";
+            $status = 200;
+        }catch(\Exception $e){
+            $message = "Something went wrong";
+            $status = 500;
+        }
+        $response = [
+            'message' => $message
+        ];
+        return response($response,$status);
     }
 
     /**
@@ -158,13 +179,15 @@ class VendorsController extends Controller
     public function getBillingInformation(){
         $user = Auth::user();
         $vendor = $user->vendor()->first();
-        $billing = $vendor->billingInfo()->first()->toArray();
+        $billing = $vendor->billingInfo()->first();
         if($billing!=null){
             $message = 'success';
+            $status =200;
+            $billing = $billing->toArray();
         }else{
+            $status =404;
             $message = 'Please update your billing information';
         }
-        $status =200;
         $response = [
             "message" => $message,
             "billing" => $billing
@@ -172,6 +195,11 @@ class VendorsController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * Insert/Update Billing Details
+     * @param Requests\Billing $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateBillingInformation(Requests\Billing $request){
         try{
             $user = Auth::user();
@@ -185,6 +213,8 @@ class VendorsController extends Controller
                 $data = $request->all();
                 unset($data['_method']);
                 $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
                 $vendor->billingInfo()->insert($data);
                 //$billingInfo = Billing::create($data);
                 //$user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
@@ -195,6 +225,163 @@ class VendorsController extends Controller
             echo $e->getMessage();
             $status =500;
             $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
+    }
+
+    /**
+     * Get Bank Details
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getBankDetails(){
+        $user = Auth::user();
+        $vendor = $user->vendor()->first();
+        $bank = $vendor->bankInfo()->first();
+        if($bank!=null){
+            $message = 'success';
+            $status =200;
+            $bank = $bank->toArray();
+        }else{
+            $status =404;
+            $message = 'Please update your bank details';
+        }
+        $response = [
+            "message" => $message,
+            "bank" => $bank
+        ];
+        return response($response,$status);
+    }
+
+    /**
+     * Insert/Update Bank Details
+     * @param Requests\BankDetails $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function updateBankDetails(Requests\BankDetails $request){
+        try{
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+            $billing = $vendor->bankInfo()->first();
+            if($billing!=null){ //Update If exists
+                $data = $request->all();
+                unset($data['_method']);
+                $vendor->bankInfo()->update($data);
+            }else{ //Insert if not exists
+                $data = $request->all();
+                unset($data['_method']);
+                $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
+                $vendor->bankInfo()->insert($data);
+            }
+            $status =200;
+            $message = "saved successfully";
+        }catch(\Exception $e){
+            echo $e->getMessage();
+            $status =500;
+            $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
+    }
+
+    /**
+     * Insert/Update Images
+     * @param Requests\ImagesRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+    */
+    public function updateImages(Requests\ImagesRequest $request){
+        try{
+            $files = $request->image_name;
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+            $images = $vendor->images()->first();
+            if($images!=null){ //Update If exists
+                $data = $request->all();
+                unset($data['_method']);
+                $vendor->images()->update($data);
+            }else{ //Insert if not exists
+                $data = $request->all();
+                unset($data['_method']);
+
+                foreach($files as $file){
+                    /* File Upload Code */
+                    $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                    $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
+                    $vendorImageUploadPath = $vendorOwnDirecory."/"."extra_images";
+                    /* Create Upload Directory If Not Exists */
+                    if(!file_exists($vendorImageUploadPath)){
+                        File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                        chmod($vendorOwnDirecory, 0777);
+                        chmod($vendorImageUploadPath, 0777);
+                    }
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = sha1($user->id.time()).".{$extension}";
+                    $file->move($vendorImageUploadPath, $filename);
+                    chmod($vendorImageUploadPath, 0777);
+
+                    /* Rename file */
+                    $data['image_name'] = $filename;
+                    $data['vendor_id'] = $vendor->id;
+                    $data['created_at'] = Carbon::now();
+                    $data['updated_at'] = Carbon::now();
+                    $vendor->images()->insert($data);
+                }
+            }
+            $status =200;
+            $message = "saved successfully";
+        }catch(\Exception $e){
+            echo $e->getMessage();
+            $status =500;
+            $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
+    }
+    public function createFacility(Requests\AddFacilityRequest $request){
+        try{
+            $facility = $request->all();
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+            $facilityExists = AvailableFacility::where('vendor_id','=',$vendor->id)->where('sub_category_id','=',$facility['sub_category_id'])->count();
+            if($facilityExists){ // If Facility already exists
+                $status = 406; //Not Acceptable
+                $message = "Facility already exists";
+            }else{ //If not then create
+                $status = 200;
+                $message = "New facility added successfully";
+                /* File Upload Code */
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
+                /* Create Upload Directory If Not Exists */
+                if(!file_exists($vendorImageUploadPath)){
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                    chmod($vendorOwnDirecory, 0777);
+                    chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = sha1($user->id.time()).".{$extension}";
+                $request->file('image')->move($vendorImageUploadPath, $filename);
+                chmod($vendorImageUploadPath, 0777);
+
+                /* Rename file */
+                $facility['image'] = $filename;
+                $facility['vendor_id'] = $vendor->id;
+                $facility['created_at'] = Carbon::now();
+                $facility['updated_at'] = Carbon::now();
+                AvailableFacility::create($facility);
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong";
         }
         $response = [
             "message" => $message,

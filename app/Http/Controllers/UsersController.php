@@ -15,13 +15,14 @@ use Mail;
 use Auth;
 use App\Role;
 use App\Status;
+use App\RootCategory;
 
 class UsersController extends Controller
 {
     public function __construct()
     {
         //$this->middleware('auth');
-        $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer','index']]);
+        $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer','index'],'except'=>['getRootCategory','getSubCategory']]);
     }
     /**
      * Display a listing of the resource.
@@ -139,6 +140,33 @@ class UsersController extends Controller
                 //"message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
             ];
         }
+        return response($response,$status);
+    }
+
+    public function getRootCategory(){
+        $category = RootCategory::all();
+        $status = 200;
+        $response = [
+            "message" => "success",
+            "category" => $category
+        ];
+        return response($response,$status);
+    }
+
+    public function getSubCategory($id){
+        $category = RootCategory::find($id);//
+        if($category!=null){
+            $category = $category->subCategory()->get()->toArray();
+            $message = "success";
+            $status = 200;
+        }else{
+            $message = "fail, not found";
+            $status = 404;
+        }
+        $response = [
+            "message" => $message,
+            "category" => $category
+        ];
         return response($response,$status);
     }
 

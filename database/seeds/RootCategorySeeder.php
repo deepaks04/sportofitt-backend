@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-class StatusTableSeeder extends Seeder
+
+class RootCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,28 +12,22 @@ class StatusTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('status')->insert([
+        DB::table('root_categories')->insert([
             [
-                'name' => 'Review',
-                'slug' => 'review',
+                'name' => 'SPORT',
+                'slug' => 'sport',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Disabled',
-                'slug' => 'disabled',
+                'name' => 'FITNESS',
+                'slug' => 'fitness',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Active',
-                'slug' => 'active',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Pending',
-                'slug' => 'pending',
+                'name' => 'THERAPY',
+                'slug' => 'therapy',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
