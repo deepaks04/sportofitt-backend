@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Carbon\Carbon;
 class RoleTableSeeder extends Seeder
 {
     /**
@@ -15,20 +15,20 @@ class RoleTableSeeder extends Seeder
             [
                 'name' => 'ADMIN',
                 'slug' => 'admin',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'VENDOR',
                 'slug' => 'vendor',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'CUSTOMER',
                 'slug' => 'customer',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ]);
     }
