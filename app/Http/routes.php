@@ -24,8 +24,12 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::put('billing-info',array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
     Route::get('bank-info',array('uses' => 'Vendor\VendorsController@getBankDetails'));
     Route::put('bank-info',array('uses' => 'Vendor\VendorsController@updateBankDetails'));
-    Route::put('images',array('uses' => 'Vendor\VendorsController@updateImages'));
-    Route::post('add-new-facility',array('uses' => 'Vendor\VendorsController@createFacility'));
+    Route::post('images',array('uses' => 'Vendor\VendorsController@addImages'));
+    Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
+    Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
+    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
+    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
+    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
