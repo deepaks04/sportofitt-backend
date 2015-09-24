@@ -204,7 +204,7 @@ class VendorsController extends Controller
         try{
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-            $billing = $vendor->billingInfo()->first()->toArray();
+            $billing = $vendor->billingInfo()->first();
             if($billing!=null){ //Update If exists
                 $data = $request->all();
                 unset($data['_method']);
@@ -291,40 +291,42 @@ class VendorsController extends Controller
     }
 
     /**
-     * Insert/Update Images
+     * Insert Images
      * @param Requests\ImagesRequest $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
     */
-    public function updateImages(Requests\ImagesRequest $request){
+    public function addImages(Requests\ImagesRequest $request){
         try{
             $files = $request->image_name;
             $user = Auth::user();
+            $maxUploadLimit = (int)env('VENDOR_IMAGE_UPLOAD_LIMIT');
             $vendor = $user->vendor()->first();
-            $images = $vendor->images()->first();
-            if($images!=null){ //Update If exists
+            $images = $vendor->images()->count();
+            if($images==$maxUploadLimit){ // Do not allowed to upload more than 10 Images
+                $status = 406;
+                $message = "Cannot Upload more than ".$maxUploadLimit." images";
+            }else{ //Insert if not reached to max limit
+                $status =200;
+                $message = "saved successfully";
                 $data = $request->all();
-                unset($data['_method']);
-                $vendor->images()->update($data);
-            }else{ //Insert if not exists
-                $data = $request->all();
-                unset($data['_method']);
-
-                foreach($files as $file){
-                    /* File Upload Code */
-                    $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                    $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
-                    $vendorImageUploadPath = $vendorOwnDirecory."/"."extra_images";
-                    /* Create Upload Directory If Not Exists */
-                    if(!file_exists($vendorImageUploadPath)){
-                        File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                        chmod($vendorOwnDirecory, 0777);
-                        chmod($vendorImageUploadPath, 0777);
-                    }
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = sha1($user->id.time()).".{$extension}";
-                    $file->move($vendorImageUploadPath, $filename);
+                /* File Upload Code */
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."extra_images";
+                /* Create Upload Directory If Not Exists */
+                if(!file_exists($vendorImageUploadPath)){
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                    chmod($vendorOwnDirecory, 0777);
                     chmod($vendorImageUploadPath, 0777);
+                }
 
+                chmod($vendorImageUploadPath, 0777);
+                //dd();
+                foreach($files as $file){
+                    $random = mt_rand(1,1000000);
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = sha1($user->id.$random).".{$extension}";
+                    $file->move($vendorImageUploadPath, $filename);
                     /* Rename file */
                     $data['image_name'] = $filename;
                     $data['vendor_id'] = $vendor->id;
@@ -333,10 +335,71 @@ class VendorsController extends Controller
                     $vendor->images()->insert($data);
                 }
             }
-            $status =200;
-            $message = "saved successfully";
         }catch(\Exception $e){
             echo $e->getMessage();
+            $status =500;
+            $message = "something went wrong";
+        }
+        $images = $vendor->images()->count();
+        $response = [
+            "message" => $message,
+            "image_count" => $images
+        ];
+        return response($response,$status);
+    }
+
+    /**
+     * Get All extra images of vendor facility
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getImages(){
+        $user = Auth::user();
+        $vendor = $user->vendor()->first();
+        $imageCount = $vendor->images()->count();
+        if($imageCount == 0){
+            $status = 404;
+            $message = "Images not found. Please upload some";
+            $images = null;
+        }else{
+            $status = 200;
+            $message = "success";
+            $images = $vendor->images()->get()->toArray();
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath."/".sha1($user->id)."/"."extra_images/";
+            for($i=0;$i<$imageCount;$i++){
+                $images[$i]['image_name'] = $url.$images[$i]['image_name'];
+            }
+        }
+        $response = [
+            "message" => $message,
+            "images" => $images
+        ];
+        return response($response,$status);
+    }
+
+    /**
+     * Delete Extra Image - one at a time
+     * @param Requests\DeleteImageRequest $request
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteImage(Requests\DeleteImageRequest $request ,$id){
+        try{
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+            $image = $vendor->images('id','=',$id)->first();
+            $status = $image->delete();
+            if($status){
+                $status = 200;
+                $message = "Image deleted successfully";
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $path= $vendorUploadPath."/".sha1($user->id)."/"."extra_images/";
+                File::delete($path.$image->image_name);
+            }else{
+                $status =500;
+                $message = "something went wrong";
+            }
+        }catch(\Exception $e){
             $status =500;
             $message = "something went wrong";
         }
@@ -345,6 +408,7 @@ class VendorsController extends Controller
         ];
         return response($response,$status);
     }
+
     public function createFacility(Requests\AddFacilityRequest $request){
         try{
             $facility = $request->all();
@@ -388,6 +452,80 @@ class VendorsController extends Controller
         ];
         return response($response,$status);
     }
+
+    /**
+     * Get All facility created by vendor
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getFacility(){
+        $user = Auth::user();
+        $vendor = $user->vendor()->first();
+        $facilityCount = $vendor->facility()->count();
+        if($facilityCount == 0){
+            $status = 404;
+            $message = "Facility not found. Please create some";
+            $facilityCount = null;
+            $facility = null;
+        }else{
+            $status = 200;
+            $message = "success";
+            $facility = $vendor->facility()->get()->toArray();
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
+            for($i=0;$i<$facilityCount;$i++){
+                $facility[$i]['image'] = $url.$facility[$i]['image'];
+            }
+        }
+        $response = [
+            "message" => $message,
+            "facility" => $facility,
+            "facilityCount" => $facilityCount
+        ];
+        return response($response,$status);
+    }
+
+    public function updateFacility(Requests\AddFacilityRequest $request,$id){
+        try{
+            $facility = $request->all();
+            unset($facility['_method']);
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+
+            $status = 200;
+            $message = "facility updated successfully";
+            /* If File Exists then */
+            if(isset($facility['image']) && !empty($facility['image'])){
+                /* File Upload Code */
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
+                /* Create Upload Directory If Not Exists */
+                if(!file_exists($vendorImageUploadPath)){
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                    chmod($vendorOwnDirecory, 0777);
+                    chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = sha1($user->id.time()).".{$extension}";
+                $request->file('image')->move($vendorImageUploadPath, $filename);
+                chmod($vendorImageUploadPath, 0777);
+
+                /* Rename file */
+                $facility['image'] = $filename;
+            }
+            $facility['vendor_id'] = $vendor->id;
+            AvailableFacility::where('id','=',$id)->update($facility);
+        }catch(\Exception $e){
+            echo $e->getMessage();exit;
+            $status = 500;
+            $message = "Something went wrong";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
+    }
+
     /**
      * Display the specified resource.
      *
