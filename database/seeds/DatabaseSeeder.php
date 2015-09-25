@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CityTableSeeder::class);
         $this->call(AreaTableSeeder::class);
         $this->call(StatusTableSeeder::class);
+        $this->call(RootCategorySeeder::class);
+        $this->call(SubCtegorySeeder::class);
 
 
         Model::reguard();

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-class AreaTableSeeder extends Seeder
+class SubCtegorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,52 +11,46 @@ class AreaTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('areas')->insert([
+        DB::table('sub_categories')->insert([
             [
-                'name' => 'Kothrud',
-                'city_id' => 1,
+                'name' => 'Cricket',
+                'slug' => 'cricket',
+                'root_category_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Karvenagar',
-                'city_id' => 1,
+                'name' => 'Tennis',
+                'slug' => 'tennis',
+                'root_category_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Katraj',
-                'city_id' => 1,
+                'name' => 'GYM',
+                'slug' => 'gym',
+                'root_category_id' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Hadapsar',
-                'city_id' => 1,
+                'name' => 'ZUMBA',
+                'slug' => 'zumba',
+                'root_category_id' => 2,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Baner',
-                'city_id' => 1,
+                'name' => 'SPA',
+                'slug' => 'spa',
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
             [
-                'name' => 'Pashan',
-                'city_id' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Bawadhan',
-                'city_id' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Swargate',
-                'city_id' => 1,
+                'name' => 'ACUPUNCTURE',
+                'slug' => 'acupuncture',
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

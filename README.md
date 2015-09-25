@@ -29,16 +29,23 @@
  ```
  - Give recursive permission [777 -R] to following folders
  ```
+
     * bootstrap/cache
 
     * storage
+
  ```
+
  - Run following command to generate DB
  ```
 
     * php artisan key:generate
 
     * php artisan migrate:refresh --seed
+
  ```
+
   - Create a virtual host and point it to public directory of Project
   - Always create pull request on develop branch, don't do anything on master branch directly
+  - create folder "userdata" in "public/uploads" directory
+  - create folder "vendor" and "customer" in userdata and give recursive permission to both.

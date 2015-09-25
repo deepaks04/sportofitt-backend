@@ -20,10 +20,19 @@ Route::get('/', function () {
 /* For Vendor Only */
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));
+    Route::put('update-first-login',array('uses' => 'Vendor\VendorsController@updateFirstLoginFlag'));
     Route::get('my-profile',array('uses' => 'Vendor\VendorsController@getProfile'));
     Route::put('my-profile',array('uses' => 'Vendor\VendorsController@updateProfile'));
     Route::get('billing-info',array('uses' => 'Vendor\VendorsController@getBillingInformation'));
     Route::put('billing-info',array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
+    Route::get('bank-info',array('uses' => 'Vendor\VendorsController@getBankDetails'));
+    Route::put('bank-info',array('uses' => 'Vendor\VendorsController@updateBankDetails'));
+    Route::post('images',array('uses' => 'Vendor\VendorsController@addImages'));
+    Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
+    Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
+    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
+    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
+    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
@@ -38,6 +47,8 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
     Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
+    Route::get('get-root-category',array('uses' => 'UsersController@getRootCategory'));
+    Route::get('get-sub-category/{id}',array('uses' => 'UsersController@getSubCategory'));
 });
 
 

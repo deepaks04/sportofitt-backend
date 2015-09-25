@@ -86,6 +86,10 @@ class AuthController extends Controller
             $role = Role::find($user->role_id);
             $currentStatus = Status::find($user->status_id);
             $user['role'] = $role->slug;
+            if($role->slug=="vendor"){
+                $vendor = $user->vendor()->first();
+                $user['is_processed'] = (int)$vendor->is_processed;
+            }
             $user['status'] = $currentStatus->slug;
             $response = [
                 "message" => "Login Successful",
