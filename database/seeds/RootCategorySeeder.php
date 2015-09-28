@@ -1,8 +1,9 @@
+
+
 <?php
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-
 class RootCategorySeeder extends Seeder
 {
     /**
@@ -12,7 +13,7 @@ class RootCategorySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('root_categories')->insert([
+        DB::table('roles')->insert([
             [
                 'name' => 'SPORT',
                 'slug' => 'sport',

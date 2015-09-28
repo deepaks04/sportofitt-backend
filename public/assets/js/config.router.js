@@ -53,18 +53,45 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 
   .state('vendor', {
       url: "/vendor",
-      templateUrl: "assets/views/app.html",
+      templateUrl: "assets/views/vendor/app.html",
       resolve: loadSequence('modernizr', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
       abstract: true
   }).state('vendor.dashboard', {
       url: "/dashboard",
-      templateUrl: "assets/views/dashboard.html",
+      templateUrl: "assets/views/vendor/dashboard.html",
       resolve: loadSequence('jquery-sparkline', 'dashboardCtrl'),
       title: 'Dashboard',
       ncyBreadcrumb: {
           label: 'Dashboard'
-      }
-  });
+      }}).state('vendor.facility', {
+          url: '/facility',
+          template: '<div ui-view class="fade-in-up"></div>',
+          resolve: loadSequence('ngTable','facilityService','facilityCtrl'),
+          title: 'Facility',
+          ncyBreadcrumb: {
+              label: 'UI Elements'
+          }}).state('vendor.facility.list', {
+              url: '/list',
+              templateUrl : "assets/views/vendor/facility/list.html",
+              title: 'Facility List',
+              ncyBreadcrumb: {
+                  label: 'Facility List'
+              }
+            }).state('vendor.facility.add', {
+                url: '/add',
+                  templateUrl : "assets/views/vendor/facility/add.html",
+                title: 'Facility Add',
+                ncyBreadcrumb: {
+                    label: 'Facility Add'
+                }
+              }).state('vendor.facility.edit', {
+                  url: '/edit/:facilityId',
+                    templateUrl : "assets/views/vendor/facility/edit.html",
+                  title: 'Facility Edit',
+                  ncyBreadcrumb: {
+                      label: 'Facility Edit'
+                  }
+                });
 
     // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)
     function loadSequence() {

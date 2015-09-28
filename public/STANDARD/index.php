@@ -82,6 +82,8 @@
 		<script src="assets/js/directives/sparkline.js"></script>
 		<script src="assets/js/directives/touchspin.js"></script>
 		<script src="assets/js/directives/file-upload.js"></script>
+		<script src="assets/js/directives/bind-file.js"></script>
+
 		<!-- Clip-Two Controllers -->
 		<script src="assets/js/controllers/mainCtrl.js"></script>
 		<script src="assets/js/controllers/bootstrapCtrl.js"></script>

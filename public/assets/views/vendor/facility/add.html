@@ -1,0 +1,72 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title">
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="mainTitle" >ADD FACILITY</h1>
+			<span class="mainDescription">Create new facility for your business</span>
+		</div>
+		<div ncy-breadcrumb></div>
+	</div>
+</section>
+<!-- end: PAGE TITLE -->
+<div class="container-fluid container-fullw bg-white">
+	<div class="row">
+		<div class="col-md-12">
+			<h5 class="over-title margin-bottom-15"> <span class="text-bold">New Facility</span></h5>
+			<p>
+				</p>
+			<!-- /// controller:  'facilityAddCtrl' -  localtion: assets/js/controllers/vendor/facilityAddCtrl.js /// -->
+			<div ng-controller="facilityAddCtrl">
+				<form name="Form" id="form1" novalidate ng-submit="form.submit(Form)" enctype="multipart/form-data">
+					<div class="row">
+						<div class="col-md-8">
+              <div class="form-group" ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
+                <label class="control-label">
+                  Name <span class="symbol required"></span>
+                </label>
+                <input type="text" placeholder="Enter your First Name" class="form-control" name="name" ng-model="facility.name" required />
+                <span class="error text-small block" ng-if="Form.name.$dirty && Form.name.$invalid">First Name is required</span>
+                <span class="success text-small" ng-if="Form.name.$valid">Thank You!</span>
+              </div>
+              <div class="form-group" ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
+                <label class="control-label">
+                  Root Category <span class="symbol required"></span>
+                </label>
+                <select class="cs-select cs-skin-slide" ng-model="selectedCategory" ng-options="cat.name for cat in categoryData">
+                  <option value="">Select Category</option>
+                </select>
+                <span class="error text-small block" ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">First Name is required</span>
+                <span class="success text-small" ng-if="Form.root_category_id.$valid">Thank You!</span>
+              </div>
+              <div class="form-group" ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
+                <label class="control-label">
+                  Sub Category <span class="symbol required"></span>
+                </label>
+								<select class="cs-select cs-skin-slide" name="sub_category" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory.sub_category track by cat.id" ng-disabled="!selectedCategory">
+									<option value="">Select Category</option>
+								</select>
+								  <span class="error text-small block" ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First Name is required</span>
+                <span class="success text-small" ng-if="Form.sub_category_id.$valid">Thank You!</span>
+              </div>
+
+            <div class="form-group" ng-class="{'has-error':Form.image.$dirty && Form.image.$invalid, 'has-success':Form.image.$valid}">
+              <label class="control-label">
+                Facility Image<span class="symbol required"></span>
+              </label>
+							<span class="btn btn-primary btn-o btn-file"> Select an image file
+								<input type="file" bind-file nv-file-select="" name="image" ng-model="facility.image" uploader="uploaderImages" multiple  required/>
+							</span>
+							  <span class="error text-small block" ng-if="Form.image.$dirty && Form.image.$invalid">First Name is required</span>
+              <span class="success text-small" ng-if="Form.image.$valid">Thank You!</span>
+            </div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn-primary pull-right">
+								Submit <i class="fa fa-arrow-circle-right"></i>
+							</button>
+						</div>
+            </div>
+          </div>
+
+
+        </form>
+      </div>

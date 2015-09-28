@@ -445,7 +445,7 @@ class VendorsController extends Controller
             }
         }catch(\Exception $e){
             $status = 500;
-            $message = "Something went wrong";
+            $message = "Something went wrong : " . $e->getMessage();
         }
         $response = [
             "message" => $message,
@@ -484,6 +484,28 @@ class VendorsController extends Controller
         return response($response,$status);
     }
 
+
+    public function getFacilityById($id){
+   $status = 200;
+            $message = "success";
+             $user = Auth::user();
+        $vendor = $user->vendor()->first();
+            $facility = $vendor->facility()->find($id)->toArray();
+            if($facility) {
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
+                $facility['image'] = $url.$facility['image'];
+          }else{
+             $status = 404;
+            $message = "Facility not found. Please create some";
+            $facility = null;
+        }
+        $response = [
+            "message" => $message,
+            "facility" => $facility
+        ];
+        return response($response,$status);
+    }
     public function updateFacility(Requests\AddFacilityRequest $request,$id){
         try{
             $facility = $request->all();

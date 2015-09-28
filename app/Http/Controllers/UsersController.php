@@ -147,7 +147,7 @@ class UsersController extends Controller
     }
 
     public function getRootCategory(){
-        $category = RootCategory::all();
+        $category = RootCategory::with('subCategory')->get();
         $status = 200;
         $response = [
             "message" => "success",

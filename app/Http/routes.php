@@ -32,6 +32,7 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
     Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
     Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
+     Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
     Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
 });
 //Route::controllers([
