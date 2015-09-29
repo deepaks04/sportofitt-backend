@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AreaTableSeeder::class);
         $this->call(StatusTableSeeder::class);
         $this->call(RootCategorySeeder::class);
-      //  $this->call(SubCategorySeeder::class);
+        $this->call(SubCategorySeeder::class);
 
 
         Model::reguard();

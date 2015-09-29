@@ -13,7 +13,7 @@ class RootCategorySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('roles')->insert([
+        DB::table('root_categories')->insert([
             [
                 'name' => 'SPORT',
                 'slug' => 'sport',
