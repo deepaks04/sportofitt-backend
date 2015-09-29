@@ -7,4 +7,8 @@ Homestead.json
 storage/
 bootstrap/cache/
 _ide_helper.php
+<<<<<<< HEAD
+/nbproject/private/
+=======
 public/uploads/
+>>>>>>> f1694939b0350c90265e476deac5952fa49667eb

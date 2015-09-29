@@ -21,7 +21,9 @@ class UsersController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+  //      $this->middleware('auth',['except'=>['storeVendor', 'confirm','storeCustomer']]);
+      //  $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer']]);
+//        $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer','index']]);
         $this->middleware('guest',['only'=>['storeVendor', 'confirm','storeCustomer','index'],'except'=>['getRootCategory','getSubCategory']]);
     }
     /**
@@ -51,13 +53,14 @@ class UsersController extends Controller
             $userStatus = Status::where('slug','pending')->first();
             $userData = $request->all();
             $userData['password'] = bcrypt($request->password);
-            $userData['is_active'] = 0; //will be 1 after email verification
+            $userData['is_active'] = 1; //will be 1 after email verification
             $userData['status_id'] = $userStatus->id; //By Default Pending
             $userData['role_id'] = $role->id; //Vendor Role Id
             $userData['remember_token'] = csrf_token();
             $userData['updated_at'] = Carbon::now();
             $userData['created_at'] = Carbon::now();
             unset($userData['business_name']);
+              unset($userData['password2']);
             //$user = User::create($userData); //Mass assignment
             //$user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);
@@ -68,7 +71,7 @@ class UsersController extends Controller
             //Calling a method that is from the VendorsController
             $result = (new VendorsController)->store($vendorData);
             if($result['status']){
-                Mail::send('emails.activation', $userData, function($message) use ($userData){
+                Mail::send('views.emails.activation', $userData, function($message) use ($userData){
                     $message->to($userData['email'])->subject('Account Confirmation');
                 });
             }else{
@@ -78,8 +81,8 @@ class UsersController extends Controller
         }catch (\Exception $e){
             $status =500;
             $response = [
-                "message" => "Something Went Wrong",
-                //"message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
+                //"message" => "Something Went Wrong",
+                "message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
             ];
         }
         return response($response,$status);
@@ -144,7 +147,7 @@ class UsersController extends Controller
     }
 
     public function getRootCategory(){
-        $category = RootCategory::all();
+        $category = RootCategory::with('subCategory')->get();
         $status = 200;
         $response = [
             "message" => "success",
