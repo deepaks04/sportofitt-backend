@@ -58,11 +58,13 @@ app.constant('JS_REQUIRES', {
 
 //vendor controllers
 'facilityCtrl': 'assets/js/controllers/vendor/facilityCtrl.js',
+'vendorCtrl': 'assets/js/controllers/vendor/vendorCtrl.js',
 
 
 //Services
 'loginService': 'assets/js/services/LoginService.js',
 'facilityService': 'assets/js/services/facilityService.js',
+'userService': 'assets/js/services/userService.js',
 
         //*** Filters
         'htmlToPlaintext': 'assets/js/filters/htmlToPlaintext.js'

@@ -63,7 +63,15 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
       title: 'Dashboard',
       ncyBreadcrumb: {
           label: 'Dashboard'
-      }}).state('vendor.facility', {
+      }}).state('vendor.profile', {
+        url: '/profile',
+        templateUrl: "assets/views/vendor/profile.html",
+        title: 'Vendor Profile',
+        ncyBreadcrumb: {
+            label: 'Vendor Profile'
+        },
+        resolve: loadSequence('flow','userService', 'vendorCtrl')
+    }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',
           resolve: loadSequence('ngTable','facilityService','facilityCtrl'),
