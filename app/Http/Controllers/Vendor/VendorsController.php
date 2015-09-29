@@ -128,6 +128,7 @@ class VendorsController extends Controller
             $response = [
                 "message" => "Settings updated successfully"
             ];
+            unset($request['email']);
             $user = $request->all();
             $vendor = $request->all();
             $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact');
