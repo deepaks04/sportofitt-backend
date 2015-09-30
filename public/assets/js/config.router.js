@@ -63,12 +63,12 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
       title: 'Dashboard',
       ncyBreadcrumb: {
           label: 'Dashboard'
-      }}).state('vendor.profile', {
-        url: '/profile',
+      }}).state('vendor.setting', {
+        url: '/setting',
         templateUrl: "assets/views/vendor/profile.html",
-        title: 'Vendor Profile',
+        title: 'Vendor Profile Setting',
         ncyBreadcrumb: {
-            label: 'Vendor Profile'
+            label: 'Vendor Profile Setting'
         },
         resolve: loadSequence('flow','userService', 'vendorCtrl')
     }).state('vendor.facility', {
