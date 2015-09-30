@@ -13,10 +13,11 @@
 <div class="container-fluid container-fullw bg-white">
 	<div class="row">
 		<div class="col-md-12">
-			<!-- /// controller:  'ProfileCtrl' -  localtion: assets/js/controllers/ProfileCtrl.js /// -->
+			<!-- /// controller:  'ProfileCtrl' -  localtion: assets/js/controllers/vendor/ProfileCtrl.js /// -->
 			<div ng-controller="ProfileCtrl">
 				<!-- start: USER TABSET -->
 				<tabset class="tabbable">
+					<!-- start: TAB OVERVIEW -->
 					<tab heading="Overview">
 						<div class="row">
 							<div class="col-md-4">
@@ -279,7 +280,7 @@
 						</div>
 					</tab>
 					<!-- end: TAB OVERVIEW -->
-				<!-- start: TAB EDIT ACCOUNT -->
+					<!-- start: TAB EDIT ACCOUNT -->
 					<tab heading="Edit Account" active="editActive">
 						<form role="form" id="form" novalidate ng-submit="form.submit(userInfo)" enctype="multipart/form-data">
 							<fieldset>
@@ -318,15 +319,29 @@
 											</label>
 											<input type="text" placeholder="contact number" class="form-control" name="contact" ng-model="userInfo.contact">
 										</div>
+									<!-- 	<div class="form-group">
+											<label class="control-label">
+												Url
+											</label>
+											<input type="text" placeholder="Enter Url" class="form-control" name="url" ng-model="userInfo.url">
+										</div> -->
 									</div>
 									<div class="col-md-6">
-										
-										<div class="form-group">
-											<label class="control-label">
-												Description
+										<!-- <div class="form-group">
+											<label class="block">
+												Gender
 											</label>
-											<textarea placeholder="address" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
-										</div>
+											<div class="clip-radio radio-primary">
+												<input type="radio" id="us-female" name="gender" value="female" ng-model="userInfo.gender">
+												<label for="us-female">
+													Female
+												</label>
+												<input type="radio" id="us-male" name="gender" value="male" ng-model="userInfo.gender">
+												<label for="us-male">
+													Male
+												</label>
+											</div>
+										</div> -->
 										<div class="row">
 											<div class="col-md-4">
 												<div class="form-group">
@@ -382,169 +397,15 @@
 							</button>
 						</div>
             </div>
-									
-							
+									</div>
+								</div>
 							</fieldset>
 							
 						</form>
 					</tab>
 					<!-- end: TAB EDIT ACCOUNT -->
-					<!-- start: TAB Billing Details -->
-					<tab heading="Billing Details">
-						<form role="form" id="form" novalidate ng-submit="billingForm.submit(billingInfo)" enctype="multipart/form-data">
-							<fieldset>
-								<legend>
-									Billing Info
-								</legend>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Company Name
-											</label>
-											<input type="text" placeholder="Enter your Company name" class="form-control" name="company_title" ng-model="billingInfo.company_title">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Address
-											</label>
-											<input type="text" placeholder="Enter your company address" class="form-control" name="address" ng-model="billingInfo.address">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Registration Number
-											</label>
-											<input type="text" placeholder="Enter your Registration Number" class="form-control" name="registration_no" ng-model="billingInfo.registration_no">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Service Tax Number
-											</label>
-											<input type="text" placeholder="Enter your Service Tax Number" class="form-control" name="service_tax_no" ng-model="billingInfo.service_tax_no">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												PAN Number
-											</label>
-											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="billingInfo.pan_no">
-										</div>
 
-										<div class="form-group">
-											<label class="control-label">
-												Post code
-											</label>
-											<input type="text" placeholder="Enter your Post code" class="form-control" name="postcode" ng-model="billingInfo.postcode">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Name
-											</label>
-											<input type="text" placeholder="Enter Contact person name" class="form-control" name="contact_person_name" ng-model="billingInfo.contact_person_name">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Email
-											</label>
-											<input type="email" placeholder="Enter Contact person email" class="form-control" name="contact_person_email" ng-model="billingInfo.contact_person_email">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Phone
-											</label>
-											<input type="text" placeholder="Enter Contact person phone" class="form-control" name="contact_person_phone" ng-model="billingInfo.contact_person_phone">
-										</div>
-										
-										
-										<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
-						</div>
-            </div>
-									
-							
-							</fieldset>
-							
-						</form>
-					</tab>
-					<!-- end: TAB Billing Details -->
-					<!-- start: TAB Banking Details -->
-					<tab heading="Banking Details">
-							<form role="form" id="form" novalidate ng-submit="bankForm.submit(bankDetail)" enctype="multipart/form-data">
-							<fieldset>
-								<legend>
-									Bank Details
-								</legend>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Bank Name
-											</label>
-											<input type="text" placeholder="Enter your Bank name" class="form-control" name="bank_name" ng-model="bankDetail.bank_name">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Account Number
-											</label>
-											<input type="text" placeholder="Enter your Account number" class="form-control" name="account_number" ng-model="bankDetail.account_number">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												IFSC Code
-											</label>
-											<input type="text" placeholder="Enter your IFSC Code" class="form-control" name="ifsc" ng-model="bankDetail.ifsc">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Account Type
-											</label>
-											<input type="text" placeholder="Enter your Account Type" class="form-control" name="account_type" ng-model="bankDetail.account_type">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Branch Name
-											</label>
-											<input type="text" placeholder="Enter your Branch Name" class="form-control" name="branch_name" ng-model="bankDetail.branch_name">
-										</div>
-
-										<div class="form-group">
-											<label class="control-label">
-												Beneficiary Name
-											</label>
-											<input type="text" placeholder="Enter your Beneficiary Name" class="form-control" name="beneficiary" ng-model="bankDetail.beneficiary">
-										</div>
-																		
-										<div class="form-group">
-											<label class="control-label">
-												VAT Number
-											</label>
-											<input type="text" placeholder="Enter your VAT number" class="form-control" name="vat" ng-model="bankDetail.vat">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												PAN Number
-											</label>
-											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="bankDetail.pan_no">
-										</div>
-										
-										<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
-							</div>
-
-		
-            </div>
-									
-							
-							</fieldset>
-							
-						</form>
-					</tab>
-					<!-- end: TAB Banking Details -->
+				
 				</tabset>
 				<!-- end: USER TABSET -->
 			</div>
