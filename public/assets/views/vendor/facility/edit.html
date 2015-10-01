@@ -42,7 +42,7 @@
                 <label class="control-label">
                   Sub Category <span class="symbol required"></span>
                 </label>
-								    <select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory track by cat.id" ng-disabled="!selectedCategory">
+								    <select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory" ng-disabled="!selectedCategory">
                     </select>
 								  <span class="error text-small block" ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First Name is required</span>
                 <span class="success text-small" ng-if="Form.sub_category_id.$valid">Thank You!</span>
@@ -55,7 +55,7 @@
 							<span class="btn btn-primary btn-o btn-file"> Select an image file
 								<input type="file" bind-file nv-file-select="" name="image" ng-model="facility.image" uploader="uploaderImages" multiple  required/>
 							</span>
-              <span><img ng-src="{{facility.image}}"></span>
+              <span><img src="{{facility.image}}" class="img-rounded img-responsive" alt="image" width="154" height="76"/></span>
 							  <span class="error text-small block" ng-if="Form.image.$dirty && Form.image.$invalid">First Name is required</span>
               <span class="success text-small" ng-if="Form.image.$valid">Thank You!</span>
             </div>

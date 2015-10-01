@@ -2,8 +2,11 @@
 /** 
   * controller for User Profile Example
 */
-app.controller('ProfileCtrl', ["$scope", "flowFactory","userService","SweetAlert",
- function ($scope, flowFactory,userService,SweetAlert) {
+app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userService","SweetAlert",
+ function ($scope, flowFactory,$geolocation,userService,SweetAlert) {
+
+
+
     $scope.removeImage = function () {
         $scope.noImage = true;
     };
@@ -15,12 +18,22 @@ app.controller('ProfileCtrl', ["$scope", "flowFactory","userService","SweetAlert
 });
  userService.getVendorProfile().then(function(userInfo){
 $scope.userInfo=userInfo.profile;	
-$scope.userInfo.profile_picture = {};
+$geolocation.getCurrentPosition({
+            timeout: 0
+         }).then(function(position) {
+          // console.log(position);
+       $scope.userInfo.longitude = position.coords.longitude;
+$scope.userInfo.latitude = position.coords.latitude;
+         });
     if ($scope.userInfo.profile_picture == '') {
         $scope.noImage = true;
      }
 
 
+});
+
+userService.getAreas().then(function(areas){
+$scope.areas=areas.area;  
 });
 
  userService.getBankDetails().then(function(bankDetail){

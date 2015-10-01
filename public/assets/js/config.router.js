@@ -70,7 +70,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
         ncyBreadcrumb: {
             label: 'Vendor Profile Setting'
         },
-        resolve: loadSequence('flow','userService', 'vendorCtrl')
+        resolve: loadSequence('flow','ngGeolocation','userService', 'vendorCtrl')
     }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',

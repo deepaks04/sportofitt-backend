@@ -4,6 +4,7 @@ app.factory('Login',function($http){
 return{
 auth:function(credentials){
 var authUser = $http.post('api/v1/user/auth',credentials);
+console.log(authUser);
 return authUser;
 },
 register:function(credentials){
