@@ -11,6 +11,7 @@ use Auth;
 use App\Http\Requests\LoginUserRequest;
 use App\Role;
 use App\Status;
+use Illuminate\Support\Facades\URL;
 
 class AuthController extends Controller
 {
@@ -86,6 +87,15 @@ class AuthController extends Controller
             $role = Role::find($user->role_id);
             $currentStatus = Status::find($user->status_id);
             $user['role'] = $role->slug;
+
+            if($user['profile_picture']==null){
+                $user['profile_picture'] = $user['profile_picture'];
+            }else{
+                $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+                $vendorOwnDirecory = $vendorUploadPath."/".sha1($user['id'])."/"."profile_image/";
+                $user['profile_picture'] = $vendorOwnDirecory.$user['profile_picture'];
+            }
+
             if($role->slug=="vendor"){
                 $vendor = $user->vendor()->first();
                 $user['is_processed'] = (int)$vendor->is_processed;
