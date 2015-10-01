@@ -50,6 +50,7 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
     Route::get('get-root-category',array('uses' => 'UsersController@getRootCategory'));
     Route::get('get-sub-category/{id}',array('uses' => 'UsersController@getSubCategory'));
+    Route::get('areas',array('uses' => 'UsersController@getArea'));
 });
 
 

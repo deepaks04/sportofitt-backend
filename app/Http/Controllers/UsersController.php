@@ -16,6 +16,7 @@ use Auth;
 use App\Role;
 use App\Status;
 use App\RootCategory;
+use App\Area;
 
 class UsersController extends Controller
 {
@@ -166,6 +167,16 @@ class UsersController extends Controller
         $response = [
             "message" => $message,
             "category" => $category
+        ];
+        return response($response,$status);
+    }
+
+    public function getArea(){
+        $area = Area::all();
+        $status = 200;
+        $response = [
+            "message" => "success",
+            "area" => $area
         ];
         return response($response,$status);
     }
