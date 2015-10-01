@@ -4,11 +4,14 @@ app.factory('Login',function($http){
 return{
 auth:function(credentials){
 var authUser = $http.post('api/v1/user/auth',credentials);
-console.log(authUser);
 return authUser;
 },
 register:function(credentials){
 var newUser = $http.post('api/v1/vendor/create',credentials);
+return newUser;
+},
+logout:function(){
+var newUser = $http.get('api/v1/user/logout');
 return newUser;
 }
 }
