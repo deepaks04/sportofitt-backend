@@ -44,7 +44,7 @@ console.log(response);
 });
 auth.error(function(data,status){
   console.log(data);
-    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
+    SweetAlert.swal("Sign in unsuccessfull", data.message, "error");
   return;
 })
 
@@ -98,8 +98,7 @@ app.controller('registrationCtrl', ["$scope", "$state", "$timeout", "SweetAlert"
    auth.error(function(data,status){
    console.log(data);
 
-SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-   return;
+ SweetAlert.swal("Log in unsuccessfull", data.message, "error");   return;
    })
 
            }
