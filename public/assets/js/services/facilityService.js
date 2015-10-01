@@ -21,7 +21,7 @@ function getAllFacilities() {
                 method: 'GET',
                 url: 'api/v1/vendor/facility',
                // transformResponse: transformGetFacilities,
-                cache: true
+                // cache: true
             })
             .then(sendResponseData)
             .catch(sendGetFaclityError)
