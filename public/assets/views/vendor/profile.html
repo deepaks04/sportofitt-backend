@@ -333,7 +333,7 @@
 													<label class="control-label">
 														Zip Code
 													</label>
-													<input class="form-control" placeholder="enter a zip code" type="text" name="area_id" ng-model="userInfo.area_id">
+													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas"></select>
 												</div>
 											</div>
 											<div class="col-md-4">
@@ -361,8 +361,8 @@
 												<div class="user-image">
 													<div class="thumbnail margin-bottom-5">
 														<img src="assets/images/default-user.png" alt="" ng-if="!obj.flow.files.length && noImage">
-														<img ng-src="{{userInfo.avatar}}" alt="" ng-if="!obj.flow.files.length && !noImage">
-														<img flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
+													<img ng-src="{{userInfo.profile_picture}}" alt="" ng-if="!obj.flow.files.length && !noImage">
+													<img flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
 													</div>
 												</div>
 												<div class="user-image-buttons-edit" ng-if="obj.flow.files.length">

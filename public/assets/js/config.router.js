@@ -44,9 +44,14 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
 	}).state('login.registration', {
 	    url: '/registration',
 	    templateUrl: "assets/views/login_registration.html"
-	}).state('login.lockscreen', {
-	    url: '/lock',
-	    templateUrl: "assets/views/login_lock_screen.html"
+	}).state('login.logout', {
+	    url: '/logout',
+      controller:function(Login,$state,SessionService){
+        Login.logout().then(function(){
+          SessionService.unset('auth');
+          $state.go('login.signin');
+        })
+      }
 	})
 
   //vendor routes
@@ -70,7 +75,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
         ncyBreadcrumb: {
             label: 'Vendor Profile Setting'
         },
-        resolve: loadSequence('flow','userService', 'vendorCtrl')
+        resolve: loadSequence('flow','ngGeolocation','userService', 'vendorCtrl')
     }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',

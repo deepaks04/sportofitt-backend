@@ -14,7 +14,8 @@ return {
 	getBillingInfo:getBillingInfo,
 	getBankDetails : getBankDetails,
 	updateBillingInfo:updateBillingInfo,
-	updateBankDetails:updateBankDetails
+	updateBankDetails:updateBankDetails,
+  getAreas:getAreas
 }
 
 function getVendorProfile(){
@@ -39,7 +40,23 @@ function getVendorProfile(){
 
         }
 
-    
+    function getAreas() {
+
+            return $http({
+                method: 'GET',
+                url: 'api/v1/user/areas',
+                 cache: true
+            })
+            .then(sendResponseData)
+            .catch(sendGetAreasError)
+
+        }
+
+        function sendGetAreasError(response) {
+
+            return $q.reject('Error retrieving Areas. (HTTP status: ' + response.status + ')');
+
+        }
 function getBillingInfo(){
 	 return $http({
                 method: 'GET',
