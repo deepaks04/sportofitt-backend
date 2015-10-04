@@ -87,7 +87,7 @@
 		<!-- Clip-Two Controllers -->
 		<script src="assets/js/controllers/mainCtrl.js"></script>
 		<script src="assets/js/controllers/bootstrapCtrl.js"></script>
-		<!-- Google Apis -->
-		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization"></script>
+		<!-- Google Apis 
+		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization"></script> -->
 	</body>
 </html>

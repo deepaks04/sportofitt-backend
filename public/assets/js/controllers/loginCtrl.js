@@ -34,15 +34,8 @@ app.controller('signCtrl', ["$scope", "$state", "$timeout", "$rootScope","SweetA
 
                 var auth = Login.auth($scope.user);
 auth.success(function(response){
-  if(response.user){
-    $rootScope.user = angular.copy(response.user);
-   
-    SessionService.set('auth',response.user);
-  }
   SweetAlert.swal("Good job!", response.message, "success");
   $state.go(response.user.role +'.dashboard')
-
-console.log($rootScope.user);
 });
 auth.error(function(data,status){
   console.log(data);
