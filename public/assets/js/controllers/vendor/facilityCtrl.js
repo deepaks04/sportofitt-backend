@@ -7,7 +7,7 @@ app.controller('facilityAddCtrl', ["$scope","$state","facilityService","SweetAle
     facilityService.getRootCategory()
         .then(getRootCategorySuccess);
 
-        $scope.subCategory = "";
+        $scope.selectedCategory = {"":"Select"};
 
         $scope.master = $scope.facility;
         $scope.form = {

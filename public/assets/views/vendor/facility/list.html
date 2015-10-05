@@ -27,7 +27,7 @@
 					<table ng-table="tableParams" class="table table-striped">
 					<tr ng-repeat="facility in facilityData">
 						<td data-title="'Name'" sortable="'name'">{{facility.name}}</td>
-						<td class="center" data-title="'Image'" ><img src="{{facility.image}}" class="img-rounded" alt="image"/></td>
+						<td class="center" data-title="'Image'" ><img src="{{facility.image}}" class="img-rounded img-responsive" alt="image" width="154" height="76"/></td>
 						<td data-title="'Sub Category'" sortable="'sub_category_id'">{{facility.sub_category_id}}</td>
 						<td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
 						<td class="center">

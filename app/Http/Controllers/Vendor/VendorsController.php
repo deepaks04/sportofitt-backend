@@ -129,6 +129,7 @@ class VendorsController extends Controller
                 "message" => "Settings updated successfully"
             ];
             unset($request['email']);
+              unset($request['username']);
             $user = $request->all();
             $vendor = $request->all();
             $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact');
@@ -491,17 +492,17 @@ class VendorsController extends Controller
 
 
     public function getFacilityById($id){
-   $status = 200;
-            $message = "success";
-             $user = Auth::user();
+        $status = 200;
+        $message = "success";
+        $user = Auth::user();
         $vendor = $user->vendor()->first();
-            $facility = $vendor->facility()->find($id)->toArray();
-            if($facility) {
-            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
-                $facility['image'] = $url.$facility['image'];
-          }else{
-             $status = 404;
+        $facility = $vendor->facility()->find($id)->toArray();
+        if($facility) {
+        $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+        $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
+            $facility['image'] = $url.$facility['image'];
+        }else{
+            $status = 404;
             $message = "Facility not found. Please create some";
             $facility = null;
         }
