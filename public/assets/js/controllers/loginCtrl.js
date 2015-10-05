@@ -3,8 +3,8 @@
   * controllers used for the Login
 */
 
-app.controller('signCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login","SessionService",
- function ($scope, $state, $timeout, SweetAlert,Login,SessionService) {
+app.controller('signCtrl', ["$scope", "$state", "$timeout", "$rootScope","SweetAlert","Login","SessionService",
+ function ($scope, $state, $timeout,$rootScope, SweetAlert,Login,SessionService) {
 
     $scope.master = $scope.user;
     $scope.form = {
@@ -34,17 +34,12 @@ app.controller('signCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login"
 
                 var auth = Login.auth($scope.user);
 auth.success(function(response){
-  if(response.user){
-    SessionService.set('auth',response.user);
-  }
   SweetAlert.swal("Good job!", response.message, "success");
   $state.go(response.user.role +'.dashboard')
-
-console.log(response);
 });
 auth.error(function(data,status){
   console.log(data);
-    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
+    SweetAlert.swal("Sign in unsuccessfull", data.message, "error");
   return;
 })
 
@@ -98,8 +93,7 @@ app.controller('registrationCtrl', ["$scope", "$state", "$timeout", "SweetAlert"
    auth.error(function(data,status){
    console.log(data);
 
-SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-   return;
+ SweetAlert.swal("Log in unsuccessfull", data.message, "error");   return;
    })
 
            }
