@@ -12,11 +12,14 @@ class CreateDayWiseSessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('day_wise_sessions', function (Blueprint $table) {
+        Schema::create('session_package_child', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('available_facility_id')->unsigned();
-            $table->float('actual_price')->nullable();
-            $table->float('discounted_price')->nullable();
+            $table->integer('session_package_id')->unsigned();
+            $table->boolean('is_peak')->default(0);
+            $table->string('duration');
+            $table->integer('day')->nullable();
+            $table->float('actual_price');
+            $table->integer('discount');
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ class CreateDayWiseSessionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('day_wise_sessions');
+        Schema::drop('session_package_child');
     }
 }

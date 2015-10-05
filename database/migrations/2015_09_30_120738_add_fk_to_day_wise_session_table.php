@@ -12,8 +12,8 @@ class AddFkToDayWiseSessionTable extends Migration
      */
     public function up()
     {
-        Schema::table('day_wise_sessions', function (Blueprint $table) {
-            $table->foreign('available_facility_id')->references('id')->on('available_facilities')->onUpdate('cascade')->onDelete('cascade');
+        Schema::table('session_package_child', function (Blueprint $table) {
+            $table->foreign('session_package_id')->references('id')->on('session_package')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -24,8 +24,8 @@ class AddFkToDayWiseSessionTable extends Migration
      */
     public function down()
     {
-        Schema::table('day_wise_sessions', function (Blueprint $table) {
-            $table->dropForeign('day_wise_sessions_available_facility_id_foreign');
+        Schema::table('session_package_child', function (Blueprint $table) {
+            $table->dropForeign('session_package_child_session_package_id_foreign');
         });
     }
 }

@@ -16,10 +16,7 @@ class CreateSessionPackageTabel extends Migration
             $table->increments('id');
             $table->integer('available_facility_id')->unsigned();
             $table->integer('package_type_id')->unsigned();
-            $table->boolean('is_peak')->default(0);
-            $table->string('duration');
-            $table->float('actual_price')->nullable();
-            $table->float('discounted_price')->nullable();
+            $table->string('name',255);
             $table->text('description')->nullable();
             $table->timestamps();
         });
