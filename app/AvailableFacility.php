@@ -20,4 +20,8 @@ class AvailableFacility extends Model
     public function vendor(){
         return $this->belongsTo('App\Vendor','id');
     }
+
+    public function packageType(){
+        return $this->hasMany('App\SessionPackage');
+    }
 }

@@ -51,14 +51,14 @@ class UsersController extends Controller
             $userStatus = Status::where('slug','pending')->first();
             $userData = $request->all();
             $userData['password'] = bcrypt($request->password);
-            $userData['is_active'] = 1; //will be 1 after email verification
+            $userData['is_active'] = 0; //will be 1 after email verification
             $userData['status_id'] = $userStatus->id; //By Default Pending
             $userData['role_id'] = $role->id; //Vendor Role Id
             $userData['remember_token'] = csrf_token();
             $userData['updated_at'] = Carbon::now();
             $userData['created_at'] = Carbon::now();
             unset($userData['business_name']);
-              unset($userData['password2']);
+            unset($userData['password2']);
             //$user = User::create($userData); //Mass assignment
             //$user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);

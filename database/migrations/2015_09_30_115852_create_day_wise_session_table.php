@@ -16,10 +16,13 @@ class CreateDayWiseSessionTable extends Migration
             $table->increments('id');
             $table->integer('session_package_id')->unsigned();
             $table->boolean('is_peak')->default(0);
-            $table->string('duration');
+            $table->integer('month')->nullable();
             $table->integer('day')->nullable();
+            $table->time('start')->nullable();
+            $table->time('end')->nullable();
             $table->float('actual_price');
-            $table->integer('discount');
+            $table->integer('discount')->default(0);
+            $table->integer('duration')->nullable();
             $table->timestamps();
         });
     }
