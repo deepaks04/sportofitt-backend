@@ -18,6 +18,7 @@ class CreateTableAvailableFacility extends Migration
             $table->string('image',255);
             $table->integer('sub_category_id')->unsigned();
             $table->integer('vendor_id')->unsigned();
+            $table->integer('slots');
             $table->timestamps();
         });
     }

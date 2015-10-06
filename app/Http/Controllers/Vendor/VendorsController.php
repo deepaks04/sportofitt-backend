@@ -129,7 +129,7 @@ class VendorsController extends Controller
                 "message" => "Settings updated successfully"
             ];
             unset($request['email']);
-              unset($request['username']);
+            unset($request['username']);
             $user = $request->all();
             $vendor = $request->all();
             $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact');
@@ -164,18 +164,6 @@ class VendorsController extends Controller
             ];
         }
         return response($response,$status);
-    }
-
-    /**
-     * @param $keys
-     * @param $array
-     * @return mixed
-     */
-    public function unsetKeys($keys,$array){
-        foreach($keys as $key) {
-            unset($array[$key]);
-        }
-        return $array;
     }
 
     /**
@@ -496,8 +484,9 @@ class VendorsController extends Controller
         $message = "success";
         $user = Auth::user();
         $vendor = $user->vendor()->first();
-        $facility = $vendor->facility()->find($id)->toArray();
-        if($facility) {
+        $facility = $vendor->facility()->find($id);
+        if($facility!=null) {
+        $facility = $facility->toArray();
         $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
         $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
             $facility['image'] = $url.$facility['image'];
