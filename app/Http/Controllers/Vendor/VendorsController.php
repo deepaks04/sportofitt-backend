@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\BillingInfo;
+use App\PackageType;
+use App\RootCategory;
+use App\SessionPackage;
+use App\SessionPackageChild;
 use App\Vendor;
 use Illuminate\Http\Request;
 
@@ -16,6 +20,7 @@ use URL;
 use App\Billing;
 use Carbon\Carbon;
 use App\AvailableFacility;
+use App\SubCategory;
 
 class VendorsController extends Controller
 {
@@ -464,6 +469,16 @@ class VendorsController extends Controller
             $status = 200;
             $message = "success";
             $facility = $vendor->facility()->get()->toArray();
+            /*foreach($facility as $singleFacility){
+                //dd($singleFacility['sub_category_id']);
+                $singleFacility['category']['sub'] = SubCategory::find($singleFacility['sub_category_id'])->toArray();
+                //$singleFacility['category'] = $singleFacility['category']->toArray();
+                //dd($singleFacility);
+            }*/
+            for($i=0;$i<$facilityCount;$i++){
+                $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
+                $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
+            }
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
             $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
             for($i=0;$i<$facilityCount;$i++){
@@ -539,6 +554,52 @@ class VendorsController extends Controller
         }
         $response = [
             "message" => $message,
+        ];
+        return response($response,$status);
+    }
+
+    public function getFacilityDetailInformation(){
+        $user = Auth::user();
+        $vendor = $user->vendor()->first();
+        $facilities = $vendor->facility()->get();
+        $sessionPackageInfoType = null;
+        if($facilities!=null){
+            $facilities = $facilities->toArray();
+            $i = 0;
+            foreach($facilities as $facility){
+                $facilityCount = count($facilities);
+                for($j=0;$i<$facilityCount;$i++){
+                    $facilities[$j]['category']['sub'] = SubCategory::find($facilities[$j]['sub_category_id'])->toArray();
+                    $facilities[$j]['category']['root'] = RootCategory::find($facilities[$j]['category']['sub']['root_category_id'])->toArray();
+                }
+                $packages = SessionPackage::where('available_facility_id','=',$facility['id'])->get();
+                if($packages!=null){
+                    $packages = $packages->toArray();
+
+                    foreach($packages as $package){
+                        $type = PackageType::where('id','=',$package['package_type_id'])->first()->toArray();
+                        //dd($type);
+                        $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                        $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
+                        if($packageChild!=null){
+                            $packageChild = $packageChild->toArray();
+                            $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
+                        }else{
+                            $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
+                        }
+
+                        $i++;
+                    }
+                }
+            }
+        }
+        $status = 200;
+        $response = [
+            "message" => "success",
+            "user" => $user,
+            "vendor" => $vendor,
+            "facility" => $facilities,
+            "sessionPackage" => $sessionPackageInfoType
         ];
         return response($response,$status);
     }
