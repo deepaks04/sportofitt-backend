@@ -14,7 +14,7 @@ class SubCategory extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(){
+    public function rootCategory(){
         return $this->belongsTo('App\RootCategory','id');
     }
 }

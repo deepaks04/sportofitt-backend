@@ -30,14 +30,15 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('images',array('uses' => 'Vendor\VendorsController@addImages'));
     Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
     Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
-    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
-    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
+    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));//modify
+    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility')); //modify
     Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
     Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
-
+    //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
     Route::post('session',array('uses' => 'Vendor\SessionPackageController@createSession'));
+    Route::get('facility-detail',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
