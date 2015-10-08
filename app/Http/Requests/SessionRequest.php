@@ -21,6 +21,7 @@ class SessionRequest extends Request
                 return true;
                 break;
             case 'GET':
+                //echo 1;exit;
                 return true;
                 break;
             case 'POST':
@@ -57,6 +58,8 @@ class SessionRequest extends Request
     {
         switch($this->method())
         {
+            case 'GET':
+                break;
             case 'PUT':
                 break;
             case 'POST':
