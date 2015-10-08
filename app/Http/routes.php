@@ -48,7 +48,8 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
 Route::group(['prefix' => 'api/v1/customer/'], function () {
     Route::post('create/',array('uses' => 'UsersController@storeCustomer'));
     //New
-    Route::put('update-profile',array('uses' => 'Customer\CustomersController@updateProfileInformation'));
+    Route::put('profile',array('uses' => 'Customer\CustomersController@updateProfileInformation'));
+    Route::get('profile',array('uses' => 'Customer\CustomersController@getProfileInformation'));
 });
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {

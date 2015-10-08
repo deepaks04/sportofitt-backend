@@ -320,7 +320,6 @@ class VendorsController extends Controller
                 }
 
                 chmod($vendorImageUploadPath, 0777);
-                //dd();
                 foreach($files as $file){
                     $random = mt_rand(1,1000000);
                     $extension = $file->getClientOriginalExtension();
