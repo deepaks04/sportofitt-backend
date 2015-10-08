@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Area;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -91,14 +92,27 @@ class AuthController extends Controller
             if($user['profile_picture']==null){
                 $user['profile_picture'] = $user['profile_picture'];
             }else{
-                $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-                $vendorOwnDirecory = $vendorUploadPath."/".sha1($user['id'])."/"."profile_image/";
-                $user['profile_picture'] = $vendorOwnDirecory.$user['profile_picture'];
+                if($role->slug=="vendor"){
+                    $uploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+                }if($role->slug=="customer"){
+                    $uploadPath = URL::asset(env('CUSTOMER_FILE_UPLOAD'));
+                }
+                $userOwnDirecory = $uploadPath."/".sha1($user['id'])."/"."profile_image/";
+                $user['profile_picture'] = $userOwnDirecory.$user['profile_picture'];
             }
 
             if($role->slug=="vendor"){
                 $vendor = $user->vendor()->first();
                 $user['is_processed'] = (int)$vendor->is_processed;
+                $area = Area::select('name')->find($vendor['area_id']);
+                $vendor['area'] = $area['name'];
+                $user['extra'] = $vendor;
+            }
+            if($role->slug=="customer"){
+                $customer = $user->customer()->first();
+                $area = Area::select('name')->find($customer['area_id']);
+                $customer['area'] = $area['name'];
+                $user['extra'] = $customer;
             }
             $user['status'] = $currentStatus->slug;
             $response = [

@@ -29,4 +29,14 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $table = 'customers';
+
+    protected $guarded = ['user_id','id'];
+
+    /**
+     * vendors belongs to user
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }
