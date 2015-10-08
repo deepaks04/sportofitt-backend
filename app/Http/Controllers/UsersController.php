@@ -138,7 +138,6 @@ class UsersController extends Controller
             $status =500;
             $response = [
                 "message" => "Something Went Wrong ".$e->getMessage(),
-                //"message" => "Something Went Wrong, Vendor Registration Unsuccessful!".$e->getMessage(),
             ];
         }
         return response($response,$status);

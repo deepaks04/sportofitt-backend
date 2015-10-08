@@ -39,9 +39,7 @@ class PasswordController extends Controller
         $status =200;
         $password = $request->all();
         unset($password['_method']);
-        //$password['old'] = bcrypt($password['old']);
         $user = Auth::user();
-        //$userExists = User::where(array('id'=>$user->id,'password'=>$password['old']))->count();
         if(Hash::check($password['old'], $user->password)){
             $message = "Password Updated Successfully";
             $user->update(array('password'=>bcrypt($password['new'])));

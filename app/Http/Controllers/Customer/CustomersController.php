@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Area;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -106,12 +107,14 @@ class CustomersController extends Controller
             $status = 200;
             $message = "Success";
             if($user->profile_picture==null){
-                $myProfile['profile_picture'] = $user->profile_picture;
+                $user['profile_picture'] = $user->profile_picture;
             }else{
                 $vendorUploadPath = URL::asset(env('CUSTOMER_FILE_UPLOAD'));
                 $vendorOwnDirecory = $vendorUploadPath."/".sha1($user->id)."/"."profile_image/";
                 $user['profile_picture'] = $vendorOwnDirecory.$user->profile_picture;
             }
+            $area = Area::find($user['customer']->area_id);
+            $user['customer']['area'] = $area->name;
             $response = [
                 "message" => $message,
                 "user" => $user
