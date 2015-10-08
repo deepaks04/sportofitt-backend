@@ -558,13 +558,13 @@ class VendorsController extends Controller
         return response($response,$status);
     }
 
-    public function getFacilityDetailInformation(){
+    public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request,$id){
         $user = Auth::user();
         $vendor = $user->vendor()->first();
-        $facilities = $vendor->facility()->get();
+        $facilities = $vendor->facility()->where(array('id'=>$id))->get();
         $sessionPackageInfoType = null;
         if($facilities!=null){
-            $facilities = $facilities->toArray();
+            $facilities = $facilities->toArray();dd($facilities);
             $i = 0;
             foreach($facilities as $facility){
                 $facilityCount = count($facilities);

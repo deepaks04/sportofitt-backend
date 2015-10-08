@@ -59,7 +59,9 @@ class AddFacilityRequest extends Request
                     'name' => 'required|min:5|max:50',
                     'image' => 'mimes:jpeg,png,jpg',
                     'is_active' => 'required|integer',
-                    'sub_category_id' => 'required|integer'
+                    'slots' => 'required|integer',
+                    'sub_category_id' => 'required|integer',
+                    'description' => 'min:5|max:500',
                 ];
                 break;
             case 'POST':
