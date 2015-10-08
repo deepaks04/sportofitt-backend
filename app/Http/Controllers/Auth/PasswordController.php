@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangePasswordRequest;
+use App\User;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PasswordController extends Controller
 {
@@ -27,6 +31,26 @@ class PasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest',['except'=>['change']]);
+        $this->middleware('auth',['only'=>['change']]);
+    }
+
+    public function change(ChangePasswordRequest $request){
+        $status =200;
+        $password = $request->all();
+        unset($password['_method']);
+        //$password['old'] = bcrypt($password['old']);
+        $user = Auth::user();
+        //$userExists = User::where(array('id'=>$user->id,'password'=>$password['old']))->count();
+        if(Hash::check($password['old'], $user->password)){
+            $message = "Password Updated Successfully";
+            $user->update(array('password'=>bcrypt($password['new'])));
+        }else{
+            $message = "Old password is not matched, update not allowed";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
     }
 }

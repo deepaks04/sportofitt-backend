@@ -47,15 +47,19 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
 /* For Customer Only */
 Route::group(['prefix' => 'api/v1/customer/'], function () {
     Route::post('create/',array('uses' => 'UsersController@storeCustomer'));
+    //New
+    Route::put('update-profile',array('uses' => 'Customer\CustomersController@updateProfileInformation'));
 });
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
-    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
+    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));//modify
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
     Route::get('get-root-category',array('uses' => 'UsersController@getRootCategory'));
     Route::get('get-sub-category/{id}',array('uses' => 'UsersController@getSubCategory'));
     Route::get('areas',array('uses' => 'UsersController@getArea'));
+    //New
+    Route::put('change-password',array('uses' => 'Auth\PasswordController@change'));
 });
 
 

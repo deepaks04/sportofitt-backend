@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class CustomersController extends Controller
 {
@@ -48,6 +49,33 @@ class CustomersController extends Controller
             return $result;
 
         }
+    }
+
+    public function updateProfileInformation(Requests\CustomerProfileUpdateRequest $request){
+        try{
+            $status = 200;
+            $message = "Updated Successfully";
+            $user = Auth::user();
+            $customer = $user->customer()->first();
+            $userData = $request->all();
+            $userKeys = array('birthdate','gender','_method','pincode','phone_no','area_id');
+            $userData = $this->unsetKeys($userKeys,$userData);
+            $user->update($userData);
+            $customerData = $request->all();
+            $customerKeys = array('fname','lname','_method','profile_picture','email','username');
+            $customerData = $this->unsetKeys($customerKeys,$customerData);//dd($request->birthdate);
+            $birthdate = strtotime($request->birthdate);
+            $birthdate = date('Y-m-d',$birthdate);
+            $customerData['birthdate'] = $birthdate;
+            $customer->update($customerData);
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Updated Successfully";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
     }
 
     /**

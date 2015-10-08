@@ -87,4 +87,8 @@ class User extends Model implements AuthenticatableContract,
         return $this->hasOne('App\Vendor');
     }
 
+    public function customer(){
+        return $this->hasOne('App\Customer');
+    }
+
 }
