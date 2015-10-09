@@ -27,7 +27,7 @@ app.controller('signCtrl', ["$scope", "$state", "$timeout", "$rootScope","SweetA
                 }
 
                 angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
+              //  SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
                 return;
 
             } else {
@@ -40,16 +40,10 @@ auth.success(function(response){
 auth.error(function(data,status){
   console.log(data);
     SweetAlert.swal("Sign in unsuccessfull", data.message, "error");
-  return;
+  //return;
 })
 
             }
-
-        },
-        reset: function (form) {
-
-            $scope.myModel = angular.copy($scope.master);
-            form.$setPristine(true);
 
         }
     };
@@ -59,51 +53,24 @@ auth.error(function(data,status){
 app.controller('registrationCtrl', ["$scope", "$state", "$timeout", "SweetAlert","Login",
  function ($scope, $state, $timeout, SweetAlert,Login) {
    $scope.master = $scope.myModel;
+     $scope.errors = {};
    $scope.form = {
 
        register: function (form) {
-           var firstError = null;
-           if (form.$invalid) {
-
-               var field = null, firstError = null;
-               for (field in form) {
-                   if (field[0] != '$') {
-                       if (firstError === null && !form[field].$valid) {
-                           firstError = form[field].$name;
-                       }
-
-                       if (form[field].$pristine) {
-                           form[field].$dirty = true;
-                       }
-                   }
-               }
-
-               angular.element('.ng-invalid[name=' + firstError + ']').focus();
-               SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-               return;
-
-           } else {
-
-               var auth = Login.register($scope.myModel);
+               var auth = Login.register(form);
+              console.log(form);
    auth.success(function(response){
    SweetAlert.swal("Good job!", "Your form is ready to be submitted!", "success");
 
    console.log(response);
    });
    auth.error(function(data,status){
-   console.log(data);
-
- SweetAlert.swal("Log in unsuccessfull", data.message, "error");   return;
-   })
-
-           }
-
-       },
-       reset: function (form) {
-
-           $scope.myModel = angular.copy($scope.master);
-           form.$setPristine(true);
-
-       }
-   };
+  $scope.errors = {};
+   angular.forEach(data,function(errors,field){
+          
+  $scope.errors[field] = errors.join(', ');
+   });
+ })
+ }
+          };
 }]);

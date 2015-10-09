@@ -6,7 +6,7 @@
 		</div>
 		<!-- start: REGISTER BOX -->
 		<div class="box-register" ng-controller="registrationCtrl">
-		<form class="form-register" name="Form" id="form1" novalidate ng-submit="form.register(Form)">
+		<form class="form-register" name="Form" id="form1" novalidate >
 				<fieldset>
 					<legend>
 						Sign Up
@@ -14,66 +14,62 @@
 					<p>
 						Enter your personal details below:
 					</p>
-					<div class="form-group" ng-class="{'has-error':Form.fname.$dirty && Form.fname.$invalid, 'has-success':Form.fname.$valid}">
+					<div class="form-group" ng-class="{'has-error':errors.fname,'has-success':!errors.fname}">
 
-						<input type="text" placeholder="Enter your First Name" class="form-control" name="fname" ng-model="myModel.fname" required />
-						<span class="error text-small block" ng-if="Form.fname.$dirty && Form.fname.$invalid">First Name is required</span>
-						<span class="success text-small" ng-if="Form.fname.$valid">Thank You!</span>
+						<input type="text" placeholder="Enter your First Name" class="form-control" name="fname" ng-model="myModel.fname"  />
+						<span class="error text-small block" ng-if="errors.fname">{{errors.fname}}</span>
+						<!-- <span class="success text-small" ng-if="myModel.fname.$valid">Thank You!</span> -->
 					</div>
-					<div class="form-group" ng-class="{'has-error':Form.lname.$dirty && Form.lname.$invalid, 'has-success':Form.lname.$valid}">
+					<div class="form-group"  ng-class="{'has-error':errors.lname,'has-success':!errors.lname}">
 
-						<input type="text" placeholder="Enter your Last Name" class="form-control" name="lname" ng-model="myModel.lname" required />
-						<span class="error text-small block" ng-if="Form.lname.$dirty && Form.lname.$invalid">Last Name is required</span>
-						<span class="success text-small" ng-if="Form.lname.$valid">Thank You!</span>
+						<input type="text" placeholder="Enter your Last Name" class="form-control" name="lname" ng-model="myModel.lname"  />
+						<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
+						<!-- <span class="success text-small" ng-if="myModel.lname.$valid">Thank You!</span> -->
 					</div>
 
-					<div class="form-group" ng-class="{'has-error':Form.business_name.$dirty && Form.business_name.$invalid, 'has-success':Form.business_name.$valid}">
+					<div class="form-group" ng-class="{'has-error':errors.business_name,'has-success':!errors.business_name}">
 
-						<input type="text" placeholder="Enter your Business Name" class="form-control" name="business_name" ng-model="myModel.business_name" required>
-						<span class="error text-small block" ng-if="Form.business_name.$dirty && Form.business_name.$invalid">Business Name is required</span>
-						<span class="success text-small" ng-if="Form.business_name.$valid">Thank You!</span>
+						<input type="text" placeholder="Enter your Business Name" class="form-control" name="business_name" ng-model="myModel.business_name" >
+												<span class="error text-small block" ng-if="errors.business_name">{{errors.business_name}}</span>
+
 					</div>
 
 
 					<p>
 						Enter your account details below:
 					</p>
-					<div class="form-group" ng-class="{'has-error':Form.username.$dirty && Form.username.$invalid, 'has-success':Form.username.$valid}">
+					<div class="form-group" ng-class="{'has-error':errors.username, 'has-success':!errors.username}">
 
 						<span class="input-icon">
-							<input type="text" class="form-control" name="username" placeholder="Username" ng-model="myModel.username" required>
+							<input type="text" class="form-control" name="username" placeholder="Username" ng-model="myModel.username" >
 							<i class="fa fa-user"></i> </span>
-							<span class="error text-small block" ng-if="Form.username.$dirty && Form.username.$invalid">UserName is required</span>
-							<span class="success text-small" ng-if="Form.username.$valid">Thank You!</span>
+							<span class="error text-small block" ng-if="errors.username">{{errors.username}}</span>
 
 					</div>
-					<div class="form-group" ng-class="{'has-error':Form.email.$dirty && Form.email.$invalid, 'has-success':Form.email.$valid}">
+					<div class="form-group" ng-class="{'has-error':errors.email, 'has-success':!errors.email}">
 
 						<span class="input-icon">
-							<input type="email" class="form-control" name="email" placeholder="Email" ng-model="myModel.email" required>
+							<input type="email" class="form-control" name="email" placeholder="Email" ng-model="myModel.email" >
 							<i class="fa fa-envelope"></i> </span>
-							<span class="error text-small block" ng-if="Form.email.$dirty && Form.email.$invalid">Email is required</span>
-							<span class="success text-small" ng-if="Form.email.$valid">Thank You!</span>
+							<span class="error text-small block" ng-if="errors.email">{{errors.email}}</span>
 
 					</div>
-					<div class="form-group" ng-class="{'has-error':Form.password.$dirty && Form.password.$invalid, 'has-success':Form.password.$valid}">
+					<div class="form-group" ng-class="{'has-error':errors.password, 'has-success':!errors.password}">
 
 						<span class="input-icon">
-							<input type="password" class="form-control" id="password" name="password" placeholder="Password" ng-model="myModel.password" required>
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password" ng-model="myModel.password" >
 							<i class="fa fa-lock"></i> </span>
-							<span class="error text-small block" ng-if="Form.password.$dirty && Form.password.$invalid">Password is required</span>
-							<span class="success text-small" ng-if="Form.password.$valid">Thank You!</span>
+							<span class="error text-small block" ng-if="errors.password">{{errors.password}}</span>
 
 					</div>
 
-					<div class="form-group" ng-class="{'has-error':Form.password2.$dirty && Form.password2.$error.compareTo || Form.password2.$dirty && Form.password2.$invalid, 'has-success':Form.password2.$valid}">
+					<!-- <div class="form-group" ng-class="{'has-error':errors.password2, 'has-success':!errors.password2}">
 						<span class="input-icon">
-							<input type="password" placeholder="Repeat Password" class="form-control" name="password2" ng-model="myModel.password2" compare-to="myModel.password" required/>
+							<input type="password" placeholder="Repeat Password" class="form-control" name="password2" ng-model="myModel.password2" compare-to="myModel.password" />
 <i class="fa fa-lock"></i></span>
-						<span class="error text-small block" ng-if="Form.password2.$dirty && Form.password2.$error.required">Repeat password is required!</span>
-						<span class="error text-small block" ng-if="Form.password2.$dirty && Form.password2.$error.compareTo">Passwords do not match!</span>
-						<span class="success text-small block" ng-if="Form.password2.$valid">Passwords match!</span>
-					</div>
+						<span class="error text-small block" ng-if="errors.password2">{{errors.password2}}</span>
+						
+					</div> -->
 					<!-- <div class="form-group">
 						<div class="checkbox clip-check check-primary">
 							<input type="checkbox" id="agree" value="agree">
@@ -89,7 +85,7 @@
 								Log-in
 							</a>
 						</p>
-						<button type="submit" class="btn btn-primary pull-right">
+						<button type="submit" ng-click="form.register(myModel);" class="btn btn-primary pull-right">
 							Submit <i class="fa fa-arrow-circle-right"></i>
 						</button>
 					</div>

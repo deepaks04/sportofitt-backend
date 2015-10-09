@@ -288,35 +288,45 @@
 								</legend>
 								<div class="row">
 									<div class="col-md-6">
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.fname,'has-success':!errors.fname}">
 											<label class="control-label">
 												First Name
 											</label>
 											<input type="text" placeholder="Enter your first name" class="form-control" name="fname" ng-model="userInfo.fname">
+											<span class="error text-small block" ng-if="errors.fname">{{errors.fname}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.Lname,'has-success':!errors.Lname}">
 											<label class="control-label">
 												Last Name
 											</label>
 											<input type="text" placeholder="Enter your last name" class="form-control" name="lname" ng-model="userInfo.lname">
+<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
+									
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.email,'has-success':!errors.email}">
 											<label class="control-label">
 												Email Address
 											</label>
-											<input type="email" placeholder="email address" class="form-control" name="email" ng-model="userInfo.email">
+											<input type="email" placeholder="Enter Your Email Address" class="form-control" name="email" ng-model="userInfo.email">
+											<span class="error text-small block" ng-if="errors.email">{{errors.email}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.address,'has-success':!errors.address}">
 											<label class="control-label">
 												Address
 											</label>
 											<input type="text" placeholder="address" class="form-control" name="address" ng-model="userInfo.address">
+											<span class="error text-small block" ng-if="errors.address">{{errors.address}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
 											<label class="control-label">
-												contact
+												Contact
 											</label>
-											<input type="text" placeholder="contact number" class="form-control" name="contact" ng-model="userInfo.contact">
+											<input type="text" placeholder="Enter Your Contact Number" class="form-control" name="contact" ng-model="userInfo.contact">
+											<span class="error text-small block" ng-if="errors.contact">{{errors.contact}}</span>
+
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -325,15 +335,19 @@
 											<label class="control-label">
 												Description
 											</label>
-											<textarea placeholder="address" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
+											<textarea placeholder="Enter Description" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
 										</div>
 										<div class="row">
 											<div class="col-md-4">
-												<div class="form-group">
+												<div class="form-group" ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
 													<label class="control-label">
-														Zip Code
+														Select Area
 													</label>
-													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas"></select>
+													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas">
+													    	<option>Select Area</option>
+													    </select>
+													    <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
+
 												</div>
 											</div>
 											<div class="col-md-4">
@@ -349,11 +363,11 @@
 													<label class="control-label">
 														Latitude
 													</label>
-													<input class="form-control" placeholder="enter your longitude" type="text" name="latitude" ng-model="userInfo.latitude">
+													<input  class="form-control" placeholder="enter your longitude" type="text" name="latitude" ng-model="userInfo.latitude">
 												</div>
 											</div>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.image,'has-success':!errors.image}">
 											<label>
 												Image Upload <span class="symbol required"></span>
 											</label>
@@ -373,6 +387,8 @@
 													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
 													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i> </span>
 												</div>
+												<span class="error text-small block" ng-if="errors.image">{{errors.image}}</span>
+
 
 																							</div>
 										</div>

@@ -38,37 +38,11 @@ $scope.areas=areas.area;
 
  userService.getBankDetails().then(function(bankDetail){
 $scope.bankDetail=bankDetail.bank;	
-});
-
- 
-
-         
+});  
 
   $scope.form = {
 
             submit: function (form) {
-                var firstError = null;
-                if (form.$invalid) {
-
-                    var field = null, firstError = null;
-                    for (field in form) {
-                        if (field[0] != '$') {
-                            if (firstError === null && !form[field].$valid) {
-                                firstError = form[field].$name;
-                            }
-
-                            if (form[field].$pristine) {
-                                form[field].$dirty = true;
-                            }
-                        }
-                    }
-
-                    angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-                    return;
-
-                } else {
-
                   var updateProfile =userService.updateUserInfo($scope.userInfo);
       updateProfile.then(function(response){
       SweetAlert.swal(response.data.message, "success");
@@ -76,13 +50,16 @@ $scope.bankDetail=bankDetail.bank;
       console.log(response);
       });
       updateProfile.catch(function(data,status){
-      console.log(data);
-
-      SweetAlert.swal("somethings going wrong",data.data.statusText, "error");
+      // console.log(data);
+  $scope.errors = {};
+   angular.forEach(data.data,function(errors,field){
+          
+  $scope.errors[field] = errors.join(', ');
+   });
+   console.log($scope.errors);
+      // SweetAlert.swal("somethings going wrong",data.data.statusText, "error");
       return;
-      })
-
-                }
+      })             
 
             },
             reset: function (form) {

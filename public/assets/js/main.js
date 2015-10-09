@@ -39,12 +39,14 @@ function ($rootScope, $state, $stateParams,$cookieStore) {
 
      $rootScope.$on('$locationChangeStart', function(event, current, previous) {
 var auth = sessionStorage.getItem('auth'); 
-         if(!auth){
+         if(!auth && !$state.includes('login')){
+            console.log($state.includes('login'));
             $state.go('login.signin');
+             $rootScope.user = $cookieStore.get('user');
           }
-          $rootScope.user = $cookieStore.get('user');
+         
         });
-        $rootScope.$on('$locationChangeSuceess', function(event, current, previous) {
+        $rootScope.$on('$locationChangeSuccess', function(event, current, previous) {
 
             console.log('successfully changed routes');
 
