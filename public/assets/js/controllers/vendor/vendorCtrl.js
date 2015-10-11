@@ -2,8 +2,8 @@
 /** 
   * controller for User Profile Example
 */
-app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userService","SweetAlert",
- function ($scope, flowFactory,$geolocation,userService,SweetAlert) {
+app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userService","SweetAlert",'FileUploader',
+ function ($scope, flowFactory,$geolocation,userService,SweetAlert,FileUploader) {
 
 
 
@@ -32,6 +32,8 @@ $scope.userInfo.latitude = position.coords.latitude;
 
 });
 
+
+
 userService.getAreas().then(function(areas){
 $scope.areas=areas.area;  
 });
@@ -39,6 +41,7 @@ $scope.areas=areas.area;
  userService.getBankDetails().then(function(bankDetail){
 $scope.bankDetail=bankDetail.bank;	
 });  
+ 
 
   $scope.form = {
 
@@ -157,4 +160,82 @@ $scope.bankDetail=bankDetail.bank;
                 }
 
             }        };
+
+            var uploaderImages = $scope.uploaderImages = new FileUploader({
+        url: 'api/v1/vendor/images',
+        alias : 'image_name',
+        removeAfterUpload: true,
+        queueLimit : 3
+    });
+
+    // FILTERS
+
+    uploaderImages.filters.push({
+        name: 'imageFilter',
+        fn: function (item/*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    // CALLBACKS
+
+    // uploaderImages.onWhenAddingFileFailed = function (item/*{File|FileLikeObject}*/, filter, options) {
+    //     console.info('onWhenAddingFileFailed', item, filter, options);
+    // };
+    // uploaderImages.onAfterAddingFile = function (fileItem) {
+    //     console.info('onAfterAddingFile', fileItem);
+    // };
+    // uploaderImages.onAfterAddingAll = function (addedFileItems) {
+    //     console.info('onAfterAddingAll', addedFileItems);
+    // };
+    // uploaderImages.onBeforeUploadItem = function (item) {
+    //     console.info('onBeforeUploadItem', item);
+    // };
+    // uploaderImages.onProgressItem = function (fileItem, progress) {
+    //     console.info('onProgressItem', fileItem, progress);
+    // };
+    // uploaderImages.onProgressAll = function (progress) {
+    //     console.info('onProgressAll', progress);
+    // };
+    // uploaderImages.onSuccessItem = function (fileItem, response, status, headers) {
+    //     console.info('onSuccessItem', fileItem, response, status, headers);
+    // };
+    uploaderImages.onErrorItem = function (fileItem, response, status, headers) {
+        console.info('onErrorItem', fileItem, response, status, headers);
+        SweetAlert.swal("somethings going wrong",response.message, "error");
+        return;
+    };
+    // uploaderImages.onCancelItem = function (fileItem, response, status, headers) {
+    //     console.info('onCancelItem', fileItem, response, status, headers);
+    // };
+    uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
+        console.info('onCompleteItem', fileItem, response, status, headers);
+        $scope.getVendorImages();
+    };
+    uploaderImages.onCompleteAll = function () {
+        console.info('onCompleteAll');
+    };
+
+    console.info('uploader', uploaderImages);
+
+    $scope.getVendorImages = function(){
+      userService.getVendorImages().then(function(images){
+$scope.images=images.images || {};  
+$scope.uploaderImages.queue.length = $scope.images.length;
+console.log($scope.images);
+}).catch(function(response){
+  console.log(response);
+  $scope.images = {};
+});  
+    }
+    $scope.removeImage = function(imageId) {
+userService.deleteVendorImage(imageId).then(function(images){
+  $scope.getVendorImages();
+}).catch(function(response){
+  console.log(response);
+  $scope.images = {};
+}); 
+    }
+    $scope.getVendorImages();
 }]);

@@ -43,6 +43,7 @@ var auth = sessionStorage.getItem('auth');
             console.log($state.includes('login'));
             $state.go('login.signin');
              $rootScope.user = $cookieStore.get('user');
+             console.log($rootScope.user);
           }
          
         });
