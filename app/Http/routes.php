@@ -51,6 +51,12 @@ Route::group(['prefix' => 'api/v1/customer/'], function () {
     Route::put('profile',array('uses' => 'Customer\CustomersController@updateProfileInformation'));
     Route::get('profile',array('uses' => 'Customer\CustomersController@getProfileInformation'));
 });
+
+/* For Superadmin Only */
+Route::group(['prefix' => 'api/v1/superadmin/'], function () {
+
+});
+
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
