@@ -563,11 +563,11 @@ class VendorsController extends Controller
         $facilities = $vendor->facility()->where(array('id'=>$id))->get();
         $sessionPackageInfoType = null;
         if($facilities!=null){
-            $facilities = $facilities->toArray();dd($facilities);
+            $facilities = $facilities->toArray();
             $i = 0;
             foreach($facilities as $facility){
                 $facilityCount = count($facilities);
-                for($j=0;$i<$facilityCount;$i++){
+                for($j=0;$j<$facilityCount;$j++){
                     $facilities[$j]['category']['sub'] = SubCategory::find($facilities[$j]['sub_category_id'])->toArray();
                     $facilities[$j]['category']['root'] = RootCategory::find($facilities[$j]['category']['sub']['root_category_id'])->toArray();
                 }
@@ -577,17 +577,32 @@ class VendorsController extends Controller
 
                     foreach($packages as $package){
                         $type = PackageType::where('id','=',$package['package_type_id'])->first()->toArray();
-                        //dd($type);
-                        $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
-                        $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
-                        if($packageChild!=null){
-                            $packageChild = $packageChild->toArray();
-                            $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
-                        }else{
-                            $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
-                        }
+                        if($type['slug']=='package'){
+                            $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
+                            if($packageChild!=null){
+                                $packageChild = $packageChild->toArray();
+                                $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
+                            }else{
+                                $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
+                            }
 
-                        $i++;
+                            $i++;
+                        }
+                        if($type['slug']=='session'){
+                            $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->get();
+                            $j = 0;
+                            if($packageChild!=null){
+                                $packageChild = $packageChild->toArray();
+                                foreach($packageChild as $child){
+                                    $sessionPackageInfoType[$type['slug']][$j]['child'] = $child;
+                                    $j++;
+                                }
+                            }else{
+                                $sessionPackageInfoType[$type['slug']][$j]['child'] = null;
+                            }
+                        }
                     }
                 }
             }

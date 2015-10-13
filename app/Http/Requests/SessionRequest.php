@@ -65,15 +65,14 @@ class SessionRequest extends Request
             case 'POST':
                 return [
                     'available_facility_id' => 'required|integer',
-                    'name' => 'required|min:5|max:50',
                     'is_peak' => 'required|digits_between:0,1',
                     'actual_price' => 'required',
                     'discount' => 'required|integer',
                     'session_id' => 'required|integer',
-                    'day' => 'required|integer',
+                    //'day' => 'required|integer',
                     'start' => 'required|date_format:H:i',
                     'end' => 'required|date_format:H:i',
-                    'duration' => 'required|date_format:H:i',
+                    //'duration' => 'required|date_format:H:i',
                 ];
                 break;
             default:break;

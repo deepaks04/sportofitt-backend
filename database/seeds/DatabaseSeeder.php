@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SubCategorySeeder::class);
         $this->call(PackageTypeSeeder::class);
         $this->call(DayTableSeeder::class);
+        $this->call(duration_master::class);
 
 
         Model::reguard();
