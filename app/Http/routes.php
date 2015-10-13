@@ -38,7 +38,9 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
     Route::post('session',array('uses' => 'Vendor\SessionPackageController@createSession'));
+    Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
     Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
+    Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
