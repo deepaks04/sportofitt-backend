@@ -17,7 +17,7 @@ app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","S
         var dt = new Date();
         dt.setHours( 0 );
         dt.setMinutes( 15 );
-        $scope.facility.timing = dt;
+        $scope.facility.duration = dt;
     };
     $scope.today();
 
@@ -32,11 +32,26 @@ app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","S
 
 
     $scope.changed = function () {
-        $log.log('Time changed to: ' + $scope.facility.timing);
+        var hours = $scope.facility.duration.getHours();
+
+        var mins = $scope.facility.duration.getMinutes();
+        if(hours > 3){
+            alert('max time 3 hours');
+            var dt = new Date();
+            dt.setHours( 3 );
+            dt.setMinutes( 0 );
+            $scope.facility.duration = dt;
+
+        }
+        if(hours <= 0 && mins < 15){
+            alert('min time 15 minutes');
+            $scope.today();
+        }
+        $log.log('Time changed to: ' + hours + mins);
     };
 
     $scope.clear = function () {
-        $scope.facility.timing = null;
+        $scope.facility.duration = null;
     };
         $scope.form = {
 
