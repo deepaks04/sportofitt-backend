@@ -19,7 +19,7 @@ class AddFacilityRequest extends Request
         {
             case 'PUT':
                 $id = $this->route('id');
-                $facility = AvailableFacility::find($id);dd($facility);
+                $facility = AvailableFacility::find($id);
                 if($facility==null){
                     return false;
                 }else{
@@ -62,6 +62,7 @@ class AddFacilityRequest extends Request
                     'slots' => 'required|integer',
                     'sub_category_id' => 'required|integer',
                     'description' => 'min:5|max:500',
+                    'session_duration' => 'required|integer',
                 ];
                 break;
             case 'POST':
@@ -71,6 +72,7 @@ class AddFacilityRequest extends Request
                     'sub_category_id' => 'required|integer',
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',
+                    'session_duration' => 'required|integer',
                 ];
                 break;
             default:break;

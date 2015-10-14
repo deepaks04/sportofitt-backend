@@ -32,14 +32,14 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
     Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));//modify
     Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility')); //modify
-    Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
-    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
+    Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));//modify
+    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));//modify
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
     Route::post('session',array('uses' => 'Vendor\SessionPackageController@createSession'));
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
-    Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
+    Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));//modify
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
 });
 //Route::controllers([
