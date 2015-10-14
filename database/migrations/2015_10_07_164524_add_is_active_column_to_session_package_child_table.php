@@ -13,7 +13,7 @@ class AddIsActiveColumnToSessionPackageChildTable extends Migration
     public function up()
     {
         Schema::table('session_package_child', function (Blueprint $table) {
-            $table->boolean('is_active')->default(1)->after('duration');
+            $table->boolean('is_active')->default(1)->after('discount');
         });
     }
 

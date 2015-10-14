@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeDatatypeOfDurationOfSessionChildTable extends Migration
+class CreateDurationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,11 @@ class ChangeDatatypeOfDurationOfSessionChildTable extends Migration
      */
     public function up()
     {
-        Schema::table('session_package_child', function (Blueprint $table) {
-            $table->time('duration')->nullable()->change();
+        Schema::create('duration_master', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string("time",255);
+            $table->integer('actual_time');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +27,6 @@ class ChangeDatatypeOfDurationOfSessionChildTable extends Migration
      */
     public function down()
     {
-        Schema::table('session_package_child', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('duration_master');
     }
 }

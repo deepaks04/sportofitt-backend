@@ -22,7 +22,6 @@ class CreateDayWiseSessionTable extends Migration
             $table->time('end')->nullable();
             $table->float('actual_price');
             $table->integer('discount')->default(0);
-            $table->integer('duration')->nullable();
             $table->timestamps();
         });
     }
