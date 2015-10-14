@@ -10,8 +10,101 @@
 </section>
 <!-- end: PAGE TITLE -->
 
+
 <!-- start: FACILITY LIST WITH SORTING -->
 <div class="container-fluid container-fullw bg-white">
+	<script type="text/ng-template" id="sessionPackageModal.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Session Packages for {{selected.name}}</h3>
+		</div>
+		<div class="modal-body">
+			<tabset>
+				<tab heading="Session">
+					<table class="table no-bg">
+						<tr>
+							<td rowspan="2">ID: {{p.id}}
+								<input type="hidden" name="id" value="{{p.id}}">
+							</td>
+							<td>StartTime:</td>
+							<td>
+								<timepicker ng-model="facility.start"  ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+							</td>
+							<td>EndTime: </td>
+							<td>
+								<timepicker ng-model="facility.end"  ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+							</td>
+							<td>Is Pick Time:</td>
+							<td>
+								<select class="form-control" ng-model="facility.type" ng-required="">
+									<option value="">Select PickTime</option>
+									<option value="{{slot}}" ng-repeat="slot in types" ng-selected="slot === facility.types">{{slot}}</option>
+								</select>
+							</td>
+							</tr>
+						<tr>
+							<td>Discount:</td>
+							<td>
+								<select class="form-control" ng-model="facility.discount" ng-required="">
+									<option value="">Select Discount</option>
+									<option value="{{slot}}" ng-repeat="slot in discounts" ng-selected="slot === facility.discount">{{slot}}</option>
+								</select>
+							</td>
+							<td colspan="2">
+								<div class="pull-right">
+									<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" save " onclick="alert('Save :)')">
+									<input type="button" class="btn btn-primary btn-sm" value=" cancel" ng-click="setEditId(-1)">
+								</div></td>
+						</tr>
+					</table>
+					<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" Add new session " onclick="alert('Save :)')">
+
+				</tab>
+				<tab heading="Package">
+					<table class="table no-bg">
+						<tr>
+							<td rowspan="2">ID: {{p.id}}
+								<input type="hidden" name="id" value="{{p.id}}">
+							</td>
+							<td>For Months</td>
+							<td><select class="form-control" ng-model="facility.type" ng-required="">
+								<option value="">Select Months</option>
+								<option value="{{slot}}" ng-repeat="slot in months" ng-selected="slot === facility.moths">{{slot}}</option>
+							</select></td>
+
+							<td>Is Pick Time:</td>
+							<td>
+								<select class="form-control" ng-model="facility.type" ng-required="">
+									<option value="">Select PickTime</option>
+									<option value="{{slot}}" ng-repeat="slot in types" ng-selected="slot === facility.types">{{slot}}</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Discount:</td>
+							<td>
+								<select class="form-control" ng-model="facility.discount" ng-required="">
+									<option value="">Select Discount</option>
+									<option value="{{slot}}" ng-repeat="slot in discounts" ng-selected="slot === facility.discount">{{slot}}</option>
+								</select>
+							</td>
+							<td colspan="2">
+								<div class="pull-right">
+									<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" save " onclick="alert('Save :)')">
+									<input type="button" class="btn btn-primary btn-sm" value=" cancel" ng-click="setEditId(-1)">
+								</div></td>
+						</tr>
+					</table>
+					<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" Add new package " onclick="alert('Save :)')">
+
+				</tab>
+			</tabset>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="ok()">OK</button>
+			<button class="btn btn-primary btn-o" ng-click="cancel()">Cancel</button>
+		</div>
+	</script>
+
 	<div class="row">
 		<div class="col-md-12">
 			<h5 class="over-title margin-bottom-15"> <span class="text-bold">FACILITY</span></h5>
@@ -26,7 +119,7 @@
 				</div>
 					<table ng-table="tableParams" class="table table-striped">
 					<tr ng-repeat="facility in facilityData">
-						<td data-title="'Name'" sortable="'name'">{{facility.name}}</td>
+						<td data-title="'Name'" sortable="'name'"><a data-ng-click="open('lg',facility)">{{facility.name}}</a></td>
 						<td class="center" data-title="'Image'" ><img src="{{facility.image}}" class="img-rounded img-responsive" alt="image" width="154" height="76"/></td>
 						<td data-title="'Sub Category'" sortable="'sub_category_id'">{{facility.sub_category_id}}</td>
 						<td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>

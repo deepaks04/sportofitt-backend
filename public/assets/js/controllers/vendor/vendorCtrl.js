@@ -222,7 +222,7 @@ $scope.bankDetail=bankDetail.bank;
     $scope.getVendorImages = function(){
       userService.getVendorImages().then(function(images){
 $scope.images=images.images || {};  
-$scope.uploaderImages.queue.length = $scope.images.length;
+// $scope.uploaderImages.queue.length = $scope.images.length;
 console.log($scope.images);
 }).catch(function(response){
   console.log(response);

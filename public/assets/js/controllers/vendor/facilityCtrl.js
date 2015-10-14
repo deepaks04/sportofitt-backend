@@ -2,14 +2,42 @@
 /**
   * controllers used for the facility
 */
-app.controller('facilityAddCtrl', ["$scope","$state","facilityService","SweetAlert", function ($scope,$state,facilityService,SweetAlert) {
+app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","SweetAlert", function ($scope,$state,$log,facilityService,SweetAlert) {
 
     facilityService.getRootCategory()
         .then(getRootCategorySuccess);
 
         $scope.selectedCategory = {"":"Select"};
+    $scope.slots = {1:1,2:2,3:3,4:4};
+    $scope.types = {0:"Peak Time",1:"Off time"};
 
-        $scope.master = $scope.facility;
+        $scope.master = $scope.facility = {};
+    // Time Picker
+    $scope.today = function () {
+        var dt = new Date();
+        dt.setHours( 0 );
+        dt.setMinutes( 15 );
+        $scope.facility.timing = dt;
+    };
+    $scope.today();
+
+    $scope.options = {
+        hstep: [1, 2, 3],
+        mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    $scope.hstep = 1;
+    $scope.mstep = 15;
+
+
+
+    $scope.changed = function () {
+        $log.log('Time changed to: ' + $scope.facility.timing);
+    };
+
+    $scope.clear = function () {
+        $scope.facility.timing = null;
+    };
         $scope.form = {
 
             submit: function (form) {
@@ -37,14 +65,13 @@ app.controller('facilityAddCtrl', ["$scope","$state","facilityService","SweetAle
 
                   var addFacility =facilityService.addFacility($scope.facility);
       addFacility.then(function(response){
-      SweetAlert.swal(response.data.message, "success");
+      SweetAlert.swal(response.message, "success");
       $state.go("vendor.facility.list");
 
       console.log(response);
       });
       addFacility.catch(function(data,status){
-      console.log(data);
-
+      console.log($scope.Form['name']);
       SweetAlert.swal(data.data.message,data.data.statusText, "error");
       return;
       })
@@ -66,7 +93,8 @@ app.controller('facilityAddCtrl', ["$scope","$state","facilityService","SweetAle
 }]);
 
 //List of facility
-app.controller('facilityListCtrl', ["$scope", "$filter", "ngTableParams","facilityService", function ($scope, $filter, ngTableParams,facilityService) {
+app.controller('facilityListCtrl', ["$scope", "$filter", "$modal","$log","ngTableParams","facilityService", function ($scope, $filter,$modal,
+                                                                                                                      $log,ngTableParams,facilityService) {
     
     $scope.facilityData = {};
     facilityService.getAllFacilities()
@@ -90,7 +118,97 @@ function getFacilitySuccess(facilityData) {
             $defer.resolve(orderedData);
         }
     });
+
+    $scope.open = function (size,facility) {
+
+        var modalInstance = $modal.open({
+            templateUrl: 'sessionPackageModal.html',
+            controller: 'SessionModalInstanceCtrl',
+            size: size,
+            resolve: {
+                selectedFacility: function () {
+                    return facility;
+                }
+            }
+        });
+
+
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
 }]);
+
+
+
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selectedFacility", function ($scope, $modalInstance, selectedFacility) {
+
+    $scope.selected = selectedFacility;
+
+    $scope.master = $scope.facility = {};
+
+
+    $scope.types = {0:"Peak Time",1:"Off time"};
+
+    $scope.discounts = {10:10,20:20,30:30};
+
+    $scope.months = ["1 Month","3 Months","6 Months"];
+    // Time Picker
+    $scope.today = function () {
+        var dt = new Date();
+        dt.setHours( 0 );
+        dt.setMinutes( 15 );
+        $scope.facility.start = dt;
+
+        $scope.facility.end = dt;
+    };
+    $scope.today();
+
+    $scope.options = {
+        hstep: [1, 2, 3],
+        mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    $scope.hstep = 1;
+    $scope.mstep = 15;
+
+
+$scope.ismeridian=true;
+    $scope.changed = function () {
+        $log.log('Time changed to: ' + $scope.facility.start);
+        $log.log('Time changed to: ' + $scope.facility.end);
+    };
+
+    $scope.clear = function () {
+        $scope.facility.start = null;
+        $scope.facility.end = null;
+
+    };
+    console.log(selectedFacility);
+    $scope.ok = function () {
+        $modalInstance.close($scope.selected.item);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+}]);
+app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
+    $scope.items = items;
+    $scope.selected = {
+        item: $scope.items[0]
+    };
+
+    $scope.ok = function () {
+        $modalInstance.close($scope.selected.item);
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+});
 
 app.controller('facilityEditCtrl', ["$scope","$state","facilityService","SweetAlert", function ($scope,$state,facilityService,SweetAlert) {
 

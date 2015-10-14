@@ -96,7 +96,8 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
                 title: 'Facility Add',
                 ncyBreadcrumb: {
                     label: 'Facility Add'
-                }
+                },
+            resolve: loadSequence('ui.select', 'monospaced.elastic', 'ui.mask', 'touchspin-plugin', 'selectCtrl')
               }).state('vendor.facility.edit', {
                   url: '/edit/:facilityId',
                     templateUrl : "assets/views/vendor/facility/edit.html",
