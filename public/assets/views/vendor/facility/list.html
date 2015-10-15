@@ -125,8 +125,8 @@
 						<td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
 						<td class="center">
 						<div class="visible-md visible-lg hidden-sm hidden-xs">
-							<a ui-sref="vendor.facility.edit({facilityId : facility.id})" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-							<a ui-sref="vendor.facility.edit({facilityId : facility.id})" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
+							<a data-ng-click="open('lg',facility)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+							<a ui-sref="vendor.facility.booking({facilityId : facility.id})" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
 						</div>
 						<div class="visible-xs visible-sm hidden-md hidden-lg">
 							<div class="btn-group" dropdown is-open="status.isopen">
@@ -135,13 +135,13 @@
 								</button>
 								<ul class="dropdown-menu pull-right dropdown-light" role="menu">
 									<li>
-										<a ui-sref="vendor.facility.edit({facilityId : facility.id})">
+										<a data-ng-click="open('lg',facility)">
 											Edit
 										</a>
 									</li>
 	<li>
-										<a ui-sref="vendor.facility.edit({facilityId : facility.id})">
-											Remove
+										<a ui-sref="vendor.facility.booking({facilityId : facility.id})">
+											Book
 										</a>
 									</li>
 								</ul>

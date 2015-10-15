@@ -33,8 +33,7 @@ function ($rootScope, $state, $stateParams,$cookieStore) {
             logo: 'assets/images/logo.png', // relative path of the project logo
         }
     };
-    $rootScope.user = {
-    };
+        $rootScope.user = $cookieStore.get('user') || {};
 
 
      $rootScope.$on('$locationChangeStart', function(event, current, previous) {

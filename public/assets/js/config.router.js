@@ -98,13 +98,14 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
                     label: 'Facility Add'
                 },
             resolve: loadSequence('ui.select', 'monospaced.elastic', 'ui.mask', 'touchspin-plugin', 'selectCtrl')
-              }).state('vendor.facility.edit', {
-                  url: '/edit/:facilityId',
-                    templateUrl : "assets/views/vendor/facility/edit.html",
-                  title: 'Facility Edit',
+              }).state('vendor.facility.booking', {
+                  url: '/booking/:facilityId',
+                    templateUrl : "assets/views/vendor/facility/booking.html",
+                  title: 'Facility Booking',
                   ncyBreadcrumb: {
-                      label: 'Facility Edit'
-                  }
+                      label: 'Facility Booking'
+                  },
+            resolve: loadSequence('moment', 'mwl.calendar')
                 });
 
     // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)

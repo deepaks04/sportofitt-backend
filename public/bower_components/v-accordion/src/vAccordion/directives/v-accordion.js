@@ -61,8 +61,10 @@ function AccordionDirectiveController ($scope) {
   var isDisabled = false;
 
   $scope.panes = [];
-
-
+	
+	$scope.expandCb = (angular.isFunction($scope.expandCb)) ? $scope.expandCb : angular.noop;
+	$scope.collapseCb = (angular.isFunction($scope.collapseCb)) ? $scope.collapseCb : angular.noop;
+	
   ctrl.hasExpandedPane = function () {
     var bool = false;
 
