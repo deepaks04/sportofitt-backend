@@ -322,7 +322,7 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
     };
     $scope.addEvent = function () {
         $scope.events.push({
-            title: "New",
+            title: $scope.facility.name ||  null,
             startsAt: new Date(y, m, d, 10, 0),
             endsAt: new Date(y, m, d, 11, 0),
             type: 'to-do'
