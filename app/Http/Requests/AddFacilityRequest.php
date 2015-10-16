@@ -62,7 +62,11 @@ class AddFacilityRequest extends Request
                     'slots' => 'required|integer',
                     'sub_category_id' => 'required|integer',
                     'description' => 'min:5|max:500',
-                    'session_duration' => 'required|integer',
+                    'duration' => 'required|integer',
+                    'peak_price' => 'required|integer',
+                    'peak_discount' => 'required|integer',
+                    'off_peak_price' => 'required|integer',
+                    'off_peak_discount' => 'required|integer',
                 ];
                 break;
             case 'POST':
@@ -72,7 +76,7 @@ class AddFacilityRequest extends Request
                     'sub_category_id' => 'required|integer',
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',
-                    'session_duration' => 'required|integer',
+                    'duration' => 'required|integer',
                 ];
                 break;
             default:break;
