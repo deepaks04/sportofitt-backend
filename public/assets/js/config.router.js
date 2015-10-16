@@ -79,7 +79,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
     }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',
-          resolve: loadSequence('ngTable','facilityService','facilityCtrl'),
+          resolve: loadSequence('ngTable','xeditable','facilityService','facilityCtrl'),
           title: 'Facility',
           ncyBreadcrumb: {
               label: 'UI Elements'

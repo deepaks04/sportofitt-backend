@@ -158,58 +158,75 @@ function getFacilitySuccess(facilityData) {
 
 
 
-app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selectedFacility", function ($scope, $modalInstance, selectedFacility) {
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selectedFacility","facilityService",
+    function ($scope, $modalInstance, selectedFacility,facilityService) {
 
-    $scope.selected = selectedFacility;
+        $scope.facility = selectedFacility;
+        //facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
+        //    $scope.facilityData = facility.facility;
+        //}).catch(function(){
+        //    $scope.facilityData = {};
+        //})
+$scope.sessions = [];
 
-    $scope.master = $scope.facility = {};
-
-
+    $scope.slots = {1:1,2:2,3:3,4:4};
     $scope.types = {0:"Peak Time",1:"Off time"};
 
     $scope.discounts = {10:10,20:20,30:30};
 
     $scope.months = ["1 Month","3 Months","6 Months"];
-    // Time Picker
-    $scope.today = function () {
-        var dt = new Date();
-        dt.setHours( 0 );
-        dt.setMinutes( 15 );
-        $scope.facility.start = dt;
 
-        $scope.facility.end = dt;
-    };
-    $scope.today();
+        $scope.showStatus = function() {
+            var selected = [];
+            angular.forEach($scope.statuses, function(s) {
+                if ($scope.session.status.indexOf(s.value) >= 0) {
+                    selected.push(s.text);
+                }
+            });
+            return selected.length ? selected.join(', ') : 'Not set';
+        };
 
-    $scope.options = {
-        hstep: [1, 2, 3],
-        mstep: [1, 5, 10, 15, 25, 30]
-    };
+        $scope.showDiscount = function(session) {
+            var selected = [];
+            if(session.discount) {
+                selected = $filter('filter')($scope.discounts, {value: session.discount});
+            }
+            return selected.length ? selected[0].text : 'Not set';
+        };
 
-    $scope.hstep = 1;
-    $scope.mstep = 15;
 
-
-$scope.ismeridian=true;
-    $scope.changed = function () {
-        $log.log('Time changed to: ' + $scope.facility.start);
-        $log.log('Time changed to: ' + $scope.facility.end);
-    };
-
-    $scope.clear = function () {
-        $scope.facility.start = null;
-        $scope.facility.end = null;
-
-    };
-    console.log(selectedFacility);
-    $scope.ok = function () {
+        $scope.ok = function () {
         $modalInstance.close($scope.selected.item);
-    };
+        };
 
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-}]);
+
+        $scope.saveSession = function(data, id) {
+            //$scope.user not updated yet
+            angular.extend(data, {id: id});
+            return $http.post('/saveUser', data);
+        };
+
+        // remove user
+        $scope.removeSession = function(index) {
+            $scope.sessions.splice(index, 1);
+        };
+
+        // add user
+        $scope.addSession = function() {
+            $scope.inserted = {
+                id: $scope.sessions.length+1,
+                start: null,
+                end: null,
+                is_peak: 1,
+                discount : null
+            };
+            $scope.sessions.push($scope.inserted);
+        };
+
+    }]);
 app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
     $scope.items = items;
     $scope.selected = {
