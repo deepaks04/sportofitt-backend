@@ -31,15 +31,15 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
     Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
     Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));//modify
-    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility')); //modify
-    Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));//modify
+    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
+    Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
     Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));//modify
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
     Route::post('session',array('uses' => 'Vendor\SessionPackageController@createSession'));
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
-    Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));//modify
+    Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
 });
 //Route::controllers([
@@ -62,7 +62,7 @@ Route::group(['prefix' => 'api/v1/superadmin/'], function () {
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
-    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));//modify
+    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
     Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
     Route::get('get-root-category',array('uses' => 'UsersController@getRootCategory'));
     Route::get('get-sub-category/{id}',array('uses' => 'UsersController@getSubCategory'));

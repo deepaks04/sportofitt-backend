@@ -66,8 +66,8 @@ class SessionRequest extends Request
                 return [
                     'available_facility_id' => 'required|integer',
                     'is_peak' => 'required|digits_between:0,1',
-                    'actual_price' => 'required',
-                    'discount' => 'required|integer',
+                    //'actual_price' => 'required',
+                    //'discount' => 'required|integer',
                     'session_id' => 'required|integer',
                     //'day' => 'required|integer',
                     'start' => 'required|date_format:H:i',
