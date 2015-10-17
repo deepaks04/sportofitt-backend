@@ -32,7 +32,7 @@ class UpdateVendorProfileRequest extends Request
             'latitude' => 'required|min:3|max:20',
             'description' => 'required|min:3|max:500',
             'area_id' => 'required|integer',
-            'profile_picture' => 'required|mimes:jpeg,png,jpg',
+            'profile_picture' => 'mimes:jpeg,png,jpg',
         ];
     }
 }
