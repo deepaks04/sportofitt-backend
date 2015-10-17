@@ -19,10 +19,10 @@ class CreateBillingInfoTable extends Migration
             $table->string('service_tax_no',255)->nullable();
             $table->string('address',255)->nullable();
             $table->string('pan_no',255)->nullable();
-            $table->integer('postcode')->nullable();
             $table->string('contact_person_name',255)->nullable();
             $table->string('contact_person_email',255)->nullable();
             $table->string('contact_person_phone',255)->nullable();
+            $table->string('vat',10)->nullable();
             $table->integer('vendor_id')->unsigned();
             $table->timestamps();
         });

@@ -234,7 +234,7 @@ class UsersController extends Controller
     public function confirm($confirmation){
         $user = User::where('remember_token',$confirmation)->first();
         if($user==null){ //no record found
-            $status =404;
+            $status =200;
             $response = [
                 "message" => "Sorry!! No User found",
             ];

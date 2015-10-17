@@ -22,6 +22,7 @@ class CreateVendorTable extends Migration
             $table->integer('commission')->nullable();
             $table->boolean('is_processed')->default(0);
             $table->integer('user_id')->unsigned();
+            $table->integer('postcode')->nullable();
             $table->integer('area_id')->unsigned()->nullable();
             $table->timestamps();
         });

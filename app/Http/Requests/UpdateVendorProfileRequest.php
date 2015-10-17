@@ -33,6 +33,7 @@ class UpdateVendorProfileRequest extends Request
             'description' => 'required|min:3|max:500',
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
+            'postcode' => 'required|integer',
         ];
     }
 }
