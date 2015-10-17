@@ -137,7 +137,7 @@ class VendorsController extends Controller
             unset($request['username']);
             $user = $request->all();
             $vendor = $request->all();
-            $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact');
+            $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact','postcode');
             $user = $this->unsetKeys($userKeys,$user);
             $vendorKeys = array('fname','lname','_method','profile_picture');
             $vendor = $this->unsetKeys($vendorKeys,$vendor);
@@ -186,7 +186,7 @@ class VendorsController extends Controller
             $status =200;
             $billing = $billing->toArray();
         }else{
-            $status =404;
+            $status =200;
             $message = 'Please update your billing information';
         }
         $response = [
@@ -246,7 +246,7 @@ class VendorsController extends Controller
             $status =200;
             $bank = $bank->toArray();
         }else{
-            $status =404;
+            $status =200;
             $message = 'Please update your bank details';
         }
         $response = [
@@ -357,7 +357,7 @@ class VendorsController extends Controller
         $vendor = $user->vendor()->first();
         $imageCount = $vendor->images()->count();
         if($imageCount == 0){
-            $status = 404;
+            $status = 200;
             $message = "Images not found. Please upload some";
             $images = null;
         }else{
@@ -469,7 +469,7 @@ class VendorsController extends Controller
         $vendor = $user->vendor()->first();
         $facilityCount = $vendor->facility()->count();
         if($facilityCount == 0){
-            $status = 404;
+            $status = 200;
             $message = "Facility not found. Please create some";
             $facilityCount = null;
             $facility = null;
@@ -518,7 +518,7 @@ class VendorsController extends Controller
         $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
             $facility['image'] = $url.$facility['image'];
         }else{
-            $status = 404;
+            $status = 200;
             $message = "Facility not found. Please create some";
             $facility = null;
         }
