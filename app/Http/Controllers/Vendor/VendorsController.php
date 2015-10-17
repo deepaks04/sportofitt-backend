@@ -142,23 +142,25 @@ class VendorsController extends Controller
             $vendorKeys = array('fname','lname','_method','profile_picture');
             $vendor = $this->unsetKeys($vendorKeys,$vendor);
             $systemUser = User::find(Auth::user()->id);
-            /* File Upload Code */
-            $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-            $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
-            $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
-            /* Create Upload Directory If Not Exists */
-            if(!file_exists($vendorImageUploadPath)){
-                File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                chmod($vendorOwnDirecory, 0777);
+            if(isset($request->profile_picture) && !empty($request->profile_picture)){
+                /* File Upload Code */
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
+                /* Create Upload Directory If Not Exists */
+                if(!file_exists($vendorImageUploadPath)){
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                    chmod($vendorOwnDirecory, 0777);
+                    chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('profile_picture')->getClientOriginalExtension();
+                $filename = sha1($systemUser->id.time()).".{$extension}";
+                $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
-            }
-            $extension = $request->file('profile_picture')->getClientOriginalExtension();
-            $filename = sha1($systemUser->id.time()).".{$extension}";
-            $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-            chmod($vendorImageUploadPath, 0777);
 
-            /* Rename file */
-            $user['profile_picture'] = $filename;
+                /* Rename file */
+                $user['profile_picture'] = $filename;
+            }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
         }catch(\Exception $e){
@@ -410,7 +412,7 @@ class VendorsController extends Controller
     public function createFacility(Requests\AddFacilityRequest $request){
         try{
             $facility = $request->all();
-            unset($facility['session_duration']);
+            $facility = $this->unsetKeys(array('duration','peak_price','peak_discount','off_peak_price','off_peak_discount'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $facilityExists = AvailableFacility::where('vendor_id','=',$vendor->id)->where('sub_category_id','=',$facility['sub_category_id'])->count();
@@ -441,7 +443,12 @@ class VendorsController extends Controller
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
                 $newFacility = AvailableFacility::create($facility);
-                $durationStatus = $this->updateDuration($newFacility->id,$request->session_duration);
+                $sessionUpdateData['duration'] = $request->duration;
+                $sessionUpdateData['peak_price'] = $request->peak_price;
+                $sessionUpdateData['peak_discount'] = $request->peak_discount;
+                $sessionUpdateData['off_peak_price'] = $request->off_peak_price;
+                $sessionUpdateData['off_peak_discount'] = $request->off_peak_discount;
+                $durationStatus = $this->updateDuration($newFacility->id,$sessionUpdateData);
             }
         }catch(\Exception $e){
             $status = 500;
@@ -524,7 +531,7 @@ class VendorsController extends Controller
     public function updateFacility(Requests\AddFacilityRequest $request,$id){
         try{
             $facility = $request->all();
-            $facility = $this->unsetKeys(array('_method','session_duration'),$facility);
+            $facility = $this->unsetKeys(array('_method','duration','peak_price','peak_discount','off_peak_price','off_peak_discount'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $status = 200;
@@ -551,8 +558,12 @@ class VendorsController extends Controller
             }
             $facility['vendor_id'] = $vendor->id;
             AvailableFacility::where('id','=',$id)->update($facility);
-            $sessionDuration = $this->updateDuration($id,$request->session_duration);
-            $facility['session_duration'] = $sessionDuration;
+            $sessionUpdateData['duration'] = $request->duration;
+            $sessionUpdateData['peak_price'] = $request->peak_price;
+            $sessionUpdateData['peak_discount'] = $request->peak_discount;
+            $sessionUpdateData['off_peak_price'] = $request->off_peak_price;
+            $sessionUpdateData['off_peak_discount'] = $request->off_peak_discount;
+            $sessionUpdatedData = $this->updateDuration($id,$sessionUpdateData);
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong";
@@ -631,21 +642,18 @@ class VendorsController extends Controller
     }
 
 
-    public function updateDuration($facilityId,$duration){
+    public function updateDuration($facilityId,$sessionUpdateData){
         try{
-            //$duration = date('H:i:s',$duration);
             $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$facilityId)->first();
             if($checkFacilityInformation!=null){ //Update If Found
-                $data['duration'] = $duration;
-                $durationData = SessionPackage::where('available_facility_id','=',$facilityId)->update($data);
+                $durationData = SessionPackage::where('available_facility_id','=',$facilityId)->update($sessionUpdateData);
             }else{ //Insert New If Not Found
-                $data['available_facility_id'] = $facilityId;
-                $data['duration'] = $duration;
-                $data['created_at'] = Carbon::now();
-                $data['updated_at'] = Carbon::now();
+                $sessionUpdateData['available_facility_id'] = $facilityId;
+                $sessionUpdateData['created_at'] = Carbon::now();
+                $sessionUpdateData['updated_at'] = Carbon::now();
                 $packageType = PackageType::where('slug','=','session')->first();
-                $data['package_type_id'] = $packageType->id;
-                $durationData = SessionPackage::create($data);
+                $sessionUpdateData['package_type_id'] = $packageType->id;
+                $durationData = SessionPackage::create($sessionUpdateData);
                 //$durationData = $durationData->get()->toArray();
             }
             return true;
