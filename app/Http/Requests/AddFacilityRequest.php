@@ -57,22 +57,18 @@ class AddFacilityRequest extends Request
             case 'PUT':
                 return [
                     'name' => 'required|min:5|max:50',
-                    'image' => 'mimes:jpeg,png,jpg',
+                    //'image' => 'mimes:jpeg,png,jpg',
                     'is_active' => 'required|integer',
                     'slots' => 'required|integer',
                     'sub_category_id' => 'required|integer',
                     'description' => 'min:5|max:500',
                     'duration' => 'required|integer',
-                    'peak_price' => 'required|integer',
-                    'peak_discount' => 'required|integer',
-                    'off_peak_price' => 'required|integer',
-                    'off_peak_discount' => 'required|integer',
                 ];
                 break;
             case 'POST':
                 return [
                     'name' => 'required|min:5|max:50',
-                    'image' => 'required|mimes:jpeg,png,jpg',
+                    //'image' => 'required|mimes:jpeg,png,jpg',
                     'sub_category_id' => 'required|integer',
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',

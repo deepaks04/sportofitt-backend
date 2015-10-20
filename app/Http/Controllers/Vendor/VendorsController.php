@@ -133,13 +133,11 @@ class VendorsController extends Controller
             $response = [
                 "message" => "Settings updated successfully"
             ];
-            unset($request['email']);
-            unset($request['username']);
             $user = $request->all();
             $vendor = $request->all();
-            $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact','postcode');
+            $userKeys = array('email','username','business_name','longitude','latitude','area_id','description','_method','address','contact','postcode','cancellation_before_24hrs','cancellation_after_24hrs','commission');
             $user = $this->unsetKeys($userKeys,$user);
-            $vendorKeys = array('fname','lname','_method','profile_picture');
+            $vendorKeys = array('email','username','fname','lname','_method','profile_picture');
             $vendor = $this->unsetKeys($vendorKeys,$vendor);
             $systemUser = User::find(Auth::user()->id);
             if(isset($request->profile_picture) && !empty($request->profile_picture)){
@@ -412,7 +410,7 @@ class VendorsController extends Controller
     public function createFacility(Requests\AddFacilityRequest $request){
         try{
             $facility = $request->all();
-            $facility = $this->unsetKeys(array('duration','peak_price','peak_discount','off_peak_price','off_peak_discount'),$facility);
+            $facility = $this->unsetKeys(array('duration'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $facilityExists = AvailableFacility::where('vendor_id','=',$vendor->id)->where('sub_category_id','=',$facility['sub_category_id'])->count();
@@ -422,12 +420,14 @@ class VendorsController extends Controller
             }else{ //If not then create
                 $status = 200;
                 $message = "New facility added successfully";
+
+
                 /* File Upload Code */
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                /*$vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
                 /* Create Upload Directory If Not Exists */
-                if(!file_exists($vendorImageUploadPath)){
+                /*if(!file_exists($vendorImageUploadPath)){
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
                     chmod($vendorOwnDirecory, 0777);
                     chmod($vendorImageUploadPath, 0777);
@@ -438,16 +438,14 @@ class VendorsController extends Controller
                 chmod($vendorImageUploadPath, 0777);
 
                 /* Rename file */
-                $facility['image'] = $filename;
+                //$facility['image'] = $filename;
+
+
                 $facility['vendor_id'] = $vendor->id;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
                 $newFacility = AvailableFacility::create($facility);
                 $sessionUpdateData['duration'] = $request->duration;
-                $sessionUpdateData['peak_price'] = $request->peak_price;
-                $sessionUpdateData['peak_discount'] = $request->peak_discount;
-                $sessionUpdateData['off_peak_price'] = $request->off_peak_price;
-                $sessionUpdateData['off_peak_discount'] = $request->off_peak_discount;
                 $durationStatus = $this->updateDuration($newFacility->id,$sessionUpdateData);
             }
         }catch(\Exception $e){
@@ -531,7 +529,7 @@ class VendorsController extends Controller
     public function updateFacility(Requests\AddFacilityRequest $request,$id){
         try{
             $facility = $request->all();
-            $facility = $this->unsetKeys(array('_method','duration','peak_price','peak_discount','off_peak_price','off_peak_discount'),$facility);
+            $facility = $this->unsetKeys(array('_method','duration'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $status = 200;
@@ -559,10 +557,6 @@ class VendorsController extends Controller
             $facility['vendor_id'] = $vendor->id;
             AvailableFacility::where('id','=',$id)->update($facility);
             $sessionUpdateData['duration'] = $request->duration;
-            $sessionUpdateData['peak_price'] = $request->peak_price;
-            $sessionUpdateData['peak_discount'] = $request->peak_discount;
-            $sessionUpdateData['off_peak_price'] = $request->off_peak_price;
-            $sessionUpdateData['off_peak_discount'] = $request->off_peak_discount;
             $sessionUpdatedData = $this->updateDuration($id,$sessionUpdateData);
         }catch(\Exception $e){
             $status = 500;
