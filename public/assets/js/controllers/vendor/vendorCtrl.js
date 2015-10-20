@@ -7,7 +7,8 @@ app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userServi
 
 
 
-    $scope.removeImage = function () {
+    $scope.removeProfileImage = function () {
+        $scope.userInfo.profile_picture = "";
         $scope.noImage = true;
     };
     $scope.obj = new Flow();
