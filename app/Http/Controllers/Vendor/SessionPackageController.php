@@ -66,7 +66,7 @@ class SessionPackageController extends Controller
                 }
                 $packageChild = SessionPackageChild::create($childData);
                 $packageInformation['parent'] = SessionPackage::find($request->package_id);
-                $packageInformation['child'] = $packageInformation['parent']->child()->where(array('is_active'=>1))->first()->toArray();
+                $packageInformation['child'] = $packageChild->toArray();
             }
             $response = [
                 "message" => $message,
@@ -77,12 +77,13 @@ class SessionPackageController extends Controller
             $message = "Something went wrong ".$e->getMessage();
             $response = [
                 "message" => $message,
+                "package" => ""
             ];
         }
         return response($response,$status);
     }
 
-    public function createSession(Requests\SessionRequest $request){
+    public function createOpeningTime(Requests\SessionRequest $request){
         try{
             $status = 200;
             $message = "Session Created Successfully";
@@ -111,16 +112,17 @@ class SessionPackageController extends Controller
                         $parentData['package_type_id'] = $packageType->id;
                         //$session = SessionPackage::create($parentData);
                         $session = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first()->toArray();
-                        $childData = $this->unsetKeys(array('session_id','available_facility_id','name','description','day'),$childData);
+                        $childData = $this->unsetKeys(array('session_id','available_facility_id','name','description'),$childData);
                         $childData['session_package_id'] = $session['id'];
                         //$sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('day','=',$request->day)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('day','=',$request->day)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
                         //DB::enableQueryLog();
                         //$sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
 
-                        $sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->count();
+                        //$sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('day','=',$childData['day'])->count();
+                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
                         //$queries = DB::getQueryLog();
-                        //dd($queries);
-                        if($sameTimeExists>0){ //Check If Same Time Already Exists
+
+                        if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
                             $message = "Time Already Exists";
                             $sessionInformation = "";
                         }else{
@@ -142,8 +144,9 @@ class SessionPackageController extends Controller
                         //$sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('id','!=',$request->session_id)->count();
                         //$sameTimeExists = SessionPackageChild::select(DB::Raw("start between $start and $end or end between $start and $end"));
                         $sessionParentData = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first()->toArray();
-                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE (start BETWEEN '".$start."' AND '".$end."' OR end BETWEEN '".$start."' AND '".$end."') AND (id!=".$request->session_id." AND session_package_id=".$sessionParentData['id'].")"));
+                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$request->session_id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));
                         //$queries = DB::getQueryLog();
+
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
                             $message = "Time Already Exists";
                             $sessionInformation = "";
