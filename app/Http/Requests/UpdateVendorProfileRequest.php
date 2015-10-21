@@ -34,8 +34,6 @@ class UpdateVendorProfileRequest extends Request
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'postcode' => 'required|integer',
-            'cancellation_before_24hrs' => 'required|integer',
-            'cancellation_after_24hrs' => 'required|integer',
             'commission' => 'required|integer',
         ];
     }
