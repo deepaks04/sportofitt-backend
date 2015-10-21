@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Duration;
+use App\MultipleSession;
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class SessionPackageController extends Controller
                 $childData['session_package_id'] = $package->id;
                 $packageChild = SessionPackageChild::create($childData);
                 $packageInformation['parent'] = SessionPackage::find($package->id);
-                $packageInformation['child'] = $packageInformation['parent']->child()->orderBy('created_at','DESC')->first()->toArray();
+                $packageInformation['child'] = $packageChild->toArray();
             }else{ //Update Existing Package & Create New Child Row in Table
                 $childData = $request->all();
                 $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
@@ -224,6 +225,106 @@ class SessionPackageController extends Controller
         $response = [
             "message" => $message,
             "duration" => $duration
+        ];
+        return response($response,$status);
+    }
+
+    public function createSession(Requests\MultipleSessionRequest $request){
+        try{
+            $status = 200;
+            $message = "Session added successfully";
+            $sessions = $request->all();
+            $previousSession = MultipleSession::where(array(
+                'available_facility_id'=>$sessions['available_facility_id'],
+                'is_active'=>1
+            ))->count();
+            if($previousSession==20){
+                $message = "You can't add more than 20 sessions.";
+                $sessionData = "";
+            }else{
+                $sessions['created_at'] = Carbon::now();
+                $sessions['updated_at'] = Carbon::now();
+                $sessionData = MultipleSession::create($sessions);
+                $sessionData = $sessionData->toArray();
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $sessionData = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $sessionData
+        ];
+        return response($response,$status);
+    }
+
+
+    public function updateSession(Requests\MultipleSessionRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Session updated successfully";
+            $sessions = $request->all();
+            unset($sessions['_method']);
+            MultipleSession::where('id',$id)->update($sessions);
+            $sessionData = MultipleSession::find($id);
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $sessionData = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $sessionData
+        ];
+        return response($response,$status);
+    }
+
+
+    public function deleteSession(Requests\MultipleSessionRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Session deleted successfully";
+            $sessions = $request->all();
+            unset($sessions['_method']);
+            MultipleSession::where('id',$id)->update(array('is_active'=>0));
+            $sessionData = "";
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $sessionData = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $sessionData
+        ];
+        return response($response,$status);
+    }
+
+
+    public function getSessionData(Requests\SessionDataRequest $request,$id){
+        try{
+            $status = 200;
+            $data = array(
+                'available_facility_id' => $id,
+                'is_active' => 1
+            );
+            $sessionData = MultipleSession::where($data)->get();
+            if($sessionData->isEmpty()){
+                $message = "Session data not found";
+                $session = "";
+            }else{
+                $message = "success";
+                $session = $sessionData->toArray();
+            }
+        }catch (\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $session = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $session
         ];
         return response($response,$status);
     }
