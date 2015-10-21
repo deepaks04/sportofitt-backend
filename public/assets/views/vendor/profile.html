@@ -327,6 +327,14 @@
 											<textarea placeholder="Enter Description" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
 										</div>
 										<div class="row">
+											
+											<div class="col-md-12">
+													<label class="control-label">
+														Location
+													</label>
+													<ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+											</div>
+											</div>
 											<div class="col-md-4">
 												<div class="form-group" ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
 													<label class="control-label">
@@ -339,23 +347,6 @@
 
 												</div>
 											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label class="control-label">
-														Longitute
-													</label>
-													<input class="form-control" placeholder="enter your longitude" type="text" name="longitude" ng-model="userInfo.longitude">
-												</div>
-											</div>
-										<div class="col-md-4">
-												<div class="form-group">
-													<label class="control-label">
-														Latitude
-													</label>
-													<input  class="form-control" placeholder="enter your longitude" type="text" name="latitude" ng-model="userInfo.latitude">
-												</div>
-											</div>
-										</div>
 										<div class="form-group" ng-class="{'has-error':errors.image,'has-success':!errors.image}">
 											<label>
 												Image Upload <span class="symbol required"></span>

@@ -113,6 +113,12 @@ app.constant('JS_REQUIRES', {
     }, {
         name: 'ngMap',
         files: ['bower_components/ngmap/build/scripts/ng-map.min.js']
+    },{
+        name: 'logger',
+        files: ['bower_components/angular-simple-logger/dist/angular-simple-logger.min.js']
+    },{
+        name: 'uiMap',
+        files: ['bower_components/angular-google-maps/dist/angular-google-maps.min.js']
     }, {
         name: 'tc.chartjs',
         files: ['bower_components/tc-angular-chartjs/dist/tc-angular-chartjs.min.js']

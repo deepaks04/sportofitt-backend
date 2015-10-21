@@ -2,8 +2,8 @@
 /** 
   * controller for User Profile Example
 */
-app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userService","SweetAlert",'FileUploader',
- function ($scope, flowFactory,$geolocation,userService,SweetAlert,FileUploader) {
+app.controller('ProfileCtrl', ["$scope","$timeout", "flowFactory","userService","SweetAlert",'FileUploader',
+ function ($scope,$timeout, flowFactory,userService,SweetAlert,FileUploader) {
 
 
 
@@ -19,21 +19,10 @@ app.controller('ProfileCtrl', ["$scope", "flowFactory",'$geolocation',"userServi
 });
  userService.getVendorProfile().then(function(userInfo){
 $scope.userInfo=userInfo.profile;	
-$geolocation.getCurrentPosition({
-            timeout: 0
-         }).then(function(position) {
-          // console.log(position);
-       $scope.userInfo.longitude = position.coords.longitude;
-$scope.userInfo.latitude = position.coords.latitude;
-         });
     if ($scope.userInfo.profile_picture == '') {
         $scope.noImage = true;
      }
-
-
 });
-
-
 
 userService.getAreas().then(function(areas){
 $scope.areas=areas.area;  
@@ -42,7 +31,10 @@ $scope.areas=areas.area;
  userService.getBankDetails().then(function(bankDetail){
 $scope.bankDetail=bankDetail.bank;	
 });  
- 
+
+  
+  //map
+  $scope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
 
   $scope.form = {
 

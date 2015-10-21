@@ -35,6 +35,8 @@
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<!-- Fastclick -->
 		<script src="bower_components/fastclick/lib/fastclick.js"></script>
+
+		<script src="bower_components/lodash/lodash.min.js"></script>
 		<!-- Angular -->
 		<script src="bower_components/angular/angular.min.js"></script>
 		<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
@@ -87,7 +89,7 @@
 		<!-- Clip-Two Controllers -->
 		<script src="assets/js/controllers/mainCtrl.js"></script>
 		<script src="assets/js/controllers/bootstrapCtrl.js"></script>
-		<!-- Google Apis 
-		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization"></script> -->
+		<!-- Google Apis -->
+		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization,places"></script> 
 	</body>
 </html>
