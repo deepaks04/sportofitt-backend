@@ -22,7 +22,7 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));
     Route::put('update-first-login',array('uses' => 'Vendor\VendorsController@updateFirstLoginFlag'));
     Route::get('my-profile',array('uses' => 'Vendor\VendorsController@getProfile'));
-    Route::put('my-profile',array('uses' => 'Vendor\VendorsController@updateProfile'));//modify
+    Route::put('my-profile',array('uses' => 'Vendor\VendorsController@updateProfile'));
     Route::get('billing-info',array('uses' => 'Vendor\VendorsController@getBillingInformation'));
     Route::put('billing-info',array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
     Route::get('bank-info',array('uses' => 'Vendor\VendorsController@getBankDetails'));
@@ -30,10 +30,10 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('images',array('uses' => 'Vendor\VendorsController@addImages'));
     Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
     Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
-    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));//modify
+    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
     Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
     Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
-    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));//modify
+    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
@@ -41,10 +41,10 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
     Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
-    Route::post('multiple-sessions',array('uses' => 'Vendor\SessionPackageController@createSession'));//new
-    Route::put('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@updateSession'));//new
-    Route::get('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@deleteSession'));//new
-    Route::get('sessions-data/{id}',array('uses' => 'Vendor\SessionPackageController@getSessionData'));//new
+    Route::post('multiple-sessions',array('uses' => 'Vendor\SessionPackageController@createSession'));
+    Route::put('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@updateSession'));
+    Route::get('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@deleteSession'));
+    Route::get('sessions-data/{id}',array('uses' => 'Vendor\SessionPackageController@getSessionData'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
