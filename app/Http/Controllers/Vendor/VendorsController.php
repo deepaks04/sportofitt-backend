@@ -133,32 +133,32 @@ class VendorsController extends Controller
             $response = [
                 "message" => "Settings updated successfully"
             ];
-            unset($request['email']);
-            unset($request['username']);
             $user = $request->all();
             $vendor = $request->all();
-            $userKeys = array('business_name','longitude','latitude','area_id','description','_method','address','contact');
+            $userKeys = array('email','username','business_name','longitude','latitude','area_id','description','_method','address','contact','postcode','cancellation_before_24hrs','cancellation_after_24hrs','commission');
             $user = $this->unsetKeys($userKeys,$user);
-            $vendorKeys = array('fname','lname','_method','profile_picture');
+            $vendorKeys = array('email','username','fname','lname','_method','profile_picture');
             $vendor = $this->unsetKeys($vendorKeys,$vendor);
             $systemUser = User::find(Auth::user()->id);
-            /* File Upload Code */
-            $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-            $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
-            $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
-            /* Create Upload Directory If Not Exists */
-            if(!file_exists($vendorImageUploadPath)){
-                File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                chmod($vendorOwnDirecory, 0777);
+            if(isset($request->profile_picture) && !empty($request->profile_picture)){
+                /* File Upload Code */
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
+                /* Create Upload Directory If Not Exists */
+                if(!file_exists($vendorImageUploadPath)){
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                    chmod($vendorOwnDirecory, 0777);
+                    chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('profile_picture')->getClientOriginalExtension();
+                $filename = sha1($systemUser->id.time()).".{$extension}";
+                $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
-            }
-            $extension = $request->file('profile_picture')->getClientOriginalExtension();
-            $filename = sha1($systemUser->id.time()).".{$extension}";
-            $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-            chmod($vendorImageUploadPath, 0777);
 
-            /* Rename file */
-            $user['profile_picture'] = $filename;
+                /* Rename file */
+                $user['profile_picture'] = $filename;
+            }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
         }catch(\Exception $e){
@@ -184,7 +184,7 @@ class VendorsController extends Controller
             $status =200;
             $billing = $billing->toArray();
         }else{
-            $status =404;
+            $status =200;
             $message = 'Please update your billing information';
         }
         $response = [
@@ -244,7 +244,7 @@ class VendorsController extends Controller
             $status =200;
             $bank = $bank->toArray();
         }else{
-            $status =404;
+            $status =200;
             $message = 'Please update your bank details';
         }
         $response = [
@@ -355,7 +355,7 @@ class VendorsController extends Controller
         $vendor = $user->vendor()->first();
         $imageCount = $vendor->images()->count();
         if($imageCount == 0){
-            $status = 404;
+            $status = 200;
             $message = "Images not found. Please upload some";
             $images = null;
         }else{
@@ -410,6 +410,7 @@ class VendorsController extends Controller
     public function createFacility(Requests\AddFacilityRequest $request){
         try{
             $facility = $request->all();
+            $facility = $this->unsetKeys(array('duration'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $facilityExists = AvailableFacility::where('vendor_id','=',$vendor->id)->where('sub_category_id','=',$facility['sub_category_id'])->count();
@@ -419,12 +420,14 @@ class VendorsController extends Controller
             }else{ //If not then create
                 $status = 200;
                 $message = "New facility added successfully";
+
+
                 /* File Upload Code */
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                /*$vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
                 /* Create Upload Directory If Not Exists */
-                if(!file_exists($vendorImageUploadPath)){
+                /*if(!file_exists($vendorImageUploadPath)){
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
                     chmod($vendorOwnDirecory, 0777);
                     chmod($vendorImageUploadPath, 0777);
@@ -435,11 +438,15 @@ class VendorsController extends Controller
                 chmod($vendorImageUploadPath, 0777);
 
                 /* Rename file */
-                $facility['image'] = $filename;
+                //$facility['image'] = $filename;
+
+
                 $facility['vendor_id'] = $vendor->id;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
-                AvailableFacility::create($facility);
+                $newFacility = AvailableFacility::create($facility);
+                $sessionUpdateData['duration'] = $request->duration;
+                $durationStatus = $this->updateDuration($newFacility->id,$sessionUpdateData);
             }
         }catch(\Exception $e){
             $status = 500;
@@ -460,7 +467,7 @@ class VendorsController extends Controller
         $vendor = $user->vendor()->first();
         $facilityCount = $vendor->facility()->count();
         if($facilityCount == 0){
-            $status = 404;
+            $status = 200;
             $message = "Facility not found. Please create some";
             $facilityCount = null;
             $facility = null;
@@ -477,6 +484,8 @@ class VendorsController extends Controller
             for($i=0;$i<$facilityCount;$i++){
                 $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
                 $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
+                $sessionDuration = $this->getDurationData($facility[$i]['id']);
+                $facility[$i]['session_duration'] = $sessionDuration;
             }
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
             $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
@@ -501,11 +510,13 @@ class VendorsController extends Controller
         $facility = $vendor->facility()->find($id);
         if($facility!=null) {
         $facility = $facility->toArray();
+        $sessionDuration = $this->getDurationData($facility['id']);
+        $facility['session_duration'] = $sessionDuration;
         $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
         $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
             $facility['image'] = $url.$facility['image'];
         }else{
-            $status = 404;
+            $status = 200;
             $message = "Facility not found. Please create some";
             $facility = null;
         }
@@ -518,10 +529,9 @@ class VendorsController extends Controller
     public function updateFacility(Requests\AddFacilityRequest $request,$id){
         try{
             $facility = $request->all();
-            unset($facility['_method']);
+            $facility = $this->unsetKeys(array('_method','duration'),$facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
@@ -546,8 +556,9 @@ class VendorsController extends Controller
             }
             $facility['vendor_id'] = $vendor->id;
             AvailableFacility::where('id','=',$id)->update($facility);
+            $sessionUpdateData['duration'] = $request->duration;
+            $sessionUpdatedData = $this->updateDuration($id,$sessionUpdateData);
         }catch(\Exception $e){
-            echo $e->getMessage();exit;
             $status = 500;
             $message = "Something went wrong";
         }
@@ -563,32 +574,54 @@ class VendorsController extends Controller
         $facilities = $vendor->facility()->where(array('id'=>$id))->get();
         $sessionPackageInfoType = null;
         if($facilities!=null){
-            $facilities = $facilities->toArray();dd($facilities);
+            $facilities = $facilities->toArray();
             $i = 0;
+            $noOfFacility = 0;
+            $facilityDetails = null;
             foreach($facilities as $facility){
                 $facilityCount = count($facilities);
-                for($j=0;$i<$facilityCount;$i++){
+                for($j=0;$j<$facilityCount;$j++){
                     $facilities[$j]['category']['sub'] = SubCategory::find($facilities[$j]['sub_category_id'])->toArray();
                     $facilities[$j]['category']['root'] = RootCategory::find($facilities[$j]['category']['sub']['root_category_id'])->toArray();
+                    $sessionDuration = $this->getDurationData($facilities[$j]['id']);
+                    $facilities[$j]['session_duration'] = $sessionDuration;
                 }
+                $facilityDetails[$noOfFacility]['information'] = $facilities;
                 $packages = SessionPackage::where('available_facility_id','=',$facility['id'])->get();
                 if($packages!=null){
                     $packages = $packages->toArray();
 
                     foreach($packages as $package){
                         $type = PackageType::where('id','=',$package['package_type_id'])->first()->toArray();
-                        //dd($type);
-                        $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
-                        $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
-                        if($packageChild!=null){
-                            $packageChild = $packageChild->toArray();
-                            $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
-                        }else{
-                            $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
-                        }
+                        if($type['slug']=='package'){
+                            $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
+                            if($packageChild!=null){
+                                $packageChild = $packageChild->toArray();
+                                $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
+                            }else{
+                                $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
+                            }
 
-                        $i++;
+                            $i++;
+                        }
+                        if($type['slug']=='session'){
+                            $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->get();
+                            $j = 0;
+                            if($packageChild!=null){
+                                $packageChild = $packageChild->toArray();
+                                foreach($packageChild as $child){
+                                    $sessionPackageInfoType[$type['slug']][$j]['child'] = $child;
+                                    $j++;
+                                }
+                            }else{
+                                $sessionPackageInfoType[$type['slug']][$j]['child'] = null;
+                            }
+                        }
                     }
+                    $facilityDetails[$noOfFacility]['sessionPackage'] = $sessionPackageInfoType;
+                    $noOfFacility++;
                 }
             }
         }
@@ -597,10 +630,44 @@ class VendorsController extends Controller
             "message" => "success",
             "user" => $user,
             "vendor" => $vendor,
-            "facility" => $facilities,
-            "sessionPackage" => $sessionPackageInfoType
+            "facility" => $facilityDetails
         ];
         return response($response,$status);
+    }
+
+
+    public function updateDuration($facilityId,$sessionUpdateData){
+        try{
+            $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$facilityId)->first();
+            if($checkFacilityInformation!=null){ //Update If Found
+                $durationData = SessionPackage::where('available_facility_id','=',$facilityId)->update($sessionUpdateData);
+            }else{ //Insert New If Not Found
+                $sessionUpdateData['available_facility_id'] = $facilityId;
+                $sessionUpdateData['created_at'] = Carbon::now();
+                $sessionUpdateData['updated_at'] = Carbon::now();
+                $packageType = PackageType::where('slug','=','session')->first();
+                $sessionUpdateData['package_type_id'] = $packageType->id;
+                $durationData = SessionPackage::create($sessionUpdateData);
+                //$durationData = $durationData->get()->toArray();
+            }
+            return true;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function getDurationData($facilityId){
+        $packageType = PackageType::where('slug','=','session')->first();
+        $data = array(
+            'available_facility_id' => $facilityId,
+            'package_type_id' => $packageType->id
+        );
+        $durationData = SessionPackage::where($data)->first();
+        if($durationData!=null){
+            return $durationData->duration;
+        }else{
+            return 0;
+        }
     }
 
     /**

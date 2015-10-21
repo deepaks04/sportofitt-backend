@@ -16,8 +16,9 @@ class CreateSessionPackageTabel extends Migration
             $table->increments('id');
             $table->integer('available_facility_id')->unsigned();
             $table->integer('package_type_id')->unsigned();
-            $table->string('name',255);
+            $table->string('name',255)->nullable();
             $table->text('description')->nullable();
+            $table->string('duration',4)->nullable();
             $table->timestamps();
         });
     }
