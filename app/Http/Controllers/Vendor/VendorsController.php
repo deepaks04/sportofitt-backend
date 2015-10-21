@@ -296,7 +296,7 @@ class VendorsController extends Controller
     */
     public function addImages(Requests\ImagesRequest $request){
         try{
-            $files = $request->image_name;
+            $file = $request->image_name;
             $user = Auth::user();
             $maxUploadLimit = (int)env('VENDOR_IMAGE_UPLOAD_LIMIT');
             $vendor = $user->vendor()->first();
@@ -320,7 +320,7 @@ class VendorsController extends Controller
                 }
 
                 chmod($vendorImageUploadPath, 0777);
-                foreach($files as $file){
+                // foreach($files as $file){
                     $random = mt_rand(1,1000000);
                     $extension = $file->getClientOriginalExtension();
                     $filename = sha1($user->id.$random).".{$extension}";
@@ -331,12 +331,12 @@ class VendorsController extends Controller
                     $data['created_at'] = Carbon::now();
                     $data['updated_at'] = Carbon::now();
                     $vendor->images()->insert($data);
-                }
+                // }
             }
         }catch(\Exception $e){
-            echo $e->getMessage();
+            // echo $e->getMessage();
             $status =500;
-            $message = "something went wrong";
+            $message = "something went wrong".$e->getMessage();
         }
         $images = $vendor->images()->count();
         $response = [

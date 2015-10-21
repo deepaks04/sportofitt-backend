@@ -60,8 +60,8 @@ app.controller('registrationCtrl', ["$scope", "$state", "$timeout", "SweetAlert"
                var auth = Login.register(form);
               console.log(form);
    auth.success(function(response){
-   SweetAlert.swal("Good job!", "Your form is ready to be submitted!", "success");
-
+   SweetAlert.swal("Good job!", response.message, "success");
+$state.go("login.signin");
    console.log(response);
    });
    auth.error(function(data,status){

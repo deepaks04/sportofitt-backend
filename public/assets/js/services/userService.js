@@ -15,14 +15,15 @@ return {
 	getBankDetails : getBankDetails,
 	updateBillingInfo:updateBillingInfo,
 	updateBankDetails:updateBankDetails,
-  getAreas:getAreas
+  getAreas:getAreas,
+  getVendorImages:getVendorImages,
+  deleteVendorImage : deleteVendorImage
 }
 
 function getVendorProfile(){
 	 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/my-profile',
-                 cache: true
+                url: 'api/v1/vendor/my-profile'
             })
             .then(sendResponseData)
             .catch(sendGetUserError)
@@ -39,7 +40,34 @@ function getVendorProfile(){
             return $q.reject('Error retrieving User(s). (HTTP status: ' + response.status + ')');
 
         }
+function getVendorImages(){
+  return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/images'
+            })
+            .then(sendResponseData)
+            .catch(sendGetImagesError)
+}
 
+function sendGetImagesError(response) {
+
+            return $q.reject('Error retrieving Image(s). (HTTP status: ' + response.status + ')');
+
+        }
+function deleteVendorImage(imageId){
+return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/images/'+imageId
+            })
+            .then(sendResponseData)
+            .catch(sendDeleteImagesError)
+}
+
+function sendDeleteImagesError(response) {
+
+            return $q.reject('Error deleting Image(s). (HTTP status: ' + response.status + ')');
+
+        }
     function getAreas() {
 
             return $http({

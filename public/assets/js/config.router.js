@@ -75,11 +75,11 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
         ncyBreadcrumb: {
             label: 'Vendor Profile Setting'
         },
-        resolve: loadSequence('flow','ngGeolocation','userService', 'vendorCtrl')
+        resolve: loadSequence('flow','ngGeolocation','angularFileUpload','userService', 'vendorCtrl')
     }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',
-          resolve: loadSequence('ngTable','facilityService','facilityCtrl'),
+          resolve: loadSequence('ngTable','xeditable','facilityService','facilityCtrl'),
           title: 'Facility',
           ncyBreadcrumb: {
               label: 'UI Elements'
@@ -96,14 +96,16 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
                 title: 'Facility Add',
                 ncyBreadcrumb: {
                     label: 'Facility Add'
-                }
-              }).state('vendor.facility.edit', {
-                  url: '/edit/:facilityId',
-                    templateUrl : "assets/views/vendor/facility/edit.html",
-                  title: 'Facility Edit',
+                },
+            resolve: loadSequence('ui.select', 'monospaced.elastic', 'ui.mask', 'touchspin-plugin', 'selectCtrl')
+              }).state('vendor.facility.booking', {
+                  url: '/booking/:facilityId',
+                    templateUrl : "assets/views/vendor/facility/booking.html",
+                  title: 'Facility Booking',
                   ncyBreadcrumb: {
-                      label: 'Facility Edit'
-                  }
+                      label: 'Facility Booking'
+                  },
+            resolve: loadSequence('moment', 'mwl.calendar')
                 });
 
     // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)

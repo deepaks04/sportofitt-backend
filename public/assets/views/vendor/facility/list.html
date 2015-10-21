@@ -10,8 +10,224 @@
 </section>
 <!-- end: PAGE TITLE -->
 
+
 <!-- start: FACILITY LIST WITH SORTING -->
 <div class="container-fluid container-fullw bg-white">
+	<script type="text/ng-template" id="sessionPackageModal.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Session Packages for {{selected.name}}</h3>
+		</div>
+		<div class="modal-body">
+			<tabset>
+				<tab heading="Opening Hours">
+					<table class="table table-bordered table-hover table-condensed">
+						<tr style="font-weight: bold">
+							<td style="width:25%">Start Time</td>
+							<td style="width:25%">End Time</td>
+							<td style="width:15%">Pick Hour</td>
+							<td style="width:20%">Discount</td>
+							<td style="width:20%">Edit</td>
+						</tr>
+						<tr ng-repeat="session in sessions">
+							<td>
+																<span editable-bstime="session.start" e-show-meridian="true" e-minute-step="15">
+									{{ (session.time | date:"HH:mm") || 'empty' }}
+								</span>
+							</td>
+							<td>
+																<span editable-bstime="session.end" e-show-meridian="true" e-minute-step="15">
+									{{ (session.time | date:"HH:mm") || 'empty' }}
+								</span>
+							</td>
+							<td>
+								<span editable-checklist="session.is_peak" e-ng-options=" type in types">
+									{{ showStatus() }}
+								</span>
+							</td>
+							<td>
+								<span editable-select="session.discount" e-name="discount" e-form="rowform" e-ng-options="discount in discounts">
+          {{ showDiscount(session) }}
+        </span>
+							</td>
+							<td style="white-space: nowrap">
+								<!-- form -->
+								<form editable-form name="rowform" onbeforesave="saveSession($data, session.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+									<button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+										save
+									</button>
+									<button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+										cancel
+									</button>
+								</form>
+								<div class="buttons" ng-show="!rowform.$visible">
+									<button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
+									<button class="btn btn-danger" ng-click="removeSession($index)">del</button>
+								</div>
+							</td>
+						</tr>
+
+					</table>
+					<button class="btn btn-default" ng-click="addSession()">Add Time</button>
+				</tab>
+				<tab heading="Package">
+					<table class="table no-bg">
+						<tr>
+							<td rowspan="2">ID: {{p.id}}
+								<input type="hidden" name="id" value="{{p.id}}">
+							</td>
+                            <td>Package Name:</td>
+                            <td>
+                                <input type="text" name="facility_name" data-ng-model="facility.package_name" placeholder="Enter Package Name">
+                            </td>
+							<td>For Months</td>
+							<td><select class="form-control" ng-model="facility.type" ng-required="">
+								<option value="">Select Months</option>
+								<option value="{{slot}}" ng-repeat="slot in months" ng-selected="slot === facility.moths">{{slot}}</option>
+							</select></td>
+
+							<td>Is Pick Time:</td>
+							<td>
+								<select class="form-control" ng-model="facility.type" ng-required="">
+									<option value="">Select PickTime</option>
+									<option value="{{slot}}" ng-repeat="slot in types" ng-selected="slot === facility.types">{{slot}}</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Discount:</td>
+							<td>
+								<select class="form-control" ng-model="facility.discount" ng-required="">
+									<option value="">Select Discount</option>
+									<option value="{{slot}}" ng-repeat="slot in discounts" ng-selected="slot === facility.discount">{{slot}}</option>
+								</select>
+							</td>
+							<td colspan="2">
+								<div class="pull-right">
+									<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" save " onclick="alert('Save :)')">
+									<input type="button" class="btn btn-primary btn-sm" value=" cancel" ng-click="setEditId(-1)">
+								</div></td>
+						</tr>
+					</table>
+					<input type="button" class="btn btn-primary btn-sm margin-right-15" value=" Add new package " onclick="alert('Save :)')">
+
+				</tab>
+				<tab heading="Edit Facility">
+                    <form name="Form" id="form1" novalidate ng-submit="form.submit(Form)" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
+                                    <label class="control-label">
+                                        Name <span class="symbol required"></span>
+                                    </label>
+                                    <input type="text" placeholder="Enter your First Name" class="form-control" name="name" ng-model="facility.name" required />
+                                    <span class="error text-small block" ng-if="Form.name.$dirty && Form.name.$invalid">First Name is required</span>
+                                    <span class="success text-small" ng-if="Form.name.$valid">Thank You!</span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
+                                    <label class="control-label">
+                                        Root Category <span class="symbol required"></span>
+                                    </label>
+                                    <select class="form-control" ng-model="selectedCategory" ng-options="cat as cat.name for cat in categoryData">
+                                        <option value="">Select Category</option>
+                                    </select>
+                                    <span class="error text-small block" ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">First Name is required</span>
+                                    <span class="success text-small" ng-if="Form.root_category_id.$valid">Thank You!</span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
+                                    <label class="control-label">
+                                        Sub Category <span class="symbol required"></span>
+                                    </label>
+                                    <select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory" ng-disabled="!selectedCategory">
+                                        <option value="">Select Category</option>
+                                    </select>
+                                    <span class="error text-small block" ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First Name is required</span>
+                                    <span class="success text-small" ng-if="Form.sub_category_id.$valid">Thank You!</span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error':Form.duration.$dirty && Form.duration.$invalid, 'has-success':Form.duration.$valid}">
+                                    <label class="control-label">
+                                        Session Duration <span class="symbol required"></span>
+                                    </label>
+                                    <timepicker ng-model="facility.duration"  ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+                                    <span class="error text-small block" ng-if="Form.duration.$dirty && Form.duration.$invalid">First session_price is required</span>
+                                    <span class="success text-small" ng-if="Form.duration.$valid">Thank You!</span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="col-md-3">
+
+                                    <div class="form-group" ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
+                                        <label class="control-label">
+                                            Slots <span class="symbol required"></span>
+                                        </label>
+                                        <select class="form-control" ng-model="facility.slots" ng-required="">
+                                            <option value="">Select Slot</option>
+                                            <option value="{{slot}}" ng-repeat="slot in slots" ng-selected="slot === facility.slots">{{slot}}</option>
+                                        </select>
+                                        <span class="error text-small block" ng-if="Form.slots.$dirty && Form.slots.$invalid">Slot is required</span>
+                                        <span class="success text-small" ng-if="Form.slots.$valid">Thank You!</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group" ng-class="{'has-error':Form.session_price.$dirty && Form.session_price.$invalid, 'has-success':Form.session_price.$valid}">
+                                        <label class="control-label">
+                                            Session Price <span class="symbol required"></span>
+                                        </label>
+                                        <input type="text" placeholder="Enter your First session_price" class="form-control" session_price="session_price" ng-model="facility.session_price" required />
+                                        <span class="error text-small block" ng-if="Form.session_price.$dirty && Form.session_price.$invalid">First session_price is required</span>
+                                        <span class="success text-small" ng-if="Form.session_price.$valid">Thank You!</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group" ng-class="{'has-error':Form.month_price.$dirty && Form.month_price.$invalid, 'has-success':Form.month_price.$valid}">
+                                        <label class="control-label">
+                                            Monthly Price <span class="symbol required"></span>
+                                        </label>
+                                        <input type="text" placeholder="Enter your First month_price" class="form-control" month_price="month_price" ng-model="facility.month_price" required />
+                                        <span class="error text-small block" ng-if="Form.month_price.$dirty && Form.month_price.$invalid">First month_price is required</span>
+                                        <span class="success text-small" ng-if="Form.month_price.$valid">Thank You!</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" ng-class="{'has-error':Form.image.$dirty && Form.image.$invalid, 'has-success':Form.image.$valid}">
+                                    <label class="control-label">
+                                        Facility Image<span class="symbol required"></span>
+                                    </label>
+							<span class="btn btn-primary btn-o btn-file"> Select an image file
+								<input type="file" bind-file nv-file-select="" name="image" ng-model="facility.image" uploader="uploaderImages" multiple  required/>
+							</span>
+                                    <span class="error text-small block" ng-if="Form.image.$dirty && Form.image.$invalid">First Name is required</span>
+                                    <span class="success text-small" ng-if="Form.image.$valid">Thank You!</span>
+                                </div>
+                                <div class="form-group" ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
+                                    <label class="control-label">
+                                        Description<span class="symbol required"></span>
+                                    </label>
+                                    <textarea name="description" data-ng-model="facility.description"></textarea>
+                                    <span class="error text-small block" ng-if="Form.description.$dirty && Form.description.$invalid">First Name is required</span>
+                                    <span class="success text-small" ng-if="Form.description.$valid">Thank You!</span>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary pull-right">
+                                        Submit <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </tab>
+			</tabset>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" ng-click="ok()">OK</button>
+			<button class="btn btn-primary btn-o" ng-click="cancel()">Cancel</button>
+		</div>
+	</script>
+
 	<div class="row">
 		<div class="col-md-12">
 			<h5 class="over-title margin-bottom-15"> <span class="text-bold">FACILITY</span></h5>
@@ -26,14 +242,14 @@
 				</div>
 					<table ng-table="tableParams" class="table table-striped">
 					<tr ng-repeat="facility in facilityData">
-						<td data-title="'Name'" sortable="'name'">{{facility.name}}</td>
+						<td data-title="'Name'" sortable="'name'"><a data-ng-click="open('lg',facility)">{{facility.name}}</a></td>
 						<td class="center" data-title="'Image'" ><img src="{{facility.image}}" class="img-rounded img-responsive" alt="image" width="154" height="76"/></td>
 						<td data-title="'Sub Category'" sortable="'sub_category_id'">{{facility.sub_category_id}}</td>
 						<td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
 						<td class="center">
 						<div class="visible-md visible-lg hidden-sm hidden-xs">
-							<a ui-sref="vendor.facility.edit({facilityId : facility.id})" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-							<a ui-sref="vendor.facility.edit({facilityId : facility.id})" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
+							<a data-ng-click="open('lg',facility)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
+							<a ui-sref="vendor.facility.booking({facilityId : facility.id})" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
 						</div>
 						<div class="visible-xs visible-sm hidden-md hidden-lg">
 							<div class="btn-group" dropdown is-open="status.isopen">
@@ -42,13 +258,13 @@
 								</button>
 								<ul class="dropdown-menu pull-right dropdown-light" role="menu">
 									<li>
-										<a ui-sref="vendor.facility.edit({facilityId : facility.id})">
+										<a data-ng-click="open('lg',facility)">
 											Edit
 										</a>
 									</li>
 	<li>
-										<a ui-sref="vendor.facility.edit({facilityId : facility.id})">
-											Remove
+										<a ui-sref="vendor.facility.booking({facilityId : facility.id})">
+											Book
 										</a>
 									</li>
 								</ul>

@@ -19,7 +19,7 @@
 			<div ng-controller="facilityAddCtrl">
 				<form name="Form" id="form1" novalidate ng-submit="form.submit(Form)" enctype="multipart/form-data">
 					<div class="row">
-						<div class="col-md-8">
+						<div class="col-md-6">
               <div class="form-group" ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
                 <label class="control-label">
                   Name <span class="symbol required"></span>
@@ -42,13 +42,59 @@
                 <label class="control-label">
                   Sub Category <span class="symbol required"></span>
                 </label>
-								<select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory track by cat.id" ng-disabled="!selectedCategory">
+								<select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory" ng-disabled="!selectedCategory">
 									<option value="">Select Category</option>
 								</select>
 								  <span class="error text-small block" ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First Name is required</span>
                 <span class="success text-small" ng-if="Form.sub_category_id.$valid">Thank You!</span>
               </div>
+                            <div class="form-group" ng-class="{'has-error':Form.duration.$dirty && Form.duration.$invalid, 'has-success':Form.duration.$valid}">
+                                <label class="control-label">
+                                    Session Duration <span class="symbol required"></span>
+                                </label>
+                                <timepicker ng-model="facility.duration"  ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+                                <span class="error text-small block" ng-if="Form.duration.$dirty && Form.duration.$invalid">First session_price is required</span>
+                                <span class="success text-small" ng-if="Form.duration.$valid">Thank You!</span>
+                            </div>
+                            </div>
 
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+
+                                <div class="form-group" ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
+                                    <label class="control-label">
+                                        Slots <span class="symbol required"></span>
+                                    </label>
+                                    <select class="form-control" ng-model="facility.slots" ng-required="">
+                                        <option value="">Select Slot</option>
+                                        <option value="{{slot}}" ng-repeat="slot in slots" ng-selected="slot === facility.slots">{{slot}}</option>
+                                    </select>
+                                    <span class="error text-small block" ng-if="Form.slots.$dirty && Form.slots.$invalid">Slot is required</span>
+                                    <span class="success text-small" ng-if="Form.slots.$valid">Thank You!</span>
+                                </div>
+                                </div>
+                            <div class="col-md-3">
+                            <div class="form-group" ng-class="{'has-error':Form.session_price.$dirty && Form.session_price.$invalid, 'has-success':Form.session_price.$valid}">
+                                <label class="control-label">
+                                    Session Price <span class="symbol required"></span>
+                                </label>
+                                <input type="text" placeholder="Enter your First session_price" class="form-control" session_price="session_price" ng-model="facility.session_price" required />
+                                <span class="error text-small block" ng-if="Form.session_price.$dirty && Form.session_price.$invalid">First session_price is required</span>
+                                <span class="success text-small" ng-if="Form.session_price.$valid">Thank You!</span>
+                            </div>
+                                </div>
+                            <div class="col-md-3">
+                            <div class="form-group" ng-class="{'has-error':Form.month_price.$dirty && Form.month_price.$invalid, 'has-success':Form.month_price.$valid}">
+                                <label class="control-label">
+                                    Monthly Price <span class="symbol required"></span>
+                                </label>
+                                <input type="text" placeholder="Enter your First month_price" class="form-control" month_price="month_price" ng-model="facility.month_price" required />
+                                <span class="error text-small block" ng-if="Form.month_price.$dirty && Form.month_price.$invalid">First month_price is required</span>
+                                <span class="success text-small" ng-if="Form.month_price.$valid">Thank You!</span>
+                            </div>
+                                </div>
+                                </div>
+                        <div class="col-md-6">
             <div class="form-group" ng-class="{'has-error':Form.image.$dirty && Form.image.$invalid, 'has-success':Form.image.$valid}">
               <label class="control-label">
                 Facility Image<span class="symbol required"></span>
@@ -59,6 +105,15 @@
 							  <span class="error text-small block" ng-if="Form.image.$dirty && Form.image.$invalid">First Name is required</span>
               <span class="success text-small" ng-if="Form.image.$valid">Thank You!</span>
             </div>
+                            <div class="form-group" ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
+                                <label class="control-label">
+                                   Description<span class="symbol required"></span>
+                                </label>
+							<textarea name="description" data-ng-model="facility.description"></textarea>
+                                <span class="error text-small block" ng-if="Form.description.$dirty && Form.description.$invalid">First Name is required</span>
+                                <span class="success text-small" ng-if="Form.description.$valid">Thank You!</span>
+                            </div>
+
 						<div class="form-actions">
 							<button type="submit" class="btn btn-primary pull-right">
 								Submit <i class="fa fa-arrow-circle-right"></i>

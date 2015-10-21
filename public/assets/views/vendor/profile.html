@@ -50,36 +50,30 @@
 										</thead>
 										<tbody>
 											<tr>
-												<td>url</td>
+												<td>URL</td>
 												<td>
 												<a href="#">
 													{{userInfo.url}}
 												</a></td>
 											</tr>
 											<tr>
-												<td>email:</td>
+												<td>Email:</td>
 												<td>
 												<a href>
 													{{userInfo.email}}
 												</a></td>
 											</tr>
 											<tr>
-												<td>contact:</td>
+												<td>Contact:</td>
 												<td>{{userInfo.contact}}</td>
 											</tr>
-											<tr>
-												<td>skye</td>
-												<td>
-												<a href>
-													{{userInfo.skype}}
-												</a></td>
-											</tr>
+
 										</tbody>
 									</table>
 									<table class="table table-condensed">
 										<thead>
 											<tr>
-												<th colspan="3">Business information</th>
+												<th colspan="3">Business Information</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -92,12 +86,7 @@
 												<td>{{userInfo.address}}</td>
 											</tr>
 											<tr>
-												<td>Geo Location</td>
-												<td><span>Longitude : {{userInfo.longitude}}</span>
-													<span>Latitude : {{userInfo.latitude}}</span></td>
-											</tr>
-											<tr>
-												<td>Area Id</td>
+												<td>Location</td>
 												<td>{{userInfo.area_id}}</td>
 											</tr>
 											
@@ -106,7 +95,7 @@
 									<table class="table table-condensed">
 										<thead>
 											<tr>
-												<th colspan="3">Additional information</th>
+												<th colspan="3">Additional Information</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -316,13 +305,13 @@
 											<label class="control-label">
 												Address
 											</label>
-											<input type="text" placeholder="address" class="form-control" name="address" ng-model="userInfo.address">
+											<input type="text" placeholder="Enter Your Address" class="form-control" name="address" ng-model="userInfo.address">
 											<span class="error text-small block" ng-if="errors.address">{{errors.address}}</span>
 
 										</div>
 										<div class="form-group" ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
 											<label class="control-label">
-												Contact
+												Contact Number
 											</label>
 											<input type="text" placeholder="Enter Your Contact Number" class="form-control" name="contact" ng-model="userInfo.contact">
 											<span class="error text-small block" ng-if="errors.contact">{{errors.contact}}</span>
@@ -341,7 +330,7 @@
 											<div class="col-md-4">
 												<div class="form-group" ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
 													<label class="control-label">
-														Select Area
+														Pin Code
 													</label>
 													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas">
 													    	<option>Select Area</option>
@@ -385,12 +374,10 @@
 												</div>
 												<div class="user-image-buttons-edit" ng-if="!obj.flow.files.length">
 													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
-													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i> </span>
+													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeProfileImage()"><i class="fa fa-times"></i> </span>
 												</div>
 												<span class="error text-small block" ng-if="errors.image">{{errors.image}}</span>
-
-
-																							</div>
+											</div>
 										</div>
 										<div class="form-actions">
 							<button type="submit" class="btn btn-primary pull-right">
@@ -398,8 +385,6 @@
 							</button>
 						</div>
             </div>
-									
-							
 							</fieldset>
 							
 						</form>
@@ -444,10 +429,16 @@
 											</label>
 											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="billingInfo.pan_no">
 										</div>
+										<div class="form-group">
+											<label class="control-label">
+												VAT Number
+											</label>
+											<input type="text" placeholder="Enter your VAT Number" class="form-control" name="vat" ng-model="billingInfo.vat">
+										</div>
 
 										<div class="form-group">
 											<label class="control-label">
-												Post code
+												Zip Code
 											</label>
 											<input type="text" placeholder="Enter your Post code" class="form-control" name="postcode" ng-model="billingInfo.postcode">
 										</div>
@@ -532,20 +523,7 @@
 											</label>
 											<input type="text" placeholder="Enter your Beneficiary Name" class="form-control" name="beneficiary" ng-model="bankDetail.beneficiary">
 										</div>
-																		
-										<div class="form-group">
-											<label class="control-label">
-												VAT Number
-											</label>
-											<input type="text" placeholder="Enter your VAT number" class="form-control" name="vat" ng-model="bankDetail.vat">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												PAN Number
-											</label>
-											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="bankDetail.pan_no">
-										</div>
-										
+
 										<div class="form-actions">
 							<button type="submit" class="btn btn-primary pull-right">
 								Submit <i class="fa fa-arrow-circle-right"></i>
@@ -559,8 +537,139 @@
 							</fieldset>
 							
 						</form>
-					</tab>
+					</tab >
 					<!-- end: TAB Banking Details -->
+					<!-- Tab Images -->
+					<tab heading="Images">
+								<div nv-file-drop="" uploader="uploaderImages">
+				<div class="row">
+					<div class="col-md-3">
+						<h5>Select files</h5>
+						<div class="panel panel-white">
+							<div class="panel-body">
+								<div ng-show="uploaderImages.isHTML5">
+									<!-- 3. nv-file-over uploader="link" over-class="className" -->
+									<div class="well my-drop-zone" nv-file-over="" uploader="uploaderImages">
+										Base drop zone
+									</div>
+									<!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+									<div nv-file-drop="" uploader="uploaderImages" options="{ url: '/foo' }">
+										<div nv-file-over="" uploader="uploaderImages" over-class="another-file-over-class" class="well my-drop-zone">
+											Another drop zone with its own settings
+										</div>
+									</div>
+								</div>
+								<!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+								<span class="btn btn-primary btn-o btn-file"> Select an image file
+									<input type="file" nv-file-select="" uploader="uploaderImages" multiple  />
+								</span>
+								<br/>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-9 file-upload" style="margin-bottom: 40px">
+						<h4>Uploded Images</h4>
+						<p>
+							Queue length: {{ images.length }}
+						</p>
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th width="50%">Name</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="image in images">
+										<td><strong></strong>
+										<!-- Image preview -->
+										<!--auto height-->
+										<!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+										<!--auto width-->
+										<img ng-src="{{image.image_name}}" width="100">
+										<!--fixed width and height -->
+										<!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+										</td>
+										<td nowrap>
+										<button type="button" class="btn btn-danger btn-xs" ng-click="removeImage(image.id)">
+											<span class="glyphicon glyphicon-trash"></span> Remove
+										</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					<div class=" file-upload" style="margin-bottom: 40px">
+						<h4>The queue</h4>
+						<p>
+							Queue length: {{ uploaderImages.queue.length }}
+						</p>
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th width="50%">Name</th>
+										<th ng-show="uploaderImages.isHTML5">Size</th>
+										<th ng-show="uploaderImages.isHTML5">Progress</th>
+										<th>Status</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in uploaderImages.queue">
+										<td><strong>{{ item.file.name }}</strong>
+										<!-- Image preview -->
+										<!--auto height-->
+										<!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+										<!--auto width-->
+										<div ng-show="uploaderImages.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+										<!--fixed width and height -->
+										<!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+										</td>
+										<td ng-show="uploaderImages.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+										<td ng-show="uploaderImages.isHTML5">
+										<div class="progress progress-xs margin-bottom-0">
+											<div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+										</div></td>
+										<td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span><span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span><span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+										<td nowrap>
+										<button type="button" class="btn btn-primary btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+											<span class="glyphicon glyphicon-upload"></span> Upload
+										</button>
+										<button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+											<span class="glyphicon glyphicon-ban-circle"></span> Cancel
+										</button>
+										<button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+											<span class="glyphicon glyphicon-trash"></span> Remove
+										</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div>
+							<div>
+								Queue progress:
+								<div class="progress progress-xs margin-top-5 margin-bottom-20">
+									<div class="progress-bar" role="progressbar" ng-style="{ 'width': uploaderImages.progress + '%' }"></div>
+								</div>
+							</div>
+							<button type="button" class="btn btn-primary btn-s" ng-click="uploaderImages.uploadAll()" ng-disabled="!uploaderImages.getNotUploadedItems().length">
+								<span class="glyphicon glyphicon-upload"></span> Upload all
+							</button>
+							<button type="button" class="btn btn-primary btn-o btn-s" ng-click="uploaderImages.cancelAll()" ng-disabled="!uploaderImages.isUploading">
+								<span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+							</button>
+							<button type="button" class="btn btn-primary btn-o btn-s" ng-click="uploaderImages.clearQueue()" ng-disabled="!uploaderImages.queue.length">
+								<span class="glyphicon glyphicon-trash"></span> Remove all
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+					</tab>
+
+					<!-- TAb image close -->
 				</tabset>
 				<!-- end: USER TABSET -->
 			</div>
