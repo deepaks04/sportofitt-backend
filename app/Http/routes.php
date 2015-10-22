@@ -41,6 +41,10 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
     Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
+    Route::post('multiple-sessions',array('uses' => 'Vendor\SessionPackageController@createSession'));
+    Route::put('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@updateSession'));
+    Route::get('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@deleteSession'));
+    Route::get('sessions-data/{id}',array('uses' => 'Vendor\SessionPackageController@getSessionData'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',

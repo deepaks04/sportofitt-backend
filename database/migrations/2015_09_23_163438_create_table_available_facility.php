@@ -19,6 +19,8 @@ class CreateTableAvailableFacility extends Migration
             $table->integer('sub_category_id')->unsigned();
             $table->integer('vendor_id')->unsigned();
             $table->integer('slots');
+            $table->integer('cancellation_before_24hrs')->unsigned();
+            $table->integer('cancellation_after_24hrs')->unsigned();
             $table->timestamps();
         });
     }

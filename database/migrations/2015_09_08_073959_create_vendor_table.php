@@ -24,8 +24,6 @@ class CreateVendorTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('postcode')->nullable();
             $table->integer('area_id')->unsigned()->nullable();
-            $table->integer('cancellation_before_24hrs')->unsigned();
-            $table->integer('cancellation_after_24hrs')->unsigned();
             $table->timestamps();
         });
     }

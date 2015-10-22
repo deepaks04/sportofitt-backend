@@ -135,7 +135,7 @@ class VendorsController extends Controller
             ];
             $user = $request->all();
             $vendor = $request->all();
-            $userKeys = array('email','username','business_name','longitude','latitude','area_id','description','_method','address','contact','postcode','cancellation_before_24hrs','cancellation_after_24hrs','commission');
+            $userKeys = array('email','username','business_name','longitude','latitude','area_id','description','_method','address','contact','postcode','commission');
             $user = $this->unsetKeys($userKeys,$user);
             $vendorKeys = array('email','username','fname','lname','_method','profile_picture');
             $vendor = $this->unsetKeys($vendorKeys,$vendor);

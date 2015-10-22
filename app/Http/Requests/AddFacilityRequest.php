@@ -63,6 +63,8 @@ class AddFacilityRequest extends Request
                     'sub_category_id' => 'required|integer',
                     'description' => 'min:5|max:500',
                     'duration' => 'required|integer',
+                    'cancellation_before_24hrs' => 'required|integer',
+                    'cancellation_after_24hrs' => 'required|integer',
                 ];
                 break;
             case 'POST':
@@ -73,6 +75,8 @@ class AddFacilityRequest extends Request
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',
                     'duration' => 'required|integer',
+                    'cancellation_before_24hrs' => 'required|integer',
+                    'cancellation_after_24hrs' => 'required|integer',
                 ];
                 break;
             default:break;
