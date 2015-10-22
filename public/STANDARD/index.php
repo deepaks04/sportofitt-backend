@@ -32,6 +32,7 @@
 		<div ui-view id="app" ng-class="{'app-mobile' : app.isMobile, 'app-navbar-fixed' : app.layout.isNavbarFixed, 'app-sidebar-fixed' : app.layout.isSidebarFixed, 'app-sidebar-closed':app.layout.isSidebarClosed, 'app-footer-fixed':app.layout.isFooterFixed}"></div>
 
 		<!-- jQuery -->
+		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization"></script> 
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<!-- Fastclick -->
 		<script src="bower_components/fastclick/lib/fastclick.js"></script>
@@ -90,6 +91,6 @@
 		<script src="assets/js/controllers/mainCtrl.js"></script>
 		<script src="assets/js/controllers/bootstrapCtrl.js"></script>
 		<!-- Google Apis -->
-		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=weather,visualization,places"></script> 
+		
 	</body>
 </html>

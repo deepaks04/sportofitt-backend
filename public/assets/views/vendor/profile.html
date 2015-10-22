@@ -332,7 +332,29 @@
 													<label class="control-label">
 														Location
 													</label>
-													<ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+													   <ui-gmap-google-map 
+         center="map.center"
+         zoom="map.zoom"
+         dragging="map.dragging"
+         map-refresh="true"
+         bounds="map.bounds"
+         events="map.events"
+         options="map.options"
+         pan="true"
+         control="map.control"
+        >
+          <ui-gmap-markers models="map.markers2" coords="'self'" icon="'icon'" click="onMarkerClicked" options="'options'" events="map.markers2Events">
+            <ui-gmap-windows show="'showWindow'" closeClick="'closeClick'" ng-cloak>
+                <div>
+                    I should not be attached to a
+                    marker.
+               
+                    <p ng-non-bindable >This is an info window at {{ latitude | number:4 }}, {{ longitude | number:4 }}!</p>
+
+                    <p class="muted">My marker will stay open when the window is popped up!</p>
+                </div>
+            </ui-gmap-windows>
+        </ui-gmap-markers>
 											</div>
 											</div>
 											<div class="col-md-4">

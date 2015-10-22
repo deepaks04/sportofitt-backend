@@ -34,7 +34,68 @@ $scope.bankDetail=bankDetail.bank;
 
   
   //map
-  $scope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
+
+  $scope.map = {  show: true,
+      control: {},
+      version: "uknown",
+      heatLayerCallback: function (layer) {
+        //set the heat layers backend data
+        var mockHeatLayer = new MockHeatLayer(layer);
+      },
+      showTraffic: true,
+      showBicycling: false,
+      showWeather: false,
+      showHeat: false,
+      center: {
+        latitude: 45,
+        longitude: 78
+      },
+      options: {
+        streetViewControl: false,
+        panControl: false,
+        maxZoom: 20,
+        minZoom: 3
+      },
+      zoom: 3,
+      dragging: false,
+      bounds: {},
+        markers2: [
+             {
+          id: 2,
+          icon: 'assets/images/blue_marker.png',
+          latitude: 33,
+          longitude: 77,
+          showWindow: false,
+          options: {
+            labelContent: 'DRAG ME!',
+            labelAnchor: "22 0",
+            labelClass: "marker-labels",
+            draggable: true
+          }
+        }
+        ]
+         events: {
+           dragend: function () {
+          $timeout(function () {
+            var markers = [];
+
+            var id = 0;
+            if ($scope.map.mexiMarkers !== null && $scope.map.mexiMarkers.length > 0) {
+              var maxMarker = _.max($scope.map.mexiMarkers, function (marker) {
+                return marker.mid;
+              });
+              id = maxMarker.mid;
+            }
+            for (var i = 0; i < 4; i++) {
+              id++;
+              markers.push(createRandomMarker(id, $scope.map.bounds, "mid"));
+            }
+            $scope.map.mexiMarkers = markers.concat($scope.map.mexiMarkers);
+          });
+        }
+      }
+      
+       };
 
   $scope.form = {
 
