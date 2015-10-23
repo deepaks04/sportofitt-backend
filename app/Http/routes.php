@@ -45,6 +45,9 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::put('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@updateSession'));
     Route::get('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@deleteSession'));
     Route::get('sessions-data/{id}',array('uses' => 'Vendor\SessionPackageController@getSessionData'));
+
+    Route::post('calendar-block',array('uses' => 'Vendor\SessionPackageController@blockCalendar'));
+    Route::get('calendar-block/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockData'));
 });
 //Route::controllers([
 //    'auth' => 'Auth\AuthController',
