@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddFkToDayWiseSessionTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,7 +13,11 @@ class AddFkToDayWiseSessionTable extends Migration
     public function up()
     {
         Schema::table('session_package_child', function (Blueprint $table) {
-            $table->foreign('session_package_id')->references('id')->on('session_package')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('session_package_id')
+                ->references('id')
+                ->on('session_package')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

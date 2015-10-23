@@ -1,9 +1,10 @@
 <?php
-
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+
 class CityTableSeeder extends Seeder
 {
+
     /**
      * Run the database seeds.
      *
@@ -15,8 +16,8 @@ class CityTableSeeder extends Seeder
             [
                 'name' => 'Pune',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
+                'updated_at' => Carbon::now()
+            ]
         ]);
     }
 }

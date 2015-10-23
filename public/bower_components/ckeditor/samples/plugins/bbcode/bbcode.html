@@ -5,35 +5,38 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 -->
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>BBCode Plugin &mdash; CKEditor Sample</title>
-	<script src="../../../ckeditor.js"></script>
-	<script src="../../../samples/sample.js"></script>
-	<link rel="stylesheet" href="../../../samples/sample.css">
-	<meta name="ckeditor-sample-required-plugins" content="sourcearea">
-	<meta name="ckeditor-sample-name" content="Output for BBCode">
-	<meta name="ckeditor-sample-group" content="Additional Plugins">
-	<meta name="ckeditor-sample-description" content="Configuring CKEditor to produce BBCode tags instead of HTML.">
+<meta charset="utf-8">
+<title>BBCode Plugin &mdash; CKEditor Sample</title>
+<script src="../../../ckeditor.js"></script>
+<script src="../../../samples/sample.js"></script>
+<link rel="stylesheet" href="../../../samples/sample.css">
+<meta name="ckeditor-sample-required-plugins" content="sourcearea">
+<meta name="ckeditor-sample-name" content="Output for BBCode">
+<meta name="ckeditor-sample-group" content="Additional Plugins">
+<meta name="ckeditor-sample-description"
+	content="Configuring CKEditor to produce BBCode tags instead of HTML.">
 </head>
 <body>
 	<h1 class="samples">
-		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo; BBCode Plugin
+		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo;
+		BBCode Plugin
 	</h1>
 	<div class="description">
 		<p>
-			This sample shows how to configure CKEditor to output <a href="http://en.wikipedia.org/wiki/BBCode">BBCode</a> format instead of HTML.
-			Please note that the editor configuration was modified to reflect what is needed in a BBCode editing environment.
-			Smiley images, for example, were stripped to the emoticons that are commonly used in some BBCode dialects.
+			This sample shows how to configure CKEditor to output <a
+				href="http://en.wikipedia.org/wiki/BBCode">BBCode</a> format instead
+			of HTML. Please note that the editor configuration was modified to
+			reflect what is needed in a BBCode editing environment. Smiley
+			images, for example, were stripped to the emoticons that are commonly
+			used in some BBCode dialects.
 		</p>
-		<p>
-			Please note that currently there is no standard for the BBCode markup language, so its implementation
-			for different platforms (message boards, blogs etc.) can vary. This means that before using CKEditor to
-			output BBCode you may need to adjust the implementation to your own environment.
-		</p>
-		<p>
-			A snippet of the configuration code can be seen below; check the source of this page for
-			a full definition:
-		</p>
+		<p>Please note that currently there is no standard for the BBCode
+			markup language, so its implementation for different platforms
+			(message boards, blogs etc.) can vary. This means that before using
+			CKEditor to output BBCode you may need to adjust the implementation
+			to your own environment.</p>
+		<p>A snippet of the configuration code can be seen below; check
+			the source of this page for a full definition:</p>
 		<pre class="samples">
 CKEDITOR.replace( 'editor1', {
 	<strong>extraPlugins: 'bbcode',</strong>
@@ -51,9 +54,7 @@ CKEDITOR.replace( 'editor1', {
 	</div>
 	<form action="../../../samples/sample_posteddata.php" method="post">
 		<p>
-			<label for="editor1">
-				Editor 1:
-			</label>
+			<label for="editor1"> Editor 1: </label>
 			<textarea cols="80" id="editor1" name="editor1" rows="10">This is some [b]sample text[/b]. You are using [url=http://ckeditor.com/]CKEditor[/url].</textarea>
 			<script>
 
@@ -100,11 +101,13 @@ CKEDITOR.replace( 'editor1', {
 	<div id="footer">
 		<hr>
 		<p>
-			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+			CKEditor - The text editor for the Internet - <a class="samples"
+				href="http://ckeditor.com/">http://ckeditor.com</a>
 		</p>
 		<p id="copy">
-			Copyright &copy; 2003-2015, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
-			Knabben. All rights reserved.
+			Copyright &copy; 2003-2015, <a class="samples"
+				href="http://cksource.com/">CKSource</a> - Frederico Knabben. All
+			rights reserved.
 		</p>
 	</div>
 </body>

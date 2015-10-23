@@ -2,8 +2,9 @@
 <section id="page-title">
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="mainTitle" >FACILITY LIST</h1>
-			<span class="mainDescription">List of available facility for your business</span>
+			<h1 class="mainTitle">FACILITY LIST</h1>
+			<span class="mainDescription">List of available facility for
+				your business</span>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -230,46 +231,52 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<h5 class="over-title margin-bottom-15"> <span class="text-bold">FACILITY</span></h5>
+			<h5 class="over-title margin-bottom-15">
+				<span class="text-bold">FACILITY</span>
+			</h5>
 			<!-- /// controller:  'ngTableCtrl2' -  localtion: assets/js/controllers/ngTableCtrl.js /// -->
 			<div ng-controller="facilityListCtrl">
 				<div class="row margin-bottom-10">
 					<div class="col-md-12">
-						<button ng-click="tableParams.sorting({})" class="btn btn-default pull-right">
-							Clear sorting
-						</button>
+						<button ng-click="tableParams.sorting({})"
+							class="btn btn-default pull-right">Clear sorting</button>
 					</div>
 				</div>
-					<table ng-table="tableParams" class="table table-striped">
+				<table ng-table="tableParams" class="table table-striped">
 					<tr ng-repeat="facility in facilityData">
-						<td data-title="'Name'" sortable="'name'"><a data-ng-click="open('lg',facility)">{{facility.name}}</a></td>
-						<td class="center" data-title="'Image'" ><img src="{{facility.image}}" class="img-rounded img-responsive" alt="image" width="154" height="76"/></td>
+						<td data-title="'Name'" sortable="'name'"><a
+							data-ng-click="open('lg',facility)">{{facility.name}}</a></td>
+						<td class="center" data-title="'Image'"><img
+							src="{{facility.image}}" class="img-rounded img-responsive"
+							alt="image" width="154" height="76" /></td>
 						<td data-title="'Sub Category'" sortable="'sub_category_id'">{{facility.sub_category_id}}</td>
 						<td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
 						<td class="center">
-						<div class="visible-md visible-lg hidden-sm hidden-xs">
-							<a data-ng-click="open('lg',facility)" class="btn btn-transparent btn-xs" tooltip-placement="top" tooltip="Edit"><i class="fa fa-pencil"></i></a>
-							<a ui-sref="vendor.facility.booking({facilityId : facility.id})" class="btn btn-transparent btn-xs tooltips" tooltip-placement="top" tooltip="Remove"><i class="fa fa-times fa fa-white"></i></a>
-						</div>
-						<div class="visible-xs visible-sm hidden-md hidden-lg">
-							<div class="btn-group" dropdown is-open="status.isopen">
-								<button type="button" class="btn btn-primary btn-o btn-sm dropdown-toggle" dropdown-toggle>
-									<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu pull-right dropdown-light" role="menu">
-									<li>
-										<a data-ng-click="open('lg',facility)">
-											Edit
-										</a>
-									</li>
-	<li>
-										<a ui-sref="vendor.facility.booking({facilityId : facility.id})">
-											Book
-										</a>
-									</li>
-								</ul>
+							<div class="visible-md visible-lg hidden-sm hidden-xs">
+								<a data-ng-click="open('lg',facility)"
+									class="btn btn-transparent btn-xs" tooltip-placement="top"
+									tooltip="Edit"><i class="fa fa-pencil"></i></a> <a
+									ui-sref="vendor.facility.booking({facilityId : facility.id})"
+									class="btn btn-transparent btn-xs tooltips"
+									tooltip-placement="top" tooltip="Remove"><i
+									class="fa fa-times fa fa-white"></i></a>
 							</div>
-						</div></td>
+							<div class="visible-xs visible-sm hidden-md hidden-lg">
+								<div class="btn-group" dropdown is-open="status.isopen">
+									<button type="button"
+										class="btn btn-primary btn-o btn-sm dropdown-toggle"
+										dropdown-toggle>
+										<i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right dropdown-light" role="menu">
+										<li><a data-ng-click="open('lg',facility)"> Edit </a></li>
+										<li><a
+											ui-sref="vendor.facility.booking({facilityId : facility.id})">
+												Book </a></li>
+									</ul>
+								</div>
+							</div>
+						</td>
 					</tr>
 				</table>
 			</div>

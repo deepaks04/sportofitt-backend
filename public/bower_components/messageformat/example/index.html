@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> 
-    <script>document.write('<script src="' + (localStorage.getItem('lang') || 'en') + '/i18n.js"><\/script>')</script>
-  </head>
-  <body>
-    <div id="content">
-    </div>
-    <input type="button" value="en" name="en" />
-    <input type="button" value="fr" name="fr" />
-    <script>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script>document.write('<script src="' + (localStorage.getItem('lang') || 'en') + '/i18n.js"><\/script>')</script>
+</head>
+<body>
+	<div id="content"></div>
+	<input type="button" value="en" name="en" />
+	<input type="button" value="fr" name="fr" />
+	<script>
       $('<div>').text(window.i18n['colors'].red()).appendTo('#content');
       $('<div>').text(window.i18n['colors'].blue()).appendTo('#content');
       $('<div>').text(window.i18n['colors'].green()).appendTo('#content');
@@ -24,5 +24,5 @@
         location.reload();
       });
     </script>
-  </body>
+</body>
 </html>

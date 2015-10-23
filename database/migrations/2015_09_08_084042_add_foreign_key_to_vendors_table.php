@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddForeignKeyToVendorsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,8 +13,16 @@ class AddForeignKeyToVendorsTable extends Migration
     public function up()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('area_id')->references('id')->on('areas')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('area_id')
+                ->references('id')
+                ->on('areas')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

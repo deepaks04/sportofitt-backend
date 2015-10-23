@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddIsActiveColumnToSessionPackageChildTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,7 +13,9 @@ class AddIsActiveColumnToSessionPackageChildTable extends Migration
     public function up()
     {
         Schema::table('session_package_child', function (Blueprint $table) {
-            $table->boolean('is_active')->default(1)->after('discount');
+            $table->boolean('is_active')
+                ->default(1)
+                ->after('discount');
         });
     }
 

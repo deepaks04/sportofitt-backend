@@ -5,50 +5,69 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 -->
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Mathematical Formulas &mdash; CKEditor Sample</title>
-	<script src="../../../ckeditor.js"></script>
-	<link href="../../../samples/sample.css" rel="stylesheet">
-	<meta name="ckeditor-sample-name" content="Mathematics plugin">
-	<meta name="ckeditor-sample-group" content="Plugins">
-	<meta name="ckeditor-sample-description" content="Create mathematical equations in TeX and display them in visual form.">
-	<meta name="ckeditor-sample-isnew" content="1">
-	<script>
+<meta charset="utf-8">
+<title>Mathematical Formulas &mdash; CKEditor Sample</title>
+<script src="../../../ckeditor.js"></script>
+<link href="../../../samples/sample.css" rel="stylesheet">
+<meta name="ckeditor-sample-name" content="Mathematics plugin">
+<meta name="ckeditor-sample-group" content="Plugins">
+<meta name="ckeditor-sample-description"
+	content="Create mathematical equations in TeX and display them in visual form.">
+<meta name="ckeditor-sample-isnew" content="1">
+<script>
 		CKEDITOR.disableAutoInline = true;
 	</script>
 </head>
 <body>
 	<h1 class="samples">
-		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo; Mathematical Formulas
+		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo;
+		Mathematical Formulas
 	</h1>
 
 	<div class="description">
+		<p>This sample shows the usage of the CKEditor mathematical plugin
+			that introduces a MathJax widget. You can now use it to create or
+			modify equations using TeX.</p>
 		<p>
-			This sample shows the usage of the CKEditor mathematical plugin that introduces a MathJax widget. You can now use it to create or modify equations using TeX.
+			TeX content will be automatically replaced by a widget when you put
+			it in a
+			<code>&lt;span class="math-tex"&gt;</code>
+			element. You can also add new equations by using the <strong>Math</strong>
+			toolbar button and entering TeX content in the plugin dialog window.
+			After you click <strong>OK</strong>, a widget will be inserted into
+			the editor content.
 		</p>
 		<p>
-			TeX content will be automatically replaced by a widget when you put it in a <code>&lt;span class="math-tex"&gt;</code> element. You can also add new equations by using the <strong>Math</strong> toolbar button and entering TeX content in the plugin dialog window. After you click <strong>OK</strong>, a widget will be inserted into the editor content.
+			The output of the editor will be plain TeX with <a
+				href="http://www.mathjax.org/">MathJax</a> delimiters:
+			<code>\(</code>
+			and
+			<code>\)</code>
+			, as in the code below:
 		</p>
-		<p>
-			The output of the editor will be plain TeX with <a href="http://www.mathjax.org/">MathJax</a> delimiters: <code>\(</code> and <code>\)</code>, as in the code below:
-		</p>
-<pre class="samples">
+		<pre class="samples">
 &lt;span class="math-tex"&gt;\( \sqrt{1} + (1)^2 = 2 \)&lt;/span&gt;
 </pre>
 		<p>
-			To transform TeX into a visual equation, a page must include the <a href="http://docs.mathjax.org/en/latest/start.html">MathJax script</a>.
+			To transform TeX into a visual equation, a page must include the <a
+				href="http://docs.mathjax.org/en/latest/start.html">MathJax
+				script</a>.
 		</p>
 		<p>
-			In order to use the new plugin, include it in the <code><a class="samples" href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraPlugins">config.extraPlugins</a></code> configuration setting.
+			In order to use the new plugin, include it in the
+			<code>
+				<a class="samples"
+					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraPlugins">config.extraPlugins</a>
+			</code>
+			configuration setting.
 		</p>
-<pre class="samples">
+		<pre class="samples">
 CKEDITOR.replace( '<em>textarea_id</em>', {
 	<strong>extraPlugins: 'mathjax'</strong>
 } );
 </pre>
-		<p id="ie8-warning">
-			Please note that this plugin is not compatible with Internet Explorer 8.
-		</p>
+		<p id="ie8-warning">Please note that this plugin is not compatible
+			with Internet Explorer 8.</p>
 	</div>
 
 	<textarea id="editor1" cols="10" rows="10">
@@ -71,11 +90,13 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 	<div id="footer">
 		<hr>
 		<p>
-			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+			CKEditor - The text editor for the Internet - <a class="samples"
+				href="http://ckeditor.com/">http://ckeditor.com</a>
 		</p>
 		<p id="copy">
-			Copyright &copy; 2003-2015, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
-			Knabben. All rights reserved.
+			Copyright &copy; 2003-2015, <a class="samples"
+				href="http://cksource.com/">CKSource</a> - Frederico Knabben. All
+			rights reserved.
 		</p>
 	</div>
 </body>

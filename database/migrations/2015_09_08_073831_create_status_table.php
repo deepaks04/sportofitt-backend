@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateStatusTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -14,8 +14,8 @@ class CreateStatusTable extends Migration
     {
         Schema::create('status', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name',255);
-            $table->string('slug',255)->unique();
+            $table->string('name', 255);
+            $table->string('slug', 255)->unique();
             $table->timestamps();
         });
     }

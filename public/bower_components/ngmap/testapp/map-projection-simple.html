@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -122,17 +123,15 @@ gallPetersMapType.projection = new GallPetersProjection();
 </script>
 </head>
 <body>
-    <div ng-controller="MapProjectionSimpleCtrl">
-      <map zoom="0" center="0,0"
-        on-click="alertLocation()"
-        street-view-control="false"
-        map-type-id="gallPetersMap"
-        map-type-control-options="{
+	<div ng-controller="MapProjectionSimpleCtrl">
+		<map zoom="0" center="0,0" on-click="alertLocation()"
+			street-view-control="false" map-type-id="gallPetersMap"
+			map-type-control-options="{
           mapTypeIds: ['ROADMAP', 'gallPetersMap']
         }">
-        <map-type name="gallPetersMap" object="gallPetersMapType">
-        </map-type>
-      </map>
-    </div>
+			<map-type name="gallPetersMap" object="gallPetersMapType">
+			</map-type>
+		</map>
+	</div>
 </body>
 </html>

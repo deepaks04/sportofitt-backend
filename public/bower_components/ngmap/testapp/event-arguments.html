@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -30,12 +31,10 @@
 </head>
 
 <body>
-    <div ng-controller="EventArgumentsController">
-      Assigning arguments in UI events
-      <br/>
-      Click map to place markers
-      <map zoom="4" center="-25.363882, 131.044922" on-click="placeMarker()">
-      </map>
-    </div>
+	<div ng-controller="EventArgumentsController">
+		Assigning arguments in UI events <br /> Click map to place markers
+		<map zoom="4" center="-25.363882, 131.044922" on-click="placeMarker()">
+		</map>
+	</div>
 </body>
 </html>

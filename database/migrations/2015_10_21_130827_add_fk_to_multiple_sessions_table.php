@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddFkToMultipleSessionsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,7 +13,11 @@ class AddFkToMultipleSessionsTable extends Migration
     public function up()
     {
         Schema::table('multiple_sessions', function (Blueprint $table) {
-            $table->foreign('available_facility_id')->references('id')->on('available_facilities')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('available_facility_id')
+                ->references('id')
+                ->on('available_facilities')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

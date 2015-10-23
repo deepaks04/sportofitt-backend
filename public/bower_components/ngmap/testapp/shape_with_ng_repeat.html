@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 <script src="scripts/app.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
@@ -29,19 +30,14 @@
 </head>
 
 <body>
-    <div ng-controller="MyCtrl">
-      <map zoom="11" center="[40.74, -74.18]">
-         <shape ng-repeat="shape in allShapes" 
-           name="{{shape.name}}"
-           stroke-color="#FF0000"
-           stroke-opacity="0.8"
-           path="{{shape.path}}"
-           paths="{{shape.paths}}"
-           bounds="{{shape.bounds}}"
-           center="{{shape.center}}"
-           radius="{{shape.radius}}"
-           stroke-weight="2"></shape>
-      </map>
-    </div>
+	<div ng-controller="MyCtrl">
+		<map zoom="11" center="[40.74, -74.18]">
+			<shape ng-repeat="shape in allShapes" name="{{shape.name}}"
+				stroke-color="#FF0000" stroke-opacity="0.8" path="{{shape.path}}"
+				paths="{{shape.paths}}" bounds="{{shape.bounds}}"
+				center="{{shape.center}}" radius="{{shape.radius}}"
+				stroke-weight="2"></shape>
+		</map>
+	</div>
 </body>
 </html>

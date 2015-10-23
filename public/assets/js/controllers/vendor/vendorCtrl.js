@@ -94,10 +94,11 @@ app.controller('ProfileCtrl', ["$scope","$timeout", "flowFactory","userService",
 	$scope.form = {
 
 			submit: function (form) {
-				if($scope.obj.flow.files[0]){
+
+				if($scope.obj.flow.files[0] !== undefined){
 					$scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
 				}
-				console.log($scope.obj.flow.files[0].file);
+
 
 				var updateProfile =userService.updateUserInfo($scope.userInfo);
 				updateProfile.then(function(response){
