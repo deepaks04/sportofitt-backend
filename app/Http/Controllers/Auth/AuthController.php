@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Area;
@@ -17,16 +16,16 @@ use Illuminate\Support\Facades\URL;
 class AuthController extends Controller
 {
     /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
-
+     * |--------------------------------------------------------------------------
+     * | Registration & Login Controller
+     * |--------------------------------------------------------------------------
+     * |
+     * | This controller handles the registration of new users, as well as the
+     * | authentication of existing users. By default, this controller uses
+     * | a simple trait to add these behaviors. Why don't you explore it?
+     * |
+     */
+    
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
@@ -36,13 +35,15 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        $this->middleware('guest', [
+            'except' => 'logout'
+        ]);
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data            
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -50,14 +51,14 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:6'
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data            
      * @return User
      */
     protected function create(array $data)
@@ -65,50 +66,55 @@ class AuthController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'password' => bcrypt($data['password'])
         ]);
     }
 
-    protected function authenticate(LoginUserRequest $request){
+    protected function authenticate(LoginUserRequest $request)
+    {
         $user = User::where('email', $request->email)->first();
-        if($user == NULL){
-            $status =404;
+        if ($user == NULL) {
+            $status = 404;
             $response = [
-                "message" => "Sorry!! Incorrect email or password",
+                "message" => "Sorry!! Incorrect email or password"
             ];
-        }elseif($user->is_active == 0){
-            $status =401;
+        } elseif ($user->is_active == 0) {
+            $status = 401;
             $response = [
-                "message" => "Please confirm your email id first",
+                "message" => "Please confirm your email id first"
             ];
-        }elseif (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        } elseif (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ])) {
             // Authentication passed...
-            $status =200;
+            $status = 200;
             $user = Auth::User();
             $role = Role::find($user->role_id);
             $currentStatus = Status::find($user->status_id);
             $user['role'] = $role->slug;
-
-            if($user['profile_picture']==null){
+            
+            if ($user['profile_picture'] == null) {
                 $user['profile_picture'] = $user['profile_picture'];
-            }else{
-                if($role->slug=="vendor"){
+            } else {
+                if ($role->slug == "vendor") {
                     $uploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-                }if($role->slug=="customer"){
+                }
+                if ($role->slug == "customer") {
                     $uploadPath = URL::asset(env('CUSTOMER_FILE_UPLOAD'));
                 }
-                $userOwnDirecory = $uploadPath."/".sha1($user['id'])."/"."profile_image/";
-                $user['profile_picture'] = $userOwnDirecory.$user['profile_picture'];
+                $userOwnDirecory = $uploadPath . "/" . sha1($user['id']) . "/" . "profile_image/";
+                $user['profile_picture'] = $userOwnDirecory . $user['profile_picture'];
             }
-
-            if($role->slug=="vendor"){
+            
+            if ($role->slug == "vendor") {
                 $vendor = $user->vendor()->first();
-                $user['is_processed'] = (int)$vendor->is_processed;
+                $user['is_processed'] = (int) $vendor->is_processed;
                 $area = Area::select('name')->find($vendor['area_id']);
                 $vendor['area'] = $area['name'];
                 $user['extra'] = $vendor;
             }
-            if($role->slug=="customer"){
+            if ($role->slug == "customer") {
                 $customer = $user->customer()->first();
                 $area = Area::select('name')->find($customer['area_id']);
                 $customer['area'] = $area['name'];
@@ -117,23 +123,24 @@ class AuthController extends Controller
             $user['status'] = $currentStatus->slug;
             $response = [
                 "message" => "Login Successful",
-                "user" =>$user
+                "user" => $user
             ];
-        }else{
-            $status =404;
+        } else {
+            $status = 404;
             $response = [
-                "message" => "Sorry!! Incorrect email or password",
+                "message" => "Sorry!! Incorrect email or password"
             ];
         }
-        return response($response,$status);
+        return response($response, $status);
     }
 
-    protected function logout(){
+    protected function logout()
+    {
         Auth::logout();
-        $status =200;
+        $status = 200;
         $response = [
-            "message" => "Logout Successful",
+            "message" => "Logout Successful"
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 }

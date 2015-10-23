@@ -1,18 +1,17 @@
 <?php
-
 return [
-
+    
     /*
-    |--------------------------------------------------------------------------
-    | Default Cache Store
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default cache connection that gets used while
-    | using this caching library. This connection is used when another is
-    | not explicitly specified when executing a given caching function.
-    |
-    */
-
+     * |--------------------------------------------------------------------------
+     * | Default Cache Store
+     * |--------------------------------------------------------------------------
+     * |
+     * | This option controls the default cache connection that gets used while
+     * | using this caching library. This connection is used when another is
+     * | not explicitly specified when executing a given caching function.
+     * |
+     */
+    
     'default' => env('CACHE_DRIVER', 'file'),
 
     /*
@@ -27,41 +26,43 @@ return [
     */
 
     'stores' => [
-
+        
         'apc' => [
-            'driver' => 'apc',
+            'driver' => 'apc'
         ],
-
+        
         'array' => [
-            'driver' => 'array',
+            'driver' => 'array'
         ],
-
+        
         'database' => [
             'driver' => 'database',
-            'table'  => 'cache',
-            'connection' => null,
+            'table' => 'cache',
+            'connection' => null
         ],
-
+        
         'file' => [
             'driver' => 'file',
-            'path'   => storage_path('framework/cache'),
+            'path' => storage_path('framework/cache')
         ],
-
+        
         'memcached' => [
-            'driver'  => 'memcached',
+            'driver' => 'memcached',
             'servers' => [
                 [
-                    'host' => '127.0.0.1', 'port' => 11211, 'weight' => 100,
-                ],
-            ],
+                    'host' => '127.0.0.1',
+                    'port' => 11211,
+                    'weight' => 100
+                ]
+            ]
         ],
-
+        
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'default',
-        ],
-
-    ],
+            'connection' => 'default'
+        ]
+    ]
+    ,
 
     /*
     |--------------------------------------------------------------------------
@@ -74,6 +75,6 @@ return [
     |
     */
 
-    'prefix' => 'laravel',
-
-];
+    'prefix' => 'laravel'
+]
+;

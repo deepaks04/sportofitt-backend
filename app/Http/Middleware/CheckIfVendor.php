@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,16 +8,17 @@ use App\Role;
 
 class CheckIfVendor
 {
+
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request            
+     * @param \Closure $next            
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        $role = Role::where('slug','=','vendor')->first();
+        $role = Role::where('slug', '=', 'vendor')->first();
         $user = Auth::user();
         if ($user->role_id != $role->id) {
             return response('Unauthorized.', 401);

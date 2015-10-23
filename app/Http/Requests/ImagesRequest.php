@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
 class ImagesRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,7 +24,7 @@ class ImagesRequest extends Request
     public function rules()
     {
         return [
-            'file[]' => 'mimes:jpeg,png,jpg',
+            'file[]' => 'mimes:jpeg,png,jpg'
         ];
     }
 }

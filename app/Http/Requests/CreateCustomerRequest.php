@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
 class CreateCustomerRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -30,7 +30,7 @@ class CreateCustomerRequest extends Request
             'username' => 'required|min:5|max:50|unique:users',
             'password' => 'required|min:5|max:60',
             'gender' => 'required|integer',
-            'area_id' => 'required|integer',
+            'area_id' => 'required|integer'
         ];
     }
 }

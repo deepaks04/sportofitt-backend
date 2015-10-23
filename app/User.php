@@ -1,5 +1,4 @@
 <?php
-
 namespace App;
 
 use Illuminate\Auth\Authenticatable;
@@ -40,9 +39,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static \Illuminate\Database\Query\Builder|\App\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\App\User whereUpdatedAt($value)
  */
-class User extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword;
 
@@ -59,14 +56,17 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    //protected $fillable = ['fname', 'lname', 'email', 'username', 'password', 'is_active', 'status_id', 'role_id', 'remember_token'];
-
+    // protected $fillable = ['fname', 'lname', 'email', 'username', 'password', 'is_active', 'status_id', 'role_id', 'remember_token'];
+    
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = [
+        'password',
+        'remember_token'
+    ];
 
     /**
      * The $guarded property should contain an array of
@@ -77,18 +77,26 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $guarded = ['email', 'is_active', 'status_id', 'role_id', 'remember_token'];
+    protected $guarded = [
+        'email',
+        'is_active',
+        'status_id',
+        'role_id',
+        'remember_token'
+    ];
 
     /**
      * One User Can have One Vendor Only
+     * 
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function vendor(){
+    public function vendor()
+    {
         return $this->hasOne('App\Vendor');
     }
 
-    public function customer(){
+    public function customer()
+    {
         return $this->hasOne('App\Customer');
     }
-
 }

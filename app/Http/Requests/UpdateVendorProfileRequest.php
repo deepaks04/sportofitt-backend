@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
 class UpdateVendorProfileRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -34,7 +34,7 @@ class UpdateVendorProfileRequest extends Request
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'postcode' => 'required|integer',
-            'commission' => 'required|integer',
+            'commission' => 'required|integer'
         ];
     }
 }
