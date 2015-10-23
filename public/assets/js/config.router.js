@@ -59,7 +59,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
   .state('vendor', {
       url: "/vendor",
       templateUrl: "assets/views/vendor/app.html",
-      resolve: loadSequence('modernizr', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
+      resolve: loadSequence('modernizr', 'logger','uiMap','moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
       abstract: true
   }).state('vendor.dashboard', {
       url: "/dashboard",
@@ -75,7 +75,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
         ncyBreadcrumb: {
             label: 'Vendor Profile Setting'
         },
-        resolve: loadSequence('flow','logger','uiMap','angularFileUpload','userService', 'vendorCtrl')
+        resolve: loadSequence('flow','angularFileUpload','userService', 'vendorCtrl')
     }).state('vendor.facility', {
           url: '/facility',
           template: '<div ui-view class="fade-in-up"></div>',
