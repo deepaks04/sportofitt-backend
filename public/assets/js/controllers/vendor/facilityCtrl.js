@@ -1,454 +1,460 @@
 'use strict';
 /**
-  * controllers used for the facility
-*/
+ * controllers used for the facility
+ */
 app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","SweetAlert", function ($scope,$state,$log,facilityService,SweetAlert) {
 
-    facilityService.getRootCategory()
-        .then(getRootCategorySuccess);
+	facilityService.getRootCategory()
+	.then(getRootCategorySuccess);
 
-        $scope.selectedCategory = {"":"Select"};
-    $scope.slots = {1:1,2:2,3:3,4:4};
-    $scope.types = {0:"Peak Time",1:"Off time"};
-
-        $scope.master = $scope.facility = {};
-    // Time Picker
-    $scope.today = function () {
-        var dt = new Date();
-        dt.setHours( 0 );
-        dt.setMinutes( 15 );
-        $scope.facility.duration = dt;
-    };
-    $scope.today();
-
-    $scope.options = {
-        hstep: [1, 2, 3],
-        mstep: [1, 5, 10, 15, 25, 30]
-    };
-
-    $scope.hstep = 1;
-    $scope.mstep = 15;
+	facilityService.getDuration()
+	.then(getDurationSuccess);
 
 
+	$scope.percentageArray = {
+			10:10,
+			20:20,
+			30:30,
+			40:40,
+			50:50,
+			60:60,
+			70:70,
+			80:80,
+			90:90,
+			100:100
+			};
+	console.log($scope.percentageArray);
+	$scope.slots = {1:1,2:2,3:3,4:4};
+	$scope.types = {0:"Peak Time",1:"Off time"};
 
-    $scope.changed = function () {
-        var hours = $scope.facility.duration.getHours();
+	$scope.master = $scope.facility = {};
+//	// Time Picker
+//	$scope.today = function () {
+//		var dt = new Date();
+//		dt.setHours( 0 );
+//		dt.setMinutes( 15 );
+//		$scope.facility.duration = dt;
+//	};
+//	$scope.today();
+//
+//	$scope.options = {
+//			hstep: [1, 2, 3],
+//			mstep: [1, 5, 10, 15, 25, 30]
+//	};
+//
+//	$scope.hstep = 1;
+//	$scope.mstep = 15;
+//
+//
+//
+//	$scope.changed = function () {
+//		var hours = $scope.facility.duration.getHours();
+//
+//		var mins = $scope.facility.duration.getMinutes();
+//		if(hours > 3){
+//			alert('max time 3 hours');
+//			var dt = new Date();
+//			dt.setHours( 3 );
+//			dt.setMinutes( 0 );
+//			$scope.facility.duration = dt;
+//
+//		}
+//		if(hours <= 0 && mins < 15){
+//			alert('min time 15 minutes');
+//			$scope.today();
+//		}
+//		$log.log('Time changed to: ' + hours + mins);
+//	};
+//
+//	$scope.clear = function () {
+//		$scope.facility.duration = null;
+//	};
+	$scope.form = {
 
-        var mins = $scope.facility.duration.getMinutes();
-        if(hours > 3){
-            alert('max time 3 hours');
-            var dt = new Date();
-            dt.setHours( 3 );
-            dt.setMinutes( 0 );
-            $scope.facility.duration = dt;
+			submit: function (form) {
+				var firstError = null;
 
-        }
-        if(hours <= 0 && mins < 15){
-            alert('min time 15 minutes');
-            $scope.today();
-        }
-        $log.log('Time changed to: ' + hours + mins);
-    };
+					var addFacility =facilityService.addFacility($scope.facility);
+					addFacility.then(function(response){
+						SweetAlert.swal(response.message, "success");
+						$state.go("vendor.facility.list");
 
-    $scope.clear = function () {
-        $scope.facility.duration = null;
-    };
-        $scope.form = {
+						console.log(response);
+					});
+					addFacility.catch(function(data,status){
 
-            submit: function (form) {
-                var firstError = null;
-                if (form.$invalid) {
+						angular.forEach(data.data,function(errors,field){
+							$scope.Form[field].$dirty = true;
+							$scope.Form[field].$error = errors;
+							console.log($scope.Form[field]);
+						});
 
-                    var field = null, firstError = null;
-                    for (field in form) {
-                        if (field[0] != '$') {
-                            if (firstError === null && !form[field].$valid) {
-                                firstError = form[field].$name;
-                            }
+						SweetAlert.swal(data.data.message,data.data.statusText, "error");
+						return false;
+					})
 
-                            if (form[field].$pristine) {
-                                form[field].$dirty = true;
-                            }
-                        }
-                    }
+			},
+			reset: function (form) {
 
-                    angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-                    return;
+				$scope.facility = angular.copy($scope.master);
+				form.$setPristine(true);
 
-                } else {
+			}
+	};
 
-                  var addFacility =facilityService.addFacility($scope.facility);
-      addFacility.then(function(response){
-      SweetAlert.swal(response.message, "success");
-      $state.go("vendor.facility.list");
+	function getRootCategorySuccess(categoryData) {
+		$scope.categoryData = categoryData.category;
+	}
 
-      console.log(response);
-      });
-      addFacility.catch(function(data,status){
-      console.log($scope.Form['name']);
-      SweetAlert.swal(data.data.message,data.data.statusText, "error");
-      return;
-      })
-
-                }
-
-            },
-            reset: function (form) {
-
-                $scope.facility = angular.copy($scope.master);
-                form.$setPristine(true);
-
-            }
-        };
-
-    function getRootCategorySuccess(categoryData) {
-        $scope.categoryData = categoryData.category;
-    }
+	function getDurationSuccess(durations) {
+		$scope.durations = durations.duration;
+	}
 }]);
 
 //List of facility
 app.controller('facilityListCtrl', ["$scope", "$filter", "$modal","$log","ngTableParams","facilityService", function ($scope, $filter,$modal,
-                                                                                                                      $log,ngTableParams,facilityService) {
-    
-    $scope.facilityData = {};
-    facilityService.getAllFacilities()
-        .then(getFacilitySuccess);
+		$log,ngTableParams,facilityService) {
 
-function getFacilitySuccess(facilityData) {
-        $scope.facilityData = facilityData.facility;
-    }
+	$scope.facilityData = {};
+	facilityService.getAllFacilities()
+	.then(getFacilitySuccess);
 
-    $scope.tableParams = new ngTableParams({
-        page: 1, // show first page
-        count: 5, // count per page
-        sorting: {
-            name: 'asc' // initial sorting
-        }
-    }, {
-        total: $scope.facilityData.length, // length of data
-        getData: function ($defer, params) {
-            // use build-in angular filter
-            var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
-            $defer.resolve(orderedData);
-        }
-    });
+	function getFacilitySuccess(facilityData) {
+		$scope.facilityData = facilityData.facility;
+	}
 
-    $scope.open = function (size,facility) {
+	$scope.tableParams = new ngTableParams({
+		page: 1, // show first page
+		count: 5, // count per page
+		sorting: {
+			name: 'asc' // initial sorting
+		}
+	}, {
+		total: $scope.facilityData.length, // length of data
+		getData: function ($defer, params) {
+			// use build-in angular filter
+			var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
+			$defer.resolve(orderedData);
+		}
+	});
 
-        var modalInstance = $modal.open({
-            templateUrl: 'sessionPackageModal.html',
-            controller: 'SessionModalInstanceCtrl',
-            size: size,
-            resolve: {
-                selectedFacility: function () {
-                    return facility;
-                }
-            }
-        });
+	$scope.open = function (size,facility) {
+
+		var modalInstance = $modal.open({
+			templateUrl: 'sessionPackageModal.html',
+			controller: 'SessionModalInstanceCtrl',
+			size: size,
+			resolve: {
+				selectedFacility: function () {
+					return facility;
+				}
+			}
+		});
 
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
+		modalInstance.result.then(function (selectedItem) {
+			$scope.selected = selectedItem;
+		}, function () {
+			$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
 }]);
 
 
 
 app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selectedFacility","facilityService",
-    function ($scope, $modalInstance, selectedFacility,facilityService) {
+                                            function ($scope, $modalInstance, selectedFacility,facilityService) {
 
-        $scope.facility = selectedFacility;
-        //facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
-        //    $scope.facilityData = facility.facility;
-        //}).catch(function(){
-        //    $scope.facilityData = {};
-        //})
-$scope.sessions = [];
+	$scope.facility = selectedFacility;
+	// facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
+	// $scope.facilityData = facility.facility;
+	// }).catch(function(){
+	// $scope.facilityData = {};
+	// })
+	$scope.sessions = [];
 
-    $scope.slots = {1:1,2:2,3:3,4:4};
-    $scope.types = {0:"Peak Time",1:"Off time"};
+	$scope.slots = {1:1,2:2,3:3,4:4};
+	$scope.types = {0:"Peak Time",1:"Off time"};
 
-    $scope.discounts = {10:10,20:20,30:30};
+	$scope.discounts = {10:10,20:20,30:30};
 
-    $scope.months = ["1 Month","3 Months","6 Months"];
+	$scope.months = ["1 Month","3 Months","6 Months"];
 
-        $scope.showStatus = function() {
-            var selected = [];
-            angular.forEach($scope.statuses, function(s) {
-                if ($scope.session.status.indexOf(s.value) >= 0) {
-                    selected.push(s.text);
-                }
-            });
-            return selected.length ? selected.join(', ') : 'Not set';
-        };
+	$scope.showStatus = function() {
+		var selected = [];
+		angular.forEach($scope.statuses, function(s) {
+			if ($scope.session.status.indexOf(s.value) >= 0) {
+				selected.push(s.text);
+			}
+		});
+		return selected.length ? selected.join(', ') : 'Not set';
+	};
 
-        $scope.showDiscount = function(session) {
-            var selected = [];
-            if(session.discount) {
-                selected = $filter('filter')($scope.discounts, {value: session.discount});
-            }
-            return selected.length ? selected[0].text : 'Not set';
-        };
+	$scope.showDiscount = function(session) {
+		var selected = [];
+		if(session.discount) {
+			selected = $filter('filter')($scope.discounts, {value: session.discount});
+		}
+		return selected.length ? selected[0].text : 'Not set';
+	};
 
 
-        $scope.ok = function () {
-        $modalInstance.close($scope.selected.item);
-        };
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.item);
+	};
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
 
-        $scope.saveSession = function(data, id) {
-            //$scope.user not updated yet
-            angular.extend(data, {id: id});
-            return $http.post('/saveUser', data);
-        };
+	$scope.saveSession = function(data, id) {
+		// $scope.user not updated yet
+		angular.extend(data, {id: id});
+		return $http.post('/saveUser', data);
+	};
 
-        // remove user
-        $scope.removeSession = function(index) {
-            $scope.sessions.splice(index, 1);
-        };
+	// remove user
+	$scope.removeSession = function(index) {
+		$scope.sessions.splice(index, 1);
+	};
 
-        // add user
-        $scope.addSession = function() {
-            $scope.inserted = {
-                id: $scope.sessions.length+1,
-                start: null,
-                end: null,
-                is_peak: 1,
-                discount : null
-            };
-            $scope.sessions.push($scope.inserted);
-        };
+	// add user
+	$scope.addSession = function() {
+		$scope.inserted = {
+				id: $scope.sessions.length+1,
+				start: null,
+				end: null,
+				is_peak: 1,
+				discount : null
+		};
+		$scope.sessions.push($scope.inserted);
+	};
 
-    }]);
+}]);
 app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
-    $scope.items = items;
-    $scope.selected = {
-        item: $scope.items[0]
-    };
+	$scope.items = items;
+	$scope.selected = {
+			item: $scope.items[0]
+	};
 
-    $scope.ok = function () {
-        $modalInstance.close($scope.selected.item);
-    };
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.item);
+	};
 
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
 });
 
 app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","facilityService","SweetAlert", function ($scope,$state, $aside, moment,facilityService,SweetAlert) {
-    $scope.facilityId = $state.params.facilityId;
+	$scope.facilityId = $state.params.facilityId;
 
 
 
-    $scope.facilityData = {};
-    facilityService.getAllFacilities()
-        .then(getAllFacilitySuccess);
+	$scope.facilityData = {};
+	facilityService.getAllFacilities()
+	.then(getAllFacilitySuccess);
 
-    function getAllFacilitySuccess(facilityData) {
-        $scope.facilityData = facilityData.facility;
-        console.log($scope.facilityData);
-    }
+	function getAllFacilitySuccess(facilityData) {
+		$scope.facilityData = facilityData.facility;
+		console.log($scope.facilityData);
+	}
 
-    facilityService.getFacilityById($scope.facilityId)
-        .then(getFacilitySuccess);
+	facilityService.getFacilityById($scope.facilityId)
+	.then(getFacilitySuccess);
 
-    function getFacilitySuccess(facilityData) {
-        $scope.facility = facilityData.facility;
-        console.log($scope.facility);
-    }
+	function getFacilitySuccess(facilityData) {
+		$scope.facility = facilityData.facility;
+		console.log($scope.facility);
+	}
 
-    var vm = this;
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+	var vm = this;
+	var date = new Date();
+	var d = date.getDate();
+	var m = date.getMonth();
+	var y = date.getFullYear();
 
-    $scope.events = [
-        {
-            title: 'Birthday Party',
-            type: 'home',
-            startsAt: new Date(y, m, 5, 19, 0),
-            endsAt: new Date(y, m, 5, 22, 30)
-        },
-        {
-            title: 'AngularJS Seminar',
-            type: 'off-site-work',
-            startsAt: new Date(y, m, 8, 10, 30),
-            endsAt: new Date(y, m, 9, 18, 30)
-        },
-        {
-            title: 'Event 1',
-            type: 'job',
-            startsAt: new Date(y, m, d - 5),
-            endsAt: new Date(y, m, d - 2)
-        },
-        {
-            title: 'Event 2',
-            type: 'cancelled',
-            startsAt: new Date(y, m, d - 3, 16, 0),
-            endsAt: new Date(y, m, d - 3, 18, 0)
-        },
-        {
-            title: 'This is a really long event title',
-            type: 'to-do',
-            startsAt: new Date(y, m, d + 1, 19, 0),
-            endsAt: new Date(y, m, d + 1, 22, 30)
-        },
-    ];
+	$scope.events = [
+	                 {
+	                	 title: 'Birthday Party',
+	                	 type: 'home',
+	                	 startsAt: new Date(y, m, 5, 19, 0),
+	                	 endsAt: new Date(y, m, 5, 22, 30)
+	                 },
+	                 {
+	                	 title: 'AngularJS Seminar',
+	                	 type: 'off-site-work',
+	                	 startsAt: new Date(y, m, 8, 10, 30),
+	                	 endsAt: new Date(y, m, 9, 18, 30)
+	                 },
+	                 {
+	                	 title: 'Event 1',
+	                	 type: 'job',
+	                	 startsAt: new Date(y, m, d - 5),
+	                	 endsAt: new Date(y, m, d - 2)
+	                 },
+	                 {
+	                	 title: 'Event 2',
+	                	 type: 'cancelled',
+	                	 startsAt: new Date(y, m, d - 3, 16, 0),
+	                	 endsAt: new Date(y, m, d - 3, 18, 0)
+	                 },
+	                 {
+	                	 title: 'This is a really long event title',
+	                	 type: 'to-do',
+	                	 startsAt: new Date(y, m, d + 1, 19, 0),
+	                	 endsAt: new Date(y, m, d + 1, 22, 30)
+	                 },
+	                 ];
 
-    $scope.calendarView = 'week';
-    $scope.calendarTitle = 'Name';
-    $scope.calendarDay = new Date();
+	$scope.calendarView = 'week';
+	$scope.calendarTitle = 'Name';
+	$scope.calendarDay = new Date();
 
-    function showModal(action, event) {
-        var modalInstance = $aside.open({
-            templateUrl: 'calendarEvent.html',
-            placement: 'right',
-            size: 'sm',
-            backdrop: true,
-            controller: function ($scope, $modalInstance) {
-                $scope.$modalInstance = $modalInstance;
-                $scope.action = action;
-                $scope.event = event;
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-                $scope.deleteEvent = function () {
-                    $modalInstance.close($scope.event, $scope.event);
-                };
+	function showModal(action, event) {
+		var modalInstance = $aside.open({
+			templateUrl: 'calendarEvent.html',
+			placement: 'right',
+			size: 'sm',
+			backdrop: true,
+			controller: function ($scope, $modalInstance) {
+				$scope.$modalInstance = $modalInstance;
+				$scope.action = action;
+				$scope.event = event;
+				$scope.cancel = function () {
+					$modalInstance.dismiss('cancel');
+				};
+				$scope.deleteEvent = function () {
+					$modalInstance.close($scope.event, $scope.event);
+				};
 
-            }
-        });
-        modalInstance.result.then(function (selectedEvent, action) {
+			}
+		});
+		modalInstance.result.then(function (selectedEvent, action) {
 
-            $scope.eventDeleted(selectedEvent);
+			$scope.eventDeleted(selectedEvent);
 
-        });
-    }
-
-
-    $scope.eventClicked = function (event) {
-        showModal('Clicked', event);
-    };
-    $scope.addEvent = function () {
-        $scope.events.push({
-            title: $scope.facility.name ||  null,
-            startsAt: new Date(y, m, d, 10, 0),
-            endsAt: new Date(y, m, d, 11, 0),
-            type: 'to-do'
-        });
-        $scope.eventEdited($scope.events[$scope.events.length - 1]);
-    };
-
-    $scope.eventEdited = function (event) {
-        showModal('Edited', event);
-    };
-
-    $scope.eventDeleted = function (event) {
-
-        SweetAlert.swal({
-            title: "Are you sure?",
-            text: "Your will not be able to recover this event!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel plx!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        }, function (isConfirm) {
-            if (isConfirm) {
-                $scope.events.splice(event.$id, 1);
-                SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
-            } else {
-                SweetAlert.swal("Cancelled", "Event is safe :)", "error");
-            }
-        });
-    };
+		});
+	}
 
 
-    $scope.toggle = function ($event, field, event) {
-        $event.preventDefault();
-        $event.stopPropagation();
+	$scope.eventClicked = function (event) {
+		showModal('Clicked', event);
+	};
+	$scope.addEvent = function () {
+		$scope.events.push({
+			title: $scope.facility.name ||  null,
+			startsAt: new Date(y, m, d, 10, 0),
+			endsAt: new Date(y, m, d, 11, 0),
+			type: 'to-do'
+		});
+		$scope.eventEdited($scope.events[$scope.events.length - 1]);
+	};
 
-        event[field] = !event[field];
-    };
+	$scope.eventEdited = function (event) {
+		showModal('Edited', event);
+	};
+
+	$scope.eventDeleted = function (event) {
+
+		SweetAlert.swal({
+			title: "Are you sure?",
+			text: "Your will not be able to recover this event!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Yes, delete it!",
+			cancelButtonText: "No, cancel plx!",
+			closeOnConfirm: false,
+			closeOnCancel: false
+		}, function (isConfirm) {
+			if (isConfirm) {
+				$scope.events.splice(event.$id, 1);
+				SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
+			} else {
+				SweetAlert.swal("Cancelled", "Event is safe :)", "error");
+			}
+		});
+	};
+
+
+	$scope.toggle = function ($event, field, event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		event[field] = !event[field];
+	};
 
 }]);
 
 app.controller('facilityEditCtrl', ["$scope","$state","facilityService","SweetAlert", function ($scope,$state,facilityService,SweetAlert) {
 
-    facilityService.getRootCategory()
-        .then(getRootCategorySuccess);
+	facilityService.getRootCategory()
+	.then(getRootCategorySuccess);
 
-facilityService.getFacilityById($state.params.facilityId)
-        .then(getFacilitySuccess);
-        $scope.subCategory = "";
-        $scope.selectedCategory = {};
+	facilityService.getFacilityById($state.params.facilityId)
+	.then(getFacilitySuccess);
 
-        $scope.master = $scope.facility;
-        $scope.form = {
+	$scope.percentageArray = facilityService.getPercentageArray();
+	console.log($scope.percentageArray);
+	$scope.subCategory = "";
 
-            submit: function (form) {
-                var firstError = null;
-                if (form.$invalid) {
+	$scope.master = $scope.facility;
+	$scope.form = {
 
-                    var field = null, firstError = null;
-                    for (field in form) {
-                        if (field[0] != '$') {
-                            if (firstError === null && !form[field].$valid) {
-                                firstError = form[field].$name;
-                            }
+			submit: function (form) {
+				var firstError = null;
+				if (form.$invalid) {
 
-                            if (form[field].$pristine) {
-                                form[field].$dirty = true;
-                            }
-                        }
-                    }
+					var field = null, firstError = null;
+					for (field in form) {
+						if (field[0] != '$') {
+							if (firstError === null && !form[field].$valid) {
+								firstError = form[field].$name;
+							}
 
-                    angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-                    return;
+							if (form[field].$pristine) {
+								form[field].$dirty = true;
+							}
+						}
+					}
 
-                } else {
+					angular.element('.ng-invalid[name=' + firstError + ']').focus();
+					SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
+					return;
 
-                  var addFacility =facilityService.addFacility($scope.facility);
-      addFacility.then(function(response){
-      SweetAlert.swal(response.data.message, "success");
-      $state.go("vendor.facility.list");
+				} else {
 
-      console.log(response);
-      });
-      addFacility.catch(function(data,status){
-      console.log(data);
+					var addFacility =facilityService.addFacility($scope.facility);
+					addFacility.then(function(response){
+						SweetAlert.swal(response.data.message, "success");
+						$state.go("vendor.facility.list");
 
-      SweetAlert.swal(data.data.message,data.data.statusText, "error");
-      return;
-      })
+						console.log(response);
+					});
+					addFacility.catch(function(data,status){
+						console.log(data);
 
-                }
+						SweetAlert.swal(data.data.message,data.data.statusText, "error");
+						return;
+					})
 
-            },
-            reset: function (form) {
+				}
 
-                $scope.facility = angular.copy($scope.master);
-                form.$setPristine(true);
+			},
+			reset: function (form) {
 
-            }
-        };
+				$scope.facility = angular.copy($scope.master);
+				form.$setPristine(true);
 
-    function getRootCategorySuccess(categoryData) {
-        $scope.categoryData = categoryData.category;
-    }
+			}
+	};
 
-    function getFacilitySuccess(facilityData) {
-        $scope.facility = facilityData.facility;
-    }
+	function getRootCategorySuccess(categoryData) {
+		$scope.categoryData = categoryData.category;
+	}
+
+	function getFacilitySuccess(facilityData) {
+		$scope.facility = facilityData.facility;
+	}
 }]);

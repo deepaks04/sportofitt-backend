@@ -305,11 +305,13 @@
 							<div class="col-md-6">
 								<div class="form-group"
 									ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
-									<label class="control-label"> Pin Code </label> <select
+									<label class="control-label"> Pin Code </label>
+									<select
 										ng-model="userInfo.area_id"
 										ng-options="area.id as area.name for area in areas">
 										<option value="">Select Area</option>
-									</select> <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
+									</select>
+									 <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
 
 								</div>
 								<div class="form-group"
