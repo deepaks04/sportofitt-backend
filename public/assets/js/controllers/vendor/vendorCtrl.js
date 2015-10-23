@@ -34,8 +34,9 @@ $scope.bankDetail=bankDetail.bank;
 
   
   //map
-
-  $scope.map = {  show: true,
+$scope.setMap = function (){
+  $scope.map = { 
+   show: true,
       control: {},
       version: "uknown",
       heatLayerCallback: function (layer) {
@@ -47,8 +48,8 @@ $scope.bankDetail=bankDetail.bank;
       showWeather: false,
       showHeat: false,
       center: {
-        latitude: 45,
-        longitude: 78
+        latitude: $scope.userInfo.latitude || 18.52,
+        longitude: $scope.userInfo.longitude || 73.82
       },
       options: {
         streetViewControl: false,
@@ -56,15 +57,15 @@ $scope.bankDetail=bankDetail.bank;
         maxZoom: 20,
         minZoom: 3
       },
-      zoom: 3,
+      zoom: 20,
       dragging: false,
       bounds: {},
         markers2: [
              {
           id: 2,
-          icon: 'assets/images/blue_marker.png',
-          latitude: 33,
-          longitude: 77,
+         // icon: 'assets/images/blue_marker.png',
+          latitude: $scope.userInfo.latitude || 18.52,
+          longitude: $scope.userInfo.longitude || 73.82,
           showWindow: false,
           options: {
             labelContent: 'DRAG ME!',
@@ -74,32 +75,24 @@ $scope.bankDetail=bankDetail.bank;
           }
         }
         ]
-         events: {
-           dragend: function () {
-          $timeout(function () {
-            var markers = [];
-
-            var id = 0;
-            if ($scope.map.mexiMarkers !== null && $scope.map.mexiMarkers.length > 0) {
-              var maxMarker = _.max($scope.map.mexiMarkers, function (marker) {
-                return marker.mid;
-              });
-              id = maxMarker.mid;
-            }
-            for (var i = 0; i < 4; i++) {
-              id++;
-              markers.push(createRandomMarker(id, $scope.map.bounds, "mid"));
-            }
-            $scope.map.mexiMarkers = markers.concat($scope.map.mexiMarkers);
-          });
-        }
-      }
       
        };
+
+        $scope.map.markers2Events = {
+    dragend: function (marker, eventName, model, args) {
+      model.options.labelContent = "Dragged lat: " + model.latitude + " lon: " + model.longitude;
+      $scope.userInfo.latitude = model.latitude;
+      $scope.userInfo.longitude = model.longitude;
+    }
+  };
+}
 
   $scope.form = {
 
             submit: function (form) {
+              if(form.profile_picture === $scope.userInfo.profile_picture){
+                $scope.userInfo.profile_picture = "";
+              }
                   var updateProfile =userService.updateUserInfo($scope.userInfo);
       updateProfile.then(function(response){
       SweetAlert.swal(response.data.message, "success");
@@ -134,26 +127,7 @@ $scope.bankDetail=bankDetail.bank;
             submit: function (form) {
             	
                 var firstError = null;
-                if (form.$invalid) {
-
-                    var field = null, firstError = null;
-                    for (field in form) {
-                        if (field[0] != '$') {
-                            if (firstError === null && !form[field].$valid) {
-                                firstError = form[field].$name;
-                            }
-
-                            if (form[field].$pristine) {
-                                form[field].$dirty = true;
-                            }
-                        }
-                    }
-
-                    angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-                    return;
-
-                } else {
+              
 
                   var updateBillingInfo =userService.updateBillingInfo(form);
       updateBillingInfo.then(function(response){
@@ -163,55 +137,38 @@ $scope.bankDetail=bankDetail.bank;
       });
       updateBillingInfo.catch(function(data,status){
       console.log(data);
-
-      SweetAlert.swal("somethings going wrong",data.data.statusText, "error");
-      return;
+  $scope.errors = {};
+   angular.forEach(data.data,function(errors,field){
+          
+  $scope.errors[field] = errors.join(', ');
+   });
       })
 
                 }
-
-            }        };
+                     };
 
                $scope.bankForm = {
 
             submit: function (form) {
             	
                 var firstError = null;
-                if (form.$invalid) {
-
-                    var field = null, firstError = null;
-                    for (field in form) {
-                        if (field[0] != '$') {
-                            if (firstError === null && !form[field].$valid) {
-                                firstError = form[field].$name;
-                            }
-
-                            if (form[field].$pristine) {
-                                form[field].$dirty = true;
-                            }
-                        }
-                    }
-
-                    angular.element('.ng-invalid[name=' + firstError + ']').focus();
-                    SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-                    return;
-
-                } else {
+                
 
                   var updateBankDetails =userService.updateBankDetails(form);
       updateBankDetails.then(function(response){
+  $scope.errors = {};
       SweetAlert.swal(response.data.message, "success");
      
       console.log(response);
       });
       updateBankDetails.catch(function(data,status){
       console.log(data);
-
-      SweetAlert.swal("somethings going wrong",data.data.statusText, "error");
-      return;
+ $scope.errors = {};
+   angular.forEach(data.data,function(errors,field){
+          
+  $scope.errors[field] = errors.join(', ');
+   });
       })
-
-                }
 
             }        };
 

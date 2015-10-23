@@ -106,7 +106,7 @@
 										</tbody>
 									</table>
 									<div class="text-right">
-										<a class="btn btn-primary btn-o btn-wide" href="#" ng-click="editActive = true">
+										<a class="btn btn-primary btn-o btn-wide" href="#" ng-click="editActive = true;setMap();">
 											Edit Account
 										</a>
 									</div>
@@ -269,7 +269,7 @@
 					</tab>
 					<!-- end: TAB OVERVIEW -->
 				<!-- start: TAB EDIT ACCOUNT -->
-					<tab heading="Edit Account" active="editActive">
+					<tab heading="Edit Account" active="editActive" ng-click="setMap()">
 						<form role="form" id="form" novalidate ng-submit="form.submit(userInfo)" enctype="multipart/form-data">
 							<fieldset>
 								<legend>
@@ -326,6 +326,23 @@
 											</label>
 											<textarea placeholder="Enter Description" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
 										</div>
+												<div class="form-group" ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
+													<label class="control-label">
+														Pin Code
+													</label>
+													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas">
+													    	<option>Select Area</option>
+													    </select>
+													    <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
+
+												</div>
+												<div class="form-group" ng-class="{'has-error':errors.postcode,'has-success':!errors.postcode}">
+											<label class="control-label">
+												Post Code
+											</label>
+											<input type="text" placeholder="Enter your Post code" class="form-control" name="postcode" ng-model="userInfo.postcode">
+											 <span class="error text-small block" ng-if="errors.postcode">{{errors.postcode}}</span>
+										</div>
 										<div class="row">
 											
 											<div class="col-md-12">
@@ -346,29 +363,17 @@
           <ui-gmap-markers models="map.markers2" coords="'self'" icon="'icon'" click="onMarkerClicked" options="'options'" events="map.markers2Events">
             <ui-gmap-windows show="'showWindow'" closeClick="'closeClick'" ng-cloak>
                 <div>
-                    I should not be attached to a
-                    marker.
+                {{userInfo.address}}
                
-                    <p ng-non-bindable >This is an info window at {{ latitude | number:4 }}, {{ longitude | number:4 }}!</p>
+                    <p ng-non-bindable >Your Location at {{ latitude | number:4 }}, {{ longitude | number:4 }}!</p>
 
-                    <p class="muted">My marker will stay open when the window is popped up!</p>
+                   
                 </div>
             </ui-gmap-windows>
         </ui-gmap-markers>
 											</div>
 											</div>
-											<div class="col-md-4">
-												<div class="form-group" ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
-													<label class="control-label">
-														Pin Code
-													</label>
-													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas">
-													    	<option>Select Area</option>
-													    </select>
-													    <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
-
-												</div>
-											</div>
+											
 										<div class="form-group" ng-class="{'has-error':errors.image,'has-success':!errors.image}">
 											<label>
 												Image Upload <span class="symbol required"></span>
@@ -382,11 +387,11 @@
 													</div>
 												</div>
 												<div class="user-image-buttons-edit" ng-if="obj.flow.files.length">
-													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
+													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="profile_picture" uploader="uploaderImages" multiple  required/></span>
 													<span class="btn btn-danger" ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i></span>
 												</div>
 												<div class="user-image-buttons-edit" ng-if="!obj.flow.files.length">
-													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
+													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="profile_picture" uploader="uploaderImages" multiple  required/></span>
 													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeProfileImage()"><i class="fa fa-times"></i> </span>
 												</div>
 												<span class="error text-small block" ng-if="errors.image">{{errors.image}}</span>
@@ -412,68 +417,71 @@
 								</legend>
 								<div class="row">
 									<div class="col-md-6">
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.company_title,'has-success':!errors.company_title}">
 											<label class="control-label">
 												Company Name
 											</label>
 											<input type="text" placeholder="Enter your Company name" class="form-control" name="company_title" ng-model="billingInfo.company_title">
+											 <span class="error text-small block" ng-if="errors.company_title">{{errors.company_title}}</span>
 										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Address
-											</label>
-											<input type="text" placeholder="Enter your company address" class="form-control" name="address" ng-model="billingInfo.address">
-										</div>
-										<div class="form-group">
+									
+										<div class="form-group" ng-class="{'has-error':errors.registration_no,'has-success':!errors.registration_no}">
 											<label class="control-label">
 												Registration Number
 											</label>
 											<input type="text" placeholder="Enter your Registration Number" class="form-control" name="registration_no" ng-model="billingInfo.registration_no">
+											 <span class="error text-small block" ng-if="errors.registration_no">{{errors.registration_no}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.service_tax_no,'has-success':!errors.service_tax_no}">
 											<label class="control-label">
 												Service Tax Number
 											</label>
 											<input type="text" placeholder="Enter your Service Tax Number" class="form-control" name="service_tax_no" ng-model="billingInfo.service_tax_no">
+											 <span class="error text-small block" ng-if="errors.service_tax_no">{{errors.service_tax_no}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.pan_no,'has-success':!errors.pan_no}">
 											<label class="control-label">
 												PAN Number
 											</label>
 											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="billingInfo.pan_no">
+											 <span class="error text-small block" ng-if="errors.pan_no">{{errors.pan_no}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.vat,'has-success':!errors.vat}">
 											<label class="control-label">
 												VAT Number
 											</label>
 											<input type="text" placeholder="Enter your VAT Number" class="form-control" name="vat" ng-model="billingInfo.vat">
+											 <span class="error text-small block" ng-if="errors.vat">{{errors.vat}}</span>
+
 										</div>
 
-										<div class="form-group">
-											<label class="control-label">
-												Zip Code
-											</label>
-											<input type="text" placeholder="Enter your Post code" class="form-control" name="postcode" ng-model="billingInfo.postcode">
-										</div>
+										
 									</div>
 									<div class="col-md-6">
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.contact_person_name,'has-success':!errors.contact_person_name}">
 											<label class="control-label">
 												Contact Person Name
 											</label>
 											<input type="text" placeholder="Enter Contact person name" class="form-control" name="contact_person_name" ng-model="billingInfo.contact_person_name">
+											 <span class="error text-small block" ng-if="errors.contact_person_name">{{errors.contact_person_name}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.contact_person_email,'has-success':!errors.contact_person_email}">
 											<label class="control-label">
 												Contact Person Email
 											</label>
 											<input type="email" placeholder="Enter Contact person email" class="form-control" name="contact_person_email" ng-model="billingInfo.contact_person_email">
+											 <span class="error text-small block" ng-if="errors.contact_person_email">{{errors.contact_person_email}}</span>
+
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.contact_person_phone,'has-success':!errors.contact_person_phone}">
 											<label class="control-label">
 												Contact Person Phone
 											</label>
 											<input type="text" placeholder="Enter Contact person phone" class="form-control" name="contact_person_phone" ng-model="billingInfo.contact_person_phone">
+											 <span class="error text-small block" ng-if="errors.contact_person_phone">{{errors.contact_person_phone}}</span>
+
 										</div>
 										
 										
@@ -499,42 +507,48 @@
 								</legend>
 								<div class="row">
 									<div class="col-md-6">
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.bank_name,'has-success':!errors.bank_name}">
 											<label class="control-label">
 												Bank Name
 											</label>
 											<input type="text" placeholder="Enter your Bank name" class="form-control" name="bank_name" ng-model="bankDetail.bank_name">
+											 <span class="error text-small block" ng-if="errors.bank_name">{{errors.bank_name}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.account_number,'has-success':!errors.account_number}">
 											<label class="control-label">
 												Account Number
 											</label>
 											<input type="text" placeholder="Enter your Account number" class="form-control" name="account_number" ng-model="bankDetail.account_number">
+											 <span class="error text-small block" ng-if="errors.account_number">{{errors.account_number}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.ifsc,'has-success':!errors.ifsc}">
 											<label class="control-label">
 												IFSC Code
 											</label>
 											<input type="text" placeholder="Enter your IFSC Code" class="form-control" name="ifsc" ng-model="bankDetail.ifsc">
+											 <span class="error text-small block" ng-if="errors.ifsc">{{errors.ifsc}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
 											<label class="control-label">
 												Account Type
 											</label>
 											<input type="text" placeholder="Enter your Account Type" class="form-control" name="account_type" ng-model="bankDetail.account_type">
+											 <span class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
 										</div>
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.branch_name,'has-success':!errors.branch_name}">
 											<label class="control-label">
 												Branch Name
 											</label>
 											<input type="text" placeholder="Enter your Branch Name" class="form-control" name="branch_name" ng-model="bankDetail.branch_name">
+											 <span class="error text-small block" ng-if="errors.branch_name">{{errors.branch_name}}</span>
 										</div>
 
-										<div class="form-group">
+										<div class="form-group" ng-class="{'has-error':errors.beneficiary,'has-success':!errors.beneficiary}">
 											<label class="control-label">
 												Beneficiary Name
 											</label>
 											<input type="text" placeholder="Enter your Beneficiary Name" class="form-control" name="beneficiary" ng-model="bankDetail.beneficiary">
+											 <span class="error text-small block" ng-if="errors.beneficiary">{{errors.beneficiary}}</span>
 										</div>
 
 										<div class="form-actions">
