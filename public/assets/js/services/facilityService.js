@@ -10,25 +10,30 @@
 		return {
 			getRootCategory: getRootCategory,
 			addFacility: addFacility,
+			updateFacility:updateFacility,
 			getAllFacilities:getAllFacilities,
 			getFacilityById:getFacilityById,
 			getFacilityDetailsById:getFacilityDetailsById,
 			getDuration : getDuration,
-			getPercentageArray:getPercentageArray
+			getPercentageArray:getPercentageArray,
+			addOpeningTime : addOpeningTime,
+			getSessionsByfacilityId:getSessionsByfacilityId,
+			saveSession:saveSession,
+			addPackage:addPackage
 		};
 
 		var percentageArray = {
-								10:10,
-								20:20,
-								30:30,
-								40:40,
-								50:50,
-								60:60,
-								70:70,
-								80:80,
-								90:90,
-								100:100
-								};
+				10:10,
+				20:20,
+				30:30,
+				40:40,
+				50:50,
+				60:60,
+				70:70,
+				80:80,
+				90:90,
+				100:100
+		};
 
 		function getPercentageArray(){
 			return percentageArray;
@@ -42,14 +47,25 @@
 				// cache: true
 			})
 			.then(sendResponseData)
-			.catch(sendGetDurationError);
+			.catch(sendGetError);
 		};
 
-		function sendGetDurationError(response) {
+		function sendGetError(response) {
 
-			return $q.reject('Error retrieving Duration(s). (HTTP status: ' + response.status + ')');
+			return $q.reject('Error retrieving data(s). (HTTP status: ' + response.status + ')');
 
 		};
+
+		function getSessionsByfacilityId(facilityId){
+			return $http({
+				method: 'GET',
+				url: 'api/v1/vendor/sessions-data/'+facilityId,
+				// transformResponse: transformGetFacilities,
+				// cache: true
+			})
+			.then(sendResponseData)
+			.catch(sendGetError);
+		}
 
 		function getAllFacilities() {
 			return $http({
@@ -120,30 +136,26 @@
 			.catch(sendGetFaclityError);
 		}
 
-		function updateBook(book) {
-
-			deleteSummaryFromCache();
-			deleteAllBooksResponseFromCache();
-
+		function updateFacility(facility) {
 			return $http({
 				method: 'PUT',
-				url: 'api/books/' + book.book_id,
-				data: book
+				url: 'api/v1/vendor/facility/' + facility.id,
+				data: facility
 			})
-			.then(updateBookSuccess)
-			.catch(updateBookError);
+			.then(updateFacilitySuccess)
+			.catch(updateFacilityError);
 
 		}
 
-		function updateBookSuccess(response) {
+		function updateFacilitySuccess(response) {
 
-			return 'Book updated: ' + response.config.data.title;
+			return 'Facility updated: ' + response.config.data.title;
 
 		}
 
-		function updateBookError(response) {
+		function updateFacilityError(response) {
 
-			return $q.reject('Error updating book.(HTTP status: ' + response.status + ')');
+			return $q.reject('Error updating Facility.(HTTP status: ' + response.status + ')');
 
 		}
 
@@ -174,31 +186,79 @@
 
 		}
 
-		function deleteBook(bookID) {
+		function addOpeningTime(data){
+			if(data.start instanceof Date)
+			{
+				data.start = data.start.getHours() +":"+("0"+data.start.getMinutes()).slice(-2);;
+			}
 
-			deleteSummaryFromCache();
-			deleteAllBooksResponseFromCache();
-
-			return $http({
-				method: 'DELETE',
-				url: 'api/books/' + bookID
-			})
-			.then(deleteBookSuccess)
-			.catch(deleteBookError);
-
+			if(data.end instanceof Date)
+			{
+				data.end = data.end.getHours() +":"+ ("0"+data.end.getMinutes()).slice(-2);;
+			}
+			var fd = new FormData();
+			for(var key in data)
+				fd.append(key, data[key]);
+			console.log(fd);
+			return		$http.post('api/v1/vendor/opening-time', fd, {
+				transformRequest: angular.indentity,
+				headers: { 'Content-Type': undefined }
+			});
 		}
 
-		function deleteBookSuccess(response) {
-
-			return 'Book deleted.';
-
+		function saveSession(data){
+			var fd = new FormData();
+			for(var key in data)
+				fd.append(key, data[key]);
+			var url = 'api/v1/vendor/multiple-sessions';
+			if(data.id !== ""){
+				url += "/" + data.id;
+				fd.append("_method","PUT");
+			}
+			return		$http.post(url, fd, {
+				transformRequest: angular.indentity,
+				headers: { 'Content-Type': undefined }
+			});
 		}
 
-		function deleteBookError(response) {
-
-			return $q.reject('Error deleting book. (HTTP status: ' + response.status + ')');
-
+		function addPackage(data){
+			var fd = new FormData();
+			for(var key in data)
+				fd.append(key, data[key]);
+			console.log(fd);
+			return		$http.post('api/v1/vendor/package', fd, {
+				transformRequest: angular.indentity,
+				headers: { 'Content-Type': undefined }
+			});
 		}
+
+
+//		function deleteBook(bookID) {
+
+//		deleteSummaryFromCache();
+//		deleteAllBooksResponseFromCache();
+
+//		return $http({
+//		method: 'DELETE',
+//		url: 'api/books/' + bookID
+//		})
+//		.then(deleteBookSuccess)
+//		.catch(deleteBookError);
+
+//		}
+
+//		function deleteBookSuccess(response) {
+
+//		return 'Book deleted.';
+
+//		}
+
+//		function deleteBookError(response) {
+
+//		return $q.reject('Error deleting book. (HTTP status: ' + response.status +
+//		')');
+
+//		}
 
 	}
 

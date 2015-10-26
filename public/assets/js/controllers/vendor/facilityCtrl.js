@@ -23,52 +23,10 @@ app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","S
 			90:90,
 			100:100
 			};
-	console.log($scope.percentageArray);
 	$scope.slots = {1:1,2:2,3:3,4:4};
 	$scope.types = {0:"Peak Time",1:"Off time"};
 
 	$scope.master = $scope.facility = {};
-//	// Time Picker
-//	$scope.today = function () {
-//		var dt = new Date();
-//		dt.setHours( 0 );
-//		dt.setMinutes( 15 );
-//		$scope.facility.duration = dt;
-//	};
-//	$scope.today();
-//
-//	$scope.options = {
-//			hstep: [1, 2, 3],
-//			mstep: [1, 5, 10, 15, 25, 30]
-//	};
-//
-//	$scope.hstep = 1;
-//	$scope.mstep = 15;
-//
-//
-//
-//	$scope.changed = function () {
-//		var hours = $scope.facility.duration.getHours();
-//
-//		var mins = $scope.facility.duration.getMinutes();
-//		if(hours > 3){
-//			alert('max time 3 hours');
-//			var dt = new Date();
-//			dt.setHours( 3 );
-//			dt.setMinutes( 0 );
-//			$scope.facility.duration = dt;
-//
-//		}
-//		if(hours <= 0 && mins < 15){
-//			alert('min time 15 minutes');
-//			$scope.today();
-//		}
-//		$log.log('Time changed to: ' + hours + mins);
-//	};
-//
-//	$scope.clear = function () {
-//		$scope.facility.duration = null;
-//	};
 	$scope.form = {
 
 			submit: function (form) {
@@ -82,7 +40,6 @@ app.controller('facilityAddCtrl', ["$scope","$state","$log","facilityService","S
 						console.log(response);
 					});
 					addFacility.catch(function(data,status){
-
 						angular.forEach(data.data,function(errors,field){
 							$scope.Form[field].$dirty = true;
 							$scope.Form[field].$error = errors;
@@ -166,17 +123,40 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
                                             function ($scope, $modalInstance, selectedFacility,facilityService) {
 
 	$scope.facility = selectedFacility;
-	// facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
-	// $scope.facilityData = facility.facility;
-	// }).catch(function(){
-	// $scope.facilityData = {};
-	// })
-	$scope.sessions = [];
+	 facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
+	 $scope.facility = facility.facility;
+	 console.log($scope.facility);
+	 }).catch(function(){
+	 $scope.facility = {};
+	 })
+
+	facilityService.getDuration()
+	.then(getDurationSuccess);
+
+	function getDurationSuccess(durations) {
+		$scope.durations = durations.duration;
+	}
+
+	$scope.openingHours = $scope.sessions = $scope.packages = [];
 
 	$scope.slots = {1:1,2:2,3:3,4:4};
 	$scope.types = {0:"Peak Time",1:"Off time"};
 
-	$scope.discounts = {10:10,20:20,30:30};
+	$scope.percentageArray = {
+			10:10,
+			20:20,
+			30:30,
+			40:40,
+			50:50,
+			60:60,
+			70:70,
+			80:80,
+			90:90,
+			100:100
+			};
+
+	$scope.days = [{id:0,text:"Sunday"},{id:1,text:"Monday"},{id:2,text:"Thusday"},{id:3,text:"Wednesday"},{id:4,text:"Thrusday"},{id:5,text:"Friday"}
+	,{id:6,text:"Saturday"}];
 
 	$scope.months = ["1 Month","3 Months","6 Months"];
 
@@ -207,29 +187,154 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 		$modalInstance.dismiss('cancel');
 	};
 
-	$scope.saveSession = function(data, id) {
+	$scope.getSessions = function(){
+
+		if($scope.sessions.length){
+			console.log($scope.sessions);
+			return $scope.sessions;
+		};
+
+		facilityService.getSessionsByfacilityId($scope.facility.id).then(function(sessions){
+			$scope.sessions = sessions.data;
+		});
+	}
+
+	$scope.saveHours = function(data, id) {
 		// $scope.user not updated yet
-		angular.extend(data, {id: id});
-		return $http.post('/saveUser', data);
+		angular.extend(data, {id: id,available_facility_id : $scope.facility.id,
+			session_id:1});
+		console.log(data);
+		var addHours = facilityService.addOpeningTime(data);
+		console.log(addHours);
+
+	return addHours;
 	};
 
-	// remove user
+
+	$scope.saveSession = function(data, id) {
+
+		// $scope.user not updated yet
+		angular.extend(data, {id: id,available_facility_id : $scope.facility.id});
+		var addSession = facilityService.saveSession(data);
+		console.log(addSession);
+
+	return addSession;
+	};
+
+	$scope.savePackage = function(data, id) {
+		// $scope.user not updated yet
+		angular.extend(data, {id: id,available_facility_id : $scope.facility.id,package_id:1,is_peak:0});
+		console.log(data);
+		var addSession = facilityService.addPackage(data);
+
+		addSession.then(function(data){
+			console.log(data);
+			return;
+		});
+
+		addSession.catch(function(data,status){
+			return data.data;
+		});
+	};
+
+	// remove Opening Hours
+	$scope.removeOpeningHours = function(index) {
+		$scope.openingHours.splice(index, 1);
+	};
+
+	// remove Session
 	$scope.removeSession = function(index) {
 		$scope.sessions.splice(index, 1);
 	};
 
-	// add user
-	$scope.addSession = function() {
-		$scope.inserted = {
-				id: $scope.sessions.length+1,
-				start: null,
-				end: null,
-				is_peak: 1,
-				discount : null
-		};
-		$scope.sessions.push($scope.inserted);
+	// remove Package
+	$scope.removePackage = function(index) {
+		$scope.packages.splice(index, 1);
 	};
 
+	// add Opening Hours
+	$scope.addHours = function() {
+		var dt = new Date();
+		$scope.inserted = {
+				id: '',
+				day:0,
+				start: dt ,
+				end: dt,
+				is_peak: 0,
+		};
+		$scope.openingHours.push($scope.inserted);
+	};
+
+	// add Sessions
+	$scope.addSession = function() {
+		$scope.sessionInserted = {
+				id: '',
+//				name:"",
+				peak:1 ,
+				off_peak: 1,
+				price: "",
+				discount : 0
+		};
+		$scope.sessions.push($scope.sessionInserted);
+	};
+
+	// add Sessions
+	$scope.addPackage = function() {
+		$scope.packageInserted = {
+				id: '',
+				name:"",
+				month:1 ,
+				actual_price: "",
+				discount : 0,
+				description : ""
+		};
+		$scope.packages.push($scope.packageInserted);
+	};
+
+
+	// edit facility
+
+	$scope.form = {
+
+			submit: function (form) {
+				var firstError = null;
+
+					var addFacility =facilityService.updateFacility($scope.facility);
+					addFacility.then(function(response){
+						SweetAlert.swal(response.message, "success");
+						$state.go("vendor.facility.list");
+
+						console.log(response);
+					});
+					addFacility.catch(function(data,status){
+						angular.forEach(data.data,function(errors,field){
+							$scope.Form[field].$dirty = true;
+							$scope.Form[field].$error = errors;
+							console.log($scope.Form[field]);
+						});
+
+						SweetAlert.swal(data.data.message,data.data.statusText, "error");
+						return false;
+					})
+
+			},
+			reset: function (form) {
+
+				$scope.facility = angular.copy($scope.master);
+				form.$setPristine(true);
+
+			}
+	};
+
+	function getRootCategorySuccess(categoryData) {
+		$scope.categoryData = categoryData.category;
+	}
+
+	function getDurationSuccess(durations) {
+		$scope.durations = durations.duration;
+	}
+
+	$scope.getSessions();
 }]);
 app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
 	$scope.items = items;
@@ -385,76 +490,4 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
 		event[field] = !event[field];
 	};
 
-}]);
-
-app.controller('facilityEditCtrl', ["$scope","$state","facilityService","SweetAlert", function ($scope,$state,facilityService,SweetAlert) {
-
-	facilityService.getRootCategory()
-	.then(getRootCategorySuccess);
-
-	facilityService.getFacilityById($state.params.facilityId)
-	.then(getFacilitySuccess);
-
-	$scope.percentageArray = facilityService.getPercentageArray();
-	console.log($scope.percentageArray);
-	$scope.subCategory = "";
-
-	$scope.master = $scope.facility;
-	$scope.form = {
-
-			submit: function (form) {
-				var firstError = null;
-				if (form.$invalid) {
-
-					var field = null, firstError = null;
-					for (field in form) {
-						if (field[0] != '$') {
-							if (firstError === null && !form[field].$valid) {
-								firstError = form[field].$name;
-							}
-
-							if (form[field].$pristine) {
-								form[field].$dirty = true;
-							}
-						}
-					}
-
-					angular.element('.ng-invalid[name=' + firstError + ']').focus();
-					SweetAlert.swal("The form cannot be submitted because it contains validation errors!", "Errors are marked with a red, dashed border!", "error");
-					return;
-
-				} else {
-
-					var addFacility =facilityService.addFacility($scope.facility);
-					addFacility.then(function(response){
-						SweetAlert.swal(response.data.message, "success");
-						$state.go("vendor.facility.list");
-
-						console.log(response);
-					});
-					addFacility.catch(function(data,status){
-						console.log(data);
-
-						SweetAlert.swal(data.data.message,data.data.statusText, "error");
-						return;
-					})
-
-				}
-
-			},
-			reset: function (form) {
-
-				$scope.facility = angular.copy($scope.master);
-				form.$setPristine(true);
-
-			}
-	};
-
-	function getRootCategorySuccess(categoryData) {
-		$scope.categoryData = categoryData.category;
-	}
-
-	function getFacilitySuccess(facilityData) {
-		$scope.facility = facilityData.facility;
-	}
 }]);
