@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers\Vendor;
 
+use App\DayMaster;
 use App\Duration;
 use App\MultipleSession;
+use App\SessionBooking;
+use App\User;
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
@@ -13,6 +16,7 @@ use App\PackageType;
 use App\SessionPackage;
 use App\SessionPackageChild;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class SessionPackageController extends Controller
 {
@@ -36,8 +40,8 @@ class SessionPackageController extends Controller
 
     /**
      * Create Package For Facility
-     * 
-     * @param Requests\PackageRequest $request            
+     *
+     * @param Requests\PackageRequest $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function createPackage(Requests\PackageRequest $request)
@@ -119,13 +123,13 @@ class SessionPackageController extends Controller
             $timeDifference = $end - $start;
             // $timeDifference = date('i:s', $timeDifference);
             $timeDifference = round(abs($timeDifference) / 60, 2);
-            
+
             $start = date('H:i:s', $start);
             $end = date('H:i:s', $end);
-            
+
             /* Check First Duration is Available Or Not */
             $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->first();
-            
+
             if ($checkFacilityInformation != null && $checkFacilityInformation->duration != null) {
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if ($timeDifference >= $checkFacilityInformation['duration']) { // If time Difference Matched
@@ -157,11 +161,11 @@ class SessionPackageController extends Controller
                         // $sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('day','=',$request->day)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('day','=',$request->day)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
                         // DB::enableQueryLog();
                         // $sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
-                        
+
                         // $sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('day','=',$childData['day'])->count();
                         $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND day=" . $childData['day'] . " AND session_package_id=" . $session['id']));
                         // $queries = DB::getQueryLog();
-                        
+
                         if ($sameTimeExists[0]->cnt > 0) { // Check If Same Time Already Exists
                             $message = "Time Already Exists";
                             $sessionInformation = "";
@@ -197,7 +201,7 @@ class SessionPackageController extends Controller
                         $sessionParentData = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->first()->toArray();
                         $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND (id!=" . $request->session_id . " AND session_package_id=" . $sessionParentData['id'] . ") AND day=" . $childData['day']));
                         // $queries = DB::getQueryLog();
-                        
+
                         if ($sameTimeExists[0]->cnt > 0) { // Check If Same Time Already Exists
                             $message = "Time Already Exists";
                             $sessionInformation = "";
@@ -379,5 +383,114 @@ class SessionPackageController extends Controller
             "data" => $session
         ];
         return response($response, $status);
+    }
+
+
+    public function blockCalendar(Requests\BlockCalendarRequest $request){
+        try{
+            $status = 200;
+            $data = $request->all();
+            $user = Auth::user();
+            //dd($user->id);
+            $date = strtotime($data['date']);
+            $day = date('l', $date);
+            $day = strtolower($day);
+            $dayMaster = DayMaster::where('slug','=',$day)->first();
+            $data['day'] = $dayMaster->id;
+            $packageType = PackageType::where('slug','=','session')->first();
+            $sessionPackageMaster = SessionPackage::where(array(
+                'available_facility_id' => $data['available_facility_id'],
+                'package_type_id' => $packageType->id
+            ))->first();
+
+            //$timeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$data['start']."' BETWEEN start AND end AND '".$data['end']."' BETWEEN start AND end) AND session_package_id=".$sessionPackageMaster->id." AND day=".$data['day']));
+            $openingTimeExists = SessionPackageChild::where('start','<=',$data['start'])
+                            ->where('end','>=',$data['start'])
+                            ->where('start','<=',$data['end'])
+                            ->where('end','>=',$data['end'])
+                            ->where('day','=',$data['day'])
+                            ->where('is_active','=',1)
+                            ->where('session_package_id','=',$sessionPackageMaster->id)
+                            ->first();//->count();
+            if($openingTimeExists!=null && $openingTimeExists->count()>0){ //Opening Time Available
+
+                $blockTimeExists = SessionBooking::where('start','<=',$data['start'])
+                    ->where('end','>=',$data['start'])
+                    ->where('start','<=',$data['end'])
+                    ->where('end','>=',$data['end'])
+                    ->where('date','=',$data['date'])
+                    ->where('is_active','=',1)
+                    ->where('available_facility_id','=',$data['available_facility_id'])
+                    ->get();//->count();
+                $availableFacility = AvailableFacility::find($data['available_facility_id']);//dd($availableFacility->slots);
+                if($availableFacility->slots>$blockTimeExists->count()){ //If Blocked Time Not Exists Already
+                    $data['user_id'] = $user->id;
+                    $data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
+                    $data['created_at'] = Carbon::now();
+                    $data['updated_at'] = Carbon::now();
+                    $openingTimeExists = $openingTimeExists->toArray();
+                    $data['session_package_child_id'] = $openingTimeExists['id'];
+                    $sessionBooking = SessionBooking::create($data);
+                    $message = "Blocked Successfully";
+                }else{ //Blocked Time Already Exists for selected time & Date
+                    $message = "Booking or blocking time already exists for selected date & time";
+                }
+            }else{ //No Opening Time Available For Selected Time & Date
+                $message = "Opening time isn't available for selected time & date";
+            }
+        }catch (\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $session = "";
+        }
+        $response = [
+            "message" => $message,
+        ];
+        return response($response,$status);
+    }
+
+
+    public function getBlockData(Request $request,$yearMonth){
+        try{
+            $message = "success";
+            $status = 200;
+            $user = Auth::user();//->with('vendor');
+            $facilityData = $user->vendor->facility;
+            if(!$facilityData->isEmpty()){
+                $facilities = $facilityData->toArray();
+                $start = $yearMonth.'-01';
+                $end = $yearMonth.'-31';
+                $blockData = null;
+                $i = 0;
+                foreach($facilities as $facility){
+                    $data = array(
+                        'available_facility_id' => $facility['id'],
+                        'is_active' => 1
+                    );
+                    //dd($data);
+                    //DB::enableQueryLog();//$queries = DB::getQueryLog();
+                    $blockingData = SessionBooking::where('available_facility_id',$facility['id'])
+                        ->where('is_active',1)
+                        ->whereBetween('date',array($start,$end))
+                        ->get();
+                    //$queries = DB::getQueryLog();
+                    //dd($queries);
+                    if(!$blockingData->isEmpty()){
+                        $blockData[$i] = $blockingData->toArray();
+                        $blockData[$i]['facility'] = AvailableFacility::find($facility['id'])->first()->toArray();
+                        $i++;
+                    }
+                }
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $blockData = "";
+        }
+        $response = [
+            "message" => $message,
+            "data"=>$blockData
+        ];
+        return response($response,$status);
     }
 }
