@@ -14,7 +14,6 @@ class AddFkToSesssionBookingTabel extends Migration
     {
         Schema::table('session_bookings', function (Blueprint $table) {
             $table->foreign('multiple_session_id')->references('id')->on('multiple_sessions')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('session_package_child_id')->references('id')->on('session_package_child')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('available_facility_id')->references('id')->on('available_facilities')->onUpdate('cascade')->onDelete('cascade');
         });
@@ -29,7 +28,6 @@ class AddFkToSesssionBookingTabel extends Migration
     {
         Schema::table('session_bookings', function (Blueprint $table) {
             $table->dropForeign('session_bookings_multiple_session_id_foreign');
-            $table->dropForeign('session_bookings_session_package_child_id_foreign');
             $table->dropForeign('session_bookings_user_id_foreign');
             $table->dropForeign('session_bookings_available_facility_id_foreign');
         });

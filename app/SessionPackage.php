@@ -14,8 +14,12 @@ class SessionPackage extends Model
         return $this->hasOne('App\PackageType');
     }
 
-    public function Child(){
+    public function ChildPackage(){
         return $this->hasOne('App\SessionPackageChild')->orderBy('created_at','DESC')->first();
+    }
+
+    public function ChildOpeningHours(){
+        return $this->hasOne('App\OpeningHour');
     }
 
     public function facility(){

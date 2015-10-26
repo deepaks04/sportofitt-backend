@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\DayMaster;
 use App\Duration;
 use App\MultipleSession;
+use App\OpeningHour;
 use App\SessionBooking;
 use App\User;
 use Carbon\Carbon;
@@ -91,7 +92,7 @@ class SessionPackageController extends Controller
     public function createOpeningTime(Requests\SessionRequest $request){
         try{
             $status = 200;
-            $message = "Session Created Successfully";
+            $message = "Opening Hour Created Successfully";
             $start = strtotime($request->start);
             $end = strtotime($request->end);
             $timeDifference = $end - $start;
@@ -116,7 +117,10 @@ class SessionPackageController extends Controller
                         $parentData = $this->unsetKeys(array('is_peak','actual_price','discount','session_id','day','start','end'),$parentData);
                         $parentData['package_type_id'] = $packageType->id;
                         //$session = SessionPackage::create($parentData);
-                        $session = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first()->toArray();
+                        $session = SessionPackage::where(array(
+                            'available_facility_id' => $request->available_facility_id,
+                            'package_type_id' => $packageType->id
+                        ))->first()->toArray();
                         $childData = $this->unsetKeys(array('session_id','available_facility_id','name','description'),$childData);
                         $childData['session_package_id'] = $session['id'];
                         //$sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('day','=',$request->day)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('day','=',$request->day)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
@@ -124,19 +128,18 @@ class SessionPackageController extends Controller
                         //$sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
 
                         //$sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('day','=',$childData['day'])->count();
-                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
+                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
                         //$queries = DB::getQueryLog();
-
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
                             $message = "Time Already Exists";
                             $sessionInformation = "";
                         }else{
-                            $sessionChild = SessionPackageChild::create($childData);
+                            $sessionChild = OpeningHour::create($childData);
                             $sessionInformation['parent'] = SessionPackage::find($session['id']);
-                            $sessionInformation['child'] = $sessionInformation['parent']->child()->orderBy('created_at','DESC')->first()->toArray();
+                            $sessionInformation['child'] = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
                         }
                     }else{ //Update Existing Session & Create New Child Row in Table
-                        $message = "Session Updated Successfully";
+                        $message = "Opening Hour Updated Successfully";
                         $childData = $request->all();
                         $childData = $this->unsetKeys(array('child_id','session_id','available_facility_id','name','description'),$childData);
                         //$childData['id'] = $request->session_id;
@@ -149,7 +152,7 @@ class SessionPackageController extends Controller
                         //$sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('id','!=',$request->session_id)->count();
                         //$sameTimeExists = SessionPackageChild::select(DB::Raw("start between $start and $end or end between $start and $end"));
                         $sessionParentData = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first()->toArray();
-                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$request->session_id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));
+                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$request->session_id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));
                         //$queries = DB::getQueryLog();
 
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
@@ -157,9 +160,9 @@ class SessionPackageController extends Controller
                             $sessionInformation = "";
                         }else{
                             //if($request->child_id!=0){ // Update Previous Child Row (Inactive)
-                            $sessionChild = SessionPackageChild::where('id',$request->session_id)->update($childData);
+                            $sessionChild = OpeningHour::where('id',$request->session_id)->update($childData);
                             $sessionInformation['parent'] = $sessionParentData;
-                            $sessionInformation['child'] = SessionPackageChild::find($request->session_id);
+                            $sessionInformation['child'] = OpeningHour::find($request->session_id);
                             //}
                             //$packageChild = SessionPackageChild::create($childData);
                             //$sessionInformation['parent'] = SessionPackage::find($request->session_id);
@@ -352,7 +355,7 @@ class SessionPackageController extends Controller
             ))->first();
 
             //$timeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$data['start']."' BETWEEN start AND end AND '".$data['end']."' BETWEEN start AND end) AND session_package_id=".$sessionPackageMaster->id." AND day=".$data['day']));
-            $openingTimeExists = SessionPackageChild::where('start','<=',$data['start'])
+            $openingTimeExists = OpeningHour::where('start','<=',$data['start'])
                             ->where('end','>=',$data['start'])
                             ->where('start','<=',$data['end'])
                             ->where('end','>=',$data['end'])
@@ -377,7 +380,7 @@ class SessionPackageController extends Controller
                     $data['created_at'] = Carbon::now();
                     $data['updated_at'] = Carbon::now();
                     $openingTimeExists = $openingTimeExists->toArray();
-                    $data['session_package_child_id'] = $openingTimeExists['id'];
+                    $data['opening_hour_id'] = $openingTimeExists['id'];
                     $sessionBooking = SessionBooking::create($data);
                     $message = "Blocked Successfully";
                 }else{ //Blocked Time Already Exists for selected time & Date
