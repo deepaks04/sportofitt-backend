@@ -1,10 +1,10 @@
 <?php
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDayWiseSessionTable extends Migration
+class CreateOpeningHoursTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -12,12 +12,14 @@ class CreateDayWiseSessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('package_child', function (Blueprint $table) {
+        Schema::create('opening_hours', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('session_package_id')->unsigned();
-            $table->integer('month');
-            $table->float('actual_price');
-            $table->integer('discount')->default(0);
+            $table->boolean('is_peak')->default(0);
+            $table->integer('day');
+            $table->time('start');
+            $table->time('end');
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateDayWiseSessionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('package_child');
+        Schema::drop('opening_hours');
     }
 }

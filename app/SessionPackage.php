@@ -17,15 +17,16 @@ class SessionPackage extends Model
         return $this->hasOne('App\PackageType');
     }
 
-    public function Child()
-    {
-        return $this->hasOne('App\SessionPackageChild')
-            ->orderBy('created_at', 'DESC')
-            ->first();
+
+    public function ChildPackage(){
+        return $this->hasOne('App\SessionPackageChild')->orderBy('created_at','DESC')->first();
     }
 
-    public function facility()
-    {
+    public function ChildOpeningHours(){
+        return $this->hasOne('App\OpeningHour');
+    }
+
+    public function facility(){
         return $this->belongsTo('App\AvailableFacility');
     }
 }

@@ -1,10 +1,10 @@
 <?php
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFkToDayWiseSessionTable extends Migration
+class AddFkToOpeningHoursTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -12,8 +12,7 @@ class AddFkToDayWiseSessionTable extends Migration
      */
     public function up()
     {
-
-        Schema::table('package_child', function (Blueprint $table) {
+        Schema::table('opening_hours', function (Blueprint $table) {
             $table->foreign('session_package_id')->references('id')->on('session_package')->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -25,8 +24,8 @@ class AddFkToDayWiseSessionTable extends Migration
      */
     public function down()
     {
-        Schema::table('package_child', function (Blueprint $table) {
-            $table->dropForeign('package_child_session_package_id_foreign');
+        Schema::table('opening_hours', function (Blueprint $table) {
+            $table->dropForeign('opening_hours_session_package_id_foreign');
         });
     }
 }

@@ -29,7 +29,7 @@ class CreateSesssionBookingTabel extends Migration
             $table->integer('discount')->nullable();
             $table->float('final_price')->nullable();
             $table->integer('multiple_session_id')->unsigned()->nullable();
-            $table->integer('session_package_child_id')->unsigned();
+            $table->integer('opening_hour_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('available_facility_id')->unsigned();
             $table->boolean('is_active')->default(1);
