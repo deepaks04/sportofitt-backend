@@ -68,11 +68,11 @@ class SessionPackageController extends Controller
                 $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
                 $childData['session_package_id'] = $request->package_id;
                 if($request->child_id!=0){ // Update Previous Child Row (Inactive)
-                    SessionPackageChild::where('id',$request->child_id)->update(array('is_active'=>0));
+                    $packageChild = SessionPackageChild::where('id',$request->child_id)->update($childData);
                 }
-                $packageChild = SessionPackageChild::create($childData);
+                //$packageChild = SessionPackageChild::create($childData);
                 $packageInformation['parent'] = SessionPackage::find($request->package_id);
-                $packageInformation['child'] = $packageChild->toArray();
+                $packageInformation['child'] = $packageInformation['parent']->ChildPackage()->first();
             }
             $response = [
                 "message" => $message,
@@ -411,7 +411,7 @@ class SessionPackageController extends Controller
                 $facilities = $facilityData->toArray();
                 $start = $yearMonth.'-01';
                 $end = $yearMonth.'-31';
-                $blockData = null;
+                $blockData = "";
                 $i = 0;
                 foreach($facilities as $facility){
                     $data = array(

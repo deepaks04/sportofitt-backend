@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\BillingInfo;
+use App\OpeningHour;
 use App\PackageType;
 use App\RootCategory;
 use App\SessionPackage;
@@ -571,23 +572,27 @@ class VendorsController extends Controller
     public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request,$id){
         $user = Auth::user();
         $vendor = $user->vendor()->first();
-        $facilities = $vendor->facility()->where(array('id'=>$id))->get();
+        $facilities = $vendor->facility()->where(array('id'=>$id))->first();
         $sessionPackageInfoType = null;
+        $openingHours = "";
+        $packageInformation = "";
+        $facilityData = "";
         if($facilities!=null){
             $facilities = $facilities->toArray();
             $i = 0;
             $noOfFacility = 0;
             $facilityDetails = null;
-            foreach($facilities as $facility){
-                $facilityCount = count($facilities);
-                for($j=0;$j<$facilityCount;$j++){
-                    $facilities[$j]['category']['sub'] = SubCategory::find($facilities[$j]['sub_category_id'])->toArray();
-                    $facilities[$j]['category']['root'] = RootCategory::find($facilities[$j]['category']['sub']['root_category_id'])->toArray();
-                    $sessionDuration = $this->getDurationData($facilities[$j]['id']);
-                    $facilities[$j]['session_duration'] = $sessionDuration;
-                }
-                $facilityDetails[$noOfFacility]['information'] = $facilities;
-                $packages = SessionPackage::where('available_facility_id','=',$facility['id'])->get();
+            //foreach($facilities as $facility){
+                //$facilityCount = count($facilities);
+                //for($j=0;$j<$facilityCount;$j++){
+                    $facilities['category']['sub'] = SubCategory::find($facilities['sub_category_id'])->toArray();
+                    $facilities['category']['root'] = RootCategory::find($facilities['category']['sub']['root_category_id'])->toArray();
+                    $sessionDuration = $this->getDurationData($facilities['id']);
+                    $facilities['duration'] = $sessionDuration;
+                //}
+                $facilityDetails['information'] = $facilities;
+                $facilityData = $facilities;
+                $packages = SessionPackage::where('available_facility_id','=',$facilities['id'])->get();
                 if($packages!=null){
                     $packages = $packages->toArray();
 
@@ -595,42 +600,49 @@ class VendorsController extends Controller
                         $type = PackageType::where('id','=',$package['package_type_id'])->first()->toArray();
                         if($type['slug']=='package'){
                             $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageInformation[$i]['parent'] = $package;
                             $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
                             if($packageChild!=null){
                                 $packageChild = $packageChild->toArray();
                                 $sessionPackageInfoType[$type['slug']][$i]['child'] = $packageChild;
+                                $packageInformation[$i]['child'] = $packageChild;
                             }else{
-                                $sessionPackageInfoType[$type['slug']][$i]['child'] = null;
+                                $sessionPackageInfoType[$type['slug']][$i]['child'] = "";
+                                $packageInformation[$i]['child'] = "";
                             }
 
                             $i++;
                         }
                         if($type['slug']=='session'){
-                            $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
-                            $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->get();
+                            //$sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
+                            $packageChild = OpeningHour::where(array('session_package_id'=>$package['id'],'is_active'=>1))->get();
                             $j = 0;
                             if($packageChild!=null){
                                 $packageChild = $packageChild->toArray();
                                 foreach($packageChild as $child){
-                                    $sessionPackageInfoType[$type['slug']][$j]['child'] = $child;
+                                    //$sessionPackageInfoType[$type['slug']][$j]['child'] = $child;
+                                    $sessionPackageInfoType['opening_hours'][$j] = $child;
+                                    $openingHours[$j] = $child;
                                     $j++;
                                 }
                             }else{
-                                $sessionPackageInfoType[$type['slug']][$j]['child'] = null;
+                                $sessionPackageInfoType['opening_hours'][$j] = "";
                             }
                         }
                     }
-                    $facilityDetails[$noOfFacility]['sessionPackage'] = $sessionPackageInfoType;
-                    $noOfFacility++;
+                    //$facilityDetails[$noOfFacility]['sessionPackage'] = $sessionPackageInfoType;
+                    //$noOfFacility++;
                 }
-            }
+            //}
         }
+
         $status = 200;
         $response = [
             "message" => "success",
             "user" => $user,
-            "vendor" => $vendor,
-            "facility" => $facilityDetails
+            "facility" => $facilityData,
+            "openingHours" => $openingHours,
+            "packageInformation" => $packageInformation
         ];
         return response($response,$status);
     }
