@@ -17,10 +17,24 @@ class PackageRequest extends Request
     {
         switch($this->method())
         {
-            case 'PUT':
-                return true;
-                break;
             case 'GET':
+                $id = $this->route('id');
+                $facility = AvailableFacility::find($id);
+                if($facility==null){
+                    return false;
+                }else{
+                    $user = Auth::user();
+                    $vendor = $user->vendor($user->id)->first();
+                    $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
+                    if($isOwner){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+                return false;
+                break;
+            case 'PUT':
                 return true;
                 break;
             case 'POST':
@@ -57,6 +71,10 @@ class PackageRequest extends Request
     {
         switch($this->method())
         {
+            case 'GET':
+                return [
+                ];
+                break;
             case 'PUT':
                 break;
             case 'POST':

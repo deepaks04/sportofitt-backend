@@ -89,6 +89,59 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    public function getPackage(Requests\PackageRequest $request,$id){
+        try{
+            $packageType = PackageType::where('slug','=','package')->first();
+            $status = 200;
+            $message = "Success";
+            $packages = "";
+            $facilityDetils = SessionPackage::where(array(
+                'available_facility_id' => $id,
+                'package_type_id' => $packageType->id,
+                'is_active' =>1
+            ))->get();
+            if(!$facilityDetils->isEmpty()){
+                $facilityDetils = $facilityDetils->toArray();
+                $i=0;
+                foreach($facilityDetils as $facilityDetil){
+                    $packages[$i]['parent'] = $facilityDetil;
+                    $packageChild = SessionPackageChild::where(array('session_package_id'=>$facilityDetil['id'],'is_active'=>1))->first();
+                    if($packageChild!=null){
+                        $packageChild = $packageChild->toArray();
+                        $packages[$i]['child'] = $packageChild;
+                    }else{
+                        $packages[$i]['child'] = "";
+                    }
+                    $i++;
+                }
+            }
+        }catch (\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $packages = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $packages
+        ];
+        return response($response,$status);
+    }
+
+    public function deletePackage(Requests\DeletePackageRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Package Deleted Successfully";
+            SessionPackage::where('id','=',$id)->update(array('is_active'=>0));
+        }catch (\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+            "data" => ""
+        ];
+        return response($response,$status);
+    }
     public function createOpeningTime(Requests\SessionRequest $request){
         try{
             $status = 200;
@@ -191,8 +244,51 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    public function getOpeningTime(Requests\SessionRequest $request, $id){
+        try{
+            $status = 200;
+            $message = "success";
+            $packageType = PackageType::where('slug','=','session')->first();
+            $openingTime = "";
+            $facilityDetils = SessionPackage::where(array(
+                'available_facility_id' => $id,
+                'package_type_id' => $packageType->id
+            ))->first()->toArray();
+            $data = array(
+                'session_package_id' => $facilityDetils['id'],
+                'is_active' => 1
+            );
+            $times = OpeningHour::where($data)->get();
+            if(!$times->isEmpty()){
+                $openingTime = $times->toArray();
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $openingTime = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $openingTime
+        ];
+        return response($response,$status);
+    }
 
-
+    public function deleteOpeningTime(Requests\DeleteOpeningTimeRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Opening Time Deleted Successfully";
+            OpeningHour::where('id','=',$id)->update(array('is_active'=>0));
+        }catch (\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+            "data" => ""
+        ];
+        return response($response,$status);
+    }
     public function updateDuration(Requests\DurationRequest $request){
         try{
             $status = 200;

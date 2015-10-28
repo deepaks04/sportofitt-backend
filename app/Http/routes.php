@@ -37,7 +37,11 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
+    Route::get('package/{id}',array('uses' => 'Vendor\SessionPackageController@getPackage'));//New
+    Route::get('delete-package/{id}',array('uses' => 'Vendor\SessionPackageController@deletePackage'));//New
     Route::post('opening-time',array('uses' => 'Vendor\SessionPackageController@createOpeningTime'));
+    Route::get('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));//NEW
+    Route::get('delete-opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));//NEW
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
     Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
