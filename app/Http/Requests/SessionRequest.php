@@ -21,8 +21,21 @@ class SessionRequest extends Request
                 return true;
                 break;
             case 'GET':
-                //echo 1;exit;
-                return true;
+                $id = $this->route('id');
+                $facility = AvailableFacility::find($id);
+                if($facility==null){
+                    return false;
+                }else{
+                    $user = Auth::user();
+                    $vendor = $user->vendor($user->id)->first();
+                    $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
+                    if($isOwner){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+                return false;
                 break;
             case 'POST':
                 if(!empty($this->available_facility_id)){
@@ -59,6 +72,8 @@ class SessionRequest extends Request
         switch($this->method())
         {
             case 'GET':
+                return [
+                ];
                 break;
             case 'PUT':
                 break;
