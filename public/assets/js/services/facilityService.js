@@ -1,236 +1,242 @@
 "use strict";
 
-(function() {
+(function () {
 
-	app.factory('facilityService', ['$q', '$timeout', '$http', '$cacheFactory', dataService]);
-
-
-	function dataService($q, $timeout, $http,  $cacheFactory) {
-
-		return {
-			getRootCategory: getRootCategory,
-			addFacility: addFacility,
-			updateFacility:updateFacility,
-			getAllFacilities:getAllFacilities,
-			getFacilityById:getFacilityById,
-			getFacilityDetailsById:getFacilityDetailsById,
-			getDuration : getDuration,
-			getPercentageArray:getPercentageArray,
-			addOpeningTime : addOpeningTime,
-			getSessionsByfacilityId:getSessionsByfacilityId,
-			saveSession:saveSession,
-			addPackage:addPackage
-		};
-
-		var percentageArray = {
-				10:10,
-				20:20,
-				30:30,
-				40:40,
-				50:50,
-				60:60,
-				70:70,
-				80:80,
-				90:90,
-				100:100
-		};
-
-		function getPercentageArray(){
-			return percentageArray;
-		}
-
-		function getDuration(){
-			return $http({
-				method: 'GET',
-				url: 'api/v1/vendor/duration',
-				// transformResponse: transformGetFacilities,
-				// cache: true
-			})
-			.then(sendResponseData)
-			.catch(sendGetError);
-		};
-
-		function sendGetError(response) {
-
-			return $q.reject('Error retrieving data(s). (HTTP status: ' + response.status + ')');
-
-		};
-
-		function getSessionsByfacilityId(facilityId){
-			return $http({
-				method: 'GET',
-				url: 'api/v1/vendor/sessions-data/'+facilityId,
-				// transformResponse: transformGetFacilities,
-				// cache: true
-			})
-			.then(sendResponseData)
-			.catch(sendGetError);
-		}
-
-		function getAllFacilities() {
-			return $http({
-				method: 'GET',
-				url: 'api/v1/vendor/facility',
-				// transformResponse: transformGetFacilities,
-				// cache: true
-			})
-			.then(sendResponseData)
-			.catch(sendGetFaclityError);
-		};
-
-		function getRootCategory() {
-			return $http({
-				method: 'GET',
-				url: 'api/v1/user/get-root-category',
-				cache: true
-			})
-			.then(sendResponseData)
-			.catch(sendGetRootCategoriesError);
-		};
-
-		function deleteAllBooksResponseFromCache() {
-			var httpCache = $cacheFactory.get('$http');
-			httpCache.remove('api/books');
-		};
+    app.factory('facilityService', ['$q', '$timeout', '$http', '$cacheFactory', dataService]);
 
 
-		function transformGetFacilities(data, headersGetter) {
-			var transformed = angular.fromJson(data);
+    function dataService($q, $timeout, $http, $cacheFactory) {
 
-			transformed.forEach(function (currentValue, index, array) {
-				currentValue.dateDownloaded = new Date();
-			});
+        return {
+            getRootCategory: getRootCategory,
+            addFacility: addFacility,
+            updateFacility: updateFacility,
+            getAllFacilities: getAllFacilities,
+            getFacilityById: getFacilityById,
+            getFacilityDetailsById: getFacilityDetailsById,
+            getDuration: getDuration,
+            addOpeningTime: addOpeningTime,
+            getOpeningTimesByFacilityId: getOpeningTimesByFacilityId,
+            getSessionsByFacilityId: getSessionsByFacilityId,
+            getPackagesByFacilityId: getPackagesByFacilityId,
+            saveSession: saveSession,
+            addPackage: addPackage
+        };
 
-			// console.log(transformed);
-			return transformed;
-		};
+        function getDuration() {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/duration',
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetError);
+        };
 
-		function sendResponseData(response) {
+        function sendGetError(response) {
 
-			return response.data;
+            return $q.reject('Error retrieving data(s). (HTTP status: ' + response.status + ')');
 
-		}
+        };
 
-		function sendGetFaclityError(response) {
+        function getSessionsByFacilityId(facilityId) {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetError);
+        };
 
-			return $q.reject('Error retrieving facility(s). (HTTP status: ' + response.status + ')');
+        function getOpeningTimesByFacilityId(facilityId) {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetError);
+        };
 
-		}
+        function getPackagesByFacilityId(facilityId) {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetError);
+        };
 
-		function sendGetRootCategoriesError(response) {
+        function getAllFacilities() {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/facility',
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetFaclityError);
+        };
 
-			return $q.reject('Error retrieving Root categories(s). (HTTP status: ' + response.status + ')');
+        function getRootCategory() {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/user/get-root-category',
+                cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetRootCategoriesError);
+        };
 
-		}
+        function deleteAllBooksResponseFromCache() {
+            var httpCache = $cacheFactory.get('$http');
+            httpCache.remove('api/books');
+        };
 
-		function getFacilityById(facilityId) {
+        function transformGetFacilities(data, headersGetter) {
+            var transformed = angular.fromJson(data);
 
-			return $http.get('api/v1/vendor/facility/' + facilityId)
-			.then(sendResponseData)
-			.catch(sendGetFaclityError);
+            transformed.forEach(function (currentValue, index, array) {
+                currentValue.dateDownloaded = new Date();
+            });
 
-		}
+            // console.log(transformed);
+            return transformed;
+        };
 
-		function getFacilityDetailsById(facilityId){
-			return $http.get('api/v1/vendor/facility-detail/' + facilityId).then(sendResponseData)
-			.catch(sendGetFaclityError);
-		}
+        function sendResponseData(response) {
 
-		function updateFacility(facility) {
-			return $http({
-				method: 'PUT',
-				url: 'api/v1/vendor/facility/' + facility.id,
-				data: facility
-			})
-			.then(updateFacilitySuccess)
-			.catch(updateFacilityError);
+            return response.data;
 
-		}
+        }
 
-		function updateFacilitySuccess(response) {
+        function sendGetFaclityError(response) {
 
-			return 'Facility updated: ' + response.config.data.title;
+            return $q.reject('Error retrieving facility(s). (HTTP status: ' + response.status + ')');
 
-		}
+        }
 
-		function updateFacilityError(response) {
+        function sendGetRootCategoriesError(response) {
 
-			return $q.reject('Error updating Facility.(HTTP status: ' + response.status + ')');
+            return $q.reject('Error retrieving Root categories(s). (HTTP status: ' + response.status + ')');
 
-		}
+        }
 
-		function addFacility(data) {
+        function getFacilityById(facilityId) {
 
-			// deleteSummaryFromCache();
-			// deleteAllBooksResponseFromCache();
-			var fd = new FormData();
-			for(var key in data)
-				fd.append(key, data[key]);
-			return		$http.post('api/v1/vendor/facility', fd, {
-				transformRequest: angular.indentity,
-				headers: { 'Content-Type': undefined }
-			});
-			// .then(addFacilitySuccess)
-			// .catch(addFacilityError);
-		}
+            return $http.get('api/v1/vendor/facility/' + facilityId)
+                    .then(sendResponseData)
+                    .catch(sendGetFaclityError);
+
+        }
+
+        function getFacilityDetailsById(facilityId) {
+            return $http.get('api/v1/vendor/facility-detail/' + facilityId).then(sendResponseData)
+                    .catch(sendGetFaclityError);
+        }
+
+        function updateFacility(facility) {
+            return $http({
+                method: 'PUT',
+                url: 'api/v1/vendor/facility/' + facility.id,
+                data: facility
+            })
+                    .then(updateFacilitySuccess)
+                    .catch(updateFacilityError);
+        }
+
+        function updateFacilitySuccess(response) {
+
+            return 'Facility updated: ' + response.config.data.title;
+
+        }
+
+        function updateFacilityError(response) {
+
+            return $q.reject('Error updating Facility.(HTTP status: ' + response.status + ')');
+
+        }
+
+        function addFacility(data) {
+
+            // deleteSummaryFromCache();
+            // deleteAllBooksResponseFromCache();
+            var fd = new FormData();
+            for (var key in data)
+                fd.append(key, data[key]);
+            return		$http.post('api/v1/vendor/facility', fd, {
+                transformRequest: angular.indentity,
+                headers: {'Content-Type': undefined}
+            });
+            // .then(addFacilitySuccess)
+            // .catch(addFacilityError);
+        }
 
 
-		function addFacilitySuccess(response){
-			return 'Facility added: ' + response.config.data.title;
+        function addFacilitySuccess(response) {
+            return 'Facility added: ' + response.config.data.title;
 
-		}
+        }
 
-		function addFacilityError(response) {
+        function addFacilityError(response) {
 
-			return $q.reject('Error adding Facility. (HTTP status: ' + response.status + ')');
+            return $q.reject('Error adding Facility. (HTTP status: ' + response.status + ')');
 
-		}
+        }
 
-		function addOpeningTime(data){
-			if(data.start instanceof Date)
-			{
-				data.start = data.start.getHours() +":"+("0"+data.start.getMinutes()).slice(-2);;
-			}
+        function addOpeningTime(data) {
+            if (data.start instanceof Date)
+            {
+                data.start = data.start.getHours() + ":" + ("0" + data.start.getMinutes()).slice(-2);
+                ;
+            }
 
-			if(data.end instanceof Date)
-			{
-				data.end = data.end.getHours() +":"+ ("0"+data.end.getMinutes()).slice(-2);;
-			}
-			var fd = new FormData();
-			for(var key in data)
-				fd.append(key, data[key]);
-			console.log(fd);
-			return		$http.post('api/v1/vendor/opening-time', fd, {
-				transformRequest: angular.indentity,
-				headers: { 'Content-Type': undefined }
-			});
-		}
+            if (data.end instanceof Date)
+            {
+                data.end = data.end.getHours() + ":" + ("0" + data.end.getMinutes()).slice(-2);
+                ;
+            }
+            var fd = new FormData();
+            for (var key in data)
+                fd.append(key, data[key]);
+            console.log(fd);
+            return		$http.post('api/v1/vendor/opening-time', fd, {
+                transformRequest: angular.indentity,
+                headers: {'Content-Type': undefined}
+            });
+        }
 
-		function saveSession(data){
-			var fd = new FormData();
-			for(var key in data)
-				fd.append(key, data[key]);
-			var url = 'api/v1/vendor/multiple-sessions';
-			if(data.id !== ""){
-				url += "/" + data.id;
-				fd.append("_method","PUT");
-			}
-			return		$http.post(url, fd, {
-				transformRequest: angular.indentity,
-				headers: { 'Content-Type': undefined }
-			});
-		}
+        function saveSession(data) {
+            var fd = new FormData();
+            for (var key in data)
+                fd.append(key, data[key]);
+            var url = 'api/v1/vendor/multiple-sessions';
+            if (data.id !== "") {
+                url += "/" + data.id;
+                fd.append("_method", "PUT");
+            }
+            return		$http.post(url, fd, {
+                transformRequest: angular.indentity,
+                headers: {'Content-Type': undefined}
+            });
+        }
 
-		function addPackage(data){
-			var fd = new FormData();
-			for(var key in data)
-				fd.append(key, data[key]);
-			console.log(fd);
-			return		$http.post('api/v1/vendor/package', fd, {
-				transformRequest: angular.indentity,
-				headers: { 'Content-Type': undefined }
-			});
-		}
+        function addPackage(data) {
+            var fd = new FormData();
+            for (var key in data)
+                fd.append(key, data[key]);
+            console.log(fd);
+            return		$http.post('api/v1/vendor/package', fd, {
+                transformRequest: angular.indentity,
+                headers: {'Content-Type': undefined}
+            });
+        }
 
 
 //		function deleteBook(bookID) {
@@ -260,6 +266,6 @@
 
 //		}
 
-	}
+    }
 
 }());

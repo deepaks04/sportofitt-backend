@@ -123,13 +123,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
                                             function ($scope, $modalInstance, selectedFacility,facilityService) {
 
 	$scope.facility = selectedFacility;
-	 facilityService.getFacilityDetailsById(selectedFacility.id).then(function(facility){
-	 $scope.facility = facility.facility;
-	 console.log($scope.facility);
-	 }).catch(function(){
-	 $scope.facility = {};
-	 })
-
+        
 	facilityService.getDuration()
 	.then(getDurationSuccess);
 
@@ -137,7 +131,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 		$scope.durations = durations.duration;
 	}
 
-	$scope.openingHours = $scope.sessions = $scope.packages = [];
+	$scope.openingHours = [];
+        $scope.sessions = [];
+        $scope.packages = [];
 
 	$scope.slots = {1:1,2:2,3:3,4:4};
 	$scope.types = {0:"Peak Time",1:"Off time"};
@@ -194,10 +190,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 			return $scope.sessions;
 		};
 
-		facilityService.getSessionsByfacilityId($scope.facility.id).then(function(sessions){
-			$scope.sessions = sessions.data;
-		});
-	}
+		facilityService.getSessionsByFacilityId($scope.facility.id).then(function(sessions){
+			$scope.sessions = (sessions.data === "")?[]:sessions.data;
+                });
+	};
 
 	$scope.saveHours = function(data, id) {
 		// $scope.user not updated yet
@@ -211,27 +207,31 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 	};
 
 
-	$scope.saveSession = function(data, id) {
-
+	$scope.saveSession = function(data, id,rowform) {
 		// $scope.user not updated yet
 		angular.extend(data, {id: id,available_facility_id : $scope.facility.id});
-		var addSession = facilityService.saveSession(data);
-		console.log(addSession);
-
-	return addSession;
+		var addSession = facilityService.saveSession(data).then(function(data){
+                    console.log(data.$name);
+                }).catch(function(response){
+                   console.log(data);
+                     angular.forEach(response.data, function( errorData, field ){
+                               data.$setError(field,errorData);
+                        });
+                        console.log(data);
+                });
+        	return addSession;
 	};
 
 	$scope.savePackage = function(data, id) {
 		// $scope.user not updated yet
 		angular.extend(data, {id: id,available_facility_id : $scope.facility.id,package_id:1,is_peak:0});
-		console.log(data);
+		
 		var addSession = facilityService.addPackage(data);
 
 		addSession.then(function(data){
-			console.log(data);
+                    $scope.showSessionEdit = false;
 			return;
 		});
-
 		addSession.catch(function(data,status){
 			return data.data;
 		});
@@ -276,7 +276,8 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 				discount : 0
 		};
 		$scope.sessions.push($scope.sessionInserted);
-	};
+                $scope.showSessionEdit = true;
+        };
 
 	// add Sessions
 	$scope.addPackage = function() {

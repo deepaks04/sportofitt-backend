@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class SessionPackageChild extends Model
 {
 
-    protected $table = 'session_package_child';
+    protected $table = 'package_child';
 
     protected $guarded = [
         'id'

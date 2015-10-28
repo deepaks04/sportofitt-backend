@@ -254,14 +254,7 @@
 									<span class="error text-small block" ng-if="errors.fname">{{errors.fname}}</span>
 
 								</div>
-								<div class="form-group"
-									ng-class="{'has-error':errors.Lname,'has-success':!errors.Lname}">
-									<label class="control-label"> Last Name </label> <input
-										type="text" placeholder="Enter your last name"
-										class="form-control" name="lname" ng-model="userInfo.lname">
-									<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
-
-								</div>
+								
 								<div class="form-group"
 									ng-class="{'has-error':errors.email,'has-success':!errors.email}">
 									<label class="control-label"> Email Address </label> <input
@@ -279,21 +272,16 @@
 										class="error text-small block" ng-if="errors.address">{{errors.address}}</span>
 
 								</div>
+								
 								<div class="form-group"
-									ng-class="{'has-error':errors.postcode,'has-success':!errors.postcode}">
-									<label class="control-label"> Post Code </label> <input
-										type="text" placeholder="Enter your Post code"
-										class="form-control" name="postcode"
-										ng-model="userInfo.postcode"> <span
-										class="error text-small block" ng-if="errors.postcode">{{errors.postcode}}</span>
-								</div>
-								<div class="form-group"
-									ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
-									<label class="control-label"> Contact Number </label> <input
-										type="text" placeholder="Enter Your Contact Number"
-										class="form-control" name="contact"
-										ng-model="userInfo.contact"> <span
-										class="error text-small block" ng-if="errors.contact">{{errors.contact}}</span>
+									ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
+									<label class="control-label"> Area </label>
+                                                                        <select class="form-control"
+										ng-model="userInfo.area_id"
+										ng-options="area.id as area.name for area in areas">
+										<option value="">Select Area</option>
+									</select>
+									 <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
 
 								</div>
 								<div class="form-group">
@@ -303,28 +291,67 @@
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group"
-									ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
-									<label class="control-label"> Pin Code </label>
-									<select
-										ng-model="userInfo.area_id"
-										ng-options="area.id as area.name for area in areas">
-										<option value="">Select Area</option>
-									</select>
-									 <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.Lname,'has-success':!errors.Lname}">
+									<label class="control-label"> Last Name </label> <input
+										type="text" placeholder="Enter your last name"
+										class="form-control" name="lname" ng-model="userInfo.lname">
+									<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
 
 								</div>
-								<div class="form-group"
-									ng-class="{'has-error':errors.commission,'has-success':!errors.commission}">
-									<label class="control-label"> Commission </label> <select
-										ng-model="userInfo.commission">
-										<option value="">Select Commition</option>
-										<option ng-repeat="commission in commissions"
-											ng-selected="commission === userInfo.commission">{{commission}}</option>
-									</select> <span class="error text-small block" ng-if="errors.commission">{{errors.commission}}</span>
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
+									<label class="control-label"> Contact Number </label> <input
+										type="text" placeholder="Enter Your Contact Number"
+										class="form-control" name="contact"
+										ng-model="userInfo.contact"> <span
+										class="error text-small block" ng-if="errors.contact">{{errors.contact}}</span>
+
 								</div>
-								<div class="row">
-									<div class="col-md-12">
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.postcode,'has-success':!errors.postcode}">
+									<label class="control-label"> Post Code </label> <input
+										type="text" placeholder="Enter your Post code"
+										class="form-control" name="postcode"
+										ng-model="userInfo.postcode"> <span
+										class="error text-small block" ng-if="errors.postcode">{{errors.postcode}}</span>
+								</div>
+								
+								
+								<div class="form-group"
+									ng-class="{'has-error':errors.profile_picture,'has-success':!errors.profile_picture}">
+									<label> Logo</label>
+									<div flow-init="{singleFile:true}" flow-name="obj.flow"
+										flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
+										<div class="user-image">
+											<div class="thumbnail margin-bottom-5">
+												<img ng-src="assets/images/default-user.png" alt=""
+													ng-if="!obj.flow.files.length && noImage"> <img
+													ng-src="{{userInfo.profile_picture}}" alt=""
+													ng-if="!obj.flow.files.length && !noImage"> <img
+													flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
+<!--                                                                                                <span class="btn btn-danger"
+                                                                                                      ng-if="!noImage" ng-click="removeImage()" title="removeImage"><i
+												class="fa fa-times"></i> </span>
+                                                                                                <span class="btn btn-danger"
+                                                                                                      ng-click="obj.flow.cancel()" ng-if="obj.flow.files.length" title="remove image"> <i class="fa fa-times"></i></span>-->
+											</div>
+										</div>
+										<div class="user-image-buttons-edit"
+											ng-if="obj.flow.files.length">
+											<span class="btn btn-primary btn-o btn-file" flow-btn>Upload Logo</span> 
+										</div>
+										<div class="user-image-buttons-edit"
+											ng-if="!obj.flow.files.length">
+											<span class="btn btn-primary btn-o btn-file" flow-btn>Upload Logo</span> 
+										</div>
+										<span class="error text-small block" ng-if="errors.profile_picture">{{errors.profile_picture}}</span>
+									</div>
+                                                                </div>
+                                                                 
+                                                        </div>
+                                                    <div class="row">
+								   <div class="col-md-12">
 										<label class="control-label"> Location </label>
 										<ui-gmap-google-map center="map.center" zoom="map.zoom"
 											dragging="map.dragging" map-refresh="true"
@@ -336,53 +363,18 @@
 											show="'showWindow'" closeClick="'closeClick'" ng-cloak>
 										<div>
 											{{userInfo.address}}
-
 											<p ng-non-bindable>Your Location at {{ latitude |
 												number:4 }}, {{ longitude | number:4 }}!</p>
-
-
 										</div>
 										</ui-gmap-windows> </ui-gmap-markers>
-									</div>
-								</div>
-
-								<div class="form-group"
-									ng-class="{'has-error':errors.profile_picture,'has-success':!errors.profile_picture}">
-									<label> Image Upload <span class="symbol required"></span>
-									</label>
-									<div flow-init="{singleFile:true}" flow-name="obj.flow"
-										flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
-										<div class="user-image">
-											<div class="thumbnail margin-bottom-5">
-												<img ng-src="assets/images/default-user.png" alt=""
-													ng-if="!obj.flow.files.length && noImage"> <img
-													ng-src="{{userInfo.profile_picture}}" alt=""
-													ng-if="!obj.flow.files.length && !noImage"> <img
-													flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
-											</div>
-										</div>
-										<div class="user-image-buttons-edit"
-											ng-if="obj.flow.files.length">
-											<span class="btn btn-primary" flow-btn><i
-												class="fa fa-pencil"></i></span> <span class="btn btn-danger"
-												ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i></span>
-										</div>
-										<div class="user-image-buttons-edit"
-											ng-if="!obj.flow.files.length">
-											<span class="btn btn-primary" flow-btn><i
-												class="fa fa-pencil"></i></span> <span class="btn btn-danger"
-												ng-if="!noImage" ng-click="removeImage()"><i
-												class="fa fa-times"></i> </span>
-										</div>
-										<span class="error text-small block" ng-if="errors.profile_picture">{{errors.profile_picture}}</span>
-									</div>
-								</div>
+									</div>	
+                                                    </div>
 								<div class="form-actions">
 									<button type="submit" class="btn btn-primary pull-right">
 										Submit <i class="fa fa-arrow-circle-right"></i>
 									</button>
 								</div>
-							</div>
+								</div>
 					</fieldset>
 
 				</form>
@@ -564,13 +556,13 @@
 										<div class="well my-drop-zone" nv-file-over=""
 											uploader="uploaderImages">Base drop zone</div>
 										<!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
-										<div nv-file-drop="" uploader="uploaderImages"
+<!--										<div nv-file-drop="" uploader="uploaderImages"
 											options="{ url: '/foo' }">
 											<div nv-file-over="" uploader="uploaderImages"
 												over-class="another-file-over-class"
 												class="well my-drop-zone">Another drop zone with its
 												own settings</div>
-										</div>
+										</div>-->
 									</div>
 									<!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
 									<span class="btn btn-primary btn-o btn-file"> Select an

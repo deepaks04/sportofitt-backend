@@ -98,8 +98,8 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
                     label: 'Facility Add'
                 },
             resolve: loadSequence('ui.select', 'monospaced.elastic', 'ui.mask', 'touchspin-plugin', 'selectCtrl')
-              }).state('vendor.facility.booking', {
-                  url: '/booking/:facilityId',
+              }).state('vendor.facility.calender', {
+                  url: '/calender/:facilityId',
                     templateUrl : "assets/views/vendor/facility/booking.html",
                   title: 'Facility Booking',
                   ncyBreadcrumb: {

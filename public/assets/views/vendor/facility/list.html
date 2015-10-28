@@ -71,7 +71,7 @@
 					</table>
 					<button class="btn btn-default" ng-click="addHours()">Add Time</button>
 				</tab>
-<tab heading="Sessions">
+<tab heading="Sessions" ng-click="getSessions()">
 					<table class="table table-bordered table-hover table-condensed">
 						<tr style="font-weight: bold">
 						<!--	<td style="width:25%">Name</td> -->
@@ -102,13 +102,13 @@
 								</span>
 							</td>
 	<td>
-						<span e-name="discount" e-form="rowform" editable-range="session.discount" e-min="0" e-max="100" e-step="5" e-style="width:75%">
+						<span e-name="discount" e-form="rowform" editable-range="session.discount" e-min="0" e-max="100" e-step="5" e-style="width:90%">
 									{{ session.discount || 'empty' }}
 								</span>
 							</td>
-								<td style="white-space: nowrap">
+                                                            <td style="white-space: nowrap">
 								<!-- form -->
-								<form editable-form name="rowform" onbeforesave="saveSession($data, session.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="sessionInserted == session">
+								<form editable-form name="rowform" onbeforesave="saveSession($data, session.id,rowform)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="showSessionEdit">
 									<button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
 										save
 									</button>
@@ -154,7 +154,7 @@
 								</span>
 							</td>
 	<td>
-						<span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5" e-style="width:75%">
+						<span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5" e-style="width:90%">
 									{{ package.discount || 'empty' }}
 								</span>
 							</td>
@@ -331,7 +331,7 @@
 								<a data-ng-click="open('lg',facility)"
 									class="btn btn-transparent btn-xs" tooltip-placement="top"
 									tooltip="Edit"><i class="fa fa-pencil"></i></a> <a
-									ui-sref="vendor.facility.booking({facilityId : facility.id})"
+									ui-sref="vendor.facility.calender({facilityId : facility.id})"
 									class="btn btn-transparent btn-xs tooltips"
 									tooltip-placement="top" tooltip="Remove"><i
 									class="fa fa-times fa fa-white"></i></a>

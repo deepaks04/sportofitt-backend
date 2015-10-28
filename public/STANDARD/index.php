@@ -46,7 +46,7 @@
 	<!-- jQuery -->
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<!-- Google Apis -->
-	<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+	<script src='//maps.googleapis.com/maps/api/js'></script>
 	<!-- Fastclick -->
 	<script src="bower_components/fastclick/lib/fastclick.js"></script>
 
