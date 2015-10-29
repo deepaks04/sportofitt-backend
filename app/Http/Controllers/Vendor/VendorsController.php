@@ -642,7 +642,6 @@ class VendorsController extends Controller
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $facilities = $vendor->facility()->where(array('id'=>$id))->first();
-
         $sessionPackageInfoType = null;
         $openingHours = "";
         $packageInformation = "";

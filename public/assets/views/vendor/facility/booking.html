@@ -73,8 +73,9 @@
                                     <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right dropdown-light" role="menu">
-                                    <li><a ng-model="calendarView" btn-radio="'year'" href="">
-                                            Year </a></li>
+                                    <li><a class="btn btn-primary btn-o btn-sm"
+                                        ng-click="addEvent()">
+                                    <i class="ti-plus"></i> Add event</a></li>
                                     <li><a ng-model="calendarView" btn-radio="'month'" href="">
                                             Month </a></li>
                                     <li><a ng-model="calendarView" btn-radio="'week'" href="">
@@ -115,7 +116,7 @@
                     <i class="ti-calendar"></i> </span>
                     <timepicker ng-model="event.startsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" ng-if="false">
                     <label>
                     End
                     </label>

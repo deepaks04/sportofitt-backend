@@ -54,7 +54,7 @@
         function getOpeningTimesByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                url: 'api/v1/vendor/opening-time/' + facilityId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -65,7 +65,7 @@
         function getPackagesByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                url: 'api/v1/vendor/package/' + facilityId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })

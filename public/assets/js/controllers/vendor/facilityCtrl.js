@@ -151,8 +151,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 			100:100
 			};
 
-	$scope.days = [{id:0,text:"Sunday"},{id:1,text:"Monday"},{id:2,text:"Thusday"},{id:3,text:"Wednesday"},{id:4,text:"Thrusday"},{id:5,text:"Friday"}
-	,{id:6,text:"Saturday"}];
+	$scope.days = [{id:1,text:"Sunday"},{id:2,text:"Monday"},{id:3,text:"Thusday"},
+            {id:4,text:"Wednesday"},{id:5,text:"Thrusday"},{id:6,text:"Friday"}
+	,{id:7,text:"Saturday"}];
 
 	$scope.months = ["1 Month","3 Months","6 Months"];
 
@@ -184,7 +185,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 	};
 
 	$scope.getSessions = function(){
-
 		if($scope.sessions.length){
 			console.log($scope.sessions);
 			return $scope.sessions;
@@ -194,24 +194,48 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 			$scope.sessions = (sessions.data === "")?[]:sessions.data;
                 });
 	};
+        
+        $scope.getOpeningHours = function(){
+		if($scope.openingHours.length){
+			console.log($scope.openingHours);
+			return $scope.openingHours;
+		};
 
+		facilityService.getOpeningTimesByFacilityId($scope.facility.id)
+                        .then(function(openingHours){
+			$scope.openingHours = (openingHours.data === "")?[]:openingHours.data;
+                });
+        };
+        
+        $scope.getPackages = function(){
+		if($scope.packages.length){
+			console.log($scope.packages);
+			return $scope.packages;
+		};
+
+		facilityService.getPackagesByFacilityId($scope.facility.id)
+                        .then(function(packages){
+			$scope.packages = (packages.data === "")?[]:packages.data;
+                }).catch(function(data){
+                    console.log(data.data);
+                });
+        };
+        
 	$scope.saveHours = function(data, id) {
 		// $scope.user not updated yet
-		angular.extend(data, {id: id,available_facility_id : $scope.facility.id,
-			session_id:1});
-		console.log(data);
-		var addHours = facilityService.addOpeningTime(data);
-		console.log(addHours);
-
-	return addHours;
-	};
-
+		angular.extend(data, {id: id,available_facility_id : $scope.facility.id});
+                var addHours = facilityService.addOpeningTime(data).then(function(responce){
+                        console.log(responce.data);
+                }).catch(function(responce){
+                    console.log(responce.data);
+                });
+        };
 
 	$scope.saveSession = function(data, id,rowform) {
 		// $scope.user not updated yet
 		angular.extend(data, {id: id,available_facility_id : $scope.facility.id});
 		var addSession = facilityService.saveSession(data).then(function(data){
-                    console.log(data.$name);
+                    console.log(data);
                 }).catch(function(response){
                    console.log(data);
                      angular.forEach(response.data, function( errorData, field ){
@@ -335,7 +359,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 		$scope.durations = durations.duration;
 	}
 
-	$scope.getSessions();
+	$scope.getOpeningHours();
 }]);
 app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
 	$scope.items = items;
