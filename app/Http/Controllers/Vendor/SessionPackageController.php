@@ -49,21 +49,26 @@ class SessionPackageController extends Controller
             $facility = AvailableFacility::findOrFail($request->available_facility_id);
             $status = 200;
             $message = "Success";
-            if($request->package_id==0){ //Create Package First Time
-                $packageType = PackageType::where('slug','=','package')->first();
-                $request->created_at = Carbon::now();
-                $request->updated = Carbon::now();
-                $parentData = $request->all();
-                $childData = $request->all();
-                $parentData = $this->unsetKeys(array('child_id','is_peak','actual_price','discount','package_id','month'),$parentData);
-                $parentData['package_type_id'] = $packageType->id;
-                $package = SessionPackage::create($parentData);
-                $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
-                $childData['session_package_id'] = $package->id;
-                $packageChild = SessionPackageChild::create($childData);
-                $packageInformation['parent'] = SessionPackage::find($package->id);
-                $packageInformation['child'] = $packageChild->toArray();
-            }else{ //Update Existing Package & Create New Child Row in Table
+            //if($request->package_id==0){ //Create Package First Time
+            $packageType = PackageType::where('slug','=','package')->first();
+            $request->created_at = Carbon::now();
+            $request->updated = Carbon::now();
+            $parentData = $request->all();
+            $childData = $request->all();
+            $parentData = $this->unsetKeys(array('child_id','is_peak','actual_price','discount','package_id','month'),$parentData);
+            $parentData['package_type_id'] = $packageType->id;
+            $package = SessionPackage::create($parentData);
+            $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
+            $childData['session_package_id'] = $package->id;
+            $packageChild = SessionPackageChild::create($childData);
+            $packageInformation = SessionPackage::find($package->id);
+            $packageChild = $packageChild->toArray();
+            $packageInformation['session_package_id'] = $packageChild['session_package_id'];
+            $packageInformation['month'] = $packageChild['month'];
+            $packageInformation['actual_price'] = $packageChild['actual_price'];
+            $packageInformation['discount'] = $packageChild['discount'];
+            $packageInformation['is_peak'] = $packageChild['is_peak'];
+            /*}else{ //Update Existing Package & Create New Child Row in Table
                 $childData = $request->all();
                 $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
                 $childData['session_package_id'] = $request->package_id;
@@ -73,7 +78,7 @@ class SessionPackageController extends Controller
                 //$packageChild = SessionPackageChild::create($childData);
                 $packageInformation['parent'] = SessionPackage::find($request->package_id);
                 $packageInformation['child'] = $packageInformation['parent']->ChildPackage()->first();
-            }
+            }*/
             $response = [
                 "message" => $message,
                 "package" => $packageInformation
@@ -86,6 +91,39 @@ class SessionPackageController extends Controller
                 "package" => ""
             ];
         }
+        return response($response,$status);
+    }
+
+    public function updatePackage(Requests\PackageRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Package data updated successfully";
+            $parentData = $request->all();
+            $childData = $request->all();
+            $parentData = $this->unsetKeys(array('_method','child_id','is_peak','actual_price','discount','package_id','month','available_facility_id','is_active'),$parentData);
+
+            $package = SessionPackage::where('id','=',$id)->update($parentData);
+            $childData = $this->unsetKeys(array('_method','child_id','package_id','available_facility_id','package_type_id','name','description','is_active'),$childData);
+            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->update($childData);
+
+            $packageInformation = SessionPackage::find($id);
+            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->first();
+            $packageChild = $packageChild->toArray();
+            $packageInformation['session_package_id'] = $packageChild['session_package_id'];
+            $packageInformation['month'] = $packageChild['month'];
+            $packageInformation['actual_price'] = $packageChild['actual_price'];
+            $packageInformation['discount'] = $packageChild['discount'];
+            $packageInformation['is_peak'] = $packageChild['is_peak'];
+
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $packageInformation = "";
+        }
+        $response = [
+            "message" => $message,
+            "package" => $packageInformation
+        ];
         return response($response,$status);
     }
 
@@ -149,6 +187,7 @@ class SessionPackageController extends Controller
             $start = strtotime($request->start);
             $end = strtotime($request->end);
             $timeDifference = $end - $start;
+            $openingHour = "";
             //$timeDifference = date('i:s', $timeDifference);
             $timeDifference = round(abs($timeDifference) / 60,2);
 
@@ -161,7 +200,7 @@ class SessionPackageController extends Controller
             if($checkFacilityInformation!=null && $checkFacilityInformation->duration!=null){
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if($timeDifference>=$checkFacilityInformation['duration']){ // If time Difference Matched
-                    if($request->session_id==0){ //Create Session First Time
+                    //if($request->session_id==0){ //Create Session First Time
                         $packageType = PackageType::where('slug','=','session')->first();
                         $request->created_at = Carbon::now();
                         $request->updated = Carbon::now();
@@ -189,21 +228,14 @@ class SessionPackageController extends Controller
                         }else{
                             $sessionChild = OpeningHour::create($childData);
                             $sessionInformation['parent'] = SessionPackage::find($session['id']);
-                            $sessionInformation['child'] = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
+                            $openingHour = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
                         }
-                    }else{ //Update Existing Session & Create New Child Row in Table
+                    //}
+                    /*else{ //Update Existing Session & Create New Child Row in Table
                         $message = "Opening Hour Updated Successfully";
                         $childData = $request->all();
                         $childData = $this->unsetKeys(array('child_id','session_id','available_facility_id','name','description'),$childData);
-                        //$childData['id'] = $request->session_id;
-                        /*if($request->child_id!=0){
-                            $sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('day','=',$request->day)->where('id','!=',$request->child_id)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('day','=',$request->day)->where('id','!=',$request->child_id)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
-                        }else{
-                            $sameTimeExists = SessionPackageChild::where('start','<',$start)->where('end','>',$start)->where('day','=',$request->day)->where('is_active','=',1)->orWhere('end','>',$end)->where('start','<',$end)->where('day','=',$request->day)->where('is_active','=',1)->orderBy('created_at','DESC')->first();
-                        }*/
-                        //DB::enableQueryLog();
-                        //$sameTimeExists = SessionPackageChild::whereBetween('start',[$start,$end])->orWhereBetween('end',[$start,$end])->where('id','!=',$request->session_id)->count();
-                        //$sameTimeExists = SessionPackageChild::select(DB::Raw("start between $start and $end or end between $start and $end"));
+
                         $sessionParentData = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first()->toArray();
                         $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$request->session_id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));
                         //$queries = DB::getQueryLog();
@@ -212,27 +244,81 @@ class SessionPackageController extends Controller
                             $message = "Time Already Exists";
                             $sessionInformation = "";
                         }else{
-                            //if($request->child_id!=0){ // Update Previous Child Row (Inactive)
                             $sessionChild = OpeningHour::where('id',$request->session_id)->update($childData);
                             $sessionInformation['parent'] = $sessionParentData;
                             $sessionInformation['child'] = OpeningHour::find($request->session_id);
-                            //}
-                            //$packageChild = SessionPackageChild::create($childData);
-                            //$sessionInformation['parent'] = SessionPackage::find($request->session_id);
-                            //$sessionInformation['child'] = $sessionInformation['parent']->child()->where(array('is_active'=>1))->first()->toArray();
+
                         }
-                    }
+                    }*/
                 }else{ // Difference not matched
                     $message = "Specified duration not matched with current time difference";
-                    $sessionInformation = "";
+                    $openingHour = "";
                 }
             }else{ // No Record Found
                 $message = "Please Update Session duration first";
-                $sessionInformation = "";
+                $openingHour = "";
             }
             $response = [
                 "message" => $message,
-                "session" => $sessionInformation
+                "data" => $openingHour
+            ];
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $response = [
+                "message" => $message,
+            ];
+        }
+        return response($response,$status);
+    }
+
+    public function updateOpeningTime(Requests\SessionRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Opening Hour updated Successfully";
+            $start = strtotime($request->start);
+            $end = strtotime($request->end);
+            $timeDifference = $end - $start;
+            $openingHour = "";
+            //$timeDifference = date('i:s', $timeDifference);
+            $timeDifference = round(abs($timeDifference) / 60,2);
+
+            $start = date('H:i:s',$start);
+            $end = date('H:i:s',$end);
+
+            /* Check First Duration is Available Or Not */
+            $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first();
+
+            if($checkFacilityInformation!=null && $checkFacilityInformation->duration!=null){
+                $checkFacilityInformation = $checkFacilityInformation->toArray();
+                if($timeDifference>=$checkFacilityInformation['duration']){ // If time Difference Matched
+                    $childData = $request->all();
+                    $childData = $this->unsetKeys(array('_method','child_id','session_id','available_facility_id','name','description'),$childData);
+                    $packageType = PackageType::where('slug','=','session')->first();
+                    $sessionParentData = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->where('package_type_id','=',$packageType->id)->first()->toArray();
+                    $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));
+                    //$queries = DB::getQueryLog();
+
+                    if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
+                        $message = "Time Already Exists";
+                        $sessionInformation = "";
+                    }else{
+                        $sessionChild = OpeningHour::where('id',$id)->update($childData);
+                        $sessionInformation['parent'] = $sessionParentData;
+                        $openingHour = OpeningHour::find($id);
+
+                    }
+                }else{ // Difference not matched
+                    $message = "Specified duration not matched with current time difference";
+                    $openingHour = "";
+                }
+            }else{ // No Record Found
+                $message = "Please Update Session duration first";
+                $openingHour = "";
+            }
+            $response = [
+                "message" => $message,
+                "data" => $openingHour
             ];
         }catch(\Exception $e){
             $status = 500;
