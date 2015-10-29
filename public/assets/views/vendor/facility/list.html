@@ -138,7 +138,7 @@
 
 			</tr>
 						<tr ng-repeat="package in packages">
-							<td>
+                                                        <td>
 								<span e-name="name" e-form="rowform" editable-text="package.name">
 									{{ package.name || 'empty' }}
 								</span>
@@ -301,8 +301,7 @@
 			</tabset>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-primary" ng-click="ok()">OK</button>
-			<button class="btn btn-primary btn-o" ng-click="cancel()">Cancel</button>
+			<button class="btn btn-primary" ng-click="cancel()">OK</button>
 		</div>
 	</script>
 

@@ -364,7 +364,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 app.controller('facilitySessionCtrl',["$scope","$modalInstance"],function($scope,$modalInstance){
 	$scope.items = items;
 	$scope.selected = {
-			item: $scope.items[0]
+            item: $scope.items[0]
 	};
 
 	$scope.ok = function () {
@@ -387,7 +387,6 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
 
 	function getAllFacilitySuccess(facilityData) {
 		$scope.facilityData = facilityData.facility;
-		console.log($scope.facilityData);
 	}
 
 	facilityService.getFacilityById($scope.facilityId)
@@ -395,7 +394,6 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
 
 	function getFacilitySuccess(facilityData) {
 		$scope.facility = facilityData.facility;
-		console.log($scope.facility);
 	}
 
 	var vm = this;
@@ -447,11 +445,28 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
 			placement: 'right',
 			size: 'sm',
 			backdrop: true,
-			controller: function ($scope, $modalInstance) {
-				$scope.$modalInstance = $modalInstance;
+                        resolve: {
+				selectedFacility: function () {
+					return $scope.facility;
+				},
+                                facilityData : function(){
+                                   return $scope.facilityData;
+                                }
+			},
+			controller: function ($scope, $modalInstance,selectedFacility,facilityData,facilityService) {
+                            $scope.facilityData = facilityData;
+                            $scope.selectedFacility = selectedFacility;
+                            $scope.$modalInstance = $modalInstance;
 				$scope.action = action;
-				$scope.event = event;
-				$scope.cancel = function () {
+				$scope.event = {};
+                                $scope.event.title = "Booked ";
+				$scope.addEvent = function () {
+                                    console.log($scope.event);
+					//$modalInstance.dismiss('cancel');
+                                        facilityService.blockSession($scope.event);
+                                        
+				};
+                                $scope.cancel = function () {
 					$modalInstance.dismiss('cancel');
 				};
 				$scope.deleteEvent = function () {
@@ -472,13 +487,13 @@ app.controller('facilityBookingCtrl', ["$scope","$state", "$aside", "moment","fa
 		showModal('Clicked', event);
 	};
 	$scope.addEvent = function () {
-		$scope.events.push({
-			title: $scope.facility.name ||  null,
-			startsAt: new Date(y, m, d, 10, 0),
-			endsAt: new Date(y, m, d, 11, 0),
-			type: 'to-do'
-		});
-		$scope.eventEdited($scope.events[$scope.events.length - 1]);
+//		$scope.events.push({
+//			title: $scope.facility.name ||  null,
+//			startsAt: new Date(y, m, d, 10, 0),
+//			endsAt: new Date(y, m, d, 11, 0),
+//			type: $scope.facility.name
+//		});
+//		$scope.eventEdited($scope.events[$scope.events.length - 1]);
 	};
 
 	$scope.eventEdited = function (event) {
