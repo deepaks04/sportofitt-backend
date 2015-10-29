@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -56,9 +57,9 @@
 </script>
 </head>
 <body>
-    <div ng-controller="LayerDataQuakesAdvCtrl">
-      <map zoom="3" center="20, -160"
-        styles="[{
+	<div ng-controller="LayerDataQuakesAdvCtrl">
+		<map zoom="3" center="20, -160"
+			styles="[{
             'featureType': 'all',
             'elementType': 'all',
             'stylers': [{'visibility': 'off'}]
@@ -75,10 +76,9 @@
             'elementType': 'geometry',
             'stylers': [{'visibility': 'on'}, {'hue': '#5f94ff'}, {'lightness': 60}]
           }]">
-        <map-data 
-          set-style="styleFunc"
-          load-geo-json="scripts/quakes.geo.json"></map-data>
-      </map>
-    </div>
+			<map-data set-style="styleFunc"
+				load-geo-json="scripts/quakes.geo.json"></map-data>
+		</map>
+	</div>
 </body>
 </html>

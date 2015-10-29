@@ -2,7 +2,9 @@
 <html ng-app="myApp">
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script> <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -71,16 +73,14 @@ var moonMapType = new google.maps.ImageMapType(moonTypeOptions);
 </script>
 </head>
 <body>
-    <div ng-controller="MapTypeImageCtrl">
-      <map zoom="1" center="0,0"
-        street-view-control="false"
-        map-type-id="moon"
-        map-type-control-options="{
+	<div ng-controller="MapTypeImageCtrl">
+		<map zoom="1" center="0,0" street-view-control="false"
+			map-type-id="moon"
+			map-type-control-options="{
           mapTypeIds: ['moon']
         }">
-        <map-type name="moon" object="moonMapType">
-        </map-type>
-      </map>
-    </div>
+			<map-type name="moon" object="moonMapType"> </map-type>
+		</map>
+	</div>
 </body>
 </html>

@@ -5,33 +5,42 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 -->
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>New Image plugin &mdash; CKEditor Sample</title>
-	<script src="../../../ckeditor.js"></script>
-	<script>
+<meta charset="utf-8">
+<title>New Image plugin &mdash; CKEditor Sample</title>
+<script src="../../../ckeditor.js"></script>
+<script>
 		if ( CKEDITOR.env.ie && CKEDITOR.env.version < 9 )
 			CKEDITOR.tools.enableHtml5Elements( document );
 	</script>
-	<link href="../../../samples/sample.css" rel="stylesheet">
-	<meta name="ckeditor-sample-name" content="New Image plugin">
-	<meta name="ckeditor-sample-group" content="Plugins">
-	<meta name="ckeditor-sample-description" content="Using the new Image plugin to insert captioned images and adjust their dimensions.">
-	<meta name="ckeditor-sample-isnew" content="1">
+<link href="../../../samples/sample.css" rel="stylesheet">
+<meta name="ckeditor-sample-name" content="New Image plugin">
+<meta name="ckeditor-sample-group" content="Plugins">
+<meta name="ckeditor-sample-description"
+	content="Using the new Image plugin to insert captioned images and adjust their dimensions.">
+<meta name="ckeditor-sample-isnew" content="1">
 </head>
 <body>
 	<h1 class="samples">
-		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo; New Image plugin
+		<a href="../../../samples/index.html">CKEditor Samples</a> &raquo; New
+		Image plugin
 	</h1>
 
 	<div class="description">
 		<p>
-			This editor is using the new <strong>Image</strong> (<code>image2</code>) plugin, which implements a dynamic <em>click-and-drag</em> resizing
+			This editor is using the new <strong>Image</strong> (
+			<code>image2</code>
+			) plugin, which implements a dynamic <em>click-and-drag</em> resizing
 			and easy captioning of the images.
 		</p>
 		<p>
-			To use the new plugin, extend <code><a class="samples" href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraPlugins">config.extraPlugins</a></code>:
+			To use the new plugin, extend
+			<code>
+				<a class="samples"
+					href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-extraPlugins">config.extraPlugins</a>
+			</code>
+			:
 		</p>
-<pre class="samples">
+		<pre class="samples">
 CKEDITOR.replace( '<em>textarea_id</em>', {
 	<strong>extraPlugins: 'image2'</strong>
 } );
@@ -54,11 +63,13 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 	<div id="footer">
 		<hr>
 		<p>
-			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+			CKEditor - The text editor for the Internet - <a class="samples"
+				href="http://ckeditor.com/">http://ckeditor.com</a>
 		</p>
 		<p id="copy">
-			Copyright &copy; 2003-2015, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
-			Knabben. All rights reserved.
+			Copyright &copy; 2003-2015, <a class="samples"
+				href="http://cksource.com/">CKSource</a> - Frederico Knabben. All
+			rights reserved.
 		</p>
 	</div>
 </body>

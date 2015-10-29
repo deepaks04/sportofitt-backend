@@ -21,18 +21,17 @@
 	<span translate="sidebar.heading.NAVIGATION">Main Navigation</span>
 </div>
 <ul class="main-navigation-menu">
-	<li ui-sref-active="active">
-		<a ui-sref="vendor.dashboard">
+	<li ui-sref-active="active"><a ui-sref="vendor.dashboard">
 			<div class="item-content">
 				<div class="item-media">
 					<i class="ti-home"></i>
 				</div>
 				<div class="item-inner">
-					<span class="title" translate="sidebar.nav.dashboard.MAIN"> Dashboard </span>
+					<span class="title" translate="sidebar.nav.dashboard.MAIN">
+						Dashboard </span>
 				</div>
 			</div>
-		</a>
-	</li>
+	</a></li>
 	<li ng-class="{'active open':$state.includes('vendor.facility')}">
 		<a href="javascript:void(0)">
 			<div class="item-content">
@@ -40,35 +39,29 @@
 					<i class="ti-settings"></i>
 				</div>
 				<div class="item-inner">
-					<span class="title" > Facility </span><i class="icon-arrow"></i>
+					<span class="title"> Facility </span><i class="icon-arrow"></i>
 				</div>
 			</div>
-		</a>
+	</a>
 		<ul class="sub-menu">
-			<li ui-sref-active="active">
-				<a ui-sref="vendor.facility.list">
-					<span class="title" > Facility List </span>
-				</a>
-			</li>
-			<li ui-sref-active="active">
-				<a ui-sref="vendor.facility.add">
-					<span class="title" > New Facility </span>
-				</a>
-			</li>
+			<li ui-sref-active="active"><a ui-sref="vendor.facility.list">
+					<span class="title"> Facility List </span>
+			</a></li>
+			<li ui-sref-active="active"><a ui-sref="vendor.facility.add">
+					<span class="title"> New Facility </span>
+			</a></li>
 
 		</ul>
 	</li>
-	<li ui-sref-active="active">
-		<a ui-sref="vendor.setting">
+	<li ui-sref-active="active"><a ui-sref="vendor.setting">
 			<div class="item-content">
 				<div class="item-media">
 					<i class="ti-settings"></i>
 				</div>
 				<div class="item-inner">
-					<span class="title" > Settings </span>
+					<span class="title"> Settings </span>
 				</div>
 			</div>
-		</a>
-	</li>
+	</a></li>
 </ul>
 <!-- end: MAIN NAVIGATION MENU -->

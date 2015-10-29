@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -85,20 +86,19 @@
 </head>
 
 <body>
-    <div ng-controller="BasicCtrl1">
-      Showing static coordinates of Chicago
-      <br/>
-      <map center="41.850033,-87.6500523" zoom="3">
-        <info-window id="1" position="41.850033,-87.6500523" visible="true">
-          <div ng-non-bindable>
-            Chicago, IL<br/>
-            LatLng: {{chicago.lat()}}, {{chicago.lng()}}, <br/>
-            World Coordinate: {{worldCoordinate.x}}, {{worldCoordinate.y}}, <br/>
-            Pixel Coordinate: {{pixelCoordinate.x}}, {{pixelCoordinate.y}}, <br/>
-            Tile Coordinate: {{tileCoordinate.x}}, {{tileCoordinate.y}} at Zoom Level {{map.getZoom()}}
-          </div>
-        </info-window>
-      </map>
-    </div>
+	<div ng-controller="BasicCtrl1">
+		Showing static coordinates of Chicago <br />
+		<map center="41.850033,-87.6500523" zoom="3">
+			<info-window id="1" position="41.850033,-87.6500523" visible="true">
+			<div ng-non-bindable>
+				Chicago, IL<br /> LatLng: {{chicago.lat()}}, {{chicago.lng()}}, <br />
+				World Coordinate: {{worldCoordinate.x}}, {{worldCoordinate.y}}, <br />
+				Pixel Coordinate: {{pixelCoordinate.x}}, {{pixelCoordinate.y}}, <br />
+				Tile Coordinate: {{tileCoordinate.x}}, {{tileCoordinate.y}} at Zoom
+				Level {{map.getZoom()}}
+			</div>
+			</info-window>
+		</map>
+	</div>
 </body>
 </html>

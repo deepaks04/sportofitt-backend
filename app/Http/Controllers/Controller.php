@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -11,8 +10,9 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function unsetKeys($keys,$array){
-        foreach($keys as $key) {
+    public function unsetKeys($keys, $array)
+    {
+        foreach ($keys as $key) {
             unset($array[$key]);
         }
         return $array;

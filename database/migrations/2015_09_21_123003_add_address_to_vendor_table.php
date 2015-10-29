@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddAddressToVendorTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,8 +13,12 @@ class AddAddressToVendorTable extends Migration
     public function up()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->string('contact',30)->nullable()->after('commission');
-            $table->string('address',255)->nullable()->after('contact');
+            $table->string('contact', 30)
+                ->nullable()
+                ->after('commission');
+            $table->string('address', 255)
+                ->nullable()
+                ->after('contact');
         });
     }
 

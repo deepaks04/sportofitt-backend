@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html ng-app="myapp">
 <head>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
-<script src="https://maps.google.com/maps/api/js?libraries=visualization"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script
+	src="https://maps.google.com/maps/api/js?libraries=visualization"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -59,31 +61,33 @@
 </script>
 </head>
 <body>
-  <style>
-    div[ng-controller=LayerHeatmapCtrl] {
-      position:relative;
-    }
-    div[ng-controller=LayerHeatmapCtrl] #panel{
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      margin-left: -180px;
-      z-index: 5;
-      background-color: #fff;
-      padding: 5px;
-      border: 1px solid #999;
-    }
-  </style>
-  <div ng-controller="LayerHeatmapCtrl">
-    <div id="panel">
-      <button ng-click="toggleHeatmap()">Toggle Heatmap</button>
-      <button ng-click="changeGradient()">Change gradient</button>
-      <button ng-click="changeRadius()">Change radius</button>
-      <button ng-click="changeOpacity()">Change opacity</button>
-    </div>
-    <map zoom="13" center="37.774546, -122.433523" map-type-id="SATELLITE">
-      <heatmap-layer id="foo" data="taxiData"></heatmap>
-    </map>
-  </div>
+	<style>
+div[ng-controller=LayerHeatmapCtrl] {
+	position: relative;
+}
+
+div[ng-controller=LayerHeatmapCtrl] #panel {
+	position: absolute;
+	top: 5px;
+	left: 50%;
+	margin-left: -180px;
+	z-index: 5;
+	background-color: #fff;
+	padding: 5px;
+	border: 1px solid #999;
+}
+</style>
+	<div ng-controller="LayerHeatmapCtrl">
+		<div id="panel">
+			<button ng-click="toggleHeatmap()">Toggle Heatmap</button>
+			<button ng-click="changeGradient()">Change gradient</button>
+			<button ng-click="changeRadius()">Change radius</button>
+			<button ng-click="changeOpacity()">Change opacity</button>
+		</div>
+		<map zoom="13" center="37.774546, -122.433523" map-type-id="SATELLITE">
+			<heatmap-layer id="foo" data="taxiData">
+			</heatmap>
+		</map>
+	</div>
 </body>
 </html>

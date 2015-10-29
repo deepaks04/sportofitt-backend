@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Vendor;
 
 use App\BillingInfo;
@@ -10,7 +9,6 @@ use App\SessionPackage;
 use App\SessionPackageChild;
 use App\Vendor;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
@@ -25,12 +23,22 @@ use App\SubCategory;
 
 class VendorsController extends Controller
 {
+
     public function __construct()
     {
-        //$this->middleware('auth');
-        $this->middleware('auth',['except'=>['store']]);
-        $this->middleware('vendor',['except'=>['store']]);
+        // $this->middleware('auth');
+        $this->middleware('auth', [
+            'except' => [
+                'store'
+            ]
+        ]);
+        $this->middleware('vendor', [
+            'except' => [
+                'store'
+            ]
+        ]);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -54,58 +62,62 @@ class VendorsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param Request $request            
      * @return Response
      */
     public function store($vendorData)
     {
-        try{
+        try {
             DB::table('vendors')->insert($vendorData);
             $result['status'] = true;
             return $result;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $result['status'] = false;
             $result['message'] = $e->getMessage();
             return $result;
-
         }
     }
 
     /**
      * Update First Time Login Flag
      */
-    public function updateFirstLoginFlag(){
-        try{
+    public function updateFirstLoginFlag()
+    {
+        try {
             $user = Auth::user();
-            $flag = $user->vendor()->update(array('is_processed'=>1));
+            $flag = $user->vendor()->update(array(
+                'is_processed' => 1
+            ));
             $message = "Success";
             $status = 200;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $message = "Something went wrong";
             $status = 500;
         }
         $response = [
             'message' => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Get Vendor Profile Data
+     * 
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getProfile(){
+    public function getProfile()
+    {
         $user = Auth::user();
         $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-        $vendorOwnDirecory = $vendorUploadPath."/".sha1($user->id)."/"."profile_image/";
+        $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "profile_image/";
         $vendor = $user->vendor;
         $myProfile['fname'] = $user->fname;
         $myProfile['lname'] = $user->lname;
         $myProfile['email'] = $user->email;
-        if($user->profile_picture==null){
+        if ($user->profile_picture == null) {
             $myProfile['profile_picture'] = $user->profile_picture;
-        }else{
-            $myProfile['profile_picture'] = $vendorOwnDirecory.$user->profile_picture;
+        } else {
+            $myProfile['profile_picture'] = $vendorOwnDirecory . $user->profile_picture;
         }
         $myProfile['username'] = $user->username;
         $myProfile['business_name'] = $vendor->business_name;
@@ -115,161 +127,192 @@ class VendorsController extends Controller
         $myProfile['area_id'] = $vendor->area_id;
         $myProfile['contact'] = $vendor->contact;
         $myProfile['description'] = $vendor->description;
-        $status= 200;
+        $status = 200;
         $response = [
             'message' => 'success',
             'profile' => $myProfile
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Vendor Update Profile Settings
-     * @param Requests\UpdateVendorProfileRequest $request
+     * 
+     * @param Requests\UpdateVendorProfileRequest $request            
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function updateProfile(Requests\UpdateVendorProfileRequest $request){
-        try{
-            $status =200;
+    public function updateProfile(Requests\UpdateVendorProfileRequest $request)
+    {
+        try {
+            $status = 200;
             $response = [
                 "message" => "Settings updated successfully"
             ];
             $user = $request->all();
             $vendor = $request->all();
-            $userKeys = array('email','username','business_name','longitude','latitude','area_id','description','_method','address','contact','postcode','commission');
-            $user = $this->unsetKeys($userKeys,$user);
-            $vendorKeys = array('email','username','fname','lname','_method','profile_picture');
-            $vendor = $this->unsetKeys($vendorKeys,$vendor);
+            $userKeys = array(
+                'email',
+                'username',
+                'business_name',
+                'longitude',
+                'latitude',
+                'area_id',
+                'description',
+                '_method',
+                'address',
+                'contact',
+                'postcode',
+                'commission'
+            );
+            $user = $this->unsetKeys($userKeys, $user);
+            $vendorKeys = array(
+                'email',
+                'username',
+                'fname',
+                'lname',
+                '_method',
+                'profile_picture'
+            );
+            $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
-            if(isset($request->profile_picture) && !empty($request->profile_picture)){
+            if (isset($request->profile_picture) && ! empty($request->profile_picture)) {
                 /* File Upload Code */
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
-                $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
                 /* Create Upload Directory If Not Exists */
-                if(!file_exists($vendorImageUploadPath)){
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                    chmod($vendorOwnDirecory, 0777);
-                    chmod($vendorImageUploadPath, 0777);
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+                    // chmod($vendorOwnDirecory, 0777);
+                    // chmod($vendorImageUploadPath, 0777);
                 }
                 $extension = $request->file('profile_picture')->getClientOriginalExtension();
-                $filename = sha1($systemUser->id.time()).".{$extension}";
+                $filename = sha1($systemUser->id . time()) . ".{$extension}";
                 $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-                chmod($vendorImageUploadPath, 0777);
-
+                // chmod($vendorImageUploadPath, 0777);
+                
                 /* Rename file */
                 $user['profile_picture'] = $filename;
             }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
-        }catch(\Exception $e){
-            echo $e->getMessage();exit;
-            $status =500;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            exit();
+            $status = 500;
             $response = [
-                "message" => "Something Went Wrong",
+                "message" => "Something Went Wrong"
             ];
         }
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * get billing information
+     * 
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getBillingInformation(){
+    public function getBillingInformation()
+    {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $billing = $vendor->billingInfo()->first();
-        if($billing!=null){
+        if ($billing != null) {
             $message = 'success';
-            $status =200;
+            $status = 200;
             $billing = $billing->toArray();
-        }else{
-            $status =200;
+        } else {
+            $status = 200;
             $message = 'Please update your billing information';
         }
         $response = [
             "message" => $message,
             "billing" => $billing
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Insert/Update Billing Details
-     * @param Requests\Billing $request
+     * 
+     * @param Requests\Billing $request            
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function updateBillingInformation(Requests\Billing $request){
-        try{
+    public function updateBillingInformation(Requests\Billing $request)
+    {
+        try {
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $billing = $vendor->billingInfo()->first();
-            if($billing!=null){ //Update If exists
+            if ($billing != null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
                 $vendor->billingInfo()->update($data);
-            }else{ //Insert if not exists
+            } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
                 $data['vendor_id'] = $vendor->id;
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
                 $vendor->billingInfo()->insert($data);
-                //$billingInfo = Billing::create($data);
-                //$user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
+                // $billingInfo = Billing::create($data);
+                // $user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
             }
-            $status =200;
+            $status = 200;
             $message = "saved successfully";
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             echo $e->getMessage();
-            $status =500;
+            $status = 500;
             $message = "something went wrong";
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Get Bank Details
+     * 
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getBankDetails(){
+    public function getBankDetails()
+    {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $bank = $vendor->bankInfo()->first();
-        if($bank!=null){
+        if ($bank != null) {
             $message = 'success';
-            $status =200;
+            $status = 200;
             $bank = $bank->toArray();
-        }else{
-            $status =200;
+        } else {
+            $status = 200;
             $message = 'Please update your bank details';
         }
         $response = [
             "message" => $message,
             "bank" => $bank
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Insert/Update Bank Details
-     * @param Requests\BankDetails $request
+     * 
+     * @param Requests\BankDetails $request            
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function updateBankDetails(Requests\BankDetails $request){
-        try{
+    public function updateBankDetails(Requests\BankDetails $request)
+    {
+        try {
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $billing = $vendor->bankInfo()->first();
-            if($billing!=null){ //Update If exists
+            if ($billing != null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
                 $vendor->bankInfo()->update($data);
-            }else{ //Insert if not exists
+            } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
                 $data['vendor_id'] = $vendor->id;
@@ -277,221 +320,241 @@ class VendorsController extends Controller
                 $data['updated_at'] = Carbon::now();
                 $vendor->bankInfo()->insert($data);
             }
-            $status =200;
+            $status = 200;
             $message = "saved successfully";
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             echo $e->getMessage();
-            $status =500;
+            $status = 500;
             $message = "something went wrong";
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Insert Images
-     * @param Requests\ImagesRequest $request
+     * 
+     * @param Requests\ImagesRequest $request            
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-    */
-    public function addImages(Requests\ImagesRequest $request){
-        try{
-            $files = $request->image_name;
+     */
+    public function addImages(Requests\ImagesRequest $request)
+    {
+        try {
+            $file = $request->image_name;
             $user = Auth::user();
-            $maxUploadLimit = (int)env('VENDOR_IMAGE_UPLOAD_LIMIT');
+            $maxUploadLimit = (int) env('VENDOR_IMAGE_UPLOAD_LIMIT');
             $vendor = $user->vendor()->first();
             $images = $vendor->images()->count();
-            if($images==$maxUploadLimit){ // Do not allowed to upload more than 10 Images
+            if ($images == $maxUploadLimit) { // Do not allowed to upload more than 10 Images
                 $status = 406;
-                $message = "Cannot Upload more than ".$maxUploadLimit." images";
-            }else{ //Insert if not reached to max limit
-                $status =200;
+                $message = "Cannot Upload more than " . $maxUploadLimit . " images";
+            } else { // Insert if not reached to max limit
+                $status = 200;
                 $message = "saved successfully";
                 $data = $request->all();
                 /* File Upload Code */
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
-                $vendorImageUploadPath = $vendorOwnDirecory."/"."extra_images";
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "extra_images";
                 /* Create Upload Directory If Not Exists */
-                if(!file_exists($vendorImageUploadPath)){
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
                     chmod($vendorOwnDirecory, 0777);
                     chmod($vendorImageUploadPath, 0777);
                 }
-
+                
                 chmod($vendorImageUploadPath, 0777);
-                foreach($files as $file){
-                    $random = mt_rand(1,1000000);
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = sha1($user->id.$random).".{$extension}";
-                    $file->move($vendorImageUploadPath, $filename);
-                    /* Rename file */
-                    $data['image_name'] = $filename;
-                    $data['vendor_id'] = $vendor->id;
-                    $data['created_at'] = Carbon::now();
-                    $data['updated_at'] = Carbon::now();
-                    $vendor->images()->insert($data);
-                }
+                // foreach($files as $file){
+                $random = mt_rand(1, 1000000);
+                $extension = $file->getClientOriginalExtension();
+                $filename = sha1($user->id . $random) . ".{$extension}";
+                $file->move($vendorImageUploadPath, $filename);
+                /* Rename file */
+                $data['image_name'] = $filename;
+                $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
+                $vendor->images()->insert($data);
+                // }
             }
-        }catch(\Exception $e){
-            echo $e->getMessage();
-            $status =500;
-            $message = "something went wrong";
+        } catch (\Exception $e) {
+            // echo $e->getMessage();
+            $status = 500;
+            $message = "something went wrong" . $e->getMessage();
         }
         $images = $vendor->images()->count();
         $response = [
             "message" => $message,
             "image_count" => $images
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Get All extra images of vendor facility
+     * 
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getImages(){
+    public function getImages()
+    {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $imageCount = $vendor->images()->count();
-        if($imageCount == 0){
+        if ($imageCount == 0) {
             $status = 200;
             $message = "Images not found. Please upload some";
             $images = null;
-        }else{
+        } else {
             $status = 200;
             $message = "success";
-            $images = $vendor->images()->get()->toArray();
+            $images = $vendor->images()
+                ->get()
+                ->toArray();
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath."/".sha1($user->id)."/"."extra_images/";
-            for($i=0;$i<$imageCount;$i++){
-                $images[$i]['image_name'] = $url.$images[$i]['image_name'];
+            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+            for ($i = 0; $i < $imageCount; $i ++) {
+                $images[$i]['image_name'] = $url . $images[$i]['image_name'];
             }
         }
         $response = [
             "message" => $message,
             "images" => $images
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Delete Extra Image - one at a time
-     * @param Requests\DeleteImageRequest $request
-     * @param $id
+     * 
+     * @param Requests\DeleteImageRequest $request            
+     * @param
+     *            $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function deleteImage(Requests\DeleteImageRequest $request ,$id){
-        try{
+    public function deleteImage(Requests\DeleteImageRequest $request, $id)
+    {
+        try {
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-            $image = $vendor->images('id','=',$id)->first();
+            $image = $vendor->images('id', '=', $id)->first();
             $status = $image->delete();
-            if($status){
+            if ($status) {
                 $status = 200;
                 $message = "Image deleted successfully";
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                $path= $vendorUploadPath."/".sha1($user->id)."/"."extra_images/";
-                File::delete($path.$image->image_name);
-            }else{
-                $status =500;
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $path = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+                File::delete($path . $image->image_name);
+            } else {
+                $status = 500;
                 $message = "something went wrong";
             }
-        }catch(\Exception $e){
-            $status =500;
+        } catch (\Exception $e) {
+            $status = 500;
             $message = "something went wrong";
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
-    public function createFacility(Requests\AddFacilityRequest $request){
-        try{
+    public function createFacility(Requests\AddFacilityRequest $request)
+    {
+        try {
             $facility = $request->all();
-            $facility = $this->unsetKeys(array('duration'),$facility);
+            $facility = $this->unsetKeys(array(
+                'duration'
+            ), $facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-            $facilityExists = AvailableFacility::where('vendor_id','=',$vendor->id)->where('sub_category_id','=',$facility['sub_category_id'])->count();
-            if($facilityExists){ // If Facility already exists
-                $status = 406; //Not Acceptable
+            $facilityExists = AvailableFacility::where('vendor_id', '=', $vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
+            if ($facilityExists) { // If Facility already exists
+                $status = 406; // Not Acceptable
                 $message = "Facility already exists";
-            }else{ //If not then create
+            } else { // If not then create
                 $status = 200;
                 $message = "New facility added successfully";
-
-
+                
                 /* File Upload Code */
-                /*$vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
-                $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
-                /* Create Upload Directory If Not Exists */
-                /*if(!file_exists($vendorImageUploadPath)){
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                    chmod($vendorOwnDirecory, 0777);
-                    chmod($vendorImageUploadPath, 0777);
-                }
-                $extension = $request->file('image')->getClientOriginalExtension();
-                $filename = sha1($user->id.time()).".{$extension}";
-                $request->file('image')->move($vendorImageUploadPath, $filename);
-                chmod($vendorImageUploadPath, 0777);
-
-                /* Rename file */
-                //$facility['image'] = $filename;
-
-
+                /*
+                 * $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                 * $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
+                 * $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
+                 * /* Create Upload Directory If Not Exists
+                 */
+                /*
+                 * if(!file_exists($vendorImageUploadPath)){
+                 * File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                 * chmod($vendorOwnDirecory, 0777);
+                 * chmod($vendorImageUploadPath, 0777);
+                 * }
+                 * $extension = $request->file('image')->getClientOriginalExtension();
+                 * $filename = sha1($user->id.time()).".{$extension}";
+                 * $request->file('image')->move($vendorImageUploadPath, $filename);
+                 * chmod($vendorImageUploadPath, 0777);
+                 *
+                 * /* Rename file
+                 */
+                // $facility['image'] = $filename;
+                
                 $facility['vendor_id'] = $vendor->id;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
                 $newFacility = AvailableFacility::create($facility);
                 $sessionUpdateData['duration'] = $request->duration;
-                $durationStatus = $this->updateDuration($newFacility->id,$sessionUpdateData);
+                $durationStatus = $this->updateDuration($newFacility->id, $sessionUpdateData);
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $status = 500;
             $message = "Something went wrong : " . $e->getMessage();
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
     /**
      * Get All facility created by vendor
+     * 
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getFacility(){
+    public function getFacility()
+    {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $facilityCount = $vendor->facility()->count();
-        if($facilityCount == 0){
+        if ($facilityCount == 0) {
             $status = 200;
             $message = "Facility not found. Please create some";
             $facilityCount = null;
             $facility = null;
-        }else{
+        } else {
             $status = 200;
             $message = "success";
-            $facility = $vendor->facility()->get()->toArray();
-            /*foreach($facility as $singleFacility){
-                //dd($singleFacility['sub_category_id']);
-                $singleFacility['category']['sub'] = SubCategory::find($singleFacility['sub_category_id'])->toArray();
-                //$singleFacility['category'] = $singleFacility['category']->toArray();
-                //dd($singleFacility);
-            }*/
-            for($i=0;$i<$facilityCount;$i++){
+            $facility = $vendor->facility()
+                ->get()
+                ->toArray();
+            /*
+             * foreach($facility as $singleFacility){
+             * //dd($singleFacility['sub_category_id']);
+             * $singleFacility['category']['sub'] = SubCategory::find($singleFacility['sub_category_id'])->toArray();
+             * //$singleFacility['category'] = $singleFacility['category']->toArray();
+             * //dd($singleFacility);
+             * }
+             */
+            for ($i = 0; $i < $facilityCount; $i ++) {
                 $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
                 $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
                 $sessionDuration = $this->getDurationData($facility[$i]['id']);
                 $facility[$i]['session_duration'] = $sessionDuration;
             }
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
-            for($i=0;$i<$facilityCount;$i++){
-                $facility[$i]['image'] = $url.$facility[$i]['image'];
+            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            for ($i = 0; $i < $facilityCount; $i ++) {
+                $facility[$i]['image'] = $url . $facility[$i]['image'];
             }
         }
         $response = [
@@ -499,24 +562,24 @@ class VendorsController extends Controller
             "facility" => $facility,
             "facilityCount" => $facilityCount
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
-
-    public function getFacilityById($id){
+    public function getFacilityById($id)
+    {
         $status = 200;
         $message = "success";
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $facility = $vendor->facility()->find($id);
-        if($facility!=null) {
-        $facility = $facility->toArray();
-        $sessionDuration = $this->getDurationData($facility['id']);
-        $facility['session_duration'] = $sessionDuration;
-        $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-        $url = $vendorUploadPath."/".sha1($user->id)."/"."facility_images/";
-            $facility['image'] = $url.$facility['image'];
-        }else{
+        if ($facility != null) {
+            $facility = $facility->toArray();
+            $sessionDuration = $this->getDurationData($facility['id']);
+            $facility['session_duration'] = $sessionDuration;
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            $facility['image'] = $url . $facility['image'];
+        } else {
             $status = 200;
             $message = "Facility not found. Please create some";
             $facility = null;
@@ -525,51 +588,57 @@ class VendorsController extends Controller
             "message" => $message,
             "facility" => $facility
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
-    public function updateFacility(Requests\AddFacilityRequest $request,$id){
-        try{
+
+    public function updateFacility(Requests\AddFacilityRequest $request, $id)
+    {
+        try {
             $facility = $request->all();
-            $facility = $this->unsetKeys(array('_method','duration'),$facility);
+            $facility = $this->unsetKeys(array(
+                '_method',
+                'duration'
+            ), $facility);
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
-            if(isset($facility['image']) && !empty($facility['image'])){
+            if (isset($facility['image']) && ! empty($facility['image'])) {
                 /* File Upload Code */
-                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
-                $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "facility_images";
                 /* Create Upload Directory If Not Exists */
-                if(!file_exists($vendorImageUploadPath)){
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
                     chmod($vendorOwnDirecory, 0777);
                     chmod($vendorImageUploadPath, 0777);
                 }
                 $extension = $request->file('image')->getClientOriginalExtension();
-                $filename = sha1($user->id.time()).".{$extension}";
+                $filename = sha1($user->id . time()) . ".{$extension}";
                 $request->file('image')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
-
+                
                 /* Rename file */
                 $facility['image'] = $filename;
             }
             $facility['vendor_id'] = $vendor->id;
-            AvailableFacility::where('id','=',$id)->update($facility);
+            AvailableFacility::where('id', '=', $id)->update($facility);
             $sessionUpdateData['duration'] = $request->duration;
-            $sessionUpdatedData = $this->updateDuration($id,$sessionUpdateData);
-        }catch(\Exception $e){
+            $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
+        } catch (\Exception $e) {
             $status = 500;
             $message = "Something went wrong";
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
-    public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request,$id){
+    public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request, $id)
+    {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
         $facilities = $vendor->facility()->where(array('id'=>$id))->first();
@@ -595,10 +664,10 @@ class VendorsController extends Controller
                 $packages = SessionPackage::where('available_facility_id','=',$facilities['id'])->get();
                 if($packages!=null){
                     $packages = $packages->toArray();
-
-                    foreach($packages as $package){
-                        $type = PackageType::where('id','=',$package['package_type_id'])->first()->toArray();
-                        if($type['slug']=='package'){
+                    
+                    foreach ($packages as $package) {
+                        $type = PackageType::where('id', '=', $package['package_type_id'])->first()->toArray();
+                        if ($type['slug'] == 'package') {
                             $sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
                             $packageInformation[$i]['parent'] = $package;
                             $packageChild = SessionPackageChild::where(array('session_package_id'=>$package['id'],'is_active'=>1))->first();
@@ -610,14 +679,14 @@ class VendorsController extends Controller
                                 $sessionPackageInfoType[$type['slug']][$i]['child'] = "";
                                 $packageInformation[$i]['child'] = "";
                             }
-
-                            $i++;
+                            
+                            $i ++;
                         }
                         if($type['slug']=='session'){
                             //$sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
                             $packageChild = OpeningHour::where(array('session_package_id'=>$package['id'],'is_active'=>1))->get();
                             $j = 0;
-                            if($packageChild!=null){
+                            if ($packageChild != null) {
                                 $packageChild = $packageChild->toArray();
                                 foreach($packageChild as $child){
                                     //$sessionPackageInfoType[$type['slug']][$j]['child'] = $child;
@@ -644,40 +713,41 @@ class VendorsController extends Controller
             "openingHours" => $openingHours,
             "packageInformation" => $packageInformation
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 
-
-    public function updateDuration($facilityId,$sessionUpdateData){
-        try{
-            $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$facilityId)->first();
-            if($checkFacilityInformation!=null){ //Update If Found
-                $durationData = SessionPackage::where('available_facility_id','=',$facilityId)->update($sessionUpdateData);
-            }else{ //Insert New If Not Found
+    public function updateDuration($facilityId, $sessionUpdateData)
+    {
+        try {
+            $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $facilityId)->first();
+            if ($checkFacilityInformation != null) { // Update If Found
+                $durationData = SessionPackage::where('available_facility_id', '=', $facilityId)->update($sessionUpdateData);
+            } else { // Insert New If Not Found
                 $sessionUpdateData['available_facility_id'] = $facilityId;
                 $sessionUpdateData['created_at'] = Carbon::now();
                 $sessionUpdateData['updated_at'] = Carbon::now();
-                $packageType = PackageType::where('slug','=','session')->first();
+                $packageType = PackageType::where('slug', '=', 'session')->first();
                 $sessionUpdateData['package_type_id'] = $packageType->id;
                 $durationData = SessionPackage::create($sessionUpdateData);
-                //$durationData = $durationData->get()->toArray();
+                // $durationData = $durationData->get()->toArray();
             }
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function getDurationData($facilityId){
-        $packageType = PackageType::where('slug','=','session')->first();
+    public function getDurationData($facilityId)
+    {
+        $packageType = PackageType::where('slug', '=', 'session')->first();
         $data = array(
             'available_facility_id' => $facilityId,
             'package_type_id' => $packageType->id
         );
         $durationData = SessionPackage::where($data)->first();
-        if($durationData!=null){
+        if ($durationData != null) {
             return $durationData->duration;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -685,7 +755,7 @@ class VendorsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id            
      * @return Response
      */
     public function show($id)
@@ -696,7 +766,7 @@ class VendorsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id            
      * @return Response
      */
     public function edit($id)
@@ -707,8 +777,8 @@ class VendorsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param Request $request            
+     * @param int $id            
      * @return Response
      */
     public function update(Request $request, $id)
@@ -719,7 +789,7 @@ class VendorsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id            
      * @return Response
      */
     public function destroy($id)

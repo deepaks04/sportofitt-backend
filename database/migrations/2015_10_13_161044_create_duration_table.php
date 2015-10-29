@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateDurationTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -14,7 +14,7 @@ class CreateDurationTable extends Migration
     {
         Schema::create('duration_master', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("time",255);
+            $table->string("time", 255);
             $table->integer('actual_time');
             $table->timestamps();
         });

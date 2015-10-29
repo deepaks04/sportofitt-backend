@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 <script src="scripts/app.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
@@ -19,14 +20,14 @@
 </head>
 
 <body>
-    <div>
-      <map zoom="3" center="10, -140">
-        <fusion-tables-layer 
-          query= "{ select: 'location',
-            from: '1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ'}",
-          heatmap = "{enabled: true}"
-        </fusion-tables-layer>
-      </map>
-    </div>
+	<div>
+		<map zoom="3" center="10, -140">
+			<fusion-tables-layer
+				query="{ select: 'location',
+            from: '1xWyeuAhIFK_aED1ikkQEGmR8mINSCJO9Vq-BPQ'}"
+				,
+          heatmap="{enabled: true}"</fusion-tables-layer>
+		</map>
+	</div>
 </body>
 </html>

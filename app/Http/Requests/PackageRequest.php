@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
@@ -9,6 +8,7 @@ use App\SessionPackage;
 
 class PackageRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -56,18 +56,18 @@ class PackageRequest extends Request
                 return false;
                 break;
             case 'POST':
-                if(!empty($this->available_facility_id)){
+                if (! empty($this->available_facility_id)) {
                     $id = $this->available_facility_id;
                     $facility = AvailableFacility::find($id);
-                    if($facility==null){
+                    if ($facility == null) {
                         return false;
-                    }else{
+                    } else {
                         $user = Auth::user();
                         $vendor = $user->vendor($user->id)->first();
-                        $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
-                        if($isOwner){
+                        $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
+                        if ($isOwner) {
                             return true;
-                        }else{
+                        } else {
                             return false;
                         }
                     }
@@ -116,7 +116,8 @@ class PackageRequest extends Request
                     'month' => 'required|integer',
                 ];
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 }

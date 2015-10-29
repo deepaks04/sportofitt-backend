@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -7,6 +6,7 @@ use Illuminate\Contracts\Auth\Guard;
 
 class RedirectIfAuthenticated
 {
+
     /**
      * The Guard implementation.
      *
@@ -17,7 +17,7 @@ class RedirectIfAuthenticated
     /**
      * Create a new filter instance.
      *
-     * @param  Guard  $auth
+     * @param Guard $auth            
      * @return void
      */
     public function __construct(Guard $auth)
@@ -28,25 +28,27 @@ class RedirectIfAuthenticated
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request            
+     * @param \Closure $next            
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            //return redirect('/home');
-            return response(['message'=>'Unauthorized.'], 401);
+            // return redirect('/home');
+            return response([
+                'message' => 'Unauthorized.'
+            ], 401);
         }
-
-//        if ($this->auth->check()) {
-//            if ($request->ajax()) {
-//                return response('Unauthorized.', 401);
-//            } else {
-//                return redirect()->guest('/home');
-//            }
-//        }
-
+        
+        // if ($this->auth->check()) {
+        // if ($request->ajax()) {
+        // return response('Unauthorized.', 401);
+        // } else {
+        // return redirect()->guest('/home');
+        // }
+        // }
+        
         return $next($request);
     }
 }

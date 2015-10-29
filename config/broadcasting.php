@@ -1,18 +1,17 @@
 <?php
-
 return [
-
+    
     /*
-    |--------------------------------------------------------------------------
-    | Default Broadcaster
-    |--------------------------------------------------------------------------
-    |
-    | This option controls the default broadcaster that will be used by the
-    | framework when an event needs to be broadcast. You may set this to
-    | any of the connections defined in the "connections" array below.
-    |
-    */
-
+     * |--------------------------------------------------------------------------
+     * | Default Broadcaster
+     * |--------------------------------------------------------------------------
+     * |
+     * | This option controls the default broadcaster that will be used by the
+     * | framework when an event needs to be broadcast. You may set this to
+     * | any of the connections defined in the "connections" array below.
+     * |
+     */
+    
     'default' => env('BROADCAST_DRIVER', 'pusher'),
 
     /*
@@ -27,23 +26,23 @@ return [
     */
 
     'connections' => [
-
+        
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_KEY'),
             'secret' => env('PUSHER_SECRET'),
-            'app_id' => env('PUSHER_APP_ID'),
+            'app_id' => env('PUSHER_APP_ID')
         ],
-
+        
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'default',
+            'connection' => 'default'
         ],
-
+        
         'log' => [
-            'driver' => 'log',
-        ],
-
-    ],
-
-];
+            'driver' => 'log'
+        ]
+    ]
+    
+]
+;

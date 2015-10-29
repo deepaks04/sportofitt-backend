@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateVendorImageTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -14,7 +14,7 @@ class CreateVendorImageTable extends Migration
     {
         Schema::create('vendor_images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image_name',255);
+            $table->string('image_name', 255);
             $table->integer('vendor_id')->unsigned();
             $table->timestamps();
         });

@@ -28,11 +28,6 @@ var request = $http.post('api/v1/user/auth',credentials);
             return { success: true };
                     }
                 );
-                
-                // fire errors
-                request.error(function (data, status, headers, config) {
-                        callback({ success: false });
-                });
 return request;
 },
 register:function(credentials){

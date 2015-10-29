@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -27,15 +28,15 @@
 </head>
 
 <body>
-    <div ng-controller="CustomControlCtrl">
-      Custom Control<br/>
-      This custom control simply returns the user to Chicago when clicked
-      <br/>
-      <map center="41.850033, -87.6500523" zoom="6">
-        <custom-control id="home" position="TOP_RIGHT" index="1" on-click="click()">
-          <div style="background-color: black; color:#fff;cursor:pointer">Home1</div>
-        </custom-control>
-      </map>
-    </div>
+	<div ng-controller="CustomControlCtrl">
+		Custom Control<br /> This custom control simply returns the user to
+		Chicago when clicked <br />
+		<map center="41.850033, -87.6500523" zoom="6">
+			<custom-control id="home" position="TOP_RIGHT" index="1"
+				on-click="click()">
+			<div style="background-color: black; color: #fff; cursor: pointer">Home1</div>
+			</custom-control>
+		</map>
+	</div>
 </body>
 </html>

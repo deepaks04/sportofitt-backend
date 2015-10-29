@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
@@ -10,6 +9,7 @@ use App\OpeningHour;
 
 class SessionRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -17,8 +17,7 @@ class SessionRequest extends Request
      */
     public function authorize()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'PUT':
                 $id = $this->route('id');
                 $openingHour = OpeningHour::find($id);
@@ -60,18 +59,18 @@ class SessionRequest extends Request
                 return false;
                 break;
             case 'POST':
-                if(!empty($this->available_facility_id)){
+                if (! empty($this->available_facility_id)) {
                     $id = $this->available_facility_id;
                     $facility = AvailableFacility::find($id);
-                    if($facility==null){
+                    if ($facility == null) {
                         return false;
-                    }else{
+                    } else {
                         $user = Auth::user();
                         $vendor = $user->vendor($user->id)->first();
-                        $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
-                        if($isOwner){
+                        $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
+                        if ($isOwner) {
                             return true;
-                        }else{
+                        } else {
                             return false;
                         }
                     }
@@ -91,8 +90,7 @@ class SessionRequest extends Request
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
                 return [
                 ];
@@ -119,11 +117,13 @@ class SessionRequest extends Request
                     //'session_id' => 'required|integer',
                     'day' => 'required|integer',
                     'start' => 'required|date_format:H:i',
-                    'end' => 'required|date_format:H:i',
-                    //'duration' => 'required|date_format:H:i',
-                ];
+                    'end' => 'required|date_format:H:i'
+                ]
+                // 'duration' => 'required|date_format:H:i',
+                ;
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 }

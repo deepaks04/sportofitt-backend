@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
@@ -8,6 +7,7 @@ use App\AvailableFacility;
 
 class SessionDataRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -15,22 +15,21 @@ class SessionDataRequest extends Request
      */
     public function authorize()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
                 $id = $this->route('id');
                 $facility = AvailableFacility::find($id);
-                if($facility==null){
+                if ($facility == null) {
                     return false;
                     break;
-                }else{
+                } else {
                     $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
-                    $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
-                    if($isOwner){
+                    $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
+                    if ($isOwner) {
                         return true;
                         break;
-                    }else{
+                    } else {
                         return false;
                         break;
                     }
@@ -50,8 +49,8 @@ class SessionDataRequest extends Request
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return []
+        //
+        ;
     }
 }
