@@ -101,6 +101,77 @@ class SessionPackageController extends Controller {
         return response($response, $status);
     }
 
+//    public function getPackage(Requests\PackageRequest $request,$id){
+//        try{
+//            $packageType = PackageType::where('slug','=','package')->first();
+//            $status = 200;
+//            $message = "Success";
+//            $packages = "";
+//            $facilityDetils = SessionPackage::where(array(
+//                'available_facility_id' => $id,
+//                'package_type_id' => $packageType->id,
+//                'is_active' =>1
+//            ))->get();
+//            if(!$facilityDetils->isEmpty()){
+//                $facilityDetils = $facilityDetils->toArray();
+//                $i=0;
+//                foreach($facilityDetils as $facilityDetil){
+//                    $packages[$i]['parent'] = $facilityDetil;
+//                    $packageChild = SessionPackageChild::where(array('session_package_id'=>$facilityDetil['id'],'is_active'=>1))->first();
+//                    if($packageChild!=null){
+//                        $packageChild = $packageChild->toArray();
+//                        $packages[$i]['child'] = $packageChild;
+//                    }else{
+//                        $packages[$i]['child'] = "";
+//                    }
+//                    $i++;
+//                }
+//            }
+//        }catch (\Exception $e){
+//            $status = 500;
+//            $message = "Something went wrong ".$e->getMessage();
+//            $packages = "";
+//        }
+//        $response = [
+//            "message" => $message,
+//            "data" => $packages
+//        ];
+//        return response($response,$status);
+//    }
+
+    public function updatePackage(Requests\PackageRequest $request,$id){
+        try{
+            $status = 200;
+            $message = "Package data updated successfully";
+            $parentData = $request->all();
+            $childData = $request->all();
+            $parentData = $this->unsetKeys(array('_method','child_id','is_peak','actual_price','discount','package_id','month','available_facility_id','is_active'),$parentData);
+
+            $package = SessionPackage::where('id','=',$id)->update($parentData);
+            $childData = $this->unsetKeys(array('_method','child_id','package_id','available_facility_id','package_type_id','name','description','is_active'),$childData);
+            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->update($childData);
+
+            $packageInformation = SessionPackage::find($id);
+            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->first();
+            $packageChild = $packageChild->toArray();
+            $packageInformation['session_package_id'] = $packageChild['session_package_id'];
+            $packageInformation['month'] = $packageChild['month'];
+            $packageInformation['actual_price'] = $packageChild['actual_price'];
+            $packageInformation['discount'] = $packageChild['discount'];
+            $packageInformation['is_peak'] = $packageChild['is_peak'];
+
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $packageInformation = "";
+        }
+        $response = [
+            "message" => $message,
+            "package" => $packageInformation
+        ];
+        return response($response,$status);
+    }
+
     public function getPackage(Requests\PackageRequest $request,$id){
         try{
             $packageType = PackageType::where('slug','=','package')->first();
@@ -135,39 +206,6 @@ class SessionPackageController extends Controller {
         $response = [
             "message" => $message,
             "data" => $packages
-        ];
-        return response($response,$status);
-    }
-
-    public function updatePackage(Requests\PackageRequest $request,$id){
-        try{
-            $status = 200;
-            $message = "Package data updated successfully";
-            $parentData = $request->all();
-            $childData = $request->all();
-            $parentData = $this->unsetKeys(array('_method','child_id','is_peak','actual_price','discount','package_id','month','available_facility_id','is_active'),$parentData);
-
-            $package = SessionPackage::where('id','=',$id)->update($parentData);
-            $childData = $this->unsetKeys(array('_method','child_id','package_id','available_facility_id','package_type_id','name','description','is_active'),$childData);
-            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->update($childData);
-
-            $packageInformation = SessionPackage::find($id);
-            $packageChild = SessionPackageChild::where('session_package_id','=',$id)->first();
-            $packageChild = $packageChild->toArray();
-            $packageInformation['session_package_id'] = $packageChild['session_package_id'];
-            $packageInformation['month'] = $packageChild['month'];
-            $packageInformation['actual_price'] = $packageChild['actual_price'];
-            $packageInformation['discount'] = $packageChild['discount'];
-            $packageInformation['is_peak'] = $packageChild['is_peak'];
-
-        }catch(\Exception $e){
-            $status = 500;
-            $message = "Something went wrong ".$e->getMessage();
-            $packageInformation = "";
-        }
-        $response = [
-            "message" => $message,
-            "package" => $packageInformation
         ];
         return response($response,$status);
     }
