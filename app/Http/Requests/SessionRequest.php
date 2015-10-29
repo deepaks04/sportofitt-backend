@@ -4,7 +4,9 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 use App\AvailableFacility;
+use App\SessionPackage;
 use Illuminate\Support\Facades\Auth;
+use App\OpeningHour;
 
 class SessionRequest extends Request
 {
@@ -18,7 +20,27 @@ class SessionRequest extends Request
         switch($this->method())
         {
             case 'PUT':
-                return true;
+                $id = $this->route('id');
+                $openingHour = OpeningHour::find($id);
+                if($openingHour!=null){
+                    $sessionPackage = SessionPackage::find($openingHour->session_package_id);
+                    if($sessionPackage!=null){
+                        $facility = AvailableFacility::find($sessionPackage->available_facility_id);
+                        if($facility==null){
+                            return false;
+                        }else{
+                            $user = Auth::user();
+                            $vendor = $user->vendor($user->id)->first();
+                            $isOwner = AvailableFacility::where('id','=',$sessionPackage->available_facility_id)->where('vendor_id','=',$vendor->id)->count();
+                            if($isOwner){
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return false;
                 break;
             case 'GET':
                 $id = $this->route('id');
@@ -76,6 +98,17 @@ class SessionRequest extends Request
                 ];
                 break;
             case 'PUT':
+                return [
+                    'available_facility_id' => 'required|integer',
+                    'is_peak' => 'required|digits_between:0,1',
+                    //'actual_price' => 'required',
+                    //'discount' => 'required|integer',
+                    //'session_id' => 'required|integer',
+                    'day' => 'required|integer',
+                    'start' => 'required|date_format:H:i',
+                    'end' => 'required|date_format:H:i',
+                    //'duration' => 'required|date_format:H:i',
+                ];
                 break;
             case 'POST':
                 return [
@@ -83,8 +116,8 @@ class SessionRequest extends Request
                     'is_peak' => 'required|digits_between:0,1',
                     //'actual_price' => 'required',
                     //'discount' => 'required|integer',
-                    'session_id' => 'required|integer',
-                    //'day' => 'required|integer',
+                    //'session_id' => 'required|integer',
+                    'day' => 'required|integer',
                     'start' => 'required|date_format:H:i',
                     'end' => 'required|date_format:H:i',
                     //'duration' => 'required|date_format:H:i',
