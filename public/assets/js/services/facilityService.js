@@ -120,7 +120,7 @@
         function sendGetFaclityError(response) {
 
             return $q.reject('Error retrieving facility(s). (HTTP status: ' + response.status + ')');
-
+            
         }
 
         function sendGetRootCategoriesError(response) {
