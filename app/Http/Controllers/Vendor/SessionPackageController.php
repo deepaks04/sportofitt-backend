@@ -524,6 +524,7 @@ class SessionPackageController extends Controller
             $status = 200;
             $data = $request->all();
             $user = Auth::user();
+            $sessionBooking = "";
             //dd($user->id);
             $date = strtotime($data['startAt']);
             $start = strtotime($data['startAt']);
@@ -576,18 +577,21 @@ class SessionPackageController extends Controller
                     $sessionBooking = SessionBooking::create($data);
                     $message = "Blocked Successfully";
                 }else{ //Blocked Time Already Exists for selected time & Date
+                    $status = 406;
                     $message = "Booking or blocking time already exists for selected date & time";
                 }
             }else{ //No Opening Time Available For Selected Time & Date
+                $status = 406;
                 $message = "Opening time isn't available for selected time & date";
             }
         }catch (\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $session = "";
+            $sessionBooking = "";
         }
         $response = [
             "message" => $message,
+            "data"=>$sessionBooking
         ];
         return response($response,$status);
     }
