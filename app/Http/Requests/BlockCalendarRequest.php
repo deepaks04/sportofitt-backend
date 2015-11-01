@@ -68,9 +68,9 @@ class BlockCalendarRequest extends Request
             case 'POST':
                 return [
                     'available_facility_id' => 'required|integer',
-                    'date' => 'required|date_format:Y-m-d',
-                    'start' => 'required|date_format:H:i',
-                    'end' => 'required|date_format:H:i',
+                    //'date' => 'required|date_format:Y-m-d H:i:s',
+                    'startAt' => 'required|date_format:Y-m-d H:i:s',
+                    //'end' => 'required|date_format:H:i',
                 ];
                 break;
             default:break;

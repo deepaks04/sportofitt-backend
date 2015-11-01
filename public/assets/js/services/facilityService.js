@@ -21,7 +21,9 @@
             getPackagesByFacilityId: getPackagesByFacilityId,
             saveSession: saveSession,
             addPackage: addPackage,
-            blockSession : blockSession
+            blockSession : blockSession,
+            getBlockedSessions : getBlockedSessions,
+            getBlockedSessionsByFacilityId :getBlockedSessionsByFacilityId
         };
 
         function getDuration() {
@@ -206,8 +208,7 @@
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            console.log(fd);
-            return		$http.post('api/v1/vendor/opening-time', fd, {
+             return		$http.post('api/v1/vendor/opening-time', fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
@@ -240,24 +241,26 @@
         }
         
         function blockSession(data){
-              if (data.start instanceof Date)
-            {
-                var date = new Date();
-                date.setMinutes(data.startsAt.getMinutes() + 20);
-                data.start = data.startsAt.getHours() + ":" + ("0" + data.startsAt.getMinutes()).slice(-2);
-
-                data.end =date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2);
-                data.date = date.getFullYear() + ":" + date.getMonth() + ":" + date.getDate();
-            }
-
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
             console.log(fd);
-            return		$http.post('api/v1/vendor/opening-time', fd, {
+            return		$http.post('api/v1/vendor/calendar-block', fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
+        }
+        
+        function getBlockedSessionsByFacilityId(facilityId,startDate){
+            return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" +startDate)
+                    .then(sendResponseData)
+                    .catch(sendGetFaclityError);
+        }
+        
+        function getBlockedSessions(startDate){
+            return $http.get('api/v1/vendor/calendar-block/' + startDate)
+                    .then(sendResponseData)
+                    .catch(sendGetFaclityError);
         }
 
 //		function deleteBook(bookID) {

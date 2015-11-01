@@ -52,6 +52,7 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
 
     Route::post('calendar-block',array('uses' => 'Vendor\SessionPackageController@blockCalendar'));
     Route::get('calendar-block/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockData'));
+    Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
 });
 // Route::controllers([
 // 'auth' => 'Auth\AuthController',
