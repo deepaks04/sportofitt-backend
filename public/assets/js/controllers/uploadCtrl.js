@@ -59,7 +59,7 @@ function ($scope, FileUploader) {
 app.controller('UploadCtrl2', ['$scope', 'FileUploader',
 function ($scope, FileUploader) {
     var uploader = $scope.uploader = new FileUploader({
-        url: 'upload.php'
+        url: 'api/v1/vendor/images',
     });
 
     // FILTERS

@@ -2,8 +2,11 @@
 <section id="page-title">
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="mainTitle" translate="sidebar.nav.pages.USERPROFILE">USER PROFILE</h1>
-			<span class="mainDescription">There are many systems which have a need for user profile pages which display personal information on each member.</span>
+			<h1 class="mainTitle" translate="sidebar.nav.pages.USERPROFILE">USER
+				PROFILE</h1>
+			<span class="mainDescription">There are many systems which
+				have a need for user profile pages which display personal
+				information on each member.</span>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -16,536 +19,675 @@
 			<!-- /// controller:  'ProfileCtrl' -  localtion: assets/js/controllers/ProfileCtrl.js /// -->
 			<div ng-controller="ProfileCtrl">
 				<!-- start: USER TABSET -->
-				<tabset class="tabbable">
-					<tab heading="Overview">
-						<div class="row">
-							<div class="col-md-4">
-								<div class="user-left">
-									<div class="center">
-										<h4>{{userInfo.fname}} {{userInfo.lname}}</h4>
-										<div flow-init="{singleFile:true}" flow-name="obj.flow" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
-											<div class="user-image">
-												<div class="thumbnail">
-													<img src="assets/images/default-user.png" alt="" ng-if="!obj.flow.files.length && noImage">
-													<img ng-src="{{userInfo.profile_picture}}" alt="" ng-if="!obj.flow.files.length && !noImage">
-													<img flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
-												</div>
-												<div class="user-image-buttons" ng-if="obj.flow.files.length">
-													<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
-													<span class="btn btn-danger" ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i> </span>
-												</div>
-												<div class="user-image-buttons" ng-if="!obj.flow.files.length">
-													<span class="btn btn-primary" flow-btn><i class="fa fa-pencil"></i></span>
-													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i></span>
-												</div>
-											</div>
+				<tabset class="tabbable"> <tab heading="Overview">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="user-left">
+							<div class="center">
+								<h4>{{userInfo.fname}} {{userInfo.lname}}</h4>
+								<div flow-init="{singleFile:true}" flow-name="obj.flow"
+									flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
+									<div class="user-image">
+										<div class="thumbnail">
+											<img src="assets/images/default-user.png" alt=""
+												ng-if="!obj.flow.files.length && noImage"> <img
+												ng-src="{{userInfo.profile_picture}}" alt=""
+												ng-if="!obj.flow.files.length && !noImage"> <img
+												flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
 										</div>
-										<hr>
-										</div> 
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th colspan="3">Contact Information</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>url</td>
-												<td>
-												<a href="#">
-													{{userInfo.url}}
-												</a></td>
-											</tr>
-											<tr>
-												<td>email:</td>
-												<td>
-												<a href>
-													{{userInfo.email}}
-												</a></td>
-											</tr>
-											<tr>
-												<td>contact:</td>
-												<td>{{userInfo.contact}}</td>
-											</tr>
-											<tr>
-												<td>skye</td>
-												<td>
-												<a href>
-													{{userInfo.skype}}
-												</a></td>
-											</tr>
-										</tbody>
-									</table>
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th colspan="3">Business information</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Business Name</td>
-												<td>{{userInfo.business_name}}</td>
-											</tr>
-											<tr>
-												<td>Address</td>
-												<td>{{userInfo.address}}</td>
-											</tr>
-											<tr>
-												<td>Geo Location</td>
-												<td><span>Longitude : {{userInfo.longitude}}</span>
-													<span>Latitude : {{userInfo.latitude}}</span></td>
-											</tr>
-											<tr>
-												<td>Area Id</td>
-												<td>{{userInfo.area_id}}</td>
-											</tr>
-											
-										</tbody>
-									</table>
-									<table class="table table-condensed">
-										<thead>
-											<tr>
-												<th colspan="3">Additional information</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Description</td>
-												<td>{{userInfo.description}}</td>
-											</tr>
-										</tbody>
-									</table>
-									<div class="text-right">
-										<a class="btn btn-primary btn-o btn-wide" href="#" ng-click="editActive = true">
-											Edit Account
-										</a>
+										<div class="user-image-buttons" ng-if="obj.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i
+												class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i>
+											</span>
+										</div>
+										<div class="user-image-buttons" ng-if="!obj.flow.files.length">
+											<span class="btn btn-primary" flow-btn><i
+												class="fa fa-pencil"></i></span> <span class="btn btn-danger"
+												ng-if="!noImage" ng-click="removeImage()"><i
+												class="fa fa-times"></i></span>
+										</div>
 									</div>
 								</div>
+								<hr>
 							</div>
-							<div class="col-md-8">
-								<div class="row space20">
-									<div class="col-sm-3">
-										<button class="btn btn-icon margin-bottom-5 margin-bottom-5 btn-block">
-											<i class="ti-layers-alt block text-primary text-extra-large margin-bottom-10"></i>
-											Projects
-										</button>
-									</div>
-									<div class="col-sm-3">
-										<button class="btn btn-icon margin-bottom-5 btn-block">
-											<i class="ti-comments block text-primary text-extra-large margin-bottom-10"></i>
-											Messages <span class="badge badge-danger"> 23 </span>
-										</button>
-									</div>
-									<div class="col-sm-3">
-										<button class="btn btn-icon margin-bottom-5 btn-block">
-											<i class="ti-calendar block text-primary text-extra-large margin-bottom-10"></i>
-											Calendar
-										</button>
-									</div>
-									<div class="col-sm-3">
-										<button class="btn btn-icon margin-bottom-5 btn-block">
-											<i class="ti-flag block text-primary text-extra-large margin-bottom-10"></i>
-											Notifications
-										</button>
-									</div>
-								</div>
-								<div class="panel panel-white" id="activities">
-									<div class="panel-heading border-light">
-										<h4 class="panel-title text-primary">Recent Activities</h4>
-										<paneltool class="panel-tools" tool-collapse="tool-collapse" tool-refresh="load1" tool-dismiss="tool-dismiss"></paneltool>
-									</div>
-									<div collapse="activities" ng-init="activities=false" class="panel-wrapper">
-										<div class="panel-body">
-											<ul class="timeline-xs">
-												<li class="timeline-item success">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															2 minutes ago
-														</div>
-														<p>
-															<a class="text-info" href>
-																Steven
-															</a>
-															has completed his account.
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															12:30
-														</div>
-														<p>
-															Staff Meeting
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item danger">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															11:11
-														</div>
-														<p>
-															Completed new layout.
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item info">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															Thu, 12 Jun
-														</div>
-														<p>
-															Contacted
-															<a class="text-info" href>
-																Microsoft
-															</a>
-															for license upgrades.
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															Tue, 10 Jun
-														</div>
-														<p>
-															Started development new site
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															Sun, 11 Apr
-														</div>
-														<p>
-															Lunch with
-															<a class="text-info" href>
-																Nicole
-															</a>
-															.
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item warning">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															Wed, 25 Mar
-														</div>
-														<p>
-															server Maintenance.
-														</p>
-													</div>
-												</li>
-												<li class="timeline-item">
-													<div class="margin-left-15">
-														<div class="text-muted text-small">
-															Fri, 20 Mar
-														</div>
-														<p>
-															New User Registration
-															<a class="text-info" href>
-																more details
-															</a>
-															.
-														</p>
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="panel panel-white space20">
-									<div class="panel-heading">
-										<h4 class="panel-title">Recent Tweets</h4>
-									</div>
-									<div class="panel-body">
-										<ul class="ltwt">
-											<li class="ltwt_tweet">
-												<p class="ltwt_tweet_text">
-													<a href class="text-info">
-														@Shakespeare
-													</a>
-													Some are born great, some achieve greatness, and some have greatness thrust upon them.
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th colspan="3">Contact Information</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>URL</td>
+										<td><a href="#"> {{userInfo.url}} </a></td>
+									</tr>
+									<tr>
+										<td>Email:</td>
+										<td><a href> {{userInfo.email}} </a></td>
+									</tr>
+									<tr>
+										<td>Contact:</td>
+										<td>{{userInfo.contact}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th colspan="3">Business Information</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Business Name</td>
+										<td>{{userInfo.business_name}}</td>
+									</tr>
+									<tr>
+										<td>Address</td>
+										<td>{{userInfo.address}}</td>
+									</tr>
+									<tr>
+										<td>Location</td>
+										<td>{{userInfo.area_id}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th colspan="3">Additional Information</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Description</td>
+										<td>{{userInfo.description}}</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="text-right">
+								<a class="btn btn-primary btn-o btn-wide" href="#"
+									ng-click="editActive = true;setMap();"> Edit Account </a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="row space20">
+							<div class="col-sm-3">
+								<button
+									class="btn btn-icon margin-bottom-5 margin-bottom-5 btn-block">
+									<i
+										class="ti-layers-alt block text-primary text-extra-large margin-bottom-10"></i>
+									Projects
+								</button>
+							</div>
+							<div class="col-sm-3">
+								<button class="btn btn-icon margin-bottom-5 btn-block">
+									<i
+										class="ti-comments block text-primary text-extra-large margin-bottom-10"></i>
+									Messages <span class="badge badge-danger"> 23 </span>
+								</button>
+							</div>
+							<div class="col-sm-3">
+								<button class="btn btn-icon margin-bottom-5 btn-block">
+									<i
+										class="ti-calendar block text-primary text-extra-large margin-bottom-10"></i>
+									Calendar
+								</button>
+							</div>
+							<div class="col-sm-3">
+								<button class="btn btn-icon margin-bottom-5 btn-block">
+									<i
+										class="ti-flag block text-primary text-extra-large margin-bottom-10"></i>
+									Notifications
+								</button>
+							</div>
+						</div>
+						<div class="panel panel-white" id="activities">
+							<div class="panel-heading border-light">
+								<h4 class="panel-title text-primary">Recent Activities</h4>
+								<paneltool class="panel-tools" tool-collapse="tool-collapse"
+									tool-refresh="load1" tool-dismiss="tool-dismiss"></paneltool>
+							</div>
+							<div collapse="activities" ng-init="activities=false"
+								class="panel-wrapper">
+								<div class="panel-body">
+									<ul class="timeline-xs">
+										<li class="timeline-item success">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">2 minutes ago</div>
+												<p>
+													<a class="text-info" href> Steven </a> has completed his
+													account.
 												</p>
-												<span class="block text-light"><i class="fa fa-fw fa-clock-o"></i> 2 minuts ago</span>
-											</li>
-										</ul>
-									</div>
+											</div>
+										</li>
+										<li class="timeline-item">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">12:30</div>
+												<p>Staff Meeting</p>
+											</div>
+										</li>
+										<li class="timeline-item danger">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">11:11</div>
+												<p>Completed new layout.</p>
+											</div>
+										</li>
+										<li class="timeline-item info">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">Thu, 12 Jun</div>
+												<p>
+													Contacted <a class="text-info" href> Microsoft </a> for
+													license upgrades.
+												</p>
+											</div>
+										</li>
+										<li class="timeline-item">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">Tue, 10 Jun</div>
+												<p>Started development new site</p>
+											</div>
+										</li>
+										<li class="timeline-item">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">Sun, 11 Apr</div>
+												<p>
+													Lunch with <a class="text-info" href> Nicole </a> .
+												</p>
+											</div>
+										</li>
+										<li class="timeline-item warning">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">Wed, 25 Mar</div>
+												<p>server Maintenance.</p>
+											</div>
+										</li>
+										<li class="timeline-item">
+											<div class="margin-left-15">
+												<div class="text-muted text-small">Fri, 20 Mar</div>
+												<p>
+													New User Registration <a class="text-info" href> more
+														details </a> .
+												</p>
+											</div>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
-					</tab>
-					<!-- end: TAB OVERVIEW -->
-				<!-- start: TAB EDIT ACCOUNT -->
-					<tab heading="Edit Account" active="editActive">
-						<form role="form" id="form" novalidate ng-submit="form.submit(userInfo)" enctype="multipart/form-data">
-							<fieldset>
-								<legend>
-									Account Info
-								</legend>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												First Name
-											</label>
-											<input type="text" placeholder="Enter your first name" class="form-control" name="fname" ng-model="userInfo.fname">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Last Name
-											</label>
-											<input type="text" placeholder="Enter your last name" class="form-control" name="lname" ng-model="userInfo.lname">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Email Address
-											</label>
-											<input type="email" placeholder="email address" class="form-control" name="email" ng-model="userInfo.email">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Address
-											</label>
-											<input type="text" placeholder="address" class="form-control" name="address" ng-model="userInfo.address">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												contact
-											</label>
-											<input type="text" placeholder="contact number" class="form-control" name="contact" ng-model="userInfo.contact">
-										</div>
-									</div>
-									<div class="col-md-6">
-										
-										<div class="form-group">
-											<label class="control-label">
-												Description
-											</label>
-											<textarea placeholder="address" class="form-control" name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea> 
-										</div>
-										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-													<label class="control-label">
-														Zip Code
-													</label>
-													    <select ng-model="userInfo.area_id" ng-options="area.id as area.name for area in areas"></select>
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<label class="control-label">
-														Longitute
-													</label>
-													<input class="form-control" placeholder="enter your longitude" type="text" name="longitude" ng-model="userInfo.longitude">
-												</div>
-											</div>
-										<div class="col-md-4">
-												<div class="form-group">
-													<label class="control-label">
-														Latitude
-													</label>
-													<input class="form-control" placeholder="enter your longitude" type="text" name="latitude" ng-model="userInfo.latitude">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label>
-												Image Upload <span class="symbol required"></span>
-											</label>
-											<div flow-init flow-object="obj.flow">
-												<div class="user-image">
-													<div class="thumbnail margin-bottom-5">
-														<img src="assets/images/default-user.png" alt="" ng-if="!obj.flow.files.length && noImage">
-													<img ng-src="{{userInfo.profile_picture}}" alt="" ng-if="!obj.flow.files.length && !noImage">
-													<img flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
-													</div>
-												</div>
-												<div class="user-image-buttons-edit" ng-if="obj.flow.files.length">
-													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
-													<span class="btn btn-danger" ng-click="obj.flow.cancel()"> <i class="fa fa-times"></i></span>
-												</div>
-												<div class="user-image-buttons-edit" ng-if="!obj.flow.files.length">
-													<span class="btn btn-primary btn-o btn-file" ><i class="fa fa-pencil"></i><input type="file" bind-file nv-file-select="" name="profile_picture" ng-model="userInfo.profile_picture" uploader="uploaderImages" multiple  required/></span>
-													<span class="btn btn-danger" ng-if="!noImage" ng-click="removeImage()"><i class="fa fa-times"></i> </span>
-												</div>
-
-																							</div>
-										</div>
-										<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
-						</div>
-            </div>
-									
-							
-							</fieldset>
-							
-						</form>
-					</tab>
-					<!-- end: TAB EDIT ACCOUNT -->
-					<!-- start: TAB Billing Details -->
-					<tab heading="Billing Details">
-						<form role="form" id="form" novalidate ng-submit="billingForm.submit(billingInfo)" enctype="multipart/form-data">
-							<fieldset>
-								<legend>
-									Billing Info
-								</legend>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Company Name
-											</label>
-											<input type="text" placeholder="Enter your Company name" class="form-control" name="company_title" ng-model="billingInfo.company_title">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Address
-											</label>
-											<input type="text" placeholder="Enter your company address" class="form-control" name="address" ng-model="billingInfo.address">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Registration Number
-											</label>
-											<input type="text" placeholder="Enter your Registration Number" class="form-control" name="registration_no" ng-model="billingInfo.registration_no">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Service Tax Number
-											</label>
-											<input type="text" placeholder="Enter your Service Tax Number" class="form-control" name="service_tax_no" ng-model="billingInfo.service_tax_no">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												PAN Number
-											</label>
-											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="billingInfo.pan_no">
-										</div>
-
-										<div class="form-group">
-											<label class="control-label">
-												Post code
-											</label>
-											<input type="text" placeholder="Enter your Post code" class="form-control" name="postcode" ng-model="billingInfo.postcode">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Name
-											</label>
-											<input type="text" placeholder="Enter Contact person name" class="form-control" name="contact_person_name" ng-model="billingInfo.contact_person_name">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Email
-											</label>
-											<input type="email" placeholder="Enter Contact person email" class="form-control" name="contact_person_email" ng-model="billingInfo.contact_person_email">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Contact Person Phone
-											</label>
-											<input type="text" placeholder="Enter Contact person phone" class="form-control" name="contact_person_phone" ng-model="billingInfo.contact_person_phone">
-										</div>
-										
-										
-										<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
-						</div>
-            </div>
-									
-							
-							</fieldset>
-							
-						</form>
-					</tab>
-					<!-- end: TAB Billing Details -->
-					<!-- start: TAB Banking Details -->
-					<tab heading="Banking Details">
-							<form role="form" id="form" novalidate ng-submit="bankForm.submit(bankDetail)" enctype="multipart/form-data">
-							<fieldset>
-								<legend>
-									Bank Details
-								</legend>
-								<div class="row">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label class="control-label">
-												Bank Name
-											</label>
-											<input type="text" placeholder="Enter your Bank name" class="form-control" name="bank_name" ng-model="bankDetail.bank_name">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Account Number
-											</label>
-											<input type="text" placeholder="Enter your Account number" class="form-control" name="account_number" ng-model="bankDetail.account_number">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												IFSC Code
-											</label>
-											<input type="text" placeholder="Enter your IFSC Code" class="form-control" name="ifsc" ng-model="bankDetail.ifsc">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Account Type
-											</label>
-											<input type="text" placeholder="Enter your Account Type" class="form-control" name="account_type" ng-model="bankDetail.account_type">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												Branch Name
-											</label>
-											<input type="text" placeholder="Enter your Branch Name" class="form-control" name="branch_name" ng-model="bankDetail.branch_name">
-										</div>
-
-										<div class="form-group">
-											<label class="control-label">
-												Beneficiary Name
-											</label>
-											<input type="text" placeholder="Enter your Beneficiary Name" class="form-control" name="beneficiary" ng-model="bankDetail.beneficiary">
-										</div>
-																		
-										<div class="form-group">
-											<label class="control-label">
-												VAT Number
-											</label>
-											<input type="text" placeholder="Enter your VAT number" class="form-control" name="vat" ng-model="bankDetail.vat">
-										</div>
-										<div class="form-group">
-											<label class="control-label">
-												PAN Number
-											</label>
-											<input type="text" placeholder="Enter your PAN Number" class="form-control" name="pan_no" ng-model="bankDetail.pan_no">
-										</div>
-										
-										<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
+						<div class="panel panel-white space20">
+							<div class="panel-heading">
+								<h4 class="panel-title">Recent Tweets</h4>
 							</div>
+							<div class="panel-body">
+								<ul class="ltwt">
+									<li class="ltwt_tweet">
+										<p class="ltwt_tweet_text">
+											<a href class="text-info"> @Shakespeare </a> Some are born
+											great, some achieve greatness, and some have greatness thrust
+											upon them.
+										</p> <span class="block text-light"><i
+											class="fa fa-fw fa-clock-o"></i> 2 minuts ago</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				</tab> <!-- end: TAB OVERVIEW --> <!-- start: TAB EDIT ACCOUNT --> <tab
+					heading="Edit Account" active="editActive" ng-click="setMap()">
+				<form role="form" id="form" novalidate
+					ng-submit="form.submit(userInfo)" enctype="multipart/form-data">
+					<fieldset>
+						<legend> Account Info </legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':errors.fname,'has-success':!errors.fname}">
+									<label class="control-label"> First Name </label> <input
+										type="text" placeholder="Enter your first name"
+										class="form-control" name="fname" ng-model="userInfo.fname">
+									<span class="error text-small block" ng-if="errors.fname">{{errors.fname}}</span>
 
-		
-            </div>
-									
-							
-							</fieldset>
-							
-						</form>
-					</tab>
-					<!-- end: TAB Banking Details -->
-				</tabset>
+								</div>
+								
+								<div class="form-group"
+									ng-class="{'has-error':errors.email,'has-success':!errors.email}">
+									<label class="control-label"> Email Address </label> <input
+										type="email" placeholder="Enter Your Email Address"
+										class="form-control" name="email" ng-model="userInfo.email">
+									<span class="error text-small block" ng-if="errors.email">{{errors.email}}</span>
+
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.address,'has-success':!errors.address}">
+									<label class="control-label"> Address </label> <input
+										type="text" placeholder="Enter Your Address"
+										class="form-control" name="address"
+										ng-model="userInfo.address"> <span
+										class="error text-small block" ng-if="errors.address">{{errors.address}}</span>
+
+								</div>
+								
+								<div class="form-group"
+									ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
+									<label class="control-label"> Area </label>
+                                                                        <select class="form-control"
+										ng-model="userInfo.area_id"
+										ng-options="area.id as area.name for area in areas">
+										<option value="">Select Area</option>
+									</select>
+									 <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
+
+								</div>
+								<div class="form-group">
+									<label class="control-label"> Description </label>
+									<textarea placeholder="Enter Description" class="form-control"
+										name="description" ng-model="userInfo.description">{{userInfo.description}}</textarea>
+								</div>
+							</div>
+							<div class="col-md-6">
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.Lname,'has-success':!errors.Lname}">
+									<label class="control-label"> Last Name </label> <input
+										type="text" placeholder="Enter your last name"
+										class="form-control" name="lname" ng-model="userInfo.lname">
+									<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
+
+								</div>
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
+									<label class="control-label"> Contact Number </label> <input
+										type="text" placeholder="Enter Your Contact Number"
+										class="form-control" name="contact"
+										ng-model="userInfo.contact"> <span
+										class="error text-small block" ng-if="errors.contact">{{errors.contact}}</span>
+
+								</div>
+                                                            <div class="form-group"
+									ng-class="{'has-error':errors.postcode,'has-success':!errors.postcode}">
+									<label class="control-label"> Post Code </label> <input
+										type="text" placeholder="Enter your Post code"
+										class="form-control" name="postcode"
+										ng-model="userInfo.postcode"> <span
+										class="error text-small block" ng-if="errors.postcode">{{errors.postcode}}</span>
+								</div>
+								
+								
+								<div class="form-group"
+									ng-class="{'has-error':errors.profile_picture,'has-success':!errors.profile_picture}">
+									<label> Logo</label>
+									<div flow-init="{singleFile:true}" flow-name="obj.flow"
+										flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
+										<div class="user-image">
+											<div class="thumbnail margin-bottom-5">
+												<img ng-src="assets/images/default-user.png" alt=""
+													ng-if="!obj.flow.files.length && noImage"> <img
+													ng-src="{{userInfo.profile_picture}}" alt=""
+													ng-if="!obj.flow.files.length && !noImage"> <img
+													flow-img="obj.flow.files[0]" ng-if="obj.flow.files.length">
+<!--                                                                                                <span class="btn btn-danger"
+                                                                                                      ng-if="!noImage" ng-click="removeImage()" title="removeImage"><i
+												class="fa fa-times"></i> </span>
+                                                                                                <span class="btn btn-danger"
+                                                                                                      ng-click="obj.flow.cancel()" ng-if="obj.flow.files.length" title="remove image"> <i class="fa fa-times"></i></span>-->
+											</div>
+										</div>
+										<div class="user-image-buttons-edit"
+											ng-if="obj.flow.files.length">
+											<span class="btn btn-primary btn-o btn-file" flow-btn>Upload Logo</span> 
+										</div>
+										<div class="user-image-buttons-edit"
+											ng-if="!obj.flow.files.length">
+											<span class="btn btn-primary btn-o btn-file" flow-btn>Upload Logo</span> 
+										</div>
+										<span class="error text-small block" ng-if="errors.profile_picture">{{errors.profile_picture}}</span>
+									</div>
+                                                                </div>
+                                                                 
+                                                        </div>
+                                                    <div class="row">
+								   <div class="col-md-12">
+										<label class="control-label"> Location </label>
+										<ui-gmap-google-map center="map.center" zoom="map.zoom"
+											dragging="map.dragging" map-refresh="true"
+											bounds="map.bounds" events="map.events" options="map.options"
+											pan="true" control="map.control">
+										<ui-gmap-markers models="map.markers2" coords="'self'"
+											icon="'icon'" click="onMarkerClicked" options="'options'"
+											events="map.markers2Events"> <ui-gmap-windows
+											show="'showWindow'" closeClick="'closeClick'" ng-cloak>
+										<div>
+											{{userInfo.address}}
+											<p ng-non-bindable>Your Location at {{ latitude |
+												number:4 }}, {{ longitude | number:4 }}!</p>
+										</div>
+										</ui-gmap-windows> </ui-gmap-markers>
+									</div>	
+                                                    </div>
+								<div class="form-actions">
+									<button type="submit" class="btn btn-primary pull-right">
+										Submit <i class="fa fa-arrow-circle-right"></i>
+									</button>
+								</div>
+								</div>
+					</fieldset>
+
+				</form>
+				</tab> <!-- end: TAB EDIT ACCOUNT --> <!-- start: TAB Billing Details -->
+				<tab heading="Billing Details">
+				<form role="form" id="form" novalidate
+					ng-submit="billingForm.submit(billingInfo)"
+					enctype="multipart/form-data">
+					<fieldset>
+						<legend> Billing Info </legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':errors.company_title,'has-success':!errors.company_title}">
+									<label class="control-label"> Company Name </label> <input
+										type="text" placeholder="Enter your Company name"
+										class="form-control" name="company_title"
+										ng-model="billingInfo.company_title"> <span
+										class="error text-small block" ng-if="errors.company_title">{{errors.company_title}}</span>
+								</div>
+
+								<div class="form-group"
+									ng-class="{'has-error':errors.registration_no,'has-success':!errors.registration_no}">
+									<label class="control-label"> Registration Number </label> <input
+										type="text" placeholder="Enter your Registration Number"
+										class="form-control" name="registration_no"
+										ng-model="billingInfo.registration_no"> <span
+										class="error text-small block" ng-if="errors.registration_no">{{errors.registration_no}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.service_tax_no,'has-success':!errors.service_tax_no}">
+									<label class="control-label"> Service Tax Number </label> <input
+										type="text" placeholder="Enter your Service Tax Number"
+										class="form-control" name="service_tax_no"
+										ng-model="billingInfo.service_tax_no"> <span
+										class="error text-small block" ng-if="errors.service_tax_no">{{errors.service_tax_no}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.pan_no,'has-success':!errors.pan_no}">
+									<label class="control-label"> PAN Number </label> <input
+										type="text" placeholder="Enter your PAN Number"
+										class="form-control" name="pan_no"
+										ng-model="billingInfo.pan_no"> <span
+										class="error text-small block" ng-if="errors.pan_no">{{errors.pan_no}}</span>
+
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.vat,'has-success':!errors.vat}">
+									<label class="control-label"> VAT Number </label> <input
+										type="text" placeholder="Enter your VAT Number"
+										class="form-control" name="vat" ng-model="billingInfo.vat">
+									<span class="error text-small block" ng-if="errors.vat">{{errors.vat}}</span>
+
+								</div>
+
+
+							</div>
+							<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':errors.contact_person_name,'has-success':!errors.contact_person_name}">
+									<label class="control-label"> Contact Person Name </label> <input
+										type="text" placeholder="Enter Contact person name"
+										class="form-control" name="contact_person_name"
+										ng-model="billingInfo.contact_person_name"> <span
+										class="error text-small block"
+										ng-if="errors.contact_person_name">{{errors.contact_person_name}}</span>
+
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.contact_person_email,'has-success':!errors.contact_person_email}">
+									<label class="control-label"> Contact Person Email </label> <input
+										type="email" placeholder="Enter Contact person email"
+										class="form-control" name="contact_person_email"
+										ng-model="billingInfo.contact_person_email"> <span
+										class="error text-small block"
+										ng-if="errors.contact_person_email">{{errors.contact_person_email}}</span>
+
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.contact_person_phone,'has-success':!errors.contact_person_phone}">
+									<label class="control-label"> Contact Person Phone </label> <input
+										type="text" placeholder="Enter Contact person phone"
+										class="form-control" name="contact_person_phone"
+										ng-model="billingInfo.contact_person_phone"> <span
+										class="error text-small block"
+										ng-if="errors.contact_person_phone">{{errors.contact_person_phone}}</span>
+
+								</div>
+
+
+								<div class="form-actions">
+									<button type="submit" class="btn btn-primary pull-right">
+										Submit <i class="fa fa-arrow-circle-right"></i>
+									</button>
+								</div>
+							</div>
+					</fieldset>
+
+				</form>
+				</tab> <!-- end: TAB Billing Details --> <!-- start: TAB Banking Details -->
+				<tab heading="Banking Details">
+				<form role="form" id="form" novalidate
+					ng-submit="bankForm.submit(bankDetail)"
+					enctype="multipart/form-data">
+					<fieldset>
+						<legend> Bank Details </legend>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':errors.bank_name,'has-success':!errors.bank_name}">
+									<label class="control-label"> Bank Name </label> <input
+										type="text" placeholder="Enter your Bank name"
+										class="form-control" name="bank_name"
+										ng-model="bankDetail.bank_name"> <span
+										class="error text-small block" ng-if="errors.bank_name">{{errors.bank_name}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.account_number,'has-success':!errors.account_number}">
+									<label class="control-label"> Account Number </label> <input
+										type="text" placeholder="Enter your Account number"
+										class="form-control" name="account_number"
+										ng-model="bankDetail.account_number"> <span
+										class="error text-small block" ng-if="errors.account_number">{{errors.account_number}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.ifsc,'has-success':!errors.ifsc}">
+									<label class="control-label"> IFSC Code </label> <input
+										type="text" placeholder="Enter your IFSC Code"
+										class="form-control" name="ifsc" ng-model="bankDetail.ifsc">
+									<span class="error text-small block" ng-if="errors.ifsc">{{errors.ifsc}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
+									<label class="control-label"> Account Type </label> <input
+										type="text" placeholder="Enter your Account Type"
+										class="form-control" name="account_type"
+										ng-model="bankDetail.account_type"> <span
+										class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.branch_name,'has-success':!errors.branch_name}">
+									<label class="control-label"> Branch Name </label> <input
+										type="text" placeholder="Enter your Branch Name"
+										class="form-control" name="branch_name"
+										ng-model="bankDetail.branch_name"> <span
+										class="error text-small block" ng-if="errors.branch_name">{{errors.branch_name}}</span>
+								</div>
+
+								<div class="form-group"
+									ng-class="{'has-error':errors.beneficiary,'has-success':!errors.beneficiary}">
+									<label class="control-label"> Beneficiary Name </label> <input
+										type="text" placeholder="Enter your Beneficiary Name"
+										class="form-control" name="beneficiary"
+										ng-model="bankDetail.beneficiary"> <span
+										class="error text-small block" ng-if="errors.beneficiary">{{errors.beneficiary}}</span>
+								</div>
+
+								<div class="form-actions">
+									<button type="submit" class="btn btn-primary pull-right">
+										Submit <i class="fa fa-arrow-circle-right"></i>
+									</button>
+								</div>
+
+
+							</div>
+					</fieldset>
+
+				</form>
+				</tab> <!-- end: TAB Banking Details --> <!-- Tab Images --> <tab
+					heading="Images">
+				<div nv-file-drop="" uploader="uploaderImages">
+					<div class="row">
+						<div class="col-md-3">
+							<h5>Select files</h5>
+							<div class="panel panel-white">
+								<div class="panel-body">
+									<div ng-show="uploaderImages.isHTML5">
+										<!-- 3. nv-file-over uploader="link" over-class="className" -->
+										<div class="well my-drop-zone" nv-file-over=""
+											uploader="uploaderImages">Base drop zone</div>
+										<!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+<!--										<div nv-file-drop="" uploader="uploaderImages"
+											options="{ url: '/foo' }">
+											<div nv-file-over="" uploader="uploaderImages"
+												over-class="another-file-over-class"
+												class="well my-drop-zone">Another drop zone with its
+												own settings</div>
+										</div>-->
+									</div>
+									<!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+									<span class="btn btn-primary btn-o btn-file"> Select an
+										image file <input type="file" nv-file-select=""
+										uploader="uploaderImages" multiple />
+									</span> <br />
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-9 file-upload" style="margin-bottom: 40px">
+							<h4>Uploded Images</h4>
+							<p>Queue length: {{ images.length }}</p>
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th width="50%">Name</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="image in images">
+											<td><strong></strong> <!-- Image preview --> <!--auto height-->
+												<!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+												<!--auto width--> <img ng-src="{{image.image_name}}"
+												width="100"> <!--fixed width and height --> <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+											</td>
+											<td nowrap>
+												<button type="button" class="btn btn-danger btn-xs"
+													ng-click="removeImage(image.id)">
+													<span class="glyphicon glyphicon-trash"></span> Remove
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class=" file-upload" style="margin-bottom: 40px">
+								<h4>The queue</h4>
+								<p>Queue length: {{ uploaderImages.queue.length }}</p>
+								<div class="table-responsive">
+									<table class="table">
+										<thead>
+											<tr>
+												<th width="50%">Name</th>
+												<th ng-show="uploaderImages.isHTML5">Size</th>
+												<th ng-show="uploaderImages.isHTML5">Progress</th>
+												<th>Status</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="item in uploaderImages.queue">
+												<td><strong>{{ item.file.name }}</strong> <!-- Image preview -->
+													<!--auto height--> <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+													<!--auto width-->
+													<div ng-show="uploaderImages.isHTML5"
+														ng-thumb="{ file: item._file, height: 100 }"></div> <!--fixed width and height -->
+													<!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+												</td>
+												<td ng-show="uploaderImages.isHTML5" nowrap>{{
+													item.file.size/1024/1024|number:2 }} MB</td>
+												<td ng-show="uploaderImages.isHTML5">
+													<div class="progress progress-xs margin-bottom-0">
+														<div class="progress-bar" role="progressbar"
+															ng-style="{ 'width': item.progress + '%' }"></div>
+													</div>
+												</td>
+												<td class="text-center"><span ng-show="item.isSuccess"><i
+														class="glyphicon glyphicon-ok"></i></span><span
+													ng-show="item.isCancel"><i
+														class="glyphicon glyphicon-ban-circle"></i></span><span
+													ng-show="item.isError"><i
+														class="glyphicon glyphicon-remove"></i></span></td>
+												<td nowrap>
+													<button type="button" class="btn btn-primary btn-xs"
+														ng-click="item.upload()"
+														ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+														<span class="glyphicon glyphicon-upload"></span> Upload
+													</button>
+													<button type="button" class="btn btn-warning btn-xs"
+														ng-click="item.cancel()" ng-disabled="!item.isUploading">
+														<span class="glyphicon glyphicon-ban-circle"></span>
+														Cancel
+													</button>
+													<button type="button" class="btn btn-danger btn-xs"
+														ng-click="item.remove()">
+														<span class="glyphicon glyphicon-trash"></span> Remove
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div>
+									<div>
+										Queue progress:
+										<div
+											class="progress progress-xs margin-top-5 margin-bottom-20">
+											<div class="progress-bar" role="progressbar"
+												ng-style="{ 'width': uploaderImages.progress + '%' }"></div>
+										</div>
+									</div>
+									<button type="button" class="btn btn-primary btn-s"
+										ng-click="uploaderImages.uploadAll()"
+										ng-disabled="!uploaderImages.getNotUploadedItems().length">
+										<span class="glyphicon glyphicon-upload"></span> Upload all
+									</button>
+									<button type="button" class="btn btn-primary btn-o btn-s"
+										ng-click="uploaderImages.cancelAll()"
+										ng-disabled="!uploaderImages.isUploading">
+										<span class="glyphicon glyphicon-ban-circle"></span> Cancel
+										all
+									</button>
+									<button type="button" class="btn btn-primary btn-o btn-s"
+										ng-click="uploaderImages.clearQueue()"
+										ng-disabled="!uploaderImages.queue.length">
+										<span class="glyphicon glyphicon-trash"></span> Remove all
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</tab> <!-- TAb image close --> </tabset>
 				<!-- end: USER TABSET -->
 			</div>
 		</div>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -12,16 +11,16 @@ use Illuminate\Support\Facades\Hash;
 class PasswordController extends Controller
 {
     /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
-
+     * |--------------------------------------------------------------------------
+     * | Password Reset Controller
+     * |--------------------------------------------------------------------------
+     * |
+     * | This controller is responsible for handling password reset requests
+     * | and uses a simple trait to include this behavior. You're free to
+     * | explore this trait and override any methods you wish to tweak.
+     * |
+     */
+    
     use ResetsPasswords;
 
     /**
@@ -31,24 +30,35 @@ class PasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest',['except'=>['change']]);
-        $this->middleware('auth',['only'=>['change']]);
+        $this->middleware('guest', [
+            'except' => [
+                'change'
+            ]
+        ]);
+        $this->middleware('auth', [
+            'only' => [
+                'change'
+            ]
+        ]);
     }
 
-    public function change(ChangePasswordRequest $request){
-        $status =200;
+    public function change(ChangePasswordRequest $request)
+    {
+        $status = 200;
         $password = $request->all();
         unset($password['_method']);
         $user = Auth::user();
-        if(Hash::check($password['old'], $user->password)){
+        if (Hash::check($password['old'], $user->password)) {
             $message = "Password Updated Successfully";
-            $user->update(array('password'=>bcrypt($password['new'])));
-        }else{
+            $user->update(array(
+                'password' => bcrypt($password['new'])
+            ));
+        } else {
             $message = "Old password is not matched, update not allowed";
         }
         $response = [
-            "message" => $message,
+            "message" => $message
         ];
-        return response($response,$status);
+        return response($response, $status);
     }
 }

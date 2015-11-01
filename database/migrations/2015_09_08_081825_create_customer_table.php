@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateCustomerTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -15,9 +15,9 @@ class CreateCustomerTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
             $table->date('birthdate')->nullable();
-            $table->string('gender',20)->nullable();
+            $table->string('gender', 20)->nullable();
             $table->integer('pincode')->nullable();
-            $table->string('phone_no',20)->nullable();
+            $table->string('phone_no', 20)->nullable();
             $table->integer('area_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->timestamps();

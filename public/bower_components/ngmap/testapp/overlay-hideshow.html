@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 <script src="scripts/app.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
@@ -39,29 +40,32 @@
 </head>
 
 <body>
-  <style>
-    div[ng-controller] {
-      position: relative;
-    }
-    #panel {
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      margin-left: -90px;
-      z-index: 5;
-      background-color: #fff;
-      padding: 5px;
-      border: 1px solid #999;
-    }
-  </style>
-  <div ng-controller="OverlayHideshowCtrl">
-    <div id="panel">
-      <input ng-click="toggleVisibility()" type=button value="Toggle Visibility">
-      <input ng-click="toggleDOMAttachment()" type=button value="Toggle DOM Attachment">
-    </div>
-    <map zoom="11" center="62.323907, -150.109291" map-type-id="SATELLITE">
-    </map>
-  </div>
+	<style>
+div[ng-controller] {
+	position: relative;
+}
+
+#panel {
+	position: absolute;
+	top: 5px;
+	left: 50%;
+	margin-left: -90px;
+	z-index: 5;
+	background-color: #fff;
+	padding: 5px;
+	border: 1px solid #999;
+}
+</style>
+	<div ng-controller="OverlayHideshowCtrl">
+		<div id="panel">
+			<input ng-click="toggleVisibility()" type=button
+				value="Toggle Visibility"> <input
+				ng-click="toggleDOMAttachment()" type=button
+				value="Toggle DOM Attachment">
+		</div>
+		<map zoom="11" center="62.323907, -150.109291" map-type-id="SATELLITE">
+		</map>
+	</div>
 
 </body>
 </html>

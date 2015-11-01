@@ -1,18 +1,22 @@
 <?php
-
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class SessionPackage extends Model
 {
+
     protected $table = 'session_package';
 
-    protected $guarded = ['id'];
+    protected $guarded = [
+        'id'
+    ];
 
-    public function type(){
+    public function type()
+    {
         return $this->hasOne('App\PackageType');
     }
+
 
     public function ChildPackage(){
         return $this->hasOne('App\SessionPackageChild')->orderBy('created_at','DESC')->first();

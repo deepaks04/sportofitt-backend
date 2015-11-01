@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddFkToBankDetailsTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,7 +13,11 @@ class AddFkToBankDetailsTable extends Migration
     public function up()
     {
         Schema::table('bank_details', function (Blueprint $table) {
-            $table->foreign('vendor_id')->references('id')->on('vendors')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('vendors')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

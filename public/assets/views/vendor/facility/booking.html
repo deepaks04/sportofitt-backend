@@ -1,0 +1,161 @@
+<!-- start: PAGE TITLE -->
+<section id="page-title">
+    <div class="row">
+        <div class="col-sm-8">
+            <h1 class="mainTitle" translate="sidebar.nav.pages.CALENDAR">CALENDAR</h1>
+            <span class="mainDescription"></span>
+        </div>
+        <div ncy-breadcrumb></div>
+    </div>
+</section>
+<!-- end: PAGE TITLE -->
+<!-- start: CALENDAR -->
+<div class="container-fluid container-fullw bg-white"
+     ng-controller="facilityBookingCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- /// controller:  'CalendarCtrl' -  localtion: assets/js/controllers/calendarCtrl.js /// -->
+            <div ng-controller="facilityBookingCtrl" id="demo">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center margin-bottom-20 ">{{
+                                            calendarTitle}}</h2>
+                        <h4 class="text-center">Calender for {{facility.name}}</h4>						
+                    </div>
+                    <div class="col-xs-8">
+                        <div class="btn-group">
+                            <button class="btn btn-primary" mwl-date-modifier
+                                    date="calendarDay" decrement="calendarView" ng-click="getEvents(calendarDay,calendarView);">
+                                <i class="ti-angle-left"></i>
+                            </button>
+                            <button class="btn btn-primary" mwl-date-modifier
+                                    date="calendarDay" increment="calendarView" ng-click="getEvents(calendarDay,calendarView);">
+                                <i class="ti-angle-right"></i>
+                            </button>
+                        </div>
+                        <button class="btn btn-primary btn-o" mwl-date-modifier
+                                date="calendarDay" set-to-today>Today</button>
+                        <div class="btn-group margin-bottom-20 margin-top-20" dropdown
+                             is-open="status.isopen">
+                            <button type="button"
+                                    class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle
+                                    ng-disabled="disabled">
+                                Select facility <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li ng-repeat="facility in facilityData"><a
+                                        ui-sref="vendor.facility.calender({facilityId : facility.id})">
+                                        {{facility.name}} </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        <div class="visible-md visible-lg hidden-sm hidden-xs">
+                            <div class="btn-group">
+                                <button class="btn btn-primary btn-o btn-wide"
+                                        ng-click="eventClicked()">
+                                    <i class="ti-plus"></i> Add event
+                                </button>
+
+                                <label
+                                    class="btn btn-primary" ng-model="calendarView"
+                                    btn-radio="'month'"> Month </label> <label
+                                    class="btn btn-primary" ng-model="calendarView"
+                                    btn-radio="'week'"> Week </label> <label
+                                    class="btn btn-primary" ng-model="calendarView"
+                                    btn-radio="'day'"> Day </label>
+                            </div>
+                        </div>
+                        <div class="visible-xs visible-sm hidden-md hidden-lg">
+                            <div class="btn-group" dropdown>
+                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                        dropdown-toggle>
+                                    <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right dropdown-light" role="menu">
+                                    <li><a class="btn btn-primary btn-o btn-sm"
+                                        ng-click="addEvent()">
+                                    <i class="ti-plus"></i> Add event</a></li>
+                                    <li><a ng-model="calendarView" btn-radio="'month'" href="">
+                                            Month </a></li>
+                                    <li><a ng-model="calendarView" btn-radio="'week'" href="">
+                                            Week </a></li>
+                                    <li><a ng-model="calendarView" btn-radio="'day'" href="">
+                                            Day </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <mwl-calendar events="events" view="calendarView"
+                              view-title="calendarTitle" current-day="calendarDay"
+                              on-timespan-click="eventClicked(calendarEvent)"
+                              on-event-click="eventEdited(calendarEvent)"
+                             auto-open="false"></mwl-calendar>
+                <br> <br> <br>
+                <!-- start: EDIT EVENT TEMPLATE -->
+                <script type="text/ng-template" id="calendarEvent.html">
+                    <div class="modal-body">
+                    <div class="form-group">
+                    <label>
+                    Event title
+                    </label>
+                    <input type="text" placeholder="Enter title" class="form-control underline text-large" value="Booked {{selectedFacility.name}}" ng-model="event.title" >
+                    </div>
+                    <div class="form-group">
+                    <label>
+                    Start
+                    </label>
+                    <span class="input-icon">
+                    <input type="text" class="form-control underline" ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt" is-open="startOpen" ng-init="startOpen = false" close-text="Close" />
+                    <i class="ti-calendar"></i> </span>
+                    <timepicker ng-model="event.startsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
+                    </div>
+                    <div class="form-group" ng-if="false">
+                    <label>
+                    End
+                    </label>
+                    <span class="input-icon">
+                    <input type="text" class="form-control underline" ng-click="endOpen = !endOpen" datepicker-popup="fullDate" ng-model="event.endsAt" is-open="endOpen" ng-init="endOpen = false" min-date="event.startsAt" max-date="event.startsAt" close-text="Close" />
+                    <i class="ti-calendar"></i> </span>
+                    <timepicker ng-model="event.endsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
+                    </div>
+                    <div class="form-group">
+                    <label>
+                    Category
+                    </label>
+                    <div class="row">
+                    <div class="col-xs-12">
+                    <div class="radio clip-radio radio-primary" ng-repeat="facility in facilityData">
+                    <input type="radio" id="{{facility.name}}" name="optionsCategory" value="{{facility.id}}" ng-model="event.available_facility_id">
+                    <label for="{{facility.name}}">
+                    <span class="fa fa-circle text-primary"></span> {{facility.name}}
+                    </label>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                   
+                    <button class="btn btn-primary btn-o" ng-click="addEvent()">
+                    Ok
+                    </button>
+            <button class="btn btn-warning btn-o" ng-click="cancel()">
+                    Cancel
+                    </button>
+            <div>
+            <span ng-repeat="error in errors">
+            {{error}}
+            </span>
+            </div>
+                    </div>
+                </script>
+                <!-- end: EDIT EVENT TEMPLATE -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: CALENDAR -->

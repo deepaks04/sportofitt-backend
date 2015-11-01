@@ -1,10 +1,10 @@
 <?php
-
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddFkToTabelSubCategory extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,7 +13,11 @@ class AddFkToTabelSubCategory extends Migration
     public function up()
     {
         Schema::table('sub_categories', function (Blueprint $table) {
-            $table->foreign('root_category_id')->references('id')->on('root_categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('root_category_id')
+                ->references('id')
+                ->on('root_categories')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

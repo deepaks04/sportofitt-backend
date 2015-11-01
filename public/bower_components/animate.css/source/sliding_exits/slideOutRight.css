@@ -1,14 +1,26 @@
-@keyframes slideOutRight {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    visibility: hidden;
-    transform: translateX(100%);
-  }
+@
+keyframes slideOutRight { 0% {
+	transform: translateX(0);
 }
 
+100%
+{
+visibility
+:
+ 
+hidden
+;
+
+    
+transform
+:
+ 
+translateX
+(100%);
+
+  
+}
+}
 .slideOutRight {
-  animation-name: slideOutRight;
+	animation-name: slideOutRight;
 }

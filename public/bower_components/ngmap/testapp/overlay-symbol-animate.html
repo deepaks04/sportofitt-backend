@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 <script src="scripts/app.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
@@ -33,10 +34,10 @@
 </head>
 
 <body>
-  <div ng-controller="OverlaySymbolAnimateCtrl">
-   <map zoom="5" center="20.291, 153.027" map-type-id="TERRAIN">
-     <shape name="polyline" id="foo"
-       icons="[{
+	<div ng-controller="OverlaySymbolAnimateCtrl">
+		<map zoom="5" center="20.291, 153.027" map-type-id="TERRAIN">
+			<shape name="polyline" id="foo"
+				icons="[{
          icon: {
            path: 'CIRCLE',
            scale: 8,
@@ -44,10 +45,9 @@
          },
          offset: '100%'
        }]"
-       path="[[22.291, 153.027], [18.291, 153.027]]">
-     </shape>
-   </map>
-  </div>
+				path="[[22.291, 153.027], [18.291, 153.027]]"> </shape>
+		</map>
+	</div>
 
 </body>
 </html>

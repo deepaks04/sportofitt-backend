@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
@@ -9,6 +8,7 @@ use App\User;
 
 class DeleteImageRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,15 +18,15 @@ class DeleteImageRequest extends Request
     {
         $id = $this->route('id');
         $image = VendorImages::find($id);
-        if($image==null){
+        if ($image == null) {
             return false;
-        }else{
+        } else {
             $user = Auth::user();
             $vendor = $user->vendor($user->id)->first();
-            $isOwner = VendorImages::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
-            if($isOwner){
+            $isOwner = VendorImages::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
+            if ($isOwner) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -39,8 +39,8 @@ class DeleteImageRequest extends Request
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return []
+        //
+        ;
     }
 }

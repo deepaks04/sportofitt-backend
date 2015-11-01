@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
@@ -9,6 +8,7 @@ use App\AvailableFacility;
 
 class MultipleSessionRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,19 +16,18 @@ class MultipleSessionRequest extends Request
      */
     public function authorize()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'PUT':
                 $id = $this->route('id');
                 $session = MultipleSession::find($id);
-                if($session!=null){
+                if ($session != null) {
                     $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
-                    $isOwner = AvailableFacility::where('id','=',$session->available_facility_id)->where('vendor_id','=',$vendor->id)->count();
-                    if($isOwner){
+                    $isOwner = AvailableFacility::where('id', '=', $session->available_facility_id)->where('vendor_id', '=', $vendor->id)->count();
+                    if ($isOwner) {
                         return true;
                         break;
-                    }else{
+                    } else {
                         return false;
                         break;
                     }
@@ -38,14 +37,14 @@ class MultipleSessionRequest extends Request
             case 'GET':
                 $id = $this->route('id');
                 $session = MultipleSession::find($id);
-                if($session!=null){
+                if ($session != null) {
                     $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
-                    $isOwner = AvailableFacility::where('id','=',$session->available_facility_id)->where('vendor_id','=',$vendor->id)->count();
-                    if($isOwner){
+                    $isOwner = AvailableFacility::where('id', '=', $session->available_facility_id)->where('vendor_id', '=', $vendor->id)->count();
+                    if ($isOwner) {
                         return true;
                         break;
-                    }else{
+                    } else {
                         return false;
                         break;
                     }
@@ -53,26 +52,26 @@ class MultipleSessionRequest extends Request
                 return false;
                 break;
             case 'POST':
-                if(!empty($_REQUEST['available_facility_id'])){
+                if (! empty($_REQUEST['available_facility_id'])) {
                     $id = $_REQUEST['available_facility_id'];
                     $facility = AvailableFacility::find($id);
-                    if($facility==null){
+                    if ($facility == null) {
                         return false;
                         break;
-                    }else{
+                    } else {
                         $user = Auth::user();
                         $vendor = $user->vendor($user->id)->first();
-                        $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
-                        if($isOwner){
+                        $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
+                        if ($isOwner) {
                             return true;
                             break;
-                        }else{
+                        } else {
                             return false;
                             break;
                         }
                     }
                 }
-                //return false;
+                // return false;
                 break;
             default:
                 return false;
@@ -87,18 +86,16 @@ class MultipleSessionRequest extends Request
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-                return [
-                ];
+                return [];
                 break;
             case 'PUT':
                 return [
                     'peak' => 'required|integer',
                     'off_peak' => 'required|integer',
                     'price' => 'required',
-                    'discount' => 'required|integer',
+                    'discount' => 'required|integer'
                 ];
                 break;
             case 'POST':
@@ -107,10 +104,11 @@ class MultipleSessionRequest extends Request
                     'peak' => 'required|integer',
                     'off_peak' => 'required|integer',
                     'price' => 'required',
-                    'discount' => 'required|integer',
+                    'discount' => 'required|integer'
                 ];
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 }

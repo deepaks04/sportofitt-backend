@@ -3,7 +3,8 @@
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -40,15 +41,12 @@
 </head>
 
 <body>
-    <div ng-controller="IconComplexCtrl">
-      <map zoom="10" center="-33.9, 151.2">
-        <marker ng-repeat="beach in beaches"
-          icon="{{image}}"
-          shape="{{shape}}"
-          title="{{beach[0]}}" 
-          position="{{beach[1]}}, {{beach[2]}}" 
-          z-index="{{beach[3]}}"></marker>
-      </map>
-    </div>
+	<div ng-controller="IconComplexCtrl">
+		<map zoom="10" center="-33.9, 151.2">
+			<marker ng-repeat="beach in beaches" icon="{{image}}"
+				shape="{{shape}}" title="{{beach[0]}}"
+				position="{{beach[1]}}, {{beach[2]}}" z-index="{{beach[3]}}"></marker>
+		</map>
+	</div>
 </body>
 </html>

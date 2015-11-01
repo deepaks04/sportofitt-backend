@@ -1,18 +1,15 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
-
-
+ * |--------------------------------------------------------------------------
+ * | Application Routes
+ * |--------------------------------------------------------------------------
+ * |
+ * | Here is where you can register all of the routes for an application.
+ * | It's a breeze. Simply tell Laravel the URIs it should respond to
+ * | and give it the controller to call when that URI is requested.
+ * |
+ */
 use App\Http\Controllers\Auth\AuthController;
 Route::get('/', function () {
     return view('STANDARD/index');
@@ -42,6 +39,7 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('delete-package/{id}',array('uses' => 'Vendor\SessionPackageController@deletePackage'));//New
     Route::post('opening-time',array('uses' => 'Vendor\SessionPackageController@createOpeningTime'));
     Route::put('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@updateOpeningTime'));
+
     Route::get('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));//NEW
     Route::get('delete-opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));//NEW
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
@@ -56,34 +54,59 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('calendar-block/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockData'));
     Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
 });
-//Route::controllers([
-//    'auth' => 'Auth\AuthController',
-//    'password' => 'Auth\PasswordController',
-//]);
+// Route::controllers([
+// 'auth' => 'Auth\AuthController',
+// 'password' => 'Auth\PasswordController',
+// ]);
 /* For Customer Only */
-Route::group(['prefix' => 'api/v1/customer/'], function () {
-    Route::post('create/',array('uses' => 'UsersController@storeCustomer'));
-    //New
-    Route::put('profile',array('uses' => 'Customer\CustomersController@updateProfileInformation'));
-    Route::get('profile',array('uses' => 'Customer\CustomersController@getProfileInformation'));
+Route::group([
+    'prefix' => 'api/v1/customer/'
+], function () {
+    Route::post('create/', array(
+        'uses' => 'UsersController@storeCustomer'
+    ));
+    // New
+    Route::put('profile', array(
+        'uses' => 'Customer\CustomersController@updateProfileInformation'
+    ));
+    Route::get('profile', array(
+        'uses' => 'Customer\CustomersController@getProfileInformation'
+    ));
 });
 
 /* For Superadmin Only */
-Route::group(['prefix' => 'api/v1/superadmin/'], function () {
-
-});
+Route::group([
+    'prefix' => 'api/v1/superadmin/'
+], function () {});
 
 /* Common to All Users */
-Route::group(['prefix' => 'api/v1/user/'], function () {
-    Route::get('confirm/{token}',array('uses' => 'UsersController@confirm'));
-    Route::post('auth',array('uses' => 'Auth\AuthController@authenticate'));
-    Route::get('logout',array('uses' => 'Auth\AuthController@logout'));
-    Route::get('get-root-category',array('uses' => 'UsersController@getRootCategory'));
-    Route::get('get-sub-category/{id}',array('uses' => 'UsersController@getSubCategory'));
-    Route::get('areas',array('uses' => 'UsersController@getArea'));
-    //New
-    Route::put('change-password',array('uses' => 'Auth\PasswordController@change'));
+Route::group([
+    'prefix' => 'api/v1/user/'
+], function () {
+    Route::get('confirm/{token}', array(
+        'uses' => 'UsersController@confirm'
+    ));
+    Route::post('auth', array(
+        'uses' => 'Auth\AuthController@authenticate'
+    ));
+    Route::get('logout', array(
+        'uses' => 'Auth\AuthController@logout'
+    ));
+    Route::get('get-root-category', array(
+        'uses' => 'UsersController@getRootCategory'
+    ));
+    Route::get('get-sub-category/{id}', array(
+        'uses' => 'UsersController@getSubCategory'
+    ));
+    Route::get('areas', array(
+        'uses' => 'UsersController@getArea'
+    ));
+    // New
+    Route::put('change-password', array(
+        'uses' => 'Auth\PasswordController@change'
+    ));
 });
 
-
-Route::get('temp',array('uses' => 'Vendor\VendorsController@index'));
+Route::get('temp', array(
+    'uses' => 'Vendor\VendorsController@index'
+));

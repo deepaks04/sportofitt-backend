@@ -1,6 +1,6 @@
 <!doctype html>
 <html ng-app="myapp">
-  <head>
+<head>
 <script src="https://code.angularjs.org/1.2.25/angular.js"></script>
 <script src="http://maps.google.com/maps/api/js"></script>
 <!-- build:js scripts/ng-map.min.js -->
@@ -28,36 +28,34 @@ app.controller('MyCtrl', function($scope, $compile) {
   };
 });  
 </script>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div ng-controller="MyCtrl">
-      <map center="41,-87" zoom="3">
-      
-        <info-window id="foo">
-          <div ng-non-bindable="">
-            Lat/Lng: {{this.getPosition()}}<br/>
-            <ul>
-              <li ng-repeat='item in store.items'>{{item}}</li>
-            </ul>
-          </div>
-        </info-window>
-        
-        <marker ng-repeat="(id, store) in stores" id="{{id}}"
-          position="{{store.position}}"
-          on-click="showStore(event, id)"
-        ></marker>
-        
-        <info-window id="bar">
-          <div ng-non-bindable="">
-            Lat: {{this.getPosition().lat()}}<br/>
-            Lng: {{this.getPosition().lng()}}<br/>
-          </div>
-        </info-window>
+	<div ng-controller="MyCtrl">
+		<map center="41,-87" zoom="3">
 
-        <marker position="41, -79" on-click="showInfoWindow('bar')" />
-      </map>
-    </div>
-  
-  </body>
+			<info-window id="foo">
+			<div ng-non-bindable="">
+				Lat/Lng: {{this.getPosition()}}<br />
+				<ul>
+					<li ng-repeat='item in store.items'>{{item}}</li>
+				</ul>
+			</div>
+			</info-window>
+
+			<marker ng-repeat="(id, store) in stores" id="{{id}}"
+				position="{{store.position}}" on-click="showStore(event, id)"></marker>
+
+			<info-window id="bar">
+			<div ng-non-bindable="">
+				Lat: {{this.getPosition().lat()}}<br /> Lng:
+				{{this.getPosition().lng()}}<br />
+			</div>
+			</info-window>
+
+			<marker position="41, -79" on-click="showInfoWindow('bar')" />
+		</map>
+	</div>
+
+</body>
 </html>

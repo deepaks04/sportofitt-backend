@@ -29,22 +29,30 @@ function ($rootScope, $state, $stateParams,$cookieStore) {
             isSidebarFixed: true, // true if you want to initialize the template with fixed sidebar
             isSidebarClosed: false, // true if you want to initialize the template with closed sidebar
             isFooterFixed: false, // true if you want to initialize the template with fixed footer
-            theme: 'theme-1', // indicate the theme chosen for your project
+            theme: 'theme-2', // indicate the theme chosen for your project
             logo: 'assets/images/logo.png', // relative path of the project logo
         }
     };
-    $rootScope.user = {
-    };
 
+    var auth = sessionStorage.getItem('auth');
+             if(!auth && !$state.includes('login')){
+                console.log($state.includes('login'));
+                $state.go('login.signin');
+                 $rootScope.user = $cookieStore.get('user');
+                 console.log($rootScope.user);
+              }
 
      $rootScope.$on('$locationChangeStart', function(event, current, previous) {
-var auth = sessionStorage.getItem('auth'); 
-         if(!auth){
+var auth = sessionStorage.getItem('auth');
+         if(!auth && !$state.includes('login')){
+            console.log($state.includes('login'));
             $state.go('login.signin');
+             $rootScope.user = $cookieStore.get('user');
+             console.log($rootScope.user);
           }
-          $rootScope.user = $cookieStore.get('user');
+
         });
-        $rootScope.$on('$locationChangeSuceess', function(event, current, previous) {
+        $rootScope.$on('$locationChangeSuccess', function(event, current, previous) {
 
             console.log('successfully changed routes');
 

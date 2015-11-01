@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
 class ChangePasswordRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,7 +26,7 @@ class ChangePasswordRequest extends Request
         return [
             'old' => 'required|min:5|max:60',
             'new' => 'required|min:5|max:60',
-            'confirm' => 'required|min:5|max:60|same:new',
+            'confirm' => 'required|min:5|max:60|same:new'
         ];
     }
 }

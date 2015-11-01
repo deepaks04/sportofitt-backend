@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
 class CreateVendorRequest extends Request
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,7 +29,7 @@ class CreateVendorRequest extends Request
             'email' => 'required|email|min:5|max:255|unique:users',
             'username' => 'required|min:5|max:50|unique:users',
             'password' => 'required|min:5|max:60',
-            'business_name' => 'required|min:3|max:255',
+            'business_name' => 'required|min:3|max:255'
         ];
     }
 }

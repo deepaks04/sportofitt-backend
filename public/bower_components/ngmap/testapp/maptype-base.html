@@ -2,7 +2,9 @@
 <html ng-app="myApp">
 <head>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script> <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
 <!-- build:js scripts/ng-map.min.js -->
 <script src="../app/scripts/app.js"></script>
 <script src="../app/scripts/directives/map_controller.js"></script>
@@ -52,18 +54,16 @@ CoordMapType.prototype.alt = 'Tile Coordinate Map Type';
 </script>
 </head>
 <body>
-    <div ng-controller="MapTypeBaseCtrl">
-      <map zoom="10" center="41.850033,-87.6500523"
-        on-maptypeid_changed="mapTypeChanged()"
-        street-view-control="false"
-        map-type-id="coordinate"
-        map-type-control-options="{
+	<div ng-controller="MapTypeBaseCtrl">
+		<map zoom="10" center="41.850033,-87.6500523"
+			on-maptypeid_changed="mapTypeChanged()" street-view-control="false"
+			map-type-id="coordinate"
+			map-type-control-options="{
           mapTypeIds: ['coordinate', 'ROADMAP'],
           style: 'DROPDOWN_MENU'
         }">
-        <map-type name="coordinate" object="CoordMapType">
-        </map-type>
-      </map>
-    </div>
+			<map-type name="coordinate" object="CoordMapType"> </map-type>
+		</map>
+	</div>
 </body>
 </html>

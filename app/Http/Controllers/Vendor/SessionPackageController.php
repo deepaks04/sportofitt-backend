@@ -526,9 +526,9 @@ class SessionPackageController extends Controller
             $user = Auth::user();
             $sessionBooking = "";
             //dd($user->id);
-            $date = strtotime($data['startAt']);
-            $start = strtotime($data['startAt']);
-            $data['startAt'] = date('Y-m-d H:i:s', $start);
+            $date = strtotime($data['startsAt']);
+            $start = strtotime($data['startsAt']);
+            $data['startsAt'] = date('Y-m-d H:i:s', $start);
             $startTime = date('H:i:s', $start);
             $day = date('l', $date);
             $day = strtolower($day);
@@ -542,9 +542,9 @@ class SessionPackageController extends Controller
 
             if($sessionPackageMaster!=null){
                 $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
-                $time = strtotime($data['startAt']);
-                $data['endAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-                $end =  strtotime($data['endAt']);
+                $time = strtotime($data['startsAt']);
+                $data['endsAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
+                $end =  strtotime($data['endsAt']);
                 $endTime = date('H:i:s', $end);
             }
             //$timeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$data['start']."' BETWEEN start AND end AND '".$data['end']."' BETWEEN start AND end) AND session_package_id=".$sessionPackageMaster->id." AND day=".$data['day']));
@@ -558,10 +558,10 @@ class SessionPackageController extends Controller
                             ->first();//->count();
             if($openingTimeExists!=null && $openingTimeExists->count()>0){ //Opening Time Available
 
-                $blockTimeExists = SessionBooking::where('startAt','<=',$data['startAt'])
-                    ->where('endAt','>=',$data['startAt'])
-                    ->where('startAt','<=',$data['endAt'])
-                    ->where('endAt','>=',$data['endAt'])
+                $blockTimeExists = SessionBooking::where('startsAt','<=',$data['startsAt'])
+                    ->where('endsAt','>=',$data['startsAt'])
+                    ->where('startsAt','<=',$data['endsAt'])
+                    ->where('endsAt','>=',$data['endsAt'])
                     //->where('date','=',$data['date'])
                     ->where('is_active','=',1)
                     ->where('available_facility_id','=',$data['available_facility_id'])
@@ -618,14 +618,14 @@ class SessionPackageController extends Controller
                     //DB::enableQueryLog();//$queries = DB::getQueryLog();
                     $blockingData = SessionBooking::where('available_facility_id',$facility['id'])
                         ->where('is_active',1)
-                        ->where('startAt','>=',$start)
-                        ->where('endAt','<=',$end)
+                        ->where('startsAt','>=',$start)
+                        ->where('endsAt','<=',$end)
                         ->get();
                     //$queries = DB::getQueryLog();
                     //dd($queries);
                     if(!$blockingData->isEmpty()){
                         //$data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
-                        $blockData[$i] = $blockingData->toArray();
+                        $blockData = $blockingData->toArray();
                         //$blockData[$i]['facility'] = AvailableFacility::find($facility['id'])->first()->toArray();
                         $i++;
                     }
@@ -659,14 +659,14 @@ class SessionPackageController extends Controller
                 //DB::enableQueryLog();//$queries = DB::getQueryLog();
                 $blockingData = SessionBooking::where('available_facility_id',$id)
                     ->where('is_active',1)
-                    ->where('startAt','>=',$start)
-                    ->where('endAt','<=',$end)
+                    ->where('startsAt','>=',$start)
+                    ->where('endsAt','<=',$end)
                     ->get();
                 //$queries = DB::getQueryLog();
                 //dd($queries);
                 if(!$blockingData->isEmpty()){
                     //$data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
-                    $blockData[$i] = $blockingData->toArray();
+                    $blockData = $blockingData->toArray();
                     //$blockData[$i]['facility'] = AvailableFacility::find($id)->first()->toArray();
                     $i++;
                 }

@@ -2,8 +2,9 @@
 <section id="page-title">
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="mainTitle" >ADD FACILITY</h1>
-			<span class="mainDescription">Create new facility for your business</span>
+			<h1 class="mainTitle">ADD FACILITY</h1>
+			<span class="mainDescription">Create new facility for your
+				business</span>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -12,61 +13,136 @@
 <div class="container-fluid container-fullw bg-white">
 	<div class="row">
 		<div class="col-md-12">
-			<h5 class="over-title margin-bottom-15"> <span class="text-bold">New Facility</span></h5>
-			<p>
-				</p>
+			<h5 class="over-title margin-bottom-15">
+				<span class="text-bold">New Facility</span>
+			</h5>
+			<p></p>
 			<!-- /// controller:  'facilityAddCtrl' -  localtion: assets/js/controllers/vendor/facilityAddCtrl.js /// -->
 			<div ng-controller="facilityAddCtrl">
-				<form name="Form" id="form1" novalidate ng-submit="form.submit(Form)" enctype="multipart/form-data">
+				<form name="Form" id="form1" novalidate
+					ng-submit="form.submit(Form)" enctype="multipart/form-data">
 					<div class="row">
-						<div class="col-md-8">
-              <div class="form-group" ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
-                <label class="control-label">
-                  Name <span class="symbol required"></span>
-                </label>
-                <input type="text" placeholder="Enter your First Name" class="form-control" name="name" ng-model="facility.name" required />
-                <span class="error text-small block" ng-if="Form.name.$dirty && Form.name.$invalid">First Name is required</span>
-                <span class="success text-small" ng-if="Form.name.$valid">Thank You!</span>
-              </div>
-              <div class="form-group" ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
-                <label class="control-label">
-                  Root Category <span class="symbol required"></span>
-                </label>
-                <select class="form-control" ng-model="selectedCategory" ng-options="cat.sub_category as cat.name for cat in categoryData">
-                  <option value="">Select Category</option>
-                </select>
-                <span class="error text-small block" ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">First Name is required</span>
-                <span class="success text-small" ng-if="Form.root_category_id.$valid">Thank You!</span>
-              </div>
-              <div class="form-group" ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
-                <label class="control-label">
-                  Sub Category <span class="symbol required"></span>
-                </label>
-								<select class="form-control" name="facility.sub_category_id" ng-model="facility.sub_category_id" ng-options="cat.id as cat.name for cat in selectedCategory track by cat.id" ng-disabled="!selectedCategory">
+						<div class="col-md-6">
+							<div class="form-group"
+								ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
+								<label class="control-label"> Name <span
+									class="symbol required"></span>
+								</label> <input type="text" placeholder="Enter Facility Name"
+									class="form-control" name="name" ng-model="facility.name"
+									required /> <span class="error text-small block"
+									ng-if="Form.name.$dirty && Form.name.$invalid">
+									{{Form.name.$error[0]}}
+									</span> <span class="success text-small"
+									ng-if="Form.name.$valid">Thank You!</span>
+							</div>
+							<div class="form-group"
+								ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
+								<label class="control-label"> Root Category <span
+									class="symbol required"></span>
+								</label> <select class="form-control" name="root_category_id" ng-model="selectedCategory"
+									ng-options="cat.sub_category as cat.name for cat in categoryData" required>
 									<option value="">Select Category</option>
+								</select> <span class="error text-small block"
+									ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">
+										{{Form.root_category_id.$error[0]}}</span> <span class="success text-small"
+									ng-if="Form.root_category_id.$valid">Thank You!</span>
+							</div>
+							<div class="form-group"
+								ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
+								<label class="control-label"> Sub Category <span
+									class="symbol required"></span>
+								</label> <select name="sub_category_id" class="form-control" name="facility.sub_category_id"
+									ng-model="facility.sub_category_id"
+									ng-options="cat.id as cat.name for cat in selectedCategory"
+									ng-disabled="!selectedCategory.length" required>
+									<option value="">Select Category</option>
+								</select> <span class="error text-small block"
+									ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">{{Form.sub_category_id.$error[0]}}</span> <span class="success text-small"
+									ng-if="Form.sub_category_id.$valid">Thank You!</span>
+							</div>
+							<div class="form-group"
+								ng-class="{'has-error':Form.duration.$dirty && Form.duration.$invalid, 'has-success':Form.duration.$valid}">
+								<label class="control-label"> Session Duration <span
+									class="symbol required"></span>
+								</label>
+								<select class="form-control" name="duration" ng-model="facility.duration"
+										ng-options="duration.id as duration.time for duration in durations" required>
+										<option value="">Select Duartion</option>
 								</select>
-								  <span class="error text-small block" ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First Name is required</span>
-                <span class="success text-small" ng-if="Form.sub_category_id.$valid">Thank You!</span>
-              </div>
-
-            <div class="form-group" ng-class="{'has-error':Form.image.$dirty && Form.image.$invalid, 'has-success':Form.image.$valid}">
-              <label class="control-label">
-                Facility Image<span class="symbol required"></span>
-              </label>
-							<span class="btn btn-primary btn-o btn-file"> Select an image file
-								<input type="file" bind-file nv-file-select="" name="image" ng-model="facility.image" uploader="uploaderImages" multiple  required/>
-							</span>
-							  <span class="error text-small block" ng-if="Form.image.$dirty && Form.image.$invalid">First Name is required</span>
-              <span class="success text-small" ng-if="Form.image.$valid">Thank You!</span>
-            </div>
-						<div class="form-actions">
-							<button type="submit" class="btn btn-primary pull-right">
-								Submit <i class="fa fa-arrow-circle-right"></i>
-							</button>
+								<span class="error text-small block"
+									ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span> <span class="success text-small"
+									ng-if="Form.duration.$valid">Thank You!</span>
+							</div>
 						</div>
-            </div>
-          </div>
+
+						<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
+									<label class="control-label"> Slots <span
+										class="symbol required"></span>
+									</label> <select class="form-control" name="slots" ng-model="facility.slots"
+										required>
+										<option value="">Select Slot</option>
+										<option value="{{slot}}" ng-repeat="slot in slots"
+											ng-selected="slot === facility.slots">{{slot}}</option>
+									</select> <span class="error text-small block"
+										ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span> <span class="success text-small"
+										ng-if="Form.slots.$valid">Thank You!</span>
+								</div>
+						</div>
+						<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':Form.cancellation_before_24hrs.$dirty && Form.cancellation_before_24hrs.$invalid,
+									'has-success':Form.cancellation_before_24hrs.$valid}">
+									<label class="control-label"> Deduction before 24 hours <span
+										class="symbol required"></span>
+									</label>
+									 <select class="form-control" name="cancellation_before_24hrs" ng-model="facility.cancellation_before_24hrs"
+										 required>
+										<option value="">Select Percentage</option>
+										<option value="{{percentage}}" ng-repeat="percentage in percentageArray"
+											ng-selected="percentage === facility.cancellation_before_24hrs">{{percentage}}</option>
+									</select>
+									<span class="error text-small block"
+										ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span> <span class="success text-small"
+										ng-if="Form.cancellation_before_24hrs.$valid">Thank You!</span>
+								</div>
+						</div>
+						<div class="col-md-6">
+								<div class="form-group"
+									ng-class="{'has-error':Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid, 'has-success':Form.cancellation_after_24hrs.$valid}">
+									<label class="control-label"> Deduction Less than 24 hrs <span
+										class="symbol required"></span>
+									</label>
+									 <select class="form-control" name="cancellation_after_24hrs" ng-model="facility.cancellation_after_24hrs"
+										required>
+											<option value="">Select Percentage</option>
+										<option value="{{percentage}}" ng-repeat="percentage in percentageArray"
+											ng-selected="percentage === facility.cancellation_after_24hrs">{{percentage}}</option>
+									</select> <span class="error text-small block"
+										ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span> <span class="success text-small"
+										ng-if="Form.cancellation_after_24hrs.$valid">Thank You!</span>
+								</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group"
+								ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
+								<label class="control-label"> Description
+								</label>
+								<textarea name="description"
+									data-ng-model="facility.description"></textarea>
+								<span class="error text-small block"
+									ng-if="Form.description.$dirty && Form.description.$invalid">{{Form.description.$error[0]}}</span>
+							</div>
+
+							<div class="form-actions">
+								<button type="submit" class="btn btn-primary pull-right">
+									Submit <i class="fa fa-arrow-circle-right"></i>
+								</button>
+							</div>
+						</div>
+					</div>
 
 
-        </form>
-      </div>
+				</form>
+			</div>

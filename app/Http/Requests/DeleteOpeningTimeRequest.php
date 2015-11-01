@@ -28,6 +28,7 @@ class DeleteOpeningTimeRequest extends Request
                 $user = Auth::user();
                 $vendor = $user->vendor($user->id)->first();
                 $isOwner = AvailableFacility::where('id','=',$sessionPackage->available_facility_id)->where('vendor_id','=',$vendor->id)->count();
+
                 if($isOwner){
                     return true;
                 }else{
