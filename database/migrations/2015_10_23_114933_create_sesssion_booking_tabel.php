@@ -16,8 +16,9 @@ class CreateSesssionBookingTabel extends Migration
             $table->increments('id');
             $table->integer('booked_or_blocked')->unsigned();//1 For Booked And 2 for Blocked.
             $table->integer('day');
-            $table->dateTime('startAt');
-            $table->dateTime('endAt');
+            $table->string('title',128);
+            $table->dateTime('startsAt');
+            $table->dateTime('endsAt');
             //$table->date('date');
             /*
              * Nullable Because In case of vendor Block it will be nullable

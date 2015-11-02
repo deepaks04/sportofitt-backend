@@ -527,8 +527,8 @@ class SessionPackageController extends Controller
             $sessionBooking = "";
             //dd($user->id);
             $date = strtotime($data['startsAt']);
-//            $start = strtotime($data['startsAt']);
-//            $data['startsAt'] = date('Y-m-d H:i:s', $start);
+            $start = strtotime($data['startsAt']);
+            $data['startsAt'] = date('Y-m-d H:i:s', $start);
             $startTime = date('H:i:s', $start);
             $day = date('l', $date);
             $day = strtolower($day);
@@ -543,7 +543,7 @@ class SessionPackageController extends Controller
             if($sessionPackageMaster!=null){
                 $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
                 $time = strtotime($data['startsAt']);
-                $data['endsAt'] = date(strtotime($sessionDuration, $time));
+                $data['endsAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
                 $end =  strtotime($data['endsAt']);
                 $endTime = date('H:i:s', $end);
             }

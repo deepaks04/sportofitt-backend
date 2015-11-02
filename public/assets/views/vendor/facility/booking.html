@@ -43,6 +43,8 @@
                                 Select facility <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
+                                <li ><a ui-sref="vendor.facility.calender({facilityId : ''})">
+                                       ALL </a></li>
                                 <li ng-repeat="facility in facilityData"><a
                                         ui-sref="vendor.facility.calender({facilityId : facility.id})">
                                         {{facility.name}} </a></li>
@@ -92,7 +94,7 @@
                               view-title="calendarTitle" current-day="calendarDay"
                               on-timespan-click="eventClicked(calendarEvent)"
                               on-event-click="eventEdited(calendarEvent)"
-                               auto-open="false"></mwl-calendar>
+                             auto-open="false"></mwl-calendar>
                 <br> <br> <br>
                 <!-- start: EDIT EVENT TEMPLATE -->
                 <script type="text/ng-template" id="calendarEvent.html">
@@ -139,19 +141,20 @@
                     </div>
                     </div>
                     <div class="modal-footer">
-                    <button class="btn btn-danger btn-o" ng-if="event" ng-click="deleteEvent(event)">
-                    Delete
-                    </button>
-                    <button class="btn btn-primary btn-o" ng-click="addEvent()">
+                   
+                    <button class="btn btn-primary btn-o" ng-if="!event.id" ng-click="addEvent()">
                     Ok
                     </button>
             <button class="btn btn-warning btn-o" ng-click="cancel()">
-                    Cancel
+            <span ng-if="!event.id">Cancel</span>
+            <span ng-if="event.id">Ok</span>
                     </button>
             <div>
-            <span ng-repeat="error in errors">
+             <div class="form-group has-error" >
+            <span class="error block" ng-repeat="error in errors" >
             {{error}}
             </span>
+    </div>
             </div>
                     </div>
                 </script>

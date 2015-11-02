@@ -197,13 +197,13 @@
             if (data.start instanceof Date)
             {
                 data.start = data.start.getHours() + ":" + ("0" + data.start.getMinutes()).slice(-2);
-                ;
+                
             }
 
             if (data.end instanceof Date)
             {
                 data.end = data.end.getHours() + ":" + ("0" + data.end.getMinutes()).slice(-2);
-                ;
+                
             }
             var fd = new FormData();
             for (var key in data)
