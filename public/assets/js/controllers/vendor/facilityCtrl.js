@@ -150,9 +150,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
             100: 100
         };
 
-        $scope.days = [{id: 1, text: "Sunday"}, {id: 2, text: "Monday"}, {id: 3, text: "Thusday"},
-            {id: 4, text: "Wednesday"}, {id: 5, text: "Thrusday"}, {id: 6, text: "Friday"}
-            , {id: 7, text: "Saturday"}];
+        $scope.days = [{id: 1, text: "Monday"}, {id: 2, text: "Thusday"},
+            {id: 3, text: "Wednesday"}, {id: 4, text: "Thrusday"}, {id: 5, text: "Friday"}
+            , {id: 6, text: "Saturday"},{id: 7, text: "Sunday"}];
 
         $scope.months = ["1 Month", "3 Months", "6 Months"];
 
@@ -418,7 +418,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
 
         function  getBlockedSession(startDate) {
             facilityService.getBlockedSessions(startDate).then(function (events) {
-
+ parseEvents(events.data);
                 })
         }
 
@@ -505,7 +505,8 @@ function parseEvents(events){
 
         $scope.eventClicked = function (event) {
           var event = {title : "Booked",
-            startsAt:new Date()};
+            startsAt:new Date(),
+            available_facility_id:$scope.facilityId};
             showModal('Clicked', event);
         };
         $scope.addEvent = function (event) {

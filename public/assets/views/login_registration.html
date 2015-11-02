@@ -88,8 +88,8 @@
 						<p>
 							Already have an account? <a ui-sref="login.signin"> Log-in </a>
 						</p>
-						<button type="submit" ng-click="form.register(myModel);"
-							class="btn btn-primary pull-right">
+						<button type="submit" ng-click="form.register(myModel); disableSubmit=true;"
+                                                        class="btn btn-primary pull-right" ng-disabled="disableSubmit">
 							Submit <i class="fa fa-arrow-circle-right"></i>
 						</button>
 					</div>
