@@ -361,11 +361,11 @@ class VendorsController extends Controller
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                    chmod($vendorOwnDirecory, 0777);
-                    chmod($vendorImageUploadPath, 0777);
+            //        chmod($vendorOwnDirecory, 0777);
+                 //   chmod($vendorImageUploadPath, 0777);
                 }
                 
-                chmod($vendorImageUploadPath, 0777);
+              //  chmod($vendorImageUploadPath, 0777);
                 // foreach($files as $file){
                 $random = mt_rand(1, 1000000);
                 $extension = $file->getClientOriginalExtension();
