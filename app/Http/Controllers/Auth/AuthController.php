@@ -76,12 +76,14 @@ class AuthController extends Controller
         if ($user == NULL) {
             $status = 404;
             $response = [
-                "message" => "Sorry!! Incorrect email or password"
+                "message" => "Sorry!! Incorrect email or password",
+                "user"=>"",
             ];
         } elseif ($user->is_active == 0) {
             $status = 401;
             $response = [
-                "message" => "Please confirm your email id first"
+                "message" => "Please confirm your email id first",
+                "user"=>"",
             ];
         } elseif (Auth::attempt([
             'email' => $request->email,
@@ -128,7 +130,8 @@ class AuthController extends Controller
         } else {
             $status = 404;
             $response = [
-                "message" => "Sorry!! Incorrect email or password"
+                "message" => "Sorry!! Incorrect email or password",
+                "user"=>"",
             ];
         }
         return response($response, $status);

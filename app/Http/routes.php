@@ -107,6 +107,12 @@ Route::group([
     ));
 });
 
+/* Admin Routes */
+Route::group(['prefix' => 'api/v1/admin/'], function () {
+    Route::get('vendors',array('uses' => 'Admin\VendorController@getVendorList'));
+    Route::post('vendor/create',array('uses' => 'Admin\VendorController@create'));
+});
+
 Route::get('temp', array(
     'uses' => 'Vendor\VendorsController@index'
 ));

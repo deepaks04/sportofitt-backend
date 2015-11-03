@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PackageTypeSeeder::class);
         $this->call(DayTableSeeder::class);
         $this->call(duration_master::class);
+        $this->call(CreateAdminSeeder::class);
         
         Model::reguard();
     }
