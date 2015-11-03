@@ -27,7 +27,6 @@ class Billing extends Request
             'company_title' => 'required|min:3|max:50',
             'registration_no' => 'required|min:3|max:30',
             'service_tax_no' => 'required|min:5|max:30',
-            'address' => 'required|min:5|max:255',
             'pan_no' => 'required|min:5|max:20',
             'contact_person_name' => 'required|min:5|max:30',
             'contact_person_email' => 'required|min:5|max:80|email',
