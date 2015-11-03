@@ -69,7 +69,7 @@ class BlockCalendarRequest extends Request
                 return [
                     'available_facility_id' => 'required|integer',
                     //'date' => 'required|date_format:Y-m-d H:i:s',
-                    'startAt' => 'required|date_format:Y-m-d H:i:s',
+                    'startsAt' => 'required|date',
                     //'end' => 'required|date_format:H:i',
                 ];
                 break;

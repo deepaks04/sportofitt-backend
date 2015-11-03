@@ -32,7 +32,7 @@
 						<tr ng-repeat="time in openingHours">
 <td>
  <span  e-name="day" e-form="rowform" editable-select="time.day" e-ng-options="day.id as day.text for day in days">
-    {{ days[time.day].text }}
+    {{ days[time.day - 1].text }}
   </span>
 
 </td>

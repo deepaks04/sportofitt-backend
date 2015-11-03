@@ -142,13 +142,20 @@ class SessionPackageController extends Controller
                 $facilityDetils = $facilityDetils->toArray();
                 $i=0;
                 foreach($facilityDetils as $facilityDetil){
-                    $packages[$i]['parent'] = $facilityDetil;
+                    $packages[$i] = $facilityDetil;
                     $packageChild = SessionPackageChild::where(array('session_package_id'=>$facilityDetil['id'],'is_active'=>1))->first();
                     if($packageChild!=null){
                         $packageChild = $packageChild->toArray();
-                        $packages[$i]['child'] = $packageChild;
+                        $packages[$i]['session_package_id'] = $packageChild['session_package_id'];
+                        $packages[$i]['month'] = $packageChild['month'];
+                        $packages[$i]['actual_price'] = $packageChild['actual_price'];
+                        $packages[$i]['discount'] = $packageChild['discount'];
+                        $packages[$i]['is_peak'] = $packageChild['is_peak'];
                     }else{
-                        $packages[$i]['child'] = "";
+                        $packages[$i]['session_package_id'] = "";
+                        $packages[$i]['actual_price'] = "";
+                        $packages[$i]['discount'] =  "";
+                        $packages[$i]['is_peak'] =  "";
                     }
                     $i++;
                 }
@@ -527,8 +534,8 @@ class SessionPackageController extends Controller
             $sessionBooking = "";
             //dd($user->id);
             $date = strtotime($data['startsAt']);
-//            $start = strtotime($data['startsAt']);
-//            $data['startsAt'] = date('Y-m-d H:i:s', $start);
+            $start = strtotime($data['startsAt']);
+            $data['startsAt'] = date('Y-m-d H:i:s', $start);
             $startTime = date('H:i:s', $start);
             $day = date('l', $date);
             $day = strtolower($day);
@@ -543,7 +550,7 @@ class SessionPackageController extends Controller
             if($sessionPackageMaster!=null){
                 $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
                 $time = strtotime($data['startsAt']);
-                $data['endsAt'] = date(strtotime($sessionDuration, $time));
+                $data['endsAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
                 $end =  strtotime($data['endsAt']);
                 $endTime = date('H:i:s', $end);
             }
