@@ -57,7 +57,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
   //vendor routes
 
   .state('vendor', {
-      url: "/vendor",
+      url: "/select",
       templateUrl: "assets/views/vendor/app.html",
       resolve: loadSequence('modernizr', 'logger','uiMap','moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
       abstract: true

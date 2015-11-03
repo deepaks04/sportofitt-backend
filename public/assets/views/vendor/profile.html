@@ -29,7 +29,7 @@
 									flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
 									<div class="user-image">
 										<div class="thumbnail">
-											<img src="assets/images/default-user.png" alt=""
+											<img ng-src="assets/images/default-user.png" alt=""
 												ng-if="!obj.flow.files.length && noImage"> <img
 												ng-src="{{userInfo.profile_picture}}" alt=""
 												ng-if="!obj.flow.files.length && !noImage"> <img

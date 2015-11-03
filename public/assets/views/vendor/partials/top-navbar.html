@@ -31,7 +31,11 @@
 		<li class="dropdown current-user" dropdown on-toggle="toggled(open)">
 			<a href class="dropdown-toggle" dropdown-toggle> <img
 				src="{{user.profile_picture}}" alt="{{user.fname }} {{user.lname }}"
-				title="{{user.fname }} {{user.lname }}"> <span
+                                title="{{user.fname }} {{user.lname }}" ng-if="user.profile_picture">
+                            <img ng-if="!user.profile_picture"
+				src="assets/images/default-user.png" alt="{{user.fname }} {{user.lname }}"
+				title="{{user.fname }} {{user.lname }}">
+                            <span
 				class="username">{{user.name}} <i class="ti-angle-down"></i></i></span>
 		</a>
 			<ul class="dropdown-menu dropdown-dark">
