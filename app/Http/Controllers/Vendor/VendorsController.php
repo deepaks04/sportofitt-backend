@@ -175,7 +175,7 @@ class VendorsController extends Controller
             );
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
-            if (isset($request->profile_picture) && ! empty($request->profile_picture)) {
+            if ($request->file('profile_picture')!=null) {
                 /* File Upload Code */
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);

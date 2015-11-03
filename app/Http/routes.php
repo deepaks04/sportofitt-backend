@@ -108,10 +108,16 @@ Route::group([
 });
 
 /* Admin Routes */
-Route::group(['prefix' => 'api/v1/admin/'], function () {
-    Route::get('vendors',array('uses' => 'Admin\VendorController@getVendorList'));
-    Route::post('vendor/create',array('uses' => 'Admin\VendorController@create'));
-    Route::put('vendor/my-profile/{id}',array('uses' => 'Admin\VendorController@updateProfile'));
+Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
+    Route::get('all',array('uses' => 'Admin\VendorController@getVendorList'));
+    Route::post('create',array('uses' => 'Admin\VendorController@create'));
+    Route::get('my-profile/{id}',array('uses' => 'Admin\VendorController@getProfile'));
+    Route::put('my-profile/{id}',array('uses' => 'Admin\VendorController@updateProfile'));
+
+    Route::get('billing-info/{id}',array('uses' => 'Admin\VendorController@getBillingInformation'));
+    Route::put('billing-info/{id}',array('uses' => 'Admin\VendorController@updateBillingInformation'));
+    Route::get('bank-info',array('uses' => 'Admin\VendorController@getBankDetails'));
+    Route::put('bank-info',array('uses' => 'Admin\VendorController@updateBankDetails'));
 });
 
 Route::get('temp', array(

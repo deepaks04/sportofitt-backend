@@ -13,6 +13,8 @@ use Auth;
 use App\Area;
 use Carbon\Carbon;
 use DB;
+use URL;
+use Illuminate\Support\Facades\Route;
 
 class VendorController extends Controller
 {
@@ -26,6 +28,8 @@ class VendorController extends Controller
         // $this->middleware('auth');
         $this->middleware('auth');
         $this->middleware('admin');
+        $this->middleware('verify.vendor');
+
     }
 
     public function skull(){
@@ -168,12 +172,12 @@ class VendorController extends Controller
                 'profile_picture'
             );
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
-            $systemUser = User::find($id);
-            if (isset($request->profile_picture) && ! empty($request->profile_picture)) {
+            $systemUser = User::findOrFail($id);
+            if ($request->file('profile_picture')!=null) {
                 /* File Upload Code */
-                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);
-                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
+                $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath.sha1($systemUser->id);
+                $vendorImageUploadPath = $vendorOwnDirecory."/"."profile_image";
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
@@ -191,6 +195,11 @@ class VendorController extends Controller
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
             $vendorInformation = User::where("id",$id)->with('vendor')->first();
+            if ($vendorInformation->profile_picture != null) {
+                $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($systemUser->id) . "/" . "profile_image/";
+                $vendorInformation->profile_picture = $vendorOwnDirecory.$vendorInformation->profile_picture;
+            }
         } catch (\Exception $e) {
             $status = 500;
             $vendorInformation = "";
@@ -199,6 +208,91 @@ class VendorController extends Controller
         $response = [
             "message" => $message,
             "data" => $vendorInformation
+        ];
+        return response($response, $status);
+    }
+
+    public function getProfile($id)
+    {
+        try{
+            $status = 200;
+            $message = "success";
+            $user = User::where('id',$id)->with('vendor')->first();
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "profile_image/";
+            if ($user->profile_picture == null) {
+                $user->profile_picture = $user->profile_picture;
+            } else {
+                $user->profile_picture = $vendorOwnDirecory . $user->profile_picture;
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $user = "";
+        }
+        $response = [
+            "message" => $message,
+            "data"=>$user
+        ];
+        return response($response, $status);
+    }
+
+    public function getBillingInformation($id)
+    {
+        try{
+            $user = User::findOrFail($id);
+            $vendor = $user->vendor()->first();
+            $billing = $vendor->billingInfo()->first();
+            if ($billing != null) {
+                $message = 'success';
+                $status = 200;
+                $billing = $billing->toArray();
+            } else {
+                $status = 200;
+                $message = 'Please update your billing information';
+                $billing = "";
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $billing = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $billing
+        ];
+        return response($response, $status);
+    }
+
+    public function updateBillingInformation(Requests\Billing $request,$id)
+    {
+        try {
+            $user = Auth::user();
+            $vendor = $user->vendor()->first();
+            $billing = $vendor->billingInfo()->first();
+            if ($billing != null) { // Update If exists
+                $data = $request->all();
+                unset($data['_method']);
+                $vendor->billingInfo()->update($data);
+            } else { // Insert if not exists
+                $data = $request->all();
+                unset($data['_method']);
+                $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
+                $vendor->billingInfo()->insert($data);
+                // $billingInfo = Billing::create($data);
+                // $user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
+            }
+            $status = 200;
+            $message = "saved successfully";
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            $status = 500;
+            $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message
         ];
         return response($response, $status);
     }
