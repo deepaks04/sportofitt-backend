@@ -198,7 +198,6 @@ class VendorsController extends Controller
             $systemUser->vendor()->update($vendor);
         } catch (\Exception $e) {
             echo $e->getMessage();
-            exit();
             $status = 500;
             $response = [
                 "message" => "Something Went Wrong"

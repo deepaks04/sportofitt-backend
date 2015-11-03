@@ -111,6 +111,7 @@ Route::group([
 Route::group(['prefix' => 'api/v1/admin/'], function () {
     Route::get('vendors',array('uses' => 'Admin\VendorController@getVendorList'));
     Route::post('vendor/create',array('uses' => 'Admin\VendorController@create'));
+    Route::put('vendor/my-profile/{id}',array('uses' => 'Admin\VendorController@updateProfile'));
 });
 
 Route::get('temp', array(

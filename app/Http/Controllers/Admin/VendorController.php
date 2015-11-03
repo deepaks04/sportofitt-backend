@@ -135,4 +135,72 @@ class VendorController extends Controller
             return $result;
         }
     }
+
+    public function updateProfile(Requests\UpdateVendorProfileRequest $request,$id)
+    {
+        try {
+            $status = 200;
+            $message =  "Settings updated successfully";
+            $vendorInformation = "";
+            $user = $request->all();
+            $vendor = $request->all();
+            $userKeys = array(
+                'email',
+                'username',
+                'business_name',
+                'longitude',
+                'latitude',
+                'area_id',
+                'description',
+                '_method',
+                'address',
+                'contact',
+                'postcode',
+                'commission'
+            );
+            $user = $this->unsetKeys($userKeys, $user);
+            $vendorKeys = array(
+                'email',
+                'username',
+                'fname',
+                'lname',
+                '_method',
+                'profile_picture'
+            );
+            $vendor = $this->unsetKeys($vendorKeys, $vendor);
+            $systemUser = User::find($id);
+            if (isset($request->profile_picture) && ! empty($request->profile_picture)) {
+                /* File Upload Code */
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
+                /* Create Upload Directory If Not Exists */
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+                    // chmod($vendorOwnDirecory, 0777);
+                    // chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('profile_picture')->getClientOriginalExtension();
+                $filename = sha1($systemUser->id . time()) . ".{$extension}";
+                $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
+                // chmod($vendorImageUploadPath, 0777);
+
+                /* Rename file */
+                $user['profile_picture'] = $filename;
+            }
+            $systemUser->update($user);
+            $systemUser->vendor()->update($vendor);
+            $vendorInformation = User::where("id",$id)->with('vendor')->first();
+        } catch (\Exception $e) {
+            $status = 500;
+            $vendorInformation = "";
+            $message = "Something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+            "data" => $vendorInformation
+        ];
+        return response($response, $status);
+    }
+
 }
