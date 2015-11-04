@@ -31,7 +31,7 @@ class Billing extends Request
             'contact_person_name' => 'required|min:5|max:30',
             'contact_person_email' => 'required|min:5|max:80|email',
             'contact_person_phone' => 'required|min:5|max:20',
-            'vat' => 'required|min:1|max:2'
+            'vat' => 'required|min:1|max:20'
         ];
     }
 }
