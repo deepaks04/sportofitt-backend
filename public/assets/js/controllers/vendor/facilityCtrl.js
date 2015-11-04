@@ -190,9 +190,18 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
             ;
 
             facilityService.getSessionsByFacilityId($scope.facility.id).then(function (sessions) {
-                $scope.sessions = (sessions.data === "") ? [] : sessions.data;
+               var sessions = (sessions.data === "") ? [] : sessions.data;
+                parseSessions(sessions);
             });
         };
+        
+        function parseSessions(sessions){
+             angular.forEach(sessions, function (session, keys) {
+                session.peak = parseInt(session.peak);
+                session.off_peak = parseInt(session.off_peak);
+                this.push(session);
+            }, $scope.sessions);
+        }
 
         $scope.getOpeningHours = function () {
             if ($scope.openingHours.length) {
@@ -202,7 +211,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
             facilityService.getOpeningTimesByFacilityId($scope.facility.id)
                     .then(function (openingHours) {
-                        openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                      var  openingHours = (openingHours.data === "") ? [] : openingHours.data;
                         parseOpeningHours(openingHours);
                     });
         };
@@ -242,12 +251,20 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
             facilityService.getPackagesByFacilityId($scope.facility.id)
                     .then(function (packages) {
-                        $scope.packages = (packages.data === "") ? [] : packages.data;
+                        var packages = (packages.data === "") ? [] : packages.data;
+                parsePackages(packages)
                     }).catch(function (data) {
                 console.log(data.data);
             });
         };
-
+        
+        function parsePackages(packages){
+             angular.forEach(packages, function (pack, keys) {
+                pack.month = parseInt(pack.month);
+               this.push(pack);
+            }, $scope.packages);
+        }
+        
         $scope.saveHours = function (data, id) {
             // $scope.user not updated yet
             angular.extend(data, {id: id, available_facility_id: $scope.facility.id});
