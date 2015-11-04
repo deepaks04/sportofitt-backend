@@ -175,7 +175,7 @@ class VendorsController extends Controller
             );
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
-            if (isset($request->profile_picture) && ! empty($request->profile_picture)) {
+            if ($request->file('profile_picture')!=null) {
                 /* File Upload Code */
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);
@@ -198,7 +198,6 @@ class VendorsController extends Controller
             $systemUser->vendor()->update($vendor);
         } catch (\Exception $e) {
             echo $e->getMessage();
-            exit();
             $status = 500;
             $response = [
                 "message" => "Something Went Wrong"
@@ -438,9 +437,9 @@ class VendorsController extends Controller
         try {
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-            $image = $vendor->images('id', '=', $id)->first();
-            $status = $image->delete();
-            if ($status) {
+            $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
+            if ($image!=null) {
+                $image->delete();
                 $status = 200;
                 $message = "Image deleted successfully";
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
@@ -448,7 +447,7 @@ class VendorsController extends Controller
                 File::delete($path . $image->image_name);
             } else {
                 $status = 500;
-                $message = "something went wrong";
+                $message = "image not found";
             }
         } catch (\Exception $e) {
             $status = 500;
@@ -476,29 +475,6 @@ class VendorsController extends Controller
             } else { // If not then create
                 $status = 200;
                 $message = "New facility added successfully";
-                
-                /* File Upload Code */
-                /*
-                 * $vendorUploadPath = public_path().env('VENDOR_FILE_UPLOAD');
-                 * $vendorOwnDirecory = $vendorUploadPath.sha1($user->id);
-                 * $vendorImageUploadPath = $vendorOwnDirecory."/"."facility_images";
-                 * /* Create Upload Directory If Not Exists
-                 */
-                /*
-                 * if(!file_exists($vendorImageUploadPath)){
-                 * File::makeDirectory($vendorImageUploadPath, $mode = 0777,true,true);
-                 * chmod($vendorOwnDirecory, 0777);
-                 * chmod($vendorImageUploadPath, 0777);
-                 * }
-                 * $extension = $request->file('image')->getClientOriginalExtension();
-                 * $filename = sha1($user->id.time()).".{$extension}";
-                 * $request->file('image')->move($vendorImageUploadPath, $filename);
-                 * chmod($vendorImageUploadPath, 0777);
-                 *
-                 * /* Rename file
-                 */
-                // $facility['image'] = $filename;
-                
                 $facility['vendor_id'] = $vendor->id;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();

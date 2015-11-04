@@ -30,6 +30,8 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'vendor' => \App\Http\Middleware\CheckIfVendor::class
+        'vendor' => \App\Http\Middleware\CheckIfVendor::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'verify.vendor' => \App\Http\Middleware\isVendor::class
     ];
 }

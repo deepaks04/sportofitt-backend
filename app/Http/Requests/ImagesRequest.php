@@ -24,7 +24,7 @@ class ImagesRequest extends Request
     public function rules()
     {
         return [
-            'file[]' => 'mimes:jpeg,png,jpg'
+            'image_name' => 'required|mimes:jpeg,png,jpg'
         ];
     }
 }

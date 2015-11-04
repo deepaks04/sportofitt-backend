@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Area;
+use App\Status;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,13 +20,32 @@ class AdminController extends Controller
      * @param \Closure $next            
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function __construct()
     {
-        $role = Role::where('slug', '=', 'superadmin')->first();
-        $user = Auth::user();
-        if ($user->role_id != $role->id) {
-            return response('Unauthorized.', 401);
+        // $this->middleware('auth');
+        $this->middleware('auth', [
+            'except' => [
+                'create'
+            ]
+        ]);
+        $this->middleware('admin', [
+            'except' => [
+                'create'
+            ]
+        ]);
+    }
+
+    public function skull(){
+        try{
+            $status = 200;
+            $message = "";
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
         }
-        return $next($request);
+        $response = [
+            "message" => $message
+        ];
+        return response($response, $status);
     }
 }
