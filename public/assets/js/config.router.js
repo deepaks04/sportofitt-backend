@@ -57,7 +57,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
   //vendor routes
 
   .state('vendor', {
-      url: "/vendor",
+      url: "/select",
       templateUrl: "assets/views/vendor/app.html",
       resolve: loadSequence('modernizr', 'logger','uiMap','moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
       abstract: true
@@ -82,7 +82,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
           resolve: loadSequence('ngTable','xeditable','facilityService','facilityCtrl'),
           title: 'Facility',
           ncyBreadcrumb: {
-              label: 'UI Elements'
+              label: 'Facility'
           }}).state('vendor.facility.list', {
               url: '/list',
               templateUrl : "assets/views/vendor/facility/list.html",

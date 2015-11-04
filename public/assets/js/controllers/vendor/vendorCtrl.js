@@ -117,7 +117,6 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
 
             },
             reset: function (form) {
-
                 $scope.userInfo = angular.copy($scope.master);
                 form.$setPristine(true);
 
@@ -136,13 +135,10 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
                 updateBillingInfo.then(function (response) {
                     SweetAlert.swal(response.data.message, "success");
 
-                    console.log(response);
                 });
                 updateBillingInfo.catch(function (data, status) {
-                    console.log(data);
                     $scope.errors = {};
                     angular.forEach(data.data, function (errors, field) {
-
                         $scope.errors[field] = errors.join(', ');
                     });
                 })
@@ -155,23 +151,17 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
 
                 var firstError = null;
 
-
                 var updateBankDetails = userService.updateBankDetails(form);
                 updateBankDetails.then(function (response) {
                     $scope.errors = {};
                     SweetAlert.swal(response.data.message, "success");
-
-                    console.log(response);
                 });
                 updateBankDetails.catch(function (data, status) {
-                    console.log(data);
                     $scope.errors = {};
                     angular.forEach(data.data, function (errors, field) {
-
                         $scope.errors[field] = errors.join(', ');
                     });
                 })
-
             }};
 
         var uploaderImages = $scope.uploaderImages = new FileUploader({
@@ -238,7 +228,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             userService.getVendorImages().then(function (images) {
                 $scope.images = images.images || {};
 //			$scope.uploaderImages.queue.length = $scope.images.length;
-                console.log($scope.images);
+             
             }).catch(function (response) {
                 console.log(response);
                 $scope.images = {};

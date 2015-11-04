@@ -548,7 +548,7 @@ class VendorsController extends Controller
                 $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
                 $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
                 $sessionDuration = $this->getDurationData($facility[$i]['id']);
-                $facility[$i]['session_duration'] = $sessionDuration;
+                $facility[$i]['duration'] = $sessionDuration;
             }
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
             $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
@@ -574,7 +574,7 @@ class VendorsController extends Controller
         if ($facility != null) {
             $facility = $facility->toArray();
             $sessionDuration = $this->getDurationData($facility['id']);
-            $facility['session_duration'] = $sessionDuration;
+            $facility['duration'] = $sessionDuration;
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
             $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
             $facility['image'] = $url . $facility['image'];

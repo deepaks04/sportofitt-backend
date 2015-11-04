@@ -625,8 +625,8 @@ class SessionPackageController extends Controller
                     //DB::enableQueryLog();//$queries = DB::getQueryLog();
                     $blockingData = SessionBooking::where('available_facility_id',$facility['id'])
                         ->where('is_active',1)
-                        ->where('startsAt','>=',$start)
-                        ->where('endsAt','<=',$end)
+                        ->where('startAt','>=',$start)
+                        ->where('endAt','<=',$end)
                         ->get();
                     //$queries = DB::getQueryLog();
                     //dd($queries);
