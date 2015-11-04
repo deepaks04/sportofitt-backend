@@ -547,7 +547,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
 
 
         $scope.eventClicked = function (event) {
-            var event = {title: "Booked",
+            var event = {title: "Blocked",
                 startsAt: new Date(),
                 available_facility_id: $scope.facilityId};
             showModal('Clicked', event);
