@@ -82,7 +82,7 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
           resolve: loadSequence('ngTable','xeditable','facilityService','facilityCtrl'),
           title: 'Facility',
           ncyBreadcrumb: {
-              label: 'UI Elements'
+              label: 'Facility'
           }}).state('vendor.facility.list', {
               url: '/list',
               templateUrl : "assets/views/vendor/facility/list.html",

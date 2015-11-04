@@ -152,7 +152,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
         $scope.days = [{id: 1, text: "Monday"}, {id: 2, text: "Thusday"},
             {id: 3, text: "Wednesday"}, {id: 4, text: "Thrusday"}, {id: 5, text: "Friday"}
-            , {id: 6, text: "Saturday"},{id: 7, text: "Sunday"}];
+            , {id: 6, text: "Saturday"}, {id: 7, text: "Sunday"}];
 
         $scope.months = ["1 Month", "3 Months", "6 Months"];
 
@@ -185,7 +185,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
         $scope.getSessions = function () {
             if ($scope.sessions.length) {
-                console.log($scope.sessions);
                 return $scope.sessions;
             }
             ;
@@ -197,16 +196,42 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
         $scope.getOpeningHours = function () {
             if ($scope.openingHours.length) {
-                console.log($scope.openingHours);
                 return $scope.openingHours;
             }
             ;
 
             facilityService.getOpeningTimesByFacilityId($scope.facility.id)
                     .then(function (openingHours) {
-                        $scope.openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                        openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                        parseOpeningHours(openingHours);
                     });
         };
+
+        function parseOpeningHours(openingHours) {
+            angular.forEach(openingHours, function (openingHour, keys) {
+                openingHour.day = openingHour.day -1;
+                openingHour.start = getHoursToDate(openingHour.start);
+
+                openingHour.end = getHoursToDate(openingHour.end);
+
+                this.push(openingHour);
+            }, $scope.openingHours);
+            
+        }
+        
+        function getHoursToDate(openingHours){
+           var timeArray = openingHours.split(":");
+           
+           var dt = new Date();
+           
+           dt.setHours(timeArray[0]);
+           
+           dt.setMinutes(timeArray[1]);
+           
+           dt.setSeconds(timeArray[2]);
+           
+           return dt;
+        }
 
         $scope.getPackages = function () {
             if ($scope.packages.length) {
@@ -419,21 +444,21 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
         function  getBlockedSession(startDate) {
             facilityService.getBlockedSessions(startDate).then(function (events) {
 
- parseEvents(events.data);
-                })
+                parseEvents(events.data);
+            })
         }
 
-function parseEvents(events){
-    angular.forEach(events,function(event,keys){
-         var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8);
-            event.startsAt = new Date(thisStartT);
-            
-            
-         var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8);
-            event.endsAt = new Date(thisEndT);
-            this.push(event);
-    },$scope.events);
-}
+        function parseEvents(events) {
+            angular.forEach(events, function (event, keys) {
+                var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8);
+                event.startsAt = new Date(thisStartT);
+
+
+                var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8);
+                event.endsAt = new Date(thisEndT);
+                this.push(event);
+            }, $scope.events);
+        }
         $scope.calendarView = 'week';
         $scope.calendarTitle = 'Name';
         $scope.calendarDay = new Date();
@@ -475,9 +500,9 @@ function parseEvents(events){
                     $scope.addEvent = function () {
                         //$modalInstance.dismiss('cancel');
                         facilityService.blockSession($scope.event).then(function (response) {
-                          $modalInstance.close($scope.event, 'add');
+                            $modalInstance.close($scope.event, 'add');
                             $modalInstance.dismiss('cancel');
-                            
+
                         }).catch(function (response) {
                             $scope.errors = {};
                             angular.forEach(response.data, function (errors, field) {
@@ -497,7 +522,7 @@ function parseEvents(events){
                 }
             });
             modalInstance.result.then(function (selectedEvent, action) {
-           
+
                 $scope.addEvent(selectedEvent);
 
             });
@@ -505,14 +530,14 @@ function parseEvents(events){
 
 
         $scope.eventClicked = function (event) {
-          var event = {title : "Booked",
-            startsAt:new Date(),
-            available_facility_id:$scope.facilityId};
+            var event = {title: "Booked",
+                startsAt: new Date(),
+                available_facility_id: $scope.facilityId};
             showModal('Clicked', event);
         };
         $scope.addEvent = function (event) {
-		$scope.events.push(event);
-		
+            $scope.events.push(event);
+
         };
 
         $scope.eventEdited = function (event) {
