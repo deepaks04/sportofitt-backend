@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\AvailableFacility;
 use App\Billing;
+use App\PackageType;
+use App\RootCategory;
+use App\SessionPackage;
+use App\SubCategory;
+use App\VendorImages;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,6 +22,7 @@ use Carbon\Carbon;
 use DB;
 use URL;
 use Illuminate\Support\Facades\Route;
+use File;
 
 class VendorController extends Controller
 {
@@ -457,5 +464,140 @@ class VendorController extends Controller
             "data" => $images
         ];
         return response($response, $status);
+    }
+
+    public function deleteImage($userId,$id)
+    {
+        try {
+            $user = User::findOrFail($userId);
+            $vendor = $user->vendor()->first();
+            $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
+            if ($image!=null) {
+                $image->delete();
+                $status = 200;
+                $message = "Image deleted successfully";
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $path = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+                File::delete($path . $image->image_name);
+            } else {
+                $status = 500;
+                $message = "image not found";
+            }
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message
+        ];
+        return response($response, $status);
+    }
+
+    public function createFacility(Requests\AddFacilityRequest $request,$id)
+    {   dd($request->all());
+        try {
+            $facility = $request->all();
+            $facility = $this->unsetKeys(array(
+                'duration'
+            ), $facility);
+            $user = User::findOrFail($id);
+            $vendor = $user->vendor()->first();
+            $newFacility = "";
+            $facilityExists = AvailableFacility::where('vendor_id', '=', $vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
+            if ($facilityExists) { // If Facility already exists
+                $status = 406; // Not Acceptable
+                $message = "Facility already exists";
+            } else { // If not then create
+                $status = 200;
+                $message = "New facility added successfully";
+                $facility['vendor_id'] = $vendor->id;
+                $facility['created_at'] = Carbon::now();
+                $facility['updated_at'] = Carbon::now();
+                $newFacility = AvailableFacility::create($facility);
+                $sessionUpdateData['duration'] = $request->duration;
+                $durationStatus = $this->updateDuration($newFacility->id, $sessionUpdateData);
+                $newFacility->duration = $request->duration;
+            }
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "Something went wrong : " . $e->getMessage();
+            $newFacility = "";
+        }
+        $response = [
+            "message" => $message,
+            "data"=>$newFacility
+        ];
+        return response($response, $status);
+    }
+
+    public function updateDuration($facilityId, $sessionUpdateData)
+    {
+        try {
+            $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $facilityId)->first();
+            if ($checkFacilityInformation != null) { // Update If Found
+                $durationData = SessionPackage::where('available_facility_id', '=', $facilityId)->update($sessionUpdateData);
+            } else { // Insert New If Not Found
+                $sessionUpdateData['available_facility_id'] = $facilityId;
+                $sessionUpdateData['created_at'] = Carbon::now();
+                $sessionUpdateData['updated_at'] = Carbon::now();
+                $packageType = PackageType::where('slug', '=', 'session')->first();
+                $sessionUpdateData['package_type_id'] = $packageType->id;
+                $durationData = SessionPackage::create($sessionUpdateData);
+                // $durationData = $durationData->get()->toArray();
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getFacility($id)
+    {
+        $user = User::findOrFail($id);
+        $vendor = $user->vendor()->first();
+        $facilityCount = $vendor->facility()->count();
+        if ($facilityCount == 0) {
+            $status = 200;
+            $message = "Facility not found. Please create some";
+            $facilityCount = null;
+            $facility = null;
+        } else {
+            $status = 200;
+            $message = "success";
+            $facility = $vendor->facility()
+                ->get()
+                ->toArray();
+            for ($i = 0; $i < $facilityCount; $i ++) {
+                $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
+                $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
+                $sessionDuration = $this->getDurationData($facility[$i]['id']);
+                $facility[$i]['duration'] = $sessionDuration;
+            }
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            for ($i = 0; $i < $facilityCount; $i ++) {
+                $facility[$i]['image'] = $url . $facility[$i]['image'];
+            }
+        }
+        $response = [
+            "message" => $message,
+            "data" => $facility,
+        ];
+        return response($response, $status);
+    }
+
+    public function getDurationData($facilityId)
+    {
+        $packageType = PackageType::where('slug', '=', 'session')->first();
+        $data = array(
+            'available_facility_id' => $facilityId,
+            'package_type_id' => $packageType->id
+        );
+        $durationData = SessionPackage::where($data)->first();
+        if ($durationData != null) {
+            return $durationData->duration;
+        } else {
+            return 0;
+        }
     }
 }

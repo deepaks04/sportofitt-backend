@@ -68,7 +68,6 @@ class AddFacilityRequest extends Request
             case 'POST':
                 return [
                     'name' => 'required|min:5|max:50',
-                    // 'image' => 'required|mimes:jpeg,png,jpg',
                     'sub_category_id' => 'required|integer',
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',

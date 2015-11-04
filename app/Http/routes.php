@@ -127,10 +127,10 @@ Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
     Route::put('bank-info/{uid}',array('uses' => 'Admin\VendorController@updateBankDetails'));
     Route::post('images/{uid}',array('uses' => 'Admin\VendorController@addImages'));
     Route::get('images/{uid}',array('uses' => 'Admin\VendorController@getImages'));
+    Route::get('images/{uid}/{id}',array('uses' => 'Admin\VendorController@deleteImage'));
 
-    Route::get('images/{id}',array('uses' => 'Admin\VendorController@deleteImage'));
-    Route::post('facility',array('uses' => 'Admin\VendorController@createFacility'));
-    Route::get('facility',array('uses' => 'Admin\VendorController@getFacility'));
+    Route::post('facility/{uid}',array('uses' => 'Admin\VendorController@createFacility'));
+    Route::get('facility/{uid}',array('uses' => 'Admin\VendorController@getFacility'));
     Route::get('facility/{id}',array('uses' => 'Admin\VendorController@getFacilityById'));
     Route::put('facility/{id}',array('uses' => 'Admin\VendorController@updateFacility'));
 });
