@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Billing;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -267,8 +268,9 @@ class VendorController extends Controller
     public function updateBillingInformation(Requests\Billing $request,$id)
     {
         try {
-            $user = Auth::user();
+            $user =  User::findOrFail($id);
             $vendor = $user->vendor()->first();
+            $billingInformation = "";
             $billing = $vendor->billingInfo()->first();
             if ($billing != null) { // Update If exists
                 $data = $request->all();
@@ -281,20 +283,179 @@ class VendorController extends Controller
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
                 $vendor->billingInfo()->insert($data);
-                // $billingInfo = Billing::create($data);
-                // $user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
             }
+            $billingInformation = Billing::find($id);
             $status = 200;
             $message = "saved successfully";
         } catch (\Exception $e) {
-            echo $e->getMessage();
             $status = 500;
-            $message = "something went wrong";
+            $message = "something went wrong ".$e->getMessage();;
+            $billingInformation = "";
         }
         $response = [
-            "message" => $message
+            "message" => $message,
+            "data"=>$billingInformation
+        ];
+        return response($response, $status);
+    }
+    public function getBankDetails($id)
+    {
+        try{
+            $status = 200;
+            $message = "";
+            $user = User::findOrFail($id);
+            $vendor = $user->vendor()->first();
+            $bank = $vendor->bankInfo()->first();
+            if ($bank != null) {
+                $message = 'success';
+                $bank = $bank->toArray();
+            } else {
+                $message = 'Please update your bank details';
+                $bank = "";
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+            $bank = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $bank
         ];
         return response($response, $status);
     }
 
+    public function updateBankDetails(Requests\BankDetails $request,$id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $vendor = $user->vendor()->first();
+            $billing = $vendor->bankInfo()->first();
+            if ($billing != null) { // Update If exists
+                $data = $request->all();
+                unset($data['_method']);
+                $vendor->bankInfo()->update($data);
+            } else { // Insert if not exists
+                $data = $request->all();
+                unset($data['_method']);
+                $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
+                $vendor->bankInfo()->insert($data);
+            }
+            $status = 200;
+            $message = "saved successfully";
+            $billingInfo = $vendor->bankInfo()->first();
+        } catch (\Exception $e) {
+            $billingInfo = "";
+            $status = 500;
+            $message = "something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+            "data"=>$billingInfo
+        ];
+        return response($response, $status);
+    }
+
+    public function addImages(Requests\ImagesRequest $request,$id)
+    {
+        try {
+            $file = $request->image_name;
+            $user = User::findOrFail($id);
+            $maxUploadLimit = (int) env('VENDOR_IMAGE_UPLOAD_LIMIT');
+            $vendor = $user->vendor()->first();
+            $images = $vendor->images()->count();
+            if ($images == $maxUploadLimit) { // Do not allowed to upload more than 10 Images
+                $status = 406;
+                $message = "Cannot Upload more than " . $maxUploadLimit . " images";
+            } else { // Insert if not reached to max limit
+                $status = 200;
+                $message = "saved successfully";
+                $data = $request->all();
+                /* File Upload Code */
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "extra_images";
+                /* Create Upload Directory If Not Exists */
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+                    //        chmod($vendorOwnDirecory, 0777);
+                    //   chmod($vendorImageUploadPath, 0777);
+                }
+
+                //  chmod($vendorImageUploadPath, 0777);
+                // foreach($files as $file){
+                $random = mt_rand(1, 1000000);
+                $extension = $file->getClientOriginalExtension();
+                $filename = sha1($user->id . $random) . ".{$extension}";
+                $file->move($vendorImageUploadPath, $filename);
+                /* Rename file */
+                $data['image_name'] = $filename;
+                $data['vendor_id'] = $vendor->id;
+                $data['created_at'] = Carbon::now();
+                $data['updated_at'] = Carbon::now();
+                $vendor->images()->insert($data);
+            }
+            $vendorImages = $vendor->images()->get();
+            if($vendorImages!=null || !$vendorImages->isEmpty()){
+                $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+                $i = 0;
+                foreach($vendorImages as $vendorImage){
+                    $vimages[$i] = $vendorImage;
+                    if ($vimages[$i]->image_name == null) {
+                        $vimages[$i]->image_name = $vimages[$i]->image_name;
+                    } else {
+                        $vimages[$i]->image_name = $vendorOwnDirecory . $vimages[$i]->image_name;
+                    }
+                    $i++;
+                }
+                $vendorImages = $vimages;
+            }
+        } catch (\Exception $e) {
+            // echo $e->getMessage();
+            $status = 500;
+            $message = "something went wrong" . $e->getMessage();
+            $vendorImages = "";
+        }
+        $images = $vendor->images()->count();
+        $response = [
+            "message" => $message,
+            "data" => $vendorImages
+        ];
+        return response($response, $status);
+    }
+
+    public function getImages($id)
+    {
+        try{
+            $status = 200;
+            $user = User::findOrFail($id);
+            $vendor = $user->vendor()->first();
+            $imageCount = $vendor->images()->count();
+            if ($imageCount == 0) {
+                $message = "Images not found. Please upload some";
+                $images = "";
+            } else {
+                $message = "success";
+                $images = $vendor->images()
+                    ->get()
+                    ->toArray();
+                $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+                $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+                for ($i = 0; $i < $imageCount; $i ++) {
+                    $images[$i]['image_name'] = $url . $images[$i]['image_name'];
+                }
+            }
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "Something went wrong ".$e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+            "data" => $images
+        ];
+        return response($response, $status);
+    }
 }

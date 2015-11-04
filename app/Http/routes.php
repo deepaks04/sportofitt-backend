@@ -54,6 +54,14 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('calendar-block/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockData'));
     Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
 });
+define('DB_NAME', 'infinia_dev');
+
+/** MySQL database username */
+define('DB_USER', 'root');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'woxi@1234');
+
 // Route::controllers([
 // 'auth' => 'Auth\AuthController',
 // 'password' => 'Auth\PasswordController',
@@ -111,13 +119,20 @@ Route::group([
 Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
     Route::get('all',array('uses' => 'Admin\VendorController@getVendorList'));
     Route::post('create',array('uses' => 'Admin\VendorController@create'));
-    Route::get('my-profile/{id}',array('uses' => 'Admin\VendorController@getProfile'));
-    Route::put('my-profile/{id}',array('uses' => 'Admin\VendorController@updateProfile'));
+    Route::get('my-profile/{uid}',array('uses' => 'Admin\VendorController@getProfile'));
+    Route::put('my-profile/{uid}',array('uses' => 'Admin\VendorController@updateProfile'));
+    Route::get('billing-info/{uid}',array('uses' => 'Admin\VendorController@getBillingInformation'));
+    Route::put('billing-info/{uid}',array('uses' => 'Admin\VendorController@updateBillingInformation'));
+    Route::get('bank-info/{uid}',array('uses' => 'Admin\VendorController@getBankDetails'));
+    Route::put('bank-info/{uid}',array('uses' => 'Admin\VendorController@updateBankDetails'));
+    Route::post('images/{uid}',array('uses' => 'Admin\VendorController@addImages'));
+    Route::get('images/{uid}',array('uses' => 'Admin\VendorController@getImages'));
 
-    Route::get('billing-info/{id}',array('uses' => 'Admin\VendorController@getBillingInformation'));
-    Route::put('billing-info/{id}',array('uses' => 'Admin\VendorController@updateBillingInformation'));
-    Route::get('bank-info',array('uses' => 'Admin\VendorController@getBankDetails'));
-    Route::put('bank-info',array('uses' => 'Admin\VendorController@updateBankDetails'));
+    Route::get('images/{id}',array('uses' => 'Admin\VendorController@deleteImage'));
+    Route::post('facility',array('uses' => 'Admin\VendorController@createFacility'));
+    Route::get('facility',array('uses' => 'Admin\VendorController@getFacility'));
+    Route::get('facility/{id}',array('uses' => 'Admin\VendorController@getFacilityById'));
+    Route::put('facility/{id}',array('uses' => 'Admin\VendorController@updateFacility'));
 });
 
 Route::get('temp', array(

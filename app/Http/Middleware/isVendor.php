@@ -18,10 +18,10 @@ class isVendor
      */
     public function handle($request, Closure $next)
     {
-        if($request->id!=null){
+        if($request->uid!=null){
             $role = Role::where('slug', '=', 'vendor')->first();
             try{
-                $user = User::findOrFail($request->id);
+                $user = User::findOrFail($request->uid);
                 if ($user->role_id != $role->id) {
                     return response('Unauthorized.', 401);
                 }
