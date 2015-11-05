@@ -35,13 +35,13 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
     Route::put('package/{id}',array('uses' => 'Vendor\SessionPackageController@updatePackage'));
-    Route::get('package/{id}',array('uses' => 'Vendor\SessionPackageController@getPackage'));//New
-    Route::get('delete-package/{id}',array('uses' => 'Vendor\SessionPackageController@deletePackage'));//New
+    Route::get('package/{id}',array('uses' => 'Vendor\SessionPackageController@getPackage'));
+    Route::get('delete-package/{id}',array('uses' => 'Vendor\SessionPackageController@deletePackage'));
     Route::post('opening-time',array('uses' => 'Vendor\SessionPackageController@createOpeningTime'));
     Route::put('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@updateOpeningTime'));
 
-    Route::get('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));//NEW
-    Route::get('delete-opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));//NEW
+    Route::get('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));
+    Route::get('delete-opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));
     Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
     Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
     Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
@@ -128,11 +128,18 @@ Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
     Route::post('images/{uid}',array('uses' => 'Admin\VendorController@addImages'));
     Route::get('images/{uid}',array('uses' => 'Admin\VendorController@getImages'));
     Route::get('images/{uid}/{id}',array('uses' => 'Admin\VendorController@deleteImage'));
-
     Route::post('facility/{uid}',array('uses' => 'Admin\VendorController@createFacility'));
     Route::get('facility/{uid}',array('uses' => 'Admin\VendorController@getFacility'));
-    Route::get('facility/{id}',array('uses' => 'Admin\VendorController@getFacilityById'));
-    Route::put('facility/{id}',array('uses' => 'Admin\VendorController@updateFacility'));
+    Route::get('facility/{uid}/{id}',array('uses' => 'Admin\VendorController@getFacilityById'));
+    Route::put('facility/{uid}/{id}',array('uses' => 'Admin\VendorController@updateFacility'));
+    Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
+    Route::post('package/{uid}',array('uses' => 'Admin\SessionPackageController@createPackage'));
+    Route::put('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updatePackage'));
+    Route::get('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getPackage'));
+    Route::get('delete-package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deletePackage'));
+
+    Route::post('opening-time',array('uses' => 'Admin\SessionPackageController@createOpeningTime'));
+    Route::put('opening-time/{id}',array('uses' => 'Admin\SessionPackageController@updateOpeningTime'));
 });
 
 Route::get('temp', array(

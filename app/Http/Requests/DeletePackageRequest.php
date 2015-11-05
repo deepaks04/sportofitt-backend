@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use App\SessionPackage;
 use App\AvailableFacility;
+use App\User;
 use Auth;
 use App\PackageType;
 
@@ -28,7 +29,11 @@ class DeletePackageRequest extends Request
             if($facility==null){
                 return false;
             }else{
-                $user = Auth::user();
+                if(!isset($this->uid) && $this->uid==null){
+                    $user = Auth::user();
+                }else{
+                    $user = User::find($this->uid);
+                }
                 $vendor = $user->vendor($user->id)->first();
                 $isOwner = AvailableFacility::where('id','=',$package->available_facility_id)->where('vendor_id','=',$vendor->id)->count();
                 if($isOwner){
