@@ -401,20 +401,27 @@
 									<span class="error text-small block" ng-if="errors.ifsc">{{errors.ifsc}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
-									<label class="control-label"> Account Type </label> <input
-										type="text" placeholder="Enter your Account Type"
-										class="form-control" name="account_type"
-										ng-model="bankDetail.account_type"> <span
-										class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
-								</div>
-								<div class="form-group"
 									ng-class="{'has-error':errors.branch_name,'has-success':!errors.branch_name}">
 									<label class="control-label"> Branch Name </label> <input
-										type="text" placeholder="Enter your Branch Name"
+										type="text" placeholder="Enter your Account Type"
 										class="form-control" name="branch_name"
 										ng-model="bankDetail.branch_name"> <span
 										class="error text-small block" ng-if="errors.branch_name">{{errors.branch_name}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
+									<label class="control-label">  Account Type </label> 
+                                                                        <label>
+                                                                            <input type="radio" ng-model="bankDetail.account_type" value="saving">
+                                                                            Saving Account
+                                                                        </label>
+                                                                        <label>
+                                                                            <input type="radio" ng-model="bankDetail.account_type" value="current">
+                                                                            Current Account
+                                                                        </label>
+                                                                        
+                                                                        <span
+										class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
 								</div>
 
 								<div class="form-group"

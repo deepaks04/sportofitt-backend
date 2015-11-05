@@ -31,24 +31,25 @@
         </tr>
         <tr ng-repeat="time in openingHours">
         <td>
-        <span  e-name="day" e-form="rowform" editable-select="time.day" e-ng-options="day.id as day.text for day in days track by day.id">
-        {{ days[time.day].text }}
+        <span  e-name="id" e-form="rowform" editable-hidden="time.id" >
         </span>
-
+<span editable-select="time.day" e-name="day" e-form="rowform" e-ng-options="s.id as s.text for s in days" e-required>
+          {{ showDay(time) }}
+        </span>
         </td>
         <td>
-        <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="15">
+        <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="15" e-required>
         {{ (time.start | date:"HH:mm") || 'empty' }}
         </span>
         </td>
         <td>
-        <span editable-bstime="time.end" e-show-meridian="true" e-name="end" e-form="rowform" e-minute-step="15">
+        <span editable-bstime="time.end" e-show-meridian="true" e-name="end" e-form="rowform" e-minute-step="15" e-required>
         {{ (time.end | date:"HH:mm") || 'empty' }}
         </span>
         </td>
         <td>
         <sapn  editable-checkbox="time.is_peak" e-name="is_peak" e-form="rowform" e-title="Peak Hour?"  e-ng-true-value="1" e-ng-false-value="0">
-        {{ time.is_peak && "Peak Hour" || "Off Peak Hour" }}
+        {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
         </span>
         </td>
         <td style="white-space: nowrap">
@@ -108,7 +109,7 @@
         </td>
         <td style="white-space: nowrap">
         <!-- form -->
-        <form editable-form name="rowform" onbeforesave="saveSession($data, session.id,rowform)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="showSessionEdit">
+        <form editable-form name="rowform" onbeforesave="saveSession($data, session.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="showSessionEdit">
         <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
         save
         </button>
@@ -133,6 +134,7 @@
         <td style="width:25%">Name</td>
         <td style="width:15%">Months</td>
         <td style="width:20%">Actual Price</td>
+<td style="width:15%">Pick Package</td>
         <td style="width:25%">Discount</td>
         <td style="width:25%">Description</td>
 
@@ -153,6 +155,11 @@
         {{ package.actual_price || 'empty' }}
         </span>
         </td>
+ <td>
+        <sapn  editable-checkbox="package.is_peak" e-name="is_peak" e-form="rowform" e-title="Peak Hour?"  e-ng-true-value="1" e-ng-false-value="0">
+        {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
+        </span>
+        </td>
         <td>
         <span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5" e-style="width:90%">
         {{ package.discount || 'empty' }}
@@ -165,7 +172,7 @@
         </td>
         <td style="white-space: nowrap">
         <!-- form -->
-        <form editable-form name="rowform" onbeforesave="savePackage($data, session.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="packageInserted == package">
+        <form editable-form name="rowform" onbeforesave="savePackage($data, package.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="packageInserted == package">
         <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-xs">
         save
         </button>

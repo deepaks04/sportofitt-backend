@@ -118,8 +118,8 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
 
 
-app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selectedFacility", "facilityService",
-    function ($scope, $modalInstance, selectedFacility, facilityService) {
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "facilityService",
+    function ($scope, $modalInstance, $filter, selectedFacility, facilityService) {
 
         $scope.facility = selectedFacility;
 
@@ -190,13 +190,13 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
             ;
 
             facilityService.getSessionsByFacilityId($scope.facility.id).then(function (sessions) {
-               var sessions = (sessions.data === "") ? [] : sessions.data;
+                var sessions = (sessions.data === "") ? [] : sessions.data;
                 parseSessions(sessions);
             });
         };
-        
-        function parseSessions(sessions){
-             angular.forEach(sessions, function (session, keys) {
+
+        function parseSessions(sessions) {
+            angular.forEach(sessions, function (session, keys) {
                 session.peak = parseInt(session.peak);
                 session.off_peak = parseInt(session.off_peak);
                 this.push(session);
@@ -211,35 +211,39 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
 
             facilityService.getOpeningTimesByFacilityId($scope.facility.id)
                     .then(function (openingHours) {
-                      var  openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                        var openingHours = (openingHours.data === "") ? [] : openingHours.data;
                         parseOpeningHours(openingHours);
                     });
         };
 
         function parseOpeningHours(openingHours) {
             angular.forEach(openingHours, function (openingHour, keys) {
-                openingHour.day = openingHour.day -1;
+
+                openingHour.day = parseInt(openingHour.day);
+
+                openingHour.is_peak = parseInt(openingHour.is_peak);
+
                 openingHour.start = getHoursToDate(openingHour.start);
 
                 openingHour.end = getHoursToDate(openingHour.end);
 
                 this.push(openingHour);
             }, $scope.openingHours);
-            
+
         }
-        
-        function getHoursToDate(openingHours){
-           var timeArray = openingHours.split(":");
-           
-           var dt = new Date();
-           
-           dt.setHours(timeArray[0]);
-           
-           dt.setMinutes(timeArray[1]);
-           
-           dt.setSeconds(timeArray[2]);
-           
-           return dt;
+
+        function getHoursToDate(openingHours) {
+            var timeArray = openingHours.split(":");
+
+            var dt = new Date();
+
+            dt.setHours(timeArray[0]);
+
+            dt.setMinutes(timeArray[1]);
+
+            dt.setSeconds(timeArray[2]);
+
+            return dt;
         }
 
         $scope.getPackages = function () {
@@ -252,55 +256,66 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "selecte
             facilityService.getPackagesByFacilityId($scope.facility.id)
                     .then(function (packages) {
                         var packages = (packages.data === "") ? [] : packages.data;
-                parsePackages(packages)
+                        parsePackages(packages)
                     }).catch(function (data) {
                 console.log(data.data);
             });
         };
-        
-        function parsePackages(packages){
-             angular.forEach(packages, function (pack, keys) {
+
+        function parsePackages(packages) {
+            angular.forEach(packages, function (pack, keys) {
+                pack.is_peak = parseInt(pack.is_peak);
                 pack.month = parseInt(pack.month);
-               this.push(pack);
+                this.push(pack);
             }, $scope.packages);
         }
-        
+
         $scope.saveHours = function (data, id) {
             // $scope.user not updated yet
+
             angular.extend(data, {id: id, available_facility_id: $scope.facility.id});
-            var addHours = facilityService.addOpeningTime(data).then(function (responce) {
+
+            var saveHours = facilityService.saveOpeningTime(data).then(function (responce) {
                 console.log(responce.data);
             }).catch(function (responce) {
                 console.log(responce.data);
             });
         };
 
+        $scope.showDay = function (time) {
+
+            var selected = [];
+            if (time.day) {
+                selected = $filter('filter')($scope.days, {id: time.day});
+            }
+            return selected.length ? selected[0].text : 'Not set';
+        }
+
         $scope.saveSession = function (data, id, rowform) {
             // $scope.user not updated yet
             angular.extend(data, {id: id, available_facility_id: $scope.facility.id});
-            var addSession = facilityService.saveSession(data).then(function (data) {
+            var saveSession = facilityService.saveSession(data).then(function (data) {
                 console.log(data);
             }).catch(function (response) {
-                console.log(data);
                 angular.forEach(response.data, function (errorData, field) {
                     data.$setError(field, errorData);
                 });
-                console.log(data);
             });
-            return addSession;
+            return saveSession;
         };
 
         $scope.savePackage = function (data, id) {
             // $scope.user not updated yet
-            angular.extend(data, {id: id, available_facility_id: $scope.facility.id, package_id: 1, is_peak: 0});
+            angular.extend(data, {id: id, available_facility_id: $scope.facility.id});
 
-            var addSession = facilityService.addPackage(data);
+console.log(data);
+            var savePackage = facilityService.savePackage(data);
 
-            addSession.then(function (data) {
-                $scope.showSessionEdit = false;
-                return;
+            savePackage.then(function (data) {
+//                $scope.showSessionEdit = false;
+              console.log(data);
             });
-            addSession.catch(function (data, status) {
+            savePackage.catch(function (data, status) {
                 return data.data;
             });
         };

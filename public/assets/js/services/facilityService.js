@@ -15,15 +15,15 @@
             getFacilityById: getFacilityById,
             getFacilityDetailsById: getFacilityDetailsById,
             getDuration: getDuration,
-            addOpeningTime: addOpeningTime,
+            saveOpeningTime: saveOpeningTime,
             getOpeningTimesByFacilityId: getOpeningTimesByFacilityId,
             getSessionsByFacilityId: getSessionsByFacilityId,
             getPackagesByFacilityId: getPackagesByFacilityId,
             saveSession: saveSession,
-            addPackage: addPackage,
-            blockSession : blockSession,
-            getBlockedSessions : getBlockedSessions,
-            getBlockedSessionsByFacilityId :getBlockedSessionsByFacilityId
+            savePackage: savePackage,
+            blockSession: blockSession,
+            getBlockedSessions: getBlockedSessions,
+            getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId
         };
 
         function getDuration() {
@@ -35,13 +35,15 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
-        };
+        }
+        ;
 
         function sendGetError(response) {
 
             return $q.reject('Error retrieving data(s). (HTTP status: ' + response.status + ')');
 
-        };
+        }
+        ;
 
         function getSessionsByFacilityId(facilityId) {
             return $http({
@@ -52,7 +54,8 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
-        };
+        }
+        ;
 
         function getOpeningTimesByFacilityId(facilityId) {
             return $http({
@@ -63,7 +66,8 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
-        };
+        }
+        ;
 
         function getPackagesByFacilityId(facilityId) {
             return $http({
@@ -74,7 +78,8 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
-        };
+        }
+        ;
 
         function getAllFacilities() {
             return $http({
@@ -85,7 +90,8 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetFaclityError);
-        };
+        }
+        ;
 
         function getRootCategory() {
             return $http({
@@ -95,12 +101,14 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetRootCategoriesError);
-        };
+        }
+        ;
 
         function deleteAllBooksResponseFromCache() {
             var httpCache = $cacheFactory.get('$http');
             httpCache.remove('api/books');
-        };
+        }
+        ;
 
         function transformGetFacilities(data, headersGetter) {
             var transformed = angular.fromJson(data);
@@ -111,7 +119,8 @@
 
             // console.log(transformed);
             return transformed;
-        };
+        }
+        ;
 
         function sendResponseData(response) {
 
@@ -122,7 +131,7 @@
         function sendGetFaclityError(response) {
 
             return $q.reject('Error retrieving facility(s). (HTTP status: ' + response.status + ')');
-            
+
         }
 
         function sendGetRootCategoriesError(response) {
@@ -193,22 +202,34 @@
 
         }
 
-        function addOpeningTime(data) {
+        function saveOpeningTime(data) {
             if (data.start instanceof Date)
             {
                 data.start = data.start.getHours() + ":" + ("0" + data.start.getMinutes()).slice(-2);
-                
+
             }
 
             if (data.end instanceof Date)
             {
                 data.end = data.end.getHours() + ":" + ("0" + data.end.getMinutes()).slice(-2);
-                
+
             }
+//            var url = (data.id) ? 'api/v1/vendor/opening-time/' + data.id : 'api/v1/vendor/opening-time';
+
+            var url = 'api/v1/vendor/opening-time';
+            
+           
             var fd = new FormData();
-            for (var key in data)
+            for (var key in data) {
                 fd.append(key, data[key]);
-             return		$http.post('api/v1/vendor/opening-time', fd, {
+            }
+            
+             if (data.id) {
+                url += "/" + data.id;
+                fd.append("_method", "PUT");
+            }
+            
+            return $http.post(url, fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
@@ -229,18 +250,24 @@
             });
         }
 
-        function addPackage(data) {
+        function savePackage(data) {
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            console.log(fd);
-            return		$http.post('api/v1/vendor/package', fd, {
+           
+            var url = 'api/v1/vendor/package';
+            if (data.id !== "") {
+                url += "/" + data.id;
+                fd.append("_method", "PUT");
+            }
+            
+            return		$http.post(url, fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
         }
-        
-        function blockSession(data){
+
+        function blockSession(data) {
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
@@ -250,14 +277,14 @@
                 headers: {'Content-Type': undefined}
             });
         }
-        
-        function getBlockedSessionsByFacilityId(facilityId,startDate){
-            return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" +startDate)
+
+        function getBlockedSessionsByFacilityId(facilityId, startDate) {
+            return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" + startDate)
                     .then(sendResponseData)
                     .catch(sendGetFaclityError);
         }
-        
-        function getBlockedSessions(startDate){
+
+        function getBlockedSessions(startDate) {
             return $http.get('api/v1/vendor/calendar-block/' + startDate)
                     .then(sendResponseData)
                     .catch(sendGetFaclityError);
