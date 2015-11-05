@@ -600,4 +600,83 @@ class VendorController extends Controller
             return 0;
         }
     }
+
+    public function getFacilityById($uid,$id)
+    {
+        $status = 200;
+        $message = "success";
+        $user = User::findOrFail($uid);
+        $vendor = $user->vendor()->first();
+        $facility = $vendor->facility()->find($id);
+        if ($facility != null) {
+            $facility = $facility->toArray();
+            $sessionDuration = $this->getDurationData($facility['id']);
+            $facility['duration'] = $sessionDuration;
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            $facility['image'] = $url . $facility['image'];
+        } else {
+            $status = 200;
+            $message = "Facility not found.";
+            $facility = null;
+        }
+        $response = [
+            "message" => $message,
+            "facility" => $facility
+        ];
+        return response($response, $status);
+    }
+
+    public function updateFacility(Requests\AddFacilityRequest $request, $uid, $id)
+    {
+        try {
+            $facility = $request->all();
+            $facilityInformation = "";
+            $facility = $this->unsetKeys(array(
+                '_method',
+                'duration'
+            ), $facility);
+            $user = User::findOrFail($uid);
+            $vendor = $user->vendor()->first();
+            $status = 200;
+            $message = "facility updated successfully";
+            /* If File Exists then */
+            if (isset($facility['image']) && ! empty($facility['image'])) {
+                /* File Upload Code */
+                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "facility_images";
+                /* Create Upload Directory If Not Exists */
+                if (! file_exists($vendorImageUploadPath)) {
+                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+                    chmod($vendorOwnDirecory, 0777);
+                    chmod($vendorImageUploadPath, 0777);
+                }
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $filename = sha1($user->id . time()) . ".{$extension}";
+                $request->file('image')->move($vendorImageUploadPath, $filename);
+                chmod($vendorImageUploadPath, 0777);
+
+                /* Rename file */
+                $facility['image'] = $filename;
+            }
+            $facility['vendor_id'] = $vendor->id;
+            AvailableFacility::where('id', '=', $id)->update($facility);
+            $sessionUpdateData['duration'] = $request->duration;
+            $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
+            if($sessionUpdatedData){
+                $facilityInformation = AvailableFacility::find($id);
+                $facilityInformation->duration = $request->duration;
+            }
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "Something went wrong";
+            $facilityInformation = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $facilityInformation
+        ];
+        return response($response, $status);
+    }
 }
