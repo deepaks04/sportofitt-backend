@@ -2,6 +2,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\MultipleSession;
 use App\AvailableFacility;
@@ -16,12 +17,17 @@ class MultipleSessionRequest extends Request
      */
     public function authorize()
     {
+        if($this->route('uid')==null){
+            $user = Auth::user();
+        }else{
+            $user = User::find($this->route('uid'));
+        }
+        $data = $this->request->all();
         switch ($this->method()) {
             case 'PUT':
                 $id = $this->route('id');
                 $session = MultipleSession::find($id);
                 if ($session != null) {
-                    $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
                     $isOwner = AvailableFacility::where('id', '=', $session->available_facility_id)->where('vendor_id', '=', $vendor->id)->count();
                     if ($isOwner) {
@@ -38,7 +44,6 @@ class MultipleSessionRequest extends Request
                 $id = $this->route('id');
                 $session = MultipleSession::find($id);
                 if ($session != null) {
-                    $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
                     $isOwner = AvailableFacility::where('id', '=', $session->available_facility_id)->where('vendor_id', '=', $vendor->id)->count();
                     if ($isOwner) {
@@ -52,14 +57,13 @@ class MultipleSessionRequest extends Request
                 return false;
                 break;
             case 'POST':
-                if (! empty($_REQUEST['available_facility_id'])) {
-                    $id = $_REQUEST['available_facility_id'];
+                if (!empty($data['available_facility_id'])) {
+                    $id = $data['available_facility_id'];
                     $facility = AvailableFacility::find($id);
                     if ($facility == null) {
                         return false;
                         break;
                     } else {
-                        $user = Auth::user();
                         $vendor = $user->vendor($user->id)->first();
                         $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
                         if ($isOwner) {

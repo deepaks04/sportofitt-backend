@@ -29,10 +29,10 @@ class DeletePackageRequest extends Request
             if($facility==null){
                 return false;
             }else{
-                if(!isset($this->uid) && $this->uid==null){
+                if($this->route('uid')==null){
                     $user = Auth::user();
                 }else{
-                    $user = User::find($this->uid);
+                    $user = User::find($this->route('uid'));
                 }
                 $vendor = $user->vendor($user->id)->first();
                 $isOwner = AvailableFacility::where('id','=',$package->available_facility_id)->where('vendor_id','=',$vendor->id)->count();

@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\AvailableFacility;
+use App\DayMaster;
+use App\MultipleSession;
+use App\OpeningHour;
 use App\PackageType;
+use App\SessionBooking;
 use App\SessionPackage;
 use App\SessionPackageChild;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class SessionPackageController extends Controller
 {
@@ -182,7 +188,7 @@ class SessionPackageController extends Controller
         ];
         return response($response,$status);
     }
-    public function createOpeningTime(Requests\SessionRequest $request){
+    public function createOpeningTime(Requests\SessionRequest $request,$uid){
         try{
             $status = 200;
             $message = "Opening Hour Created Successfully";
@@ -225,9 +231,11 @@ class SessionPackageController extends Controller
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
                     //$queries = DB::getQueryLog();
                     if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
+                        $status = 406;
                         $message = "Time Already Exists";
                         $sessionInformation = "";
                     }else{
+                        //dd($childData);
                         $sessionChild = OpeningHour::create($childData);
                         $sessionInformation['parent'] = SessionPackage::find($session['id']);
                         $openingHour = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
@@ -253,10 +261,12 @@ class SessionPackageController extends Controller
                         }
                     }*/
                 }else{ // Difference not matched
+                    $status = 406;
                     $message = "Specified duration not matched with current time difference";
                     $openingHour = "";
                 }
             }else{ // No Record Found
+                $status = 406;
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
@@ -274,7 +284,7 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-    public function updateOpeningTime(Requests\SessionRequest $request,$id){
+    public function updateOpeningTime(Requests\SessionRequest $request,$uid,$id){
         try{
             $status = 200;
             $message = "Opening Hour updated Successfully";
@@ -311,10 +321,12 @@ class SessionPackageController extends Controller
 
                     }
                 }else{ // Difference not matched
+                    $status = 406;
                     $message = "Specified duration not matched with current time difference";
                     $openingHour = "";
                 }
             }else{ // No Record Found
+                $status = 406;
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
@@ -332,7 +344,7 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-    public function getOpeningTime(Requests\SessionRequest $request, $id){
+    public function getOpeningTime(Requests\SessionRequest $request, $uid,$id){
         try{
             $status = 200;
             $message = "success";
@@ -362,7 +374,7 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-    public function deleteOpeningTime(Requests\DeleteOpeningTimeRequest $request,$id){
+    public function deleteOpeningTime(Requests\DeleteOpeningTimeRequest $request,$uid,$id){
         try{
             $status = 200;
             $message = "Opening Time Deleted Successfully";
@@ -451,7 +463,7 @@ class SessionPackageController extends Controller
     }
 
 
-    public function updateSession(Requests\MultipleSessionRequest $request,$id){
+    public function updateSession(Requests\MultipleSessionRequest $request,$uid,$id){
         try{
             $status = 200;
             $message = "Session updated successfully";
@@ -472,7 +484,7 @@ class SessionPackageController extends Controller
     }
 
 
-    public function deleteSession(Requests\MultipleSessionRequest $request,$id){
+    public function deleteSession(Requests\MultipleSessionRequest $request,$uid,$id){
         try{
             $status = 200;
             $message = "Session deleted successfully";
@@ -493,7 +505,7 @@ class SessionPackageController extends Controller
     }
 
 
-    public function getSessionData(Requests\SessionDataRequest $request,$id){
+    public function getSessionData(Requests\SessionDataRequest $request,$uid,$id){
         try{
             $status = 200;
             $data = array(
@@ -521,16 +533,16 @@ class SessionPackageController extends Controller
     }
 
 
-    public function blockCalendar(Requests\BlockCalendarRequest $request){
+    public function blockCalendar(Requests\BlockCalendarRequest $request,$uid){
         try{
             $status = 200;
             $data = $request->all();
-            $user = Auth::user();
+            $user = User::find($uid);
             $sessionBooking = "";
             //dd($user->id);
-            $date = strtotime($data['startsAt']);
-            $start = strtotime($data['startsAt']);
-            $data['startsAt'] = date('Y-m-d H:i:s', $start);
+            $date = strtotime($data['startAt']);
+            $start = strtotime($data['startAt']);
+            $data['startAt'] = date('Y-m-d H:i:s', $start);
             $startTime = date('H:i:s', $start);
             $day = date('l', $date);
             $day = strtolower($day);
@@ -544,9 +556,9 @@ class SessionPackageController extends Controller
 
             if($sessionPackageMaster!=null){
                 $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
-                $time = strtotime($data['startsAt']);
-                $data['endsAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-                $end =  strtotime($data['endsAt']);
+                $time = strtotime($data['startAt']);
+                $data['endAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
+                $end =  strtotime($data['endAt']);
                 $endTime = date('H:i:s', $end);
             }
             //$timeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM session_package_child WHERE ('".$data['start']."' BETWEEN start AND end AND '".$data['end']."' BETWEEN start AND end) AND session_package_id=".$sessionPackageMaster->id." AND day=".$data['day']));
@@ -560,10 +572,10 @@ class SessionPackageController extends Controller
                 ->first();//->count();
             if($openingTimeExists!=null && $openingTimeExists->count()>0){ //Opening Time Available
 
-                $blockTimeExists = SessionBooking::where('startsAt','<=',$data['startsAt'])
-                    ->where('endsAt','>=',$data['startsAt'])
-                    ->where('startsAt','<=',$data['endsAt'])
-                    ->where('endsAt','>=',$data['endsAt'])
+                $blockTimeExists = SessionBooking::where('startAt','<=',$data['startAt'])
+                    ->where('endAt','>=',$data['startAt'])
+                    ->where('startAt','<=',$data['endAt'])
+                    ->where('endAt','>=',$data['endAt'])
                     //->where('date','=',$data['date'])
                     ->where('is_active','=',1)
                     ->where('available_facility_id','=',$data['available_facility_id'])
@@ -599,11 +611,11 @@ class SessionPackageController extends Controller
     }
 
 
-    public function getBlockData(Request $request,$yearMonth){
+    public function getBlockData(Request $request,$uid,$yearMonth){
         try{
             $message = "success";
             $status = 200;
-            $user = Auth::user();//->with('vendor');
+            $user = User::find($uid);//->with('vendor');
             $facilityData = $user->vendor->facility;
             if(!$facilityData->isEmpty()){
                 $facilities = $facilityData->toArray();
@@ -645,11 +657,11 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-    public function getBlockDataFacilityWise(Request $request,$id,$yearMonth){
+    public function getBlockDataFacilityWise(Request $request,$uid,$id,$yearMonth){
         try{
             $message = "success";
             $status = 200;
-            $user = Auth::user();//->with('vendor');
+            $user = User::find($uid);//->with('vendor');
             $facilityData = $user->vendor->facility;
             if(!$facilityData->isEmpty()){
                 $facilities = $facilityData->toArray();
@@ -661,8 +673,8 @@ class SessionPackageController extends Controller
                 //DB::enableQueryLog();//$queries = DB::getQueryLog();
                 $blockingData = SessionBooking::where('available_facility_id',$id)
                     ->where('is_active',1)
-                    ->where('startsAt','>=',$start)
-                    ->where('endsAt','<=',$end)
+                    ->where('startAt','>=',$start)
+                    ->where('endAt','<=',$end)
                     ->get();
                 //$queries = DB::getQueryLog();
                 //dd($queries);

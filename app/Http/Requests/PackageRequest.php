@@ -18,7 +18,8 @@ class PackageRequest extends Request
      */
     public function authorize()
     {
-        if(!isset($this->uid) && $this->uid==null){
+        $data = $this->request->all();
+        if($this->route('uid')==null){
             switch($this->method())
             {
                 case 'GET':
@@ -60,8 +61,8 @@ class PackageRequest extends Request
                     return false;
                     break;
                 case 'POST':
-                    if (! empty($this->available_facility_id)) {
-                        $id = $this->available_facility_id;
+                    if (!empty($data['available_facility_id']) || $data['available_facility_id']!=null) {
+                        $id = $data['available_facility_id'];
                         $facility = AvailableFacility::find($id);
                         if ($facility == null) {
                             return false;
@@ -76,7 +77,7 @@ class PackageRequest extends Request
                             }
                         }
                     }
-                    return true;
+                    return false;
                     break;
                 default:
                     return false;
@@ -123,14 +124,14 @@ class PackageRequest extends Request
                     }
                     return false;
                     break;
-                /*case 'POST':
-                    if (! empty($this->available_facility_id)) {
-                        $id = $this->available_facility_id;
+                case 'POST':
+                    if (!empty($data['available_facility_id']) || $data['available_facility_id']!=null) {
+                        $id = $data['available_facility_id'];
                         $facility = AvailableFacility::find($id);
                         if ($facility == null) {
                             return false;
                         } else {
-                            $user = Auth::user();
+                            $user = User::find($this->uid);
                             $vendor = $user->vendor($user->id)->first();
                             $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
                             if ($isOwner) {
@@ -140,8 +141,8 @@ class PackageRequest extends Request
                             }
                         }
                     }
-                    return true;
-                    break;*/
+                    return false;
+                    break;
                 default:
                     return false;
                     break;
