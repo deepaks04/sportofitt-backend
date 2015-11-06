@@ -137,9 +137,22 @@ Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
     Route::put('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updatePackage'));
     Route::get('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getPackage'));
     Route::get('delete-package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deletePackage'));
+    Route::post('opening-time/{uid}',array('uses' => 'Admin\SessionPackageController@createOpeningTime'));
+    Route::put('opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updateOpeningTime'));
+    Route::get('opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getOpeningTime'));
+    Route::get('delete-opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deleteOpeningTime'));
+    //Route::post('session-duration/{uid}',array('uses' => 'Admin\SessionPackageController@updateDuration'));
+    //Route::get('facility-detail/{id}',array('uses' => 'Admin\VendorsController@getFacilityDetailInformation'));
+    //Route::get('duration',array('uses' => 'Admin\SessionPackageController@getDuration'));
+    Route::post('multiple-sessions/{uid}',array('uses' => 'Admin\SessionPackageController@createSession'));
+    Route::put('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updateSession'));
+    Route::get('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deleteSession'));
+    Route::get('sessions-data/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getSessionData'));
 
-    Route::post('opening-time',array('uses' => 'Admin\SessionPackageController@createOpeningTime'));
-    Route::put('opening-time/{id}',array('uses' => 'Admin\SessionPackageController@updateOpeningTime'));
+    Route::post('calendar-block/{uid}',array('uses' => 'Admin\SessionPackageController@blockCalendar'));
+    Route::get('calendar-block/{uid}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockData'));
+    Route::get('calendar-block/{uid}/{id}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockDataFacilityWise'));
+
 });
 
 Route::get('temp', array(

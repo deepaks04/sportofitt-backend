@@ -2,6 +2,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\AvailableFacility;
 
@@ -15,6 +16,12 @@ class SessionDataRequest extends Request
      */
     public function authorize()
     {
+        $data = $this->request->all();
+        if($this->route('uid')==null){
+            $user = Auth::user();
+        }else{
+            $user = User::find($this->route('uid'));
+        }
         switch ($this->method()) {
             case 'GET':
                 $id = $this->route('id');
@@ -23,7 +30,6 @@ class SessionDataRequest extends Request
                     return false;
                     break;
                 } else {
-                    $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
                     $isOwner = AvailableFacility::where('id', '=', $id)->where('vendor_id', '=', $vendor->id)->count();
                     if ($isOwner) {

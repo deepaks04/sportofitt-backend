@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\User;
 
 class BlockCalendarRequest extends Request
 {
@@ -13,6 +14,12 @@ class BlockCalendarRequest extends Request
      */
     public function authorize()
     {
+        $data = $this->request->all();
+        if($this->route('uid')==null){
+            $user = Auth::user();
+        }else{
+            $user = User::find($this->route('uid'));
+        }
         switch($this->method())
         {
             case 'PUT':
@@ -21,7 +28,6 @@ class BlockCalendarRequest extends Request
                 if($facility==null){
                     return false;
                 }else{
-                    $user = Auth::user();
                     $vendor = $user->vendor($user->id)->first();
                     $isOwner = AvailableFacility::where('id','=',$id)->where('vendor_id','=',$vendor->id)->count();
                     if($isOwner){
@@ -69,7 +75,7 @@ class BlockCalendarRequest extends Request
                 return [
                     'available_facility_id' => 'required|integer',
                     //'date' => 'required|date_format:Y-m-d H:i:s',
-                    'startsAt' => 'required|date',
+                    'startAt' => 'required|date',
                     //'end' => 'required|date_format:H:i',
                 ];
                 break;
