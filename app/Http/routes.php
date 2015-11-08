@@ -148,7 +148,6 @@ Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
     Route::put('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updateSession'));
     Route::get('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deleteSession'));
     Route::get('sessions-data/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getSessionData'));
-
     Route::post('calendar-block/{uid}',array('uses' => 'Admin\SessionPackageController@blockCalendar'));
     Route::get('calendar-block/{uid}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockData'));
     Route::get('calendar-block/{uid}/{id}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockDataFacilityWise'));
