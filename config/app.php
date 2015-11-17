@@ -142,13 +142,12 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class
-    ]
+        App\Providers\RouteServiceProvider::class,
     // barryvdh/laravel-debugbar
-    // Barryvdh\Debugbar\ServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
     // barryvdh/laravel-ide-helper
-    // Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-    
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+    ]
     ,
 
     /*
