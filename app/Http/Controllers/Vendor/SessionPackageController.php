@@ -693,7 +693,7 @@ class SessionPackageController extends Controller
                 $start = $yearMonth.'-01 00:00:00';
                 $end = $yearMonth.'-31 11:59:59';
                 $blockData = "";
-                $i = 0;
+                $blockId = 0;
                 foreach($facilities as $facility){
                     $data = array(
                         'available_facility_id' => $facility['id'],
@@ -711,8 +711,8 @@ class SessionPackageController extends Controller
                     if(!$blockingData->isEmpty()){
                         //$data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
                         $blockData = $blockingData->toArray();
-                        //$blockData[$i]['facility'] = AvailableFacility::find($facility['id'])->first()->toArray();
-                        $i++;
+                        //$blockData[$blockId]['facility'] = AvailableFacility::find($facility['id'])->first()->toArray();
+                        $blockId++;
                     }
                 }
             }
@@ -746,7 +746,7 @@ class SessionPackageController extends Controller
                 $start = $yearMonth.'-01 00:00:00';
                 $end = $yearMonth.'-31 11:59:59';
                 $blockData = "";
-                $i = 0;
+                $facilityId = 0;
                 //dd($data);
                 //DB::enableQueryLog();//$queries = DB::getQueryLog();
                 $blockingData = SessionBooking::where('available_facility_id',$id)
@@ -759,8 +759,8 @@ class SessionPackageController extends Controller
                 if(!$blockingData->isEmpty()){
                     //$data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
                     $blockData = $blockingData->toArray();
-                    //$blockData[$i]['facility'] = AvailableFacility::find($id)->first()->toArray();
-                    $i++;
+                    //$blockData[$facilityId]['facility'] = AvailableFacility::find($id)->first()->toArray();
+                    $facilityId++;
                 }
             }
         }catch(\Exception $e){
