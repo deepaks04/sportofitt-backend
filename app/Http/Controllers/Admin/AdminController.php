@@ -35,6 +35,9 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function skull(){
         try{
             $status = 200;

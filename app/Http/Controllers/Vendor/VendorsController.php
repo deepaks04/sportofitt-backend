@@ -42,7 +42,7 @@ class VendorsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request            
+     * @param Request $request
      * @return Response
      */
     public function store($vendorData)
@@ -82,7 +82,7 @@ class VendorsController extends Controller
 
     /**
      * Get Vendor Profile Data
-     * 
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getProfile()
@@ -117,8 +117,8 @@ class VendorsController extends Controller
 
     /**
      * Vendor Update Profile Settings
-     * 
-     * @param Requests\UpdateVendorProfileRequest $request            
+     *
+     * @param Requests\UpdateVendorProfileRequest $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function updateProfile(Requests\UpdateVendorProfileRequest $request)
@@ -168,7 +168,7 @@ class VendorsController extends Controller
                 $filename = sha1($systemUser->id . time()) . ".{$extension}";
                 $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
                 // chmod($vendorImageUploadPath, 0777);
-                
+
                 /* Rename file */
                 $user['profile_picture'] = $filename;
             }
@@ -187,7 +187,7 @@ class VendorsController extends Controller
 
     /**
      * get billing information
-     * 
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getBillingInformation()
@@ -212,8 +212,8 @@ class VendorsController extends Controller
 
     /**
      * Insert/Update Billing Details
-     * 
-     * @param Requests\Billing $request            
+     *
+     * @param Requests\Billing $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function updateBillingInformation(Requests\Billing $request)
@@ -251,7 +251,7 @@ class VendorsController extends Controller
 
     /**
      * Get Bank Details
-     * 
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getBankDetails()
@@ -276,8 +276,8 @@ class VendorsController extends Controller
 
     /**
      * Insert/Update Bank Details
-     * 
-     * @param Requests\BankDetails $request            
+     *
+     * @param Requests\BankDetails $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function updateBankDetails(Requests\BankDetails $request)
@@ -313,8 +313,8 @@ class VendorsController extends Controller
 
     /**
      * Insert Images
-     * 
-     * @param Requests\ImagesRequest $request            
+     *
+     * @param Requests\ImagesRequest $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function addImages(Requests\ImagesRequest $request)
@@ -342,7 +342,7 @@ class VendorsController extends Controller
             //        chmod($vendorOwnDirecory, 0777);
                  //   chmod($vendorImageUploadPath, 0777);
                 }
-                
+
               //  chmod($vendorImageUploadPath, 0777);
                 // foreach($files as $file){
                 $random = mt_rand(1, 1000000);
@@ -372,7 +372,7 @@ class VendorsController extends Controller
 
     /**
      * Get All extra images of vendor facility
-     * 
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getImages()
@@ -405,8 +405,8 @@ class VendorsController extends Controller
 
     /**
      * Delete Extra Image - one at a time
-     * 
-     * @param Requests\DeleteImageRequest $request            
+     *
+     * @param Requests\DeleteImageRequest $request
      * @param
      *            $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -438,6 +438,11 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\AddFacilityRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createFacility(Requests\AddFacilityRequest $request)
     {
         try {
@@ -473,7 +478,7 @@ class VendorsController extends Controller
 
     /**
      * Get All facility created by vendor
-     * 
+     *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getFacility()
@@ -520,6 +525,11 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getFacilityById($id)
     {
         $status = 200;
@@ -546,6 +556,12 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\AddFacilityRequest $request
+     * @param                             $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateFacility(Requests\AddFacilityRequest $request, $id)
     {
         try {
@@ -574,7 +590,7 @@ class VendorsController extends Controller
                 $filename = sha1($user->id . time()) . ".{$extension}";
                 $request->file('image')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
-                
+
                 /* Rename file */
                 $facility['image'] = $filename;
             }
@@ -592,6 +608,12 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\FacilityInfoRequest $request
+     * @param                              $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request, $id)
     {
         $user = Auth::user();
@@ -619,7 +641,7 @@ class VendorsController extends Controller
                 $packages = SessionPackage::where('available_facility_id','=',$facilities['id'])->get();
                 if($packages!=null){
                     $packages = $packages->toArray();
-                    
+
                     foreach ($packages as $package) {
                         $type = PackageType::where('id', '=', $package['package_type_id'])->first()->toArray();
                         if ($type['slug'] == 'package') {
@@ -634,7 +656,7 @@ class VendorsController extends Controller
                                 $sessionPackageInfoType[$type['slug']][$i]['child'] = "";
                                 $packageInformation[$i]['child'] = "";
                             }
-                            
+
                             $i ++;
                         }
                         if($type['slug']=='session'){
@@ -671,6 +693,12 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $facilityId
+     * @param $sessionUpdateData
+     *
+     * @return bool
+     */
     public function updateDuration($facilityId, $sessionUpdateData)
     {
         try {
@@ -692,6 +720,11 @@ class VendorsController extends Controller
         }
     }
 
+    /**
+     * @param $facilityId
+     *
+     * @return int
+     */
     public function getDurationData($facilityId)
     {
         $packageType = PackageType::where('slug', '=', 'session')->first();

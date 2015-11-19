@@ -40,6 +40,9 @@ class VendorController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function skull(){
         try{
             $status = 200;
@@ -54,6 +57,9 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getVendorList(){
         try{
             $status = 200;
@@ -92,6 +98,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\CreateVendorRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function create(Requests\CreateVendorRequest $request){
         try{
             $status = 200;
@@ -136,6 +147,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $vendorData
+     *
+     * @return mixed
+     */
     public function insert($vendorData){
         try {
             DB::table('vendors')->insert($vendorData);
@@ -148,6 +164,12 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * @param Requests\UpdateVendorProfileRequest $request
+     * @param                                     $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateProfile(Requests\UpdateVendorProfileRequest $request,$id)
     {
         try {
@@ -220,6 +242,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getProfile($id)
     {
         try{
@@ -245,6 +272,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBillingInformation($id)
     {
         try{
@@ -272,6 +304,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\Billing $request
+     * @param                  $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateBillingInformation(Requests\Billing $request,$id)
     {
         try {
@@ -305,6 +343,12 @@ class VendorController extends Controller
         ];
         return response($response, $status);
     }
+
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBankDetails($id)
     {
         try{
@@ -332,6 +376,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\BankDetails $request
+     * @param                      $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateBankDetails(Requests\BankDetails $request,$id)
     {
         try {
@@ -365,6 +415,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\ImagesRequest $request
+     * @param                        $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function addImages(Requests\ImagesRequest $request,$id)
     {
         try {
@@ -434,6 +490,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getImages($id)
     {
         try{
@@ -466,6 +527,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $userId
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteImage($userId,$id)
     {
         try {
@@ -493,6 +560,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\AddFacilityRequest $request
+     * @param                             $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createFacility(Requests\AddFacilityRequest $request,$id)
     {   dd($request->all());
         try {
@@ -530,6 +603,12 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $facilityId
+     * @param $sessionUpdateData
+     *
+     * @return bool
+     */
     public function updateDuration($facilityId, $sessionUpdateData)
     {
         try {
@@ -551,6 +630,11 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getFacility($id)
     {
         $user = User::findOrFail($id);
@@ -586,6 +670,11 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $facilityId
+     *
+     * @return int
+     */
     public function getDurationData($facilityId)
     {
         $packageType = PackageType::where('slug', '=', 'session')->first();
@@ -601,6 +690,12 @@ class VendorController extends Controller
         }
     }
 
+    /**
+     * @param $uid
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getFacilityById($uid,$id)
     {
         $status = 200;
@@ -627,6 +722,13 @@ class VendorController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param Requests\AddFacilityRequest $request
+     * @param                             $uid
+     * @param                             $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateFacility(Requests\AddFacilityRequest $request, $uid, $id)
     {
         try {

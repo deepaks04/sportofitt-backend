@@ -30,6 +30,9 @@ class SessionPackageController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function types(){
         $types = PackageType::all();
         $status = 200;
@@ -95,6 +98,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\PackageRequest $request
+     * @param                         $uid
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updatePackage(Requests\PackageRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -128,6 +138,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\PackageRequest $request
+     * @param                         $uid
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getPackage(Requests\PackageRequest $request,$uid,$id){
         try{
             $packageType = PackageType::where('slug','=','package')->first();
@@ -173,6 +190,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\DeletePackageRequest $request
+     * @param                               $uid
+     * @param                               $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deletePackage(Requests\DeletePackageRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -188,6 +212,13 @@ class SessionPackageController extends Controller
         ];
         return response($response,$status);
     }
+
+    /**
+     * @param Requests\SessionRequest $request
+     * @param                         $uid
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createOpeningTime(Requests\SessionRequest $request,$uid){
         try{
             $status = 200;
@@ -284,6 +315,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\SessionRequest $request
+     * @param                         $uid
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateOpeningTime(Requests\SessionRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -343,6 +381,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\SessionRequest $request
+     * @param                         $uid
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getOpeningTime(Requests\SessionRequest $request, $uid,$id){
         try{
             $status = 200;
@@ -373,6 +418,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\DeleteOpeningTimeRequest $request
+     * @param                                   $uid
+     * @param                                   $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteOpeningTime(Requests\DeleteOpeningTimeRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -388,6 +440,12 @@ class SessionPackageController extends Controller
         ];
         return response($response,$status);
     }
+
+    /**
+     * @param Requests\DurationRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateDuration(Requests\DurationRequest $request){
         try{
             $status = 200;
@@ -419,7 +477,9 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getDuration(){
         $status = 200;
         $message = "success";
@@ -431,6 +491,11 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createSession(Requests\MultipleSessionRequest $request){
         try{
             $status = 200;
@@ -461,7 +526,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     * @param                                 $uid
+     * @param                                 $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateSession(Requests\MultipleSessionRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -482,7 +553,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     * @param                                 $uid
+     * @param                                 $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteSession(Requests\MultipleSessionRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -503,7 +580,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\SessionDataRequest $request
+     * @param                             $uid
+     * @param                             $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getSessionData(Requests\SessionDataRequest $request,$uid,$id){
         try{
             $status = 200;
@@ -531,7 +614,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\BlockCalendarRequest $request
+     * @param                               $uid
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function blockCalendar(Requests\BlockCalendarRequest $request,$uid){
         try{
             $status = 200;
@@ -609,7 +697,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Request $request
+     * @param         $uid
+     * @param         $yearMonth
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBlockData(Request $request,$uid,$yearMonth){
         try{
             $message = "success";
@@ -656,6 +750,14 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Request $request
+     * @param         $uid
+     * @param         $id
+     * @param         $yearMonth
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBlockDataFacilityWise(Request $request,$uid,$id,$yearMonth){
         try{
             $message = "success";

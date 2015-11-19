@@ -29,6 +29,9 @@ class SessionPackageController extends Controller
         $this->middleware('vendor');
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function types(){
         $types = PackageType::all();
         $status = 200;
@@ -92,6 +95,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\PackageRequest $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updatePackage(Requests\PackageRequest $request,$id){
         try{
             $status = 200;
@@ -125,6 +134,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\PackageRequest $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getPackage(Requests\PackageRequest $request,$id){
         try{
             $packageType = PackageType::where('slug','=','package')->first();
@@ -170,6 +185,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\DeletePackageRequest $request
+     * @param                               $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deletePackage(Requests\DeletePackageRequest $request,$id){
         try{
             $status = 200;
@@ -185,6 +206,12 @@ class SessionPackageController extends Controller
         ];
         return response($response,$status);
     }
+
+    /**
+     * @param Requests\SessionRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createOpeningTime(Requests\SessionRequest $request){
         try{
             $status = 200;
@@ -276,6 +303,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\SessionRequest $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateOpeningTime(Requests\SessionRequest $request,$id){
         try{
             $status = 200;
@@ -333,6 +366,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\SessionRequest $request
+     * @param                         $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getOpeningTime(Requests\SessionRequest $request, $id){
         try{
             $status = 200;
@@ -363,6 +402,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\DeleteOpeningTimeRequest $request
+     * @param                                   $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteOpeningTime(Requests\DeleteOpeningTimeRequest $request,$id){
         try{
             $status = 200;
@@ -378,6 +423,12 @@ class SessionPackageController extends Controller
         ];
         return response($response,$status);
     }
+
+    /**
+     * @param Requests\DurationRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateDuration(Requests\DurationRequest $request){
         try{
             $status = 200;
@@ -409,7 +460,9 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getDuration(){
         $status = 200;
         $message = "success";
@@ -421,6 +474,11 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function createSession(Requests\MultipleSessionRequest $request){
         try{
             $status = 200;
@@ -451,7 +509,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     * @param                                 $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateSession(Requests\MultipleSessionRequest $request,$id){
         try{
             $status = 200;
@@ -472,7 +535,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\MultipleSessionRequest $request
+     * @param                                 $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteSession(Requests\MultipleSessionRequest $request,$id){
         try{
             $status = 200;
@@ -493,7 +561,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\SessionDataRequest $request
+     * @param                             $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getSessionData(Requests\SessionDataRequest $request,$id){
         try{
             $status = 200;
@@ -521,7 +594,11 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Requests\BlockCalendarRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function blockCalendar(Requests\BlockCalendarRequest $request){
         try{
             $status = 200;
@@ -599,7 +676,12 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
-
+    /**
+     * @param Request $request
+     * @param         $yearMonth
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBlockData(Request $request,$yearMonth){
         try{
             $message = "success";
@@ -646,6 +728,13 @@ class SessionPackageController extends Controller
         return response($response,$status);
     }
 
+    /**
+     * @param Request $request
+     * @param         $id
+     * @param         $yearMonth
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getBlockDataFacilityWise(Request $request,$id,$yearMonth){
         try{
             $message = "success";

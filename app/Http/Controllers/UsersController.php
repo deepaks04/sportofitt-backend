@@ -151,6 +151,9 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getRootCategory()
     {
         $category = RootCategory::with('subCategory')->get();
@@ -162,6 +165,11 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getSubCategory($id)
     {
         $category = RootCategory::find($id); //
@@ -182,6 +190,9 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getArea()
     {
         $area = Area::all();
@@ -192,6 +203,7 @@ class UsersController extends Controller
         ];
         return response($response, $status);
     }
+
     /**
      * Confirm User email & activate his account.
      *
