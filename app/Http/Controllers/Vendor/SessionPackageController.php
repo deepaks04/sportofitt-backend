@@ -190,6 +190,7 @@ class SessionPackageController extends Controller
     public function createOpeningTime(Requests\SessionRequest $request){
         try{
             $status = 200;
+
             $message = "Opening Hour Created Successfully";
             $start = strtotime($request->start);
             $end = strtotime($request->end);
