@@ -26,7 +26,6 @@ class VendorsController extends Controller
 
     public function __construct()
     {
-        // $this->middleware('auth');
         $this->middleware('auth', [
             'except' => [
                 'store'
@@ -161,14 +160,10 @@ class VendorsController extends Controller
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                    // chmod($vendorOwnDirecory, 0777);
-                    // chmod($vendorImageUploadPath, 0777);
                 }
                 $extension = $request->file('profile_picture')->getClientOriginalExtension();
                 $filename = sha1($systemUser->id . time()) . ".{$extension}";
                 $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-                // chmod($vendorImageUploadPath, 0777);
-
                 /* Rename file */
                 $user['profile_picture'] = $filename;
             }
@@ -233,8 +228,6 @@ class VendorsController extends Controller
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
                 $vendor->billingInfo()->insert($data);
-                // $billingInfo = Billing::create($data);
-                // $user->vendor()->update(array('billing_info_id'=>$billingInfo->id));
             }
             $status = 200;
             $message = "saved successfully";
@@ -339,12 +332,7 @@ class VendorsController extends Controller
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-            //        chmod($vendorOwnDirecory, 0777);
-                 //   chmod($vendorImageUploadPath, 0777);
                 }
-
-              //  chmod($vendorImageUploadPath, 0777);
-                // foreach($files as $file){
                 $random = mt_rand(1, 1000000);
                 $extension = $file->getClientOriginalExtension();
                 $filename = sha1($user->id . $random) . ".{$extension}";
@@ -355,10 +343,8 @@ class VendorsController extends Controller
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
                 $vendor->images()->insert($data);
-                // }
             }
         } catch (\Exception $e) {
-            // echo $e->getMessage();
             $status = 500;
             $message = "something went wrong" . $e->getMessage();
         }
@@ -497,14 +483,6 @@ class VendorsController extends Controller
             $facility = $vendor->facility()
                 ->get()
                 ->toArray();
-            /*
-             * foreach($facility as $singleFacility){
-             * //dd($singleFacility['sub_category_id']);
-             * $singleFacility['category']['sub'] = SubCategory::find($singleFacility['sub_category_id'])->toArray();
-             * //$singleFacility['category'] = $singleFacility['category']->toArray();
-             * //dd($singleFacility);
-             * }
-             */
             for ($i = 0; $i < $facilityCount; $i ++) {
                 $facility[$i]['category']['sub'] = SubCategory::find($facility[$i]['sub_category_id'])->toArray();
                 $facility[$i]['category']['root'] = RootCategory::find($facility[$i]['category']['sub']['root_category_id'])->toArray();
@@ -628,14 +606,11 @@ class VendorsController extends Controller
             $i = 0;
             $noOfFacility = 0;
             $facilityDetails = null;
-            //foreach($facilities as $facility){
-                //$facilityCount = count($facilities);
-                //for($j=0;$j<$facilityCount;$j++){
                     $facilities['category']['sub'] = SubCategory::find($facilities['sub_category_id'])->toArray();
                     $facilities['category']['root'] = RootCategory::find($facilities['category']['sub']['root_category_id'])->toArray();
                     $sessionDuration = $this->getDurationData($facilities['id']);
                     $facilities['duration'] = $sessionDuration;
-                //}
+
                 $facilityDetails['information'] = $facilities;
                 $facilityData = $facilities;
                 $packages = SessionPackage::where('available_facility_id','=',$facilities['id'])->get();
@@ -676,10 +651,8 @@ class VendorsController extends Controller
                             }
                         }
                     }
-                    //$facilityDetails[$noOfFacility]['sessionPackage'] = $sessionPackageInfoType;
-                    //$noOfFacility++;
                 }
-            //}
+
         }
 
         $status = 200;

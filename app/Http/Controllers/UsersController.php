@@ -68,8 +68,6 @@ class UsersController extends Controller
             $userData['created_at'] = Carbon::now();
             unset($userData['business_name']);
             unset($userData['password2']);
-            // $user = User::create($userData); //Mass assignment
-            // $user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);
             $vendorData['business_name'] = $request->business_name;
             $vendorData['user_id'] = $userId;
@@ -118,8 +116,6 @@ class UsersController extends Controller
             $userData['created_at'] = Carbon::now();
             unset($userData['gender']);
             unset($userData['area_id']);
-            // $user = User::create($userData); //Mass assignment
-            // $user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);
             $customerData['gender'] = (int) $request->gender;
             $customerData['area_id'] = (int) $request->area_id;
@@ -129,13 +125,9 @@ class UsersController extends Controller
             // Calling a method that is from the VendorsController
             $result = (new CustomersController())->store($customerData);
             if ($result['status']) {
-                // $environment = app()->environment();
-                // if ($environment=='production') {
-                // The environment is local
                 Mail::send('emails.activation', $userData, function ($message) use($userData) {
                     $message->to($userData['email'])->subject('Account Confirmation');
                 });
-                // }
             } else {
                 User::destroy($userId);
                 throw new \Exception($result['message']);
