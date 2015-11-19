@@ -70,6 +70,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @param LoginUserRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     protected function authenticate(LoginUserRequest $request)
     {
         $user = User::where('email', $request->email)->first();
@@ -137,6 +142,9 @@ class AuthController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     protected function logout()
     {
         Auth::logout();

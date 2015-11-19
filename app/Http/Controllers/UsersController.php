@@ -153,6 +153,9 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getRootCategory()
     {
         $category = RootCategory::with('subCategory')->get();
@@ -164,6 +167,11 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getSubCategory($id)
     {
         $category = RootCategory::find($id); //
@@ -184,6 +192,9 @@ class UsersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function getArea()
     {
         $area = Area::all();
@@ -193,51 +204,6 @@ class UsersController extends Controller
             "area" => $area
         ];
         return response($response, $status);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id            
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id            
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request            
-     * @param int $id            
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id            
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     /**

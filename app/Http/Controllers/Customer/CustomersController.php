@@ -31,6 +31,11 @@ class CustomersController extends Controller
         }
     }
 
+    /**
+     * @param Requests\CustomerProfileUpdateRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function updateProfileInformation(Requests\CustomerProfileUpdateRequest $request)
     {
         try {

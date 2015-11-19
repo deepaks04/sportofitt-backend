@@ -42,6 +42,11 @@ class PasswordController extends Controller
         ]);
     }
 
+    /**
+     * @param ChangePasswordRequest $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function change(ChangePasswordRequest $request)
     {
         $status = 200;
