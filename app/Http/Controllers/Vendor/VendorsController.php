@@ -67,15 +67,15 @@ class VendorsController extends Controller
      */
     public function store($vendorData)
     {
-        try {
+        $result = array();
+        $result['status'] = true;
+        try{
             DB::table('vendors')->insert($vendorData);
-            $result['status'] = true;
-            return $result;
-        } catch (\Exception $e) {
+        }catch (\Exception $e){
             $result['status'] = false;
             $result['message'] = $e->getMessage();
-            return $result;
         }
+        return $result;
     }
 
     /**
@@ -145,9 +145,7 @@ class VendorsController extends Controller
     {
         try {
             $status = 200;
-            $response = [
-                "message" => "Settings updated successfully"
-            ];
+            $message= "Settings updated successfully";
             $user = $request->all();
             $vendor = $request->all();
             $userKeys = array(
@@ -199,10 +197,11 @@ class VendorsController extends Controller
         } catch (\Exception $e) {
             echo $e->getMessage();
             $status = 500;
-            $response = [
-                "message" => "Something Went Wrong"
-            ];
+            $message="Something Went Wrong";
         }
+        $response = [
+            'message' => $message
+        ];
         return response($response, $status);
     }
 
