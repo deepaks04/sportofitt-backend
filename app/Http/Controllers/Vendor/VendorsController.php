@@ -625,7 +625,7 @@ class VendorsController extends Controller
         $facilityData = "";
         if($facilities!=null){
             $facilities = $facilities->toArray();
-            $i = 0;
+            $facilityId = 0;
             $noOfFacility = 0;
             $facilityDetails = null;
             //foreach($facilities as $facility){
@@ -657,7 +657,7 @@ class VendorsController extends Controller
                                 $packageInformation[$i]['child'] = "";
                             }
 
-                            $i ++;
+                            $facilityId ++;
                         }
                         if($type['slug']=='session'){
                             //$sessionPackageInfoType[$type['slug']][$i]['parent'] = $package;
