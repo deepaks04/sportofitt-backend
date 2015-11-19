@@ -79,18 +79,16 @@ class SessionPackageController extends Controller
                 $packageInformation['parent'] = SessionPackage::find($request->package_id);
                 $packageInformation['child'] = $packageInformation['parent']->ChildPackage()->first();
             }*/
-            $response = [
-                "message" => $message,
-                "package" => $packageInformation
-            ];
+
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $response = [
-                "message" => $message,
-                "package" => ""
-            ];
+            $packageInformation="";
         }
+        $response = [
+            "message" => $message,
+            "package" => $packageInformation
+        ];
         return response($response,$status);
     }
 
@@ -265,17 +263,16 @@ class SessionPackageController extends Controller
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
-            $response = [
-                "message" => $message,
-                "data" => $openingHour
-            ];
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $response = [
-                "message" => $message,
-            ];
+            $openingHour = "";
+
         }
+         $response = [
+                "message" => $message,
+                "data" => $openingHour
+            ];
         return response($response,$status);
     }
 
@@ -323,17 +320,16 @@ class SessionPackageController extends Controller
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
-            $response = [
-                "message" => $message,
-                "data" => $openingHour
-            ];
+
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $response = [
-                "message" => $message,
-            ];
+            $openingHour = "";
         }
+        $response = [
+            "message" => $message,
+            "data" => $openingHour
+        ];
         return response($response,$status);
     }
 
@@ -598,7 +594,7 @@ class SessionPackageController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$sessionBooking
+            "data"=> $sessionBooking
         ];
         return response($response,$status);
     }
@@ -645,7 +641,7 @@ class SessionPackageController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$blockData
+            "data" => $blockData
         ];
         return response($response,$status);
     }
@@ -685,7 +681,7 @@ class SessionPackageController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$blockData
+            "data"=> $blockData
         ];
         return response($response,$status);
     }

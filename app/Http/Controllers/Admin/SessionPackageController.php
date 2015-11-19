@@ -270,17 +270,17 @@ class SessionPackageController extends Controller
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
-            $response = [
-                "message" => $message,
-                "data" => $openingHour
-            ];
+                $message=$message;
+                $data = $openingHour;
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $response = [
-                "message" => $message,
-            ];
+            $data="";
         }
+        $response = [
+            "message" => $message,
+            "data" => $data
+        ];
         return response($response,$status);
     }
 
@@ -330,17 +330,16 @@ class SessionPackageController extends Controller
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
-            $response = [
-                "message" => $message,
-                "data" => $openingHour
-            ];
+                $data=$openingHour;
         }catch(\Exception $e){
             $status = 500;
             $message = "Something went wrong ".$e->getMessage();
-            $response = [
-                "message" => $message,
-            ];
+            $data="";
         }
+        $response = [
+            "message" => $message,
+            "data" => $data
+        ];
         return response($response,$status);
     }
 

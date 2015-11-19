@@ -55,9 +55,7 @@ class UsersController extends Controller
     {
         try {
             $status = 200;
-            $response = [
-                "message" => "Vendor Registered Successfully! Please check your email for the instructions on how to confirm your account"
-            ];
+            $message="Vendor Registered Successfully! Please check your email for the instructions on how to confirm your account";
             $role = Role::where('slug', 'vendor')->first();
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();
@@ -89,11 +87,11 @@ class UsersController extends Controller
             }
         } catch (\Exception $e) {
             $status = 500;
-            $response = [
-                // "message" => "Something Went Wrong",
-                "message" => "Something Went Wrong, Vendor Registration Unsuccessful!" . $e->getMessage()
-            ];
+            $message= "Something Went Wrong, Vendor Registration Unsuccessful!" . $e->getMessage();
         }
+        $response = [
+            "message" => $message
+        ];
         return response($response, $status);
     }
 
@@ -107,9 +105,7 @@ class UsersController extends Controller
     {
         try {
             $status = 200;
-            $response = [
-                "message" => "Registered Successfully! Please check your email for the instructions on how to confirm your account"
-            ];
+            $message = "Registered Successfully! Please check your email for the instructions on how to confirm your account";
             $role = Role::where('slug', 'customer')->first();
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();
@@ -146,10 +142,12 @@ class UsersController extends Controller
             }
         } catch (\Exception $e) {
             $status = 500;
-            $response = [
-                "message" => "Something Went Wrong " . $e->getMessage()
-            ];
+            $message="Something Went Wrong " . $e->getMessage();
         }
+
+        $response = [
+            "message" => $message
+        ];
         return response($response, $status);
     }
 
@@ -205,25 +203,22 @@ class UsersController extends Controller
         $user = User::where('remember_token', $confirmation)->first();
         if ($user == null) { // no record found
             $status = 200;
-            $response = [
-                "message" => "Sorry!! No User found"
-            ];
+            $message= "Sorry!! No User found";
         } else {
             if ($user->is_active) { // already confirmed
                 $status = 200;
-                $response = [
-                    "message" => "Your account already confirmed"
-                ];
+                $message="Your account already confirmed";
             } else {
                 User::where('remember_token', $confirmation)->update(array(
                     'is_active' => 1
                 ));
                 $status = 200;
-                $response = [
-                    "message" => "Your account is confirmed, you can now login to your account"
-                ];
+                $message="Your account is confirmed, you can now login to your account";
             }
         }
+        $response = [
+            "message" => $message
+        ];
         return response($response, $status);
     }
 }
