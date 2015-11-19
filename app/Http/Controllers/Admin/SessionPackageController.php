@@ -146,24 +146,24 @@ class SessionPackageController extends Controller
             ))->get();
             if(!$facilityDetils->isEmpty()){
                 $facilityDetils = $facilityDetils->toArray();
-                $i=0;
+                $packageId=0;
                 foreach($facilityDetils as $facilityDetil){
-                    $packages[$i] = $facilityDetil;
+                    $packages[$packageId] = $facilityDetil;
                     $packageChild = SessionPackageChild::where(array('session_package_id'=>$facilityDetil['id'],'is_active'=>1))->first();
                     if($packageChild!=null){
                         $packageChild = $packageChild->toArray();
-                        $packages[$i]['session_package_id'] = $packageChild['session_package_id'];
-                        $packages[$i]['month'] = $packageChild['month'];
-                        $packages[$i]['actual_price'] = $packageChild['actual_price'];
-                        $packages[$i]['discount'] = $packageChild['discount'];
-                        $packages[$i]['is_peak'] = $packageChild['is_peak'];
+                        $packages[$packageId]['session_package_id'] = $packageChild['session_package_id'];
+                        $packages[$packageId]['month'] = $packageChild['month'];
+                        $packages[$packageId]['actual_price'] = $packageChild['actual_price'];
+                        $packages[$packageId]['discount'] = $packageChild['discount'];
+                        $packages[$packageId]['is_peak'] = $packageChild['is_peak'];
                     }else{
-                        $packages[$i]['session_package_id'] = "";
-                        $packages[$i]['actual_price'] = "";
-                        $packages[$i]['discount'] =  "";
-                        $packages[$i]['is_peak'] =  "";
+                        $packages[$packageId]['session_package_id'] = "";
+                        $packages[$packageId]['actual_price'] = "";
+                        $packages[$packageId]['discount'] =  "";
+                        $packages[$packageId]['is_peak'] =  "";
                     }
-                    $i++;
+                    $packageId++;
                 }
             }
         }catch (\Exception $e){
@@ -718,7 +718,7 @@ class SessionPackageController extends Controller
                 $start = $yearMonth.'-01 00:00:00';
                 $end = $yearMonth.'-31 11:59:59';
                 $blockData = "";
-                $i = 0;
+                $facilityId = 0;
                 $blockingData = SessionBooking::where('available_facility_id',$id)
                     ->where('is_active',1)
                     ->where('startAt','>=',$start)
@@ -726,7 +726,7 @@ class SessionPackageController extends Controller
                     ->get();
                 if(!$blockingData->isEmpty()){
                     $blockData = $blockingData->toArray();
-                    $i++;
+                    $facilityId++;
                 }
             }
         }catch(\Exception $e){

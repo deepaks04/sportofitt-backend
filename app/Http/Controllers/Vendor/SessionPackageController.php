@@ -645,7 +645,7 @@ class SessionPackageController extends Controller
                 $start = $yearMonth.'-01 00:00:00';
                 $end = $yearMonth.'-31 11:59:59';
                 $blockData = "";
-                $i = 0;
+                $blockId = 0;
                 foreach($facilities as $facility){
                     $data = array(
                         'available_facility_id' => $facility['id'],
@@ -658,7 +658,7 @@ class SessionPackageController extends Controller
                         ->get();
                     if(!$blockingData->isEmpty()){
                         $blockData = $blockingData->toArray();
-                        $i++;
+                        $blockId++;
                     }
                 }
             }
@@ -692,7 +692,9 @@ class SessionPackageController extends Controller
                 $start = $yearMonth.'-01 00:00:00';
                 $end = $yearMonth.'-31 11:59:59';
                 $blockData = "";
-                $i = 0;
+
+                $facilityId = 0;
+
                 $blockingData = SessionBooking::where('available_facility_id',$id)
                     ->where('is_active',1)
                     ->where('startsAt','>=',$start)
@@ -700,7 +702,7 @@ class SessionPackageController extends Controller
                     ->get();
                 if(!$blockingData->isEmpty()){
                     $blockData = $blockingData->toArray();
-                    $i++;
+                    $facilityId++;
                 }
             }
         }catch(\Exception $e){
