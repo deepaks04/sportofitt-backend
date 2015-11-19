@@ -20,15 +20,15 @@ class CustomersController extends Controller
      */
     public function store($customerData)
     {
-        try {
+        $result = array();
+        $result['status'] = true;
+        try{
             DB::table('customers')->insert($customerData);
-            $result['status'] = true;
-            return $result;
-        } catch (\Exception $e) {
+        }catch (\Exception $e){
             $result['status'] = false;
             $result['message'] = $e->getMessage();
-            return $result;
         }
+        return $result;
     }
 
     /**
@@ -117,17 +117,15 @@ class CustomersController extends Controller
             }
             $area = Area::find($user['customer']->area_id);
             $user['customer']['area'] = $area->name;
-            $response = [
-                "message" => $message,
-                "user" => $user
-            ];
         } catch (\Exception $e) {
             $status = 200;
             $message = "Success " . $e->getMessage();
-            $response = [
-                "message" => $message
-            ];
+            $user="";
         }
+        $response = [
+            "message" => $message,
+            "user" => $user
+        ];
         return response($response, $status);
     }
 

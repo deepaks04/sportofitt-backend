@@ -93,7 +93,7 @@ class VendorController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$users
+            "data"=> $users
         ];
         return response($response, $status);
     }
@@ -142,7 +142,7 @@ class VendorController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$vendor
+            "data"=> $vendor
         ];
         return response($response, $status);
     }
@@ -267,7 +267,7 @@ class VendorController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$user
+            "data" => $user
         ];
         return response($response, $status);
     }
@@ -339,7 +339,7 @@ class VendorController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$billingInformation
+            "data" => $billingInformation
         ];
         return response($response, $status);
     }
@@ -598,7 +598,7 @@ class VendorController extends Controller
         }
         $response = [
             "message" => $message,
-            "data"=>$newFacility
+            "data"=> $newFacility
         ];
         return response($response, $status);
     }
