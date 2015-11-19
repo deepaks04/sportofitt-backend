@@ -112,6 +112,11 @@ class CustomersController extends Controller
         return response($response, $status);
     }
 
+    /**
+     * get all information filled by customer
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+
     public function getProfileInformation()
     {
         try {
