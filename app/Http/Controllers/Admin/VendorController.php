@@ -443,12 +443,7 @@ class VendorController extends Controller
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                    //        chmod($vendorOwnDirecory, 0777);
-                    //   chmod($vendorImageUploadPath, 0777);
                 }
-
-                //  chmod($vendorImageUploadPath, 0777);
-                // foreach($files as $file){
                 $random = mt_rand(1, 1000000);
                 $extension = $file->getClientOriginalExtension();
                 $filename = sha1($user->id . $random) . ".{$extension}";
@@ -622,7 +617,6 @@ class VendorController extends Controller
                 $packageType = PackageType::where('slug', '=', 'session')->first();
                 $sessionUpdateData['package_type_id'] = $packageType->id;
                 $durationData = SessionPackage::create($sessionUpdateData);
-                // $durationData = $durationData->get()->toArray();
             }
             return true;
         } catch (\Exception $e) {
