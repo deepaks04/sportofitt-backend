@@ -33,7 +33,6 @@ class VendorController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
         $this->middleware('auth');
         $this->middleware('admin');
         $this->middleware('verify.vendor');
@@ -120,8 +119,6 @@ class VendorController extends Controller
             $userData['created_at'] = Carbon::now();
             unset($userData['business_name']);
             unset($userData['password2']);
-            // $user = User::create($userData); //Mass assignment
-            // $user->id; last inserted id
             $userId = DB::table('users')->insertGetId($userData);
             $vendorData['business_name'] = $request->business_name;
             $vendorData['user_id'] = $userId;
@@ -211,14 +208,10 @@ class VendorController extends Controller
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                    // chmod($vendorOwnDirecory, 0777);
-                    // chmod($vendorImageUploadPath, 0777);
                 }
                 $extension = $request->file('profile_picture')->getClientOriginalExtension();
                 $filename = sha1($systemUser->id . time()) . ".{$extension}";
                 $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-                // chmod($vendorImageUploadPath, 0777);
-
                 /* Rename file */
                 $user['profile_picture'] = $filename;
             }
@@ -472,7 +465,6 @@ class VendorController extends Controller
                 $vendorImages = $vimages;
             }
         } catch (\Exception $e) {
-            // echo $e->getMessage();
             $status = 500;
             $message = "something went wrong" . $e->getMessage();
             $vendorImages = "";
