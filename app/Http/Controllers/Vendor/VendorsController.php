@@ -59,6 +59,7 @@ class VendorsController extends Controller
 
     /**
      * Update First Time Login Flag
+     * * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function updateFirstLoginFlag()
     {
@@ -685,7 +686,6 @@ class VendorsController extends Controller
                 $packageType = PackageType::where('slug', '=', 'session')->first();
                 $sessionUpdateData['package_type_id'] = $packageType->id;
                 $durationData = SessionPackage::create($sessionUpdateData);
-                // $durationData = $durationData->get()->toArray();
             }
             return true;
         } catch (\Exception $e) {

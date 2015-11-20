@@ -619,7 +619,7 @@ class SessionPackageController extends Controller
                     ->where('endAt','>=',$data['endAt'])
                     ->where('is_active','=',1)
                     ->where('available_facility_id','=',$data['available_facility_id'])
-                    ->get();//->count();
+                    ->get();
                 $availableFacility = AvailableFacility::find($data['available_facility_id']);//dd($availableFacility->slots);
                 if($availableFacility->slots>$blockTimeExists->count()){ //If Blocked Time Not Exists Already
                     $data['user_id'] = $user->id;
