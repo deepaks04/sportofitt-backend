@@ -42,7 +42,6 @@ class CustomersController extends Controller
         try {
             $status = 200;
             $message = "Updated Successfully";
-            dd($request->all());
             $user = Auth::user();
             $customer = $user->customer()->first();
             $userData = $request->all();
