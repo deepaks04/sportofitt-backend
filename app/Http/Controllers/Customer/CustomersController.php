@@ -41,7 +41,8 @@ class CustomersController extends Controller
     {
         try {
             $status = 200;
-            $message = "Updated Successfully"; // dd($request->all());
+            $message = "Updated Successfully";
+            dd($request->all());
             $user = Auth::user();
             $customer = $user->customer()->first();
             $userData = $request->all();
@@ -82,9 +83,8 @@ class CustomersController extends Controller
                 'email',
                 'username'
             );
-            $customerData = $this->unsetKeys($customerKeys, $customerData); // dd($request->birthdate);
-            $birthdate = strtotime($request->birthdate);
-            $birthdate = date('Y-m-d', $birthdate);
+            $customerData = $this->unsetKeys($customerKeys, $customerData);
+            $birthdate = date('Y-m-d', strtotime($request->birthdate));
             $customerData['birthdate'] = $birthdate;
             $customer->update($customerData);
         } catch (\Exception $e) {
@@ -129,5 +129,4 @@ class CustomersController extends Controller
         ];
         return response($response, $status);
     }
-
 }
