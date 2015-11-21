@@ -362,7 +362,9 @@ class VendorsController extends Controller
      */
     public function getImages()
     {
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $imageCount = $vendor->images()->count();
         if ($imageCount == 0) {
             $status = 200;
@@ -398,7 +400,9 @@ class VendorsController extends Controller
     public function deleteImage(Requests\DeleteImageRequest $request, $id)
     {
         try {
-            $vendor = $this->getVendorInfo();
+            $getUserData = $this->getVendorInfo();
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
             if ($image!=null) {
                 $image->delete();
@@ -465,7 +469,9 @@ class VendorsController extends Controller
      */
     public function getFacility()
     {
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $facilityCount = $vendor->facility()->count();
         if ($facilityCount == 0) {
             $status = 200;
@@ -507,7 +513,9 @@ class VendorsController extends Controller
     {
         $status = 200;
         $message = "success";
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $facility = $vendor->facility()->find($id);
         if ($facility != null) {
             $facility = $facility->toArray();
@@ -542,7 +550,9 @@ class VendorsController extends Controller
                 '_method',
                 'duration'
             ), $facility);
-            $vendor = $this->getVendorInfo();
+            $getUserData = $this->getVendorInfo();
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
@@ -587,7 +597,9 @@ class VendorsController extends Controller
      */
     public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request, $id)
     {
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $facilities = $vendor->facility()->where(array('id'=>$id))->first();
         $sessionPackageInfoType = null;
         $openingHours = "";
@@ -707,6 +719,8 @@ class VendorsController extends Controller
     {
         $user = Auth::user();
         $vendor = $user->vendor()->first();
-        return $vendor;
+        $userData['user']=$user;
+        $userData ['vendor']=$vendor;
+        return $userData;
     }
 }
