@@ -273,8 +273,9 @@ class VendorController extends Controller
     public function getBillingInformation($id)
     {
         try{
-            $user = User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $billing = $vendor->billingInfo()->first();
             if ($billing != null) {
                 $message = 'success';
@@ -306,8 +307,9 @@ class VendorController extends Controller
     public function updateBillingInformation(Requests\Billing $request,$id)
     {
         try {
-            $user =  User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $billingInformation = "";
             $billing = $vendor->billingInfo()->first();
             if ($billing != null) { // Update If exists
@@ -347,8 +349,9 @@ class VendorController extends Controller
         try{
             $status = 200;
             $message = "";
-            $user = User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $bank = $vendor->bankInfo()->first();
             if ($bank != null) {
                 $message = 'success';
@@ -378,8 +381,9 @@ class VendorController extends Controller
     public function updateBankDetails(Requests\BankDetails $request,$id)
     {
         try {
-            $user = User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $billing = $vendor->bankInfo()->first();
             if ($billing != null) { // Update If exists
                 $data = $request->all();
@@ -418,9 +422,10 @@ class VendorController extends Controller
     {
         try {
             $file = $request->image_name;
-            $user = User::findOrFail($id);
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $maxUploadLimit = (int) env('VENDOR_IMAGE_UPLOAD_LIMIT');
-            $vendor = $user->vendor()->first();
             $images = $vendor->images()->count();
             if ($images == $maxUploadLimit) { // Do not allowed to upload more than 10 Images
                 $status = 406;
@@ -486,8 +491,9 @@ class VendorController extends Controller
     {
         try{
             $status = 200;
-            $user = User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $imageCount = $vendor->images()->count();
             if ($imageCount == 0) {
                 $message = "Images not found. Please upload some";
@@ -523,8 +529,9 @@ class VendorController extends Controller
     public function deleteImage($userId,$id)
     {
         try {
-            $user = User::findOrFail($userId);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
             if ($image!=null) {
                 $image->delete();
@@ -560,8 +567,9 @@ class VendorController extends Controller
             $facility = $this->unsetKeys(array(
                 'duration'
             ), $facility);
-            $user = User::findOrFail($id);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($id);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $newFacility = "";
             $facilityExists = AvailableFacility::where('vendor_id', '=', $vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
             if ($facilityExists) { // If Facility already exists
@@ -623,8 +631,9 @@ class VendorController extends Controller
      */
     public function getFacility($id)
     {
-        $user = User::findOrFail($id);
-        $vendor = $user->vendor()->first();
+        $getUserData = $this->getVendorInfo($id);
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $facilityCount = $vendor->facility()->count();
         if ($facilityCount == 0) {
             $status = 200;
@@ -686,8 +695,9 @@ class VendorController extends Controller
     {
         $status = 200;
         $message = "success";
-        $user = User::findOrFail($uid);
-        $vendor = $user->vendor()->first();
+        $getUserData = $this->getVendorInfo($uid);
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $facility = $vendor->facility()->find($id);
         if ($facility != null) {
             $facility = $facility->toArray();
@@ -724,8 +734,9 @@ class VendorController extends Controller
                 '_method',
                 'duration'
             ), $facility);
-            $user = User::findOrFail($uid);
-            $vendor = $user->vendor()->first();
+            $getUserData = $this->getVendorInfo($uid);
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
@@ -766,5 +777,13 @@ class VendorController extends Controller
             "data" => $facilityInformation
         ];
         return response($response, $status);
+    }
+    public function getVendorInfo($uid)
+    {
+        $user = User::findOrFail($uid);
+        $vendor = $user->vendor()->first();
+        $userData['user']=$user;
+        $userData ['vendor']=$vendor;
+        return $userData;
     }
 }
