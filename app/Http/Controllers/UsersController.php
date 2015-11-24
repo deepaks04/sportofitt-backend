@@ -18,6 +18,7 @@ use App\Area;
 
 class UsersController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('guest', [
@@ -33,17 +34,7 @@ class UsersController extends Controller
             ]
         ]);
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        dd(env('VENDOR_FILE_UPLOAD'));
-    }
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request            
@@ -58,7 +49,7 @@ class UsersController extends Controller
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();
             $userData['password'] = bcrypt($request->password);
-            $userData['is_active'] = 1; // Vendor need not to confirm email so is active field always 1
+            $userData['is_active'] = 1; // Vendor need to verify email address so is_active set 1 to always
             $userData['status_id'] = $userStatus->id; // By Default Pending
             $userData['role_id'] = $role->id; // Vendor Role Id
             $userData['remember_token'] = csrf_token();
@@ -73,6 +64,10 @@ class UsersController extends Controller
             $vendorData['created_at'] = Carbon::now();
             // Calling a method that is from the VendorsController
             $result = (new VendorsController())->store($vendorData);
+            if (!$result['status']) {
+                User::destroy($userId);
+                throw new \Exception($result['message']);
+            }
         } catch (\Exception $e) {
             $status = 500;
             $message= "Something Went Wrong, Vendor Registration Unsuccessful!" . $e->getMessage();
