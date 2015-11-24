@@ -18,7 +18,6 @@ use App\Area;
 
 class UsersController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('guest', [
@@ -121,7 +120,6 @@ class UsersController extends Controller
             $status = 500;
             $message="Something Went Wrong " . $e->getMessage();
         }
-
         $response = [
             "message" => $message
         ];
