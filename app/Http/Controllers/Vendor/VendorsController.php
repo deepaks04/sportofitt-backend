@@ -401,7 +401,6 @@ class VendorsController extends Controller
     public function deleteImage($id,Requests\DeleteImageRequest $request)
     {
         try {
-
             $getUserData = $this->getVendorInfo();
             $user=$getUserData['user'];
             $vendor=$getUserData['vendor'];
