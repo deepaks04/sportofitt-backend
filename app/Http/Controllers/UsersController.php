@@ -75,15 +75,6 @@ class UsersController extends Controller
             $vendorData['created_at'] = Carbon::now();
             // Calling a method that is from the VendorsController
             $result = (new VendorsController())->store($vendorData);
-           /* if ($result['status']) {
-                Mail::send('views.emails.activation', $userData, function ($message) use($userData) {
-                    $message->to($userData['email'])->subject('Account Confirmation');
-                });
-            } else {
-                User::destroy($userId);
-                throw new \Exception($result['message']);
-            }*/
-
         } catch (\Exception $e) {
             $status = 500;
             $message= "Something Went Wrong, Vendor Registration Unsuccessful!" . $e->getMessage();
