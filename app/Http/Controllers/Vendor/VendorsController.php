@@ -190,7 +190,9 @@ class VendorsController extends Controller
 
     public function getBillingInformation()
     {
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $billing = $vendor->billingInfo()->first();
         if ($billing != null) {
             $message = 'success';
@@ -216,7 +218,9 @@ class VendorsController extends Controller
     public function updateBillingInformation(Requests\Billing $request)
     {
         try {
-            $vendor = $this->getVendorInfo();
+            $getUserData = $this->getVendorInfo();
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $billing = $vendor->billingInfo()->first();
             if ($billing != null) { // Update If exists
                 $data = $request->all();
@@ -250,7 +254,9 @@ class VendorsController extends Controller
      */
     public function getBankDetails()
     {
-        $vendor = $this->getVendorInfo();
+        $getUserData = $this->getVendorInfo();
+        $user=$getUserData['user'];
+        $vendor=$getUserData['vendor'];
         $bank = $vendor->bankInfo()->first();
         if ($bank != null) {
             $message = 'success';
@@ -276,7 +282,9 @@ class VendorsController extends Controller
     public function updateBankDetails(Requests\BankDetails $request)
     {
         try {
-            $vendor = $this->getVendorInfo();
+            $getUserData = $this->getVendorInfo();
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $billing = $vendor->bankInfo()->first();
             if ($billing != null) { // Update If exists
                 $data = $request->all();
@@ -437,7 +445,9 @@ class VendorsController extends Controller
             $facility = $this->unsetKeys(array(
                 'duration'
             ), $facility);
-            $vendor = $this->getVendorInfo();
+            $getUserData = $this->getVendorInfo();
+            $user=$getUserData['user'];
+            $vendor=$getUserData['vendor'];
             $facilityExists = AvailableFacility::where('vendor_id', '=', $vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
             if ($facilityExists) { // If Facility already exists
                 $status = 406; // Not Acceptable
