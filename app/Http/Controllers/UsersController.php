@@ -18,7 +18,6 @@ use App\Area;
 
 class UsersController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('guest', [
@@ -44,7 +43,6 @@ class UsersController extends Controller
     {
         dd(env('VENDOR_FILE_UPLOAD'));
     }
-
     /**
      * Store a newly created resource in storage.
      *
