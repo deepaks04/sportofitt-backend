@@ -561,7 +561,7 @@ class VendorController extends Controller
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function createFacility(Requests\AddFacilityRequest $request,$id)
-    {   dd($request->all());
+    {
         try {
             $facility = $request->all();
             $facility = $this->unsetKeys(array(

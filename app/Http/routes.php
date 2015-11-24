@@ -113,6 +113,13 @@ Route::group([
     Route::put('change-password', array(
         'uses' => 'Auth\PasswordController@change'
     ));
+    // Password reset link request routes...
+    Route::post('password/email', 'Auth\PasswordController@postEmail');
+
+// Password reset routes...
+    //Route::get('password/reset', 'Auth\PasswordController@getReset');
+    Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+    Route::post('password/reset', 'Auth\PasswordController@postReset');
 });
 
 /* Admin Routes */
