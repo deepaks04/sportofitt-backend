@@ -8,6 +8,7 @@ use App\RootCategory;
 use App\SessionPackage;
 use App\SessionPackageChild;
 use App\Vendor;
+use App\VendorImages;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -397,13 +398,15 @@ class VendorsController extends Controller
      *            $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function deleteImage(Requests\DeleteImageRequest $request, $id)
+    public function deleteImage($id,Requests\DeleteImageRequest $request)
     {
         try {
+
             $getUserData = $this->getVendorInfo();
             $user=$getUserData['user'];
             $vendor=$getUserData['vendor'];
             $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
+            //dd($image);
             if ($image!=null) {
                 $image->delete();
                 $status = 200;
