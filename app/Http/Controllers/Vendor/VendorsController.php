@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use App\AvailableFacility;
 use App\SubCategory;
 
+
 class VendorsController extends Controller
 {
 
@@ -151,6 +152,7 @@ class VendorsController extends Controller
                 '_method',
                 'profile_picture'
             );
+
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
             if ($request->file('profile_picture')!=null) {
@@ -222,9 +224,21 @@ class VendorsController extends Controller
             $user=$getUserData['user'];
             $vendor=$getUserData['vendor'];
             $billing = $vendor->billingInfo()->first();
-            if ($billing != null) { // Update If exists
+            if ($billing!= null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
+                if($data['registration_no'] == ''){
+                   $data['registration_no']=null;
+                }
+                if($data['service_tax_no'] == ''){
+                    $data['service_tax_no']=null;
+                }
+                if($data['pan_no'] == ''){
+                   $data['pan_no']=null;
+                }
+                if($data['vat'] == ''){
+                    $data['vat']=null;
+                }
                 $vendor->billingInfo()->update($data);
             } else { // Insert if not exists
                 $data = $request->all();
@@ -234,6 +248,7 @@ class VendorsController extends Controller
                 $data['updated_at'] = Carbon::now();
                 $vendor->billingInfo()->insert($data);
             }
+
             $status = 200;
             $message = "saved successfully";
         } catch (\Exception $e) {
