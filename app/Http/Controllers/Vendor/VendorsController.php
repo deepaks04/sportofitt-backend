@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use App\AvailableFacility;
 use App\SubCategory;
 
+
 class VendorsController extends Controller
 {
 
@@ -151,6 +152,7 @@ class VendorsController extends Controller
                 '_method',
                 'profile_picture'
             );
+
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
             if ($request->file('profile_picture')!=null) {
@@ -222,18 +224,39 @@ class VendorsController extends Controller
             $user=$getUserData['user'];
             $vendor=$getUserData['vendor'];
             $billing = $vendor->billingInfo()->first();
-            if ($billing != null) { // Update If exists
+            if ($billing!= null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
+                if($data['registration_no'] == '')
+                {  unset($data['registration_no']);
+                    $data['registration_no']=null;
+                }
+                if($data['service_tax_no'] == '')
+                {  unset($data['service_tax_no']);
+                    $data['service_tax_no']=null;
+                }
+                if($data['pan_no'] == '')
+                {  unset($data['pan_no']);
+                    $data['pan_no']=null;
+                }
+                if($data['vat'] == '')
+                {  unset($data['vat']);
+                    $data['vat']=null;
+                }
                 $vendor->billingInfo()->update($data);
             } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
+                //$data = $this->unsetKeys(array('registration_no','service_tax_no','pan_no','vat'),$data);
+                //dd($data);
+
                 $data['vendor_id'] = $vendor->id;
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
+                DD($data);
                 $vendor->billingInfo()->insert($data);
             }
+
             $status = 200;
             $message = "saved successfully";
         } catch (\Exception $e) {
