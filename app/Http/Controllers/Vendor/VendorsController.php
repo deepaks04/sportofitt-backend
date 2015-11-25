@@ -227,33 +227,25 @@ class VendorsController extends Controller
             if ($billing!= null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
-                if($data['registration_no'] == '')
-                {  unset($data['registration_no']);
-                    $data['registration_no']=null;
+                if($data['registration_no'] == ''){
+                   $data['registration_no']=null;
                 }
-                if($data['service_tax_no'] == '')
-                {  unset($data['service_tax_no']);
+                if($data['service_tax_no'] == ''){
                     $data['service_tax_no']=null;
                 }
-                if($data['pan_no'] == '')
-                {  unset($data['pan_no']);
-                    $data['pan_no']=null;
+                if($data['pan_no'] == ''){
+                   $data['pan_no']=null;
                 }
-                if($data['vat'] == '')
-                {  unset($data['vat']);
+                if($data['vat'] == ''){
                     $data['vat']=null;
                 }
                 $vendor->billingInfo()->update($data);
             } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
-                //$data = $this->unsetKeys(array('registration_no','service_tax_no','pan_no','vat'),$data);
-                //dd($data);
-
                 $data['vendor_id'] = $vendor->id;
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
-                DD($data);
                 $vendor->billingInfo()->insert($data);
             }
 
