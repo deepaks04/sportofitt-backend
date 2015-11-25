@@ -18,7 +18,6 @@ use App\Area;
 
 class UsersController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('guest', [
@@ -34,18 +33,7 @@ class UsersController extends Controller
             ]
         ]);
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        dd(env('VENDOR_FILE_UPLOAD'));
-    }
-
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request            
@@ -55,12 +43,12 @@ class UsersController extends Controller
     {
         try {
             $status = 200;
-            $message="Vendor Registered Successfully! Please check your email for the instructions on how to confirm your account";
+            $message="Vendor Registered Successfully! Please login to continue";
             $role = Role::where('slug', 'vendor')->first();
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();
             $userData['password'] = bcrypt($request->password);
-            $userData['is_active'] = 0; // will be 1 after email verification
+            $userData['is_active'] = 1; // Vendor need to verify email address so is_active set 1 to always
             $userData['status_id'] = $userStatus->id; // By Default Pending
             $userData['role_id'] = $role->id; // Vendor Role Id
             $userData['remember_token'] = csrf_token();
@@ -75,11 +63,7 @@ class UsersController extends Controller
             $vendorData['created_at'] = Carbon::now();
             // Calling a method that is from the VendorsController
             $result = (new VendorsController())->store($vendorData);
-            if ($result['status']) {
-                Mail::send('views.emails.activation', $userData, function ($message) use($userData) {
-                    $message->to($userData['email'])->subject('Account Confirmation');
-                });
-            } else {
+            if (!$result['status']) {
                 User::destroy($userId);
                 throw new \Exception($result['message']);
             }
@@ -136,7 +120,6 @@ class UsersController extends Controller
             $status = 500;
             $message="Something Went Wrong " . $e->getMessage();
         }
-
         $response = [
             "message" => $message
         ];
