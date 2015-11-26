@@ -587,13 +587,12 @@ class SessionPackageController extends Controller
                             ->where('day','=',$data['day'])
                             ->where('is_active','=',1)
                             ->where('session_package_id','=',$sessionPackageMaster->id)
-                            ->first();//->count();
-            if($openingTimeExists!=null && $openingTimeExists->count()>0){ //Opening Time Available
-
+                            ->first();
+            if($openingTimeExists!=null ){ //Opening Time Available
                 $blockTimeExists = SessionBooking::where('startsAt','<=',$data['startsAt'])
                     ->where('endsAt','>=',$data['startsAt'])
                     ->where('startsAt','<=',$data['endsAt'])
-                    ->where('endsAt','>=',$data['endsAt'])
+                    //->where('endsAt','>=',$data['endsAt'])
                     //->where('date','=',$data['date'])
                     ->where('is_active','=',1)
                     ->where('available_facility_id','=',$data['available_facility_id'])
