@@ -635,13 +635,21 @@ class SessionPackageController extends Controller
     public function deleteBlockedData(Request $request,$id)
     {
         try {
-            $status = 200;
-            $message = "Blocked Time Successfully Deleted";
             $getUserData = $this->getVendorInfo();
             $session=$request->all();
             $user=$getUserData['user'];
-            unset($session['_method']);
             $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$user->id))->update(array('is_active'=>0));
+
+            if($blockData != 0 ){
+                $status = 200;
+                $message = "Blocked Time Successfully Deleted";
+                unset($session['_method']);
+        }
+            else{
+                $status = 403;
+                $message = "Forbidden ";
+
+            }
 
         } catch (\Exception $e) {
             $status = 500;
