@@ -587,14 +587,11 @@ class SessionPackageController extends Controller
                             ->where('day','=',$data['day'])
                             ->where('is_active','=',1)
                             ->where('session_package_id','=',$sessionPackageMaster->id)
-                            ->first();//->count();
-            if($openingTimeExists!=null && $openingTimeExists->count()>0){ //Opening Time Available
-
-                $blockTimeExists = SessionBooking::where('startsAt','<=',$data['startsAt'])
-                    ->where('endsAt','>=',$data['startsAt'])
-                    ->where('startsAt','<=',$data['endsAt'])
-                    ->where('endsAt','>=',$data['endsAt'])
-                    //->where('date','=',$data['date'])
+                            ->first();
+            if($openingTimeExists!=null ){ //Opening Time Available
+                $startAt = $data['startsAt'];
+                $endAt = $data['endsAt'];
+                $blockTimeExists = SessionBooking::select('*')->whereRaw(" ('$startAt' between startsAt and endsAt or '$endAt' between startsAt and endsAt )")
                     ->where('is_active','=',1)
                     ->where('available_facility_id','=',$data['available_facility_id'])
                     ->get();//->count();
@@ -650,8 +647,8 @@ class SessionPackageController extends Controller
             "message" => $message
         ];
         return response($response, $status);
-
     }
+
     /**
      * @param Request $request
      * @param         $yearMonth
