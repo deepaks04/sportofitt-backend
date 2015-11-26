@@ -642,7 +642,7 @@ class SessionPackageController extends Controller
             $user=$getUserData['user'];
             unset($session['_method']);
             $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$user->id))->update(array('is_active'=>0));
-            
+
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong";

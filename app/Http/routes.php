@@ -56,14 +56,6 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
 
 });
-define('DB_NAME', 'infinia_dev');
-
-/** MySQL database username */
-define('DB_USER', 'root');
-
-/** MySQL database password */
-define('DB_PASSWORD', 'woxi@1234');
-
 // Route::controllers([
 // 'auth' => 'Auth\AuthController',
 // 'password' => 'Auth\PasswordController',
