@@ -629,6 +629,31 @@ class SessionPackageController extends Controller
 
     /**
      * @param Request $request
+     * @param         $id
+     */
+    public function deleteBlockedData(Request $request,$id)
+    {
+        try {
+            $status = 200;
+            $message = "Blocked Time Successfully Deleted";
+            $getUserData = $this->getVendorInfo();
+            $session=$request->all();
+            $user=$getUserData['user'];
+            unset($session['_method']);
+            $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$user->id))->update(array('is_active'=>0));
+
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message
+        ];
+        return response($response, $status);
+
+    }
+    /**
+     * @param Request $request
      * @param         $yearMonth
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -714,5 +739,13 @@ class SessionPackageController extends Controller
             "data"=> $blockData
         ];
         return response($response,$status);
+    }
+    public function getVendorInfo()
+    {
+        $user = Auth::user();
+        $vendor = $user->vendor()->first();
+        $userData['user']=$user;
+        $userData ['vendor']=$vendor;
+        return $userData;
     }
 }
