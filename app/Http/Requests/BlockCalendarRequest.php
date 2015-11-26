@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\AvailableFacility;
 use App\Http\Requests\Request;
+use App\SessionBooking;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +41,20 @@ class BlockCalendarRequest extends Request
                 }
                 break;
             case 'GET':
-                return true;
+                $id = $this->route('id');
+                $session = SessionBooking::find($id);
+                if ($session != null) {
+                    $vendor = $user->vendor($user->id)->first();
+                    $isOwner = SessionBooking::where('id', '=', $session->id)->where('user_id', '=', $vendor->user_id)->count();
+                    if ($isOwner) {
+                        return true;
+                        break;
+                    } else {
+                        return false;
+                        break;
+                    }
+                }
+                return false;
                 break;
             case 'POST':
                 return true;
@@ -59,6 +74,10 @@ class BlockCalendarRequest extends Request
     {
         switch($this->method())
         {
+            case 'GET':
+                return [
+                ];
+                break;
             case 'PUT':
                 return [
                     'name' => 'required|min:5|max:50',
