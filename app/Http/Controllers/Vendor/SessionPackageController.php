@@ -632,17 +632,16 @@ class SessionPackageController extends Controller
      * @param Request $request
      * @param         $id
      */
-    public function deleteBlockedData(Request $request,$id)
+    public function deleteBlockedData(Requests\BlockCalendarRequest $request,$id)
     {
         try {
-            $status = 200;
-            $message = "Blocked Time Successfully Deleted";
             $getUserData = $this->getVendorInfo();
             $session=$request->all();
             $user=$getUserData['user'];
+            $status = 200;
+            $message = "Blocked Time Successfully Deleted";
             unset($session['_method']);
             $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$user->id))->update(array('is_active'=>0));
-
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong";
