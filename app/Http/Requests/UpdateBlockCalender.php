@@ -68,7 +68,6 @@ class UpdateBlockCalender extends Request
             case 'PUT':
                 return [
                     'startsAt' => 'required|date'
-
                 ];
                 break;
             case 'POST':

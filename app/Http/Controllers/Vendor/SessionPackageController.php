@@ -655,16 +655,14 @@ class SessionPackageController extends Controller
      {
          try {
              $session=$request->all();
-             unset($session['_method'],$session['daySpan'],$session['dayOffset']);
+             $session= $this->unsetKeys(array('_method','daySpan','dayOffset'),$session);
              $sessionBookingData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))->first();
              $sessionPackageMaster = SessionPackage::where(array('available_facility_id'=>$sessionBookingData['available_facility_id']))->first();
              if($sessionPackageMaster != null){
              $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
              $time = strtotime($session['startsAt']);
              $endsAt = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-
             }
-
              $date = strtotime($session['startsAt']);
              $day = date('l', $date);
              $day = strtolower($day);
@@ -678,34 +676,26 @@ class SessionPackageController extends Controller
                  ->where('is_active','=',1)
                  ->where('session_package_id','=',$sessionPackageMaster->id)
                  ->first();
-             if($openingTimeExists!=null ){ //Opening Time Available
+             if($openingTimeExists!=null ){
                  $startAt = $session['startsAt'];
                  $endAt = $endsAt;
                  $blockTimeExists = SessionBooking::select('*')->whereRaw(" ('$startAt' between startsAt and endsAt or '$endAt' between startsAt and endsAt )")
                      ->where('is_active','=',1)
                      ->where('available_facility_id','=',$sessionBookingData['available_facility_id'])
-                     ->get();//->count();
-
+                     ->get();
                  $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);//dd($availableFacility->slots);
                  if($availableFacility->slots>$blockTimeExists->count()){ //If Blocked Time Not Exists Already
                      $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))->update(array('startsAt'=>$session['startsAt'],'endsAt'=>$endsAt));
                      $status = 200;
                      $message = " Blocked Entry updated Successfully";
-
-                 }else{ //Blocked Time Already Exists for selected time & Date
+                 }else{
                      $status = 406;
                      $message = "Booking or blocking time already exists for selected date & time";
                  }
-             }else{ //No Opening Time Available For Selected Time & Date
+             }else{
                  $status = 406;
                  $message = "Opening time isn't available for selected time & date";
              }
-
-
-
-
-
-
              } catch (\Exception $e) {
              $status = 500;
              $message = "something went wrong";
@@ -714,7 +704,6 @@ class SessionPackageController extends Controller
              "message" => $message
          ];
          return response($response, $status);
-
      }
 
     /**
