@@ -15,6 +15,7 @@ use DB;
 use Auth;
 use App\User;
 use File;
+use Mockery\Exception;
 use URL;
 use App\Billing;
 use Carbon\Carbon;
@@ -560,6 +561,28 @@ class VendorsController extends Controller
         ];
         return response($response, $status);
     }
+
+
+    public function enableDisableFacility(Requests\EnabledisableRequest $request,$id)
+    {
+        try {
+            $getUserData = $this->getVendorInfo();
+            $session=$request->all();
+            $user=$getUserData['user'];
+            $status = 200;
+            $message = "facility successfully updated";
+            unset($session['_method']);
+            $blockData = AvailableFacility::where(array('id'=>$id))->update(array('is_active'=>$session['is_active']));
+             } catch (\Exception $e) {
+            $status = 500;
+            $message = "something went wrong";
+        }
+        $response = [
+            "message" => $message
+        ];
+        return response($response, $status);
+    }
+
 
     /**
      * @param Requests\AddFacilityRequest $request
