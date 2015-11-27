@@ -30,8 +30,8 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
     Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
     Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
-    //Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
     Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@enableDisableFacility'));
+    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
