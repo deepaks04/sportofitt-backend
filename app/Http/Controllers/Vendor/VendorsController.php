@@ -37,6 +37,9 @@ class VendorsController extends Controller
                 'store'
             ]
         ]);
+        $this->user = Auth::user();
+        $this->vendor = $this->user->vendor()->first();
+
     }
 
     /**
@@ -192,10 +195,8 @@ class VendorsController extends Controller
 
     public function getBillingInformation()
     {
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $billing = $vendor->billingInfo()->first();
+
+        $billing = $this->vendor->billingInfo()->first();
         if ($billing != null) {
             $message = 'success';
             $status = 200;
@@ -220,10 +221,7 @@ class VendorsController extends Controller
     public function updateBillingInformation(Requests\Billing $request)
     {
         try {
-            $getUserData = $this->getVendorInfo();
-            $user=$getUserData['user'];
-            $vendor=$getUserData['vendor'];
-            $billing = $vendor->billingInfo()->first();
+            $billing = $this->vendor->billingInfo()->first();
             if ($billing!= null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
@@ -239,14 +237,14 @@ class VendorsController extends Controller
                 if($data['vat'] == ''){
                     $data['vat']=null;
                 }
-                $vendor->billingInfo()->update($data);
+                $this->vendor->billingInfo()->update($data);
             } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
-                $data['vendor_id'] = $vendor->id;
+                $data['vendor_id'] = $this->vendor->id;
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
-                $vendor->billingInfo()->insert($data);
+                $this->vendor->billingInfo()->insert($data);
             }
 
             $status = 200;
@@ -269,10 +267,7 @@ class VendorsController extends Controller
      */
     public function getBankDetails()
     {
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $bank = $vendor->bankInfo()->first();
+        $bank = $this->vendor->bankInfo()->first();
         if ($bank != null) {
             $message = 'success';
             $status = 200;
@@ -297,21 +292,18 @@ class VendorsController extends Controller
     public function updateBankDetails(Requests\BankDetails $request)
     {
         try {
-            $getUserData = $this->getVendorInfo();
-            $user=$getUserData['user'];
-            $vendor=$getUserData['vendor'];
-            $billing = $vendor->bankInfo()->first();
+            $billing = $this->vendor->bankInfo()->first();
             if ($billing != null) { // Update If exists
                 $data = $request->all();
                 unset($data['_method']);
-                $vendor->bankInfo()->update($data);
+                $this->vendor->bankInfo()->update($data);
             } else { // Insert if not exists
                 $data = $request->all();
                 unset($data['_method']);
-                $data['vendor_id'] = $vendor->id;
+                $data['vendor_id'] = $this->vendor->id;
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
-                $vendor->bankInfo()->insert($data);
+                $this->vendor->bankInfo()->insert($data);
             }
             $status = 200;
             $message = "saved successfully";
@@ -385,10 +377,7 @@ class VendorsController extends Controller
      */
     public function getImages()
     {
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $imageCount = $vendor->images()->count();
+        $imageCount = $this->vendor->images()->count();
         if ($imageCount == 0) {
             $status = 200;
             $message = "Images not found. Please upload some";
@@ -396,11 +385,11 @@ class VendorsController extends Controller
         } else {
             $status = 200;
             $message = "success";
-            $images = $vendor->images()
+            $images = $this->vendor->images()
                 ->get()
                 ->toArray();
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "extra_images/";
             for ($i = 0; $i < $imageCount; $i ++) {
                 $images[$i]['image_name'] = $url . $images[$i]['image_name'];
             }
@@ -423,16 +412,13 @@ class VendorsController extends Controller
     public function deleteImage(Requests\DeleteImageRequest $request, $id)
     {
         try {
-            $getUserData = $this->getVendorInfo();
-            $user=$getUserData['user'];
-            $vendor=$getUserData['vendor'];
-            $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$vendor->id))->first();
+            $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$this->vendor->id))->first();
             if ($image!=null) {
                 $image->delete();
                 $status = 200;
                 $message = "Image deleted successfully";
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $path = $vendorUploadPath . "/" . sha1($user->id) . "/" . "extra_images/";
+                $path = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "extra_images/";
                 File::delete($path . $image->image_name);
             } else {
                 $status = 500;
@@ -460,17 +446,14 @@ class VendorsController extends Controller
             $facility = $this->unsetKeys(array(
                 'duration'
             ), $facility);
-            $getUserData = $this->getVendorInfo();
-            $user=$getUserData['user'];
-            $vendor=$getUserData['vendor'];
-            $facilityExists = AvailableFacility::where('vendor_id', '=', $vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
+            $facilityExists = AvailableFacility::where('vendor_id', '=', $this->vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
             if ($facilityExists) { // If Facility already exists
                 $status = 406; // Not Acceptable
                 $message = "Facility already exists";
             } else { // If not then create
                 $status = 200;
                 $message = "New facility added successfully";
-                $facility['vendor_id'] = $vendor->id;
+                $facility['vendor_id'] = $this->vendor->id;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
                 $newFacility = AvailableFacility::create($facility);
@@ -494,10 +477,7 @@ class VendorsController extends Controller
      */
     public function getFacility()
     {
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $facilityCount = $vendor->facility()->count();
+        $facilityCount = $this->vendor->facility()->count();
         if ($facilityCount == 0) {
             $status = 200;
             $message = "Facility not found. Please create some";
@@ -506,7 +486,7 @@ class VendorsController extends Controller
         } else {
             $status = 200;
             $message = "success";
-            $facility = $vendor->facility()
+            $facility = $this->vendor->facility()
                 ->get()
                 ->toArray();
             for ($i = 0; $i < $facilityCount; $i ++) {
@@ -516,7 +496,7 @@ class VendorsController extends Controller
                 $facility[$i]['duration'] = $sessionDuration;
             }
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
             for ($i = 0; $i < $facilityCount; $i ++) {
                 $facility[$i]['image'] = $url . $facility[$i]['image'];
             }
@@ -538,16 +518,13 @@ class VendorsController extends Controller
     {
         $status = 200;
         $message = "success";
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $facility = $vendor->facility()->find($id);
+        $facility = $this->vendor->facility()->find($id);
         if ($facility != null) {
             $facility = $facility->toArray();
             $sessionDuration = $this->getDurationData($facility['id']);
             $facility['duration'] = $sessionDuration;
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($user->id) . "/" . "facility_images/";
+            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
             $facility['image'] = $url . $facility['image'];
         } else {
             $status = 200;
@@ -575,16 +552,13 @@ class VendorsController extends Controller
                 '_method',
                 'duration'
             ), $facility);
-            $getUserData = $this->getVendorInfo();
-            $user=$getUserData['user'];
-            $vendor=$getUserData['vendor'];
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
             if (isset($facility['image']) && ! empty($facility['image'])) {
                 /* File Upload Code */
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorOwnDirecory = $vendorUploadPath . sha1($this->user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory . "/" . "facility_images";
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
@@ -593,14 +567,14 @@ class VendorsController extends Controller
                     chmod($vendorImageUploadPath, 0777);
                 }
                 $extension = $request->file('image')->getClientOriginalExtension();
-                $filename = sha1($user->id . time()) . ".{$extension}";
+                $filename = sha1($this->user->id . time()) . ".{$extension}";
                 $request->file('image')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
 
                 /* Rename file */
                 $facility['image'] = $filename;
             }
-            $facility['vendor_id'] = $vendor->id;
+            $facility['vendor_id'] = $this->vendor->id;
             AvailableFacility::where('id', '=', $id)->update($facility);
             $sessionUpdateData['duration'] = $request->duration;
             $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
@@ -622,10 +596,8 @@ class VendorsController extends Controller
      */
     public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request, $id)
     {
-        $getUserData = $this->getVendorInfo();
-        $user=$getUserData['user'];
-        $vendor=$getUserData['vendor'];
-        $facilities = $vendor->facility()->where(array('id'=>$id))->first();
+        dd($request);
+        $facilities = $this->vendor->facility()->where(array('id'=>$id))->first();
         $sessionPackageInfoType = null;
         $openingHours = "";
         $packageInformation = "";
@@ -687,7 +659,7 @@ class VendorsController extends Controller
         $status = 200;
         $response = [
             "message" => "success",
-            "user" => $user,
+            "user" => $this->user,
             "facility" => $facilityData,
             "openingHours" => $openingHours,
             "packageInformation" => $packageInformation
@@ -739,13 +711,5 @@ class VendorsController extends Controller
         } else {
             return 0;
         }
-    }
-    public function getVendorInfo()
-    {
-        $user = Auth::user();
-        $vendor = $user->vendor()->first();
-        $userData['user']=$user;
-        $userData ['vendor']=$vendor;
-        return $userData;
     }
 }
