@@ -596,7 +596,6 @@ class VendorsController extends Controller
      */
     public function getFacilityDetailInformation(Requests\FacilityInfoRequest $request, $id)
     {
-        dd($request);
         $facilities = $this->vendor->facility()->where(array('id'=>$id))->first();
         $sessionPackageInfoType = null;
         $openingHours = "";
