@@ -27,6 +27,8 @@ class SessionPackageController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('vendor');
+        $this->user = Auth::user();
+        $this->vendor = $this->user->vendor()->first();
     }
 
     /**
@@ -632,13 +634,11 @@ class SessionPackageController extends Controller
     public function deleteBlockedData(Requests\BlockCalendarRequest $request,$id)
     {
         try {
-            $getUserData = $this->getVendorInfo();
             $session=$request->all();
-            $user=$getUserData['user'];
             $status = 200;
             $message = "Blocked Time Successfully Deleted";
             unset($session['_method']);
-            $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$user->id))->update(array('is_active'=>0));
+            $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))->update(array('is_active'=>0));
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong";
@@ -736,13 +736,5 @@ class SessionPackageController extends Controller
             "data"=> $blockData
         ];
         return response($response,$status);
-    }
-    public function getVendorInfo()
-    {
-        $user = Auth::user();
-        $vendor = $user->vendor()->first();
-        $userData['user']=$user;
-        $userData ['vendor']=$vendor;
-        return $userData;
     }
 }
