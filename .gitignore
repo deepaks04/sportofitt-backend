@@ -1,7 +1,9 @@
 /vendor
-storage/framework/views/
-storage/logs/
 storage/framework/sessions/
+storage/framework/views/
+
+storage/logs/
+bootstrap/cache/
 /node_modules
 Homestead.yaml
 Homestead.json

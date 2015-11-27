@@ -125,7 +125,7 @@ class PasswordController extends Controller
             //return redirect()->back()->with('status', trans($response));
 
             case Password::INVALID_USER:
-                $status = 200;
+                $status = 401;
                 $message = 'Invalid User';
                 break;
             //return redirect()->back()->withErrors(['email' => trans($response)]);
