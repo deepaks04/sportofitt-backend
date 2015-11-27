@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\DayMaster;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -205,6 +206,23 @@ class UsersController extends Controller
         }
         $response = [
             "message" => $message
+        ];
+        return response($response, $status);
+    }
+
+    public function dayMaster(){
+        try{
+            $day = DayMaster::all();
+            $status = 200;
+            $message = "success";
+        }catch(\Exception $e){
+            $status = 500;
+            $message = "something went wrong";
+            $day = '';
+        }
+        $response = [
+            "message" => $message,
+            'data' => $day
         ];
         return response($response, $status);
     }
