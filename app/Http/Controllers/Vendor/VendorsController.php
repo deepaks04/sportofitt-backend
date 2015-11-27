@@ -543,9 +543,7 @@ class VendorsController extends Controller
     public function enableDisableFacility(Requests\EnabledisableRequest $request,$id)
     {
         try {
-            $getUserData = $this->getVendorInfo();
             $session=$request->all();
-            $user=$getUserData['user'];
             $status = 200;
             $message = "facility successfully updated";
             unset($session['_method']);
