@@ -59,7 +59,9 @@ class EnabledisableRequest extends Request
                 ];
                 break;
             case 'PUT':
-               return[];
+               return[
+                   'is_active' => 'required|boolean'
+               ];
                 break;
             case 'POST':
                 return [];
