@@ -115,6 +115,8 @@ Route::group([
     //Route::get('password/reset', 'Auth\PasswordController@getReset');
     Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
     Route::post('password/reset', 'Auth\PasswordController@postReset');
+    /* Day master */
+    Route::get('day-master', 'UsersController@dayMaster');
 });
 
 /* Admin Routes */
