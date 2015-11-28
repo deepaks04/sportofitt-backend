@@ -1,85 +1,138 @@
 'use strict';
 
-/**
- * @ngdoc directive
- * @name angularBootstrapCalendarApp.directive:mwlCalendar
- * @description
- * # mwlCalendar
- */
-angular.module('mwl.calendar')
-  .directive('mwlCalendar', function () {
+var angular = require('angular');
+
+angular
+  .module('mwl.calendar')
+  .controller('MwlCalendarCtrl', function($scope, $log, $timeout, $window, $attrs, $locale, moment, calendarTitle) {
+
+    var vm = this;
+
+    vm.events = vm.events || [];
+
+    vm.changeView = function(view, newDay) {
+      vm.view = view;
+      vm.currentDay = newDay;
+    };
+
+    vm.drillDown = function(date) {
+
+      var rawDate = moment(date).toDate();
+
+      var nextView = {
+        year: 'month',
+        month: 'day',
+        week: 'day'
+      };
+
+      if (vm.onDrillDownClick({calendarDate: rawDate, calendarNextView: nextView[vm.view]}) !== false) {
+        vm.changeView(nextView[vm.view], rawDate);
+      }
+
+    };
+
+    var previousDate = moment(vm.currentDay);
+    var previousView = vm.view;
+
+    function eventIsValid(event) {
+      if (!event.startsAt) {
+        $log.warn('Bootstrap calendar: ', 'Event is missing the startsAt field', event);
+      }
+
+      if (!angular.isDate(event.startsAt)) {
+        $log.warn('Bootstrap calendar: ', 'Event startsAt should be a javascript date object', event);
+      }
+
+      if (angular.isDefined(event.endsAt)) {
+        if (!angular.isDate(event.endsAt)) {
+          $log.warn('Bootstrap calendar: ', 'Event endsAt should be a javascript date object', event);
+        }
+        if (moment(event.startsAt).isAfter(moment(event.endsAt))) {
+          $log.warn('Bootstrap calendar: ', 'Event cannot start after it finishes', event);
+        }
+      }
+
+      return true;
+    }
+
+    function refreshCalendar() {
+
+      if (calendarTitle[vm.view] && angular.isDefined($attrs.viewTitle)) {
+        vm.viewTitle = calendarTitle[vm.view](vm.currentDay);
+      }
+
+      vm.events = vm.events.filter(eventIsValid).map(function(event, index) {
+        Object.defineProperty(event, '$id', {enumerable: false, configurable: true, value: index});
+        return event;
+      });
+
+      //if on-timespan-click="calendarDay = calendarDate" is set then don't update the view as nothing needs to change
+      var currentDate = moment(vm.currentDay);
+      var shouldUpdate = true;
+      if (
+        previousDate.clone().startOf(vm.view).isSame(currentDate.clone().startOf(vm.view)) &&
+        !previousDate.isSame(currentDate) &&
+        vm.view === previousView
+      ) {
+        shouldUpdate = false;
+      }
+      previousDate = currentDate;
+      previousView = vm.view;
+
+      if (shouldUpdate) {
+        // a $timeout is required as $broadcast is synchronous so if a new events array is set the calendar won't update
+        $timeout(function() {
+          $scope.$broadcast('calendar.refreshView');
+        });
+      }
+    }
+
+    var eventsWatched = false;
+
+    //Refresh the calendar when any of these variables change.
+    $scope.$watchGroup([
+      'vm.currentDay',
+      'vm.view',
+      function() {
+        return moment.locale() + $locale.id; //Auto update the calendar when the locale changes
+      }
+    ], function() {
+      if (!eventsWatched) {
+        eventsWatched = true;
+        //need to deep watch events hence why it isn't included in the watch group
+        $scope.$watch('vm.events', refreshCalendar, true); //this will call refreshCalendar when the watcher starts (i.e. now)
+      } else {
+        refreshCalendar();
+      }
+    });
+
+  })
+  .directive('mwlCalendar', function(calendarUseTemplates) {
+
     return {
-      templateUrl: 'templates/main.html',
+      template: calendarUseTemplates ? require('./../templates/calendar.html') : '',
       restrict: 'EA',
       scope: {
-        events: '=calendarEvents',
-        view: '=calendarView',
-        currentDay: '=calendarCurrentDay',
-        control: '=calendarControl',
-        eventClick: '&calendarEventClick',
-        eventEditClick: '&calendarEditEventClick',
-        eventDeleteClick: '&calendarDeleteEventClick',
-        editEventHtml: '=calendarEditEventHtml',
-        deleteEventHtml: '=calendarDeleteEventHtml',
-        autoOpen: '=calendarAutoOpen',
-        useIsoWeek: '=calendarUseIsoWeek',
-        eventLabel: '@calendarEventLabel',
-        timeLabel: '@calendarTimeLabel',
-        dayViewStart:'@calendarDayViewStart',
-        dayViewEnd:'@calendarDayViewEnd',
-        weekTitleLabel: '@calendarWeekTitleLabel',
-        timespanClick: '&calendarTimespanClick'
+        events: '=',
+        view: '=',
+        viewTitle: '=?',
+        currentDay: '=',
+        editEventHtml: '=',
+        deleteEventHtml: '=',
+        autoOpen: '=',
+        onEventClick: '&',
+        onEventTimesChanged: '&',
+        onEditEventClick: '&',
+        onDeleteEventClick: '&',
+        onTimespanClick: '&',
+        onDrillDownClick: '&',
+        cellModifier: '&',
+        dayViewStart: '@',
+        dayViewEnd: '@',
+        dayViewSplit: '@'
       },
-      controller: function($scope, $timeout, $locale, moment) {
-
-        var self = this;
-
-        this.titleFunctions = {};
-
-        this.changeView = function(view, newDay) {
-          $scope.view = view;
-          $scope.currentDay = newDay;
-        };
-
-        $scope.control = $scope.control || {};
-
-        $scope.control.prev = function() {
-          $scope.currentDay = moment($scope.currentDay).subtract(1, $scope.view).toDate();
-        };
-
-        $scope.control.next = function() {
-          $scope.currentDay = moment($scope.currentDay).add(1, $scope.view).toDate();
-        };
-
-        $scope.control.getTitle = function() {
-          if (!self.titleFunctions[$scope.view]) {
-            return '';
-          }
-          return self.titleFunctions[$scope.view]($scope.currentDay);
-        };
-
-        //Auto update the calendar when the locale changes
-        var firstRunWatcher = true;
-        var unbindWatcher = $scope.$watch(function() {
-          return moment.locale() + $locale.id;
-        }, function() {
-          if (firstRunWatcher) { //dont run the first time the calendar is initialised
-            firstRunWatcher = false;
-            return;
-          }
-          var originalView = angular.copy($scope.view);
-          $scope.view = 'redraw';
-          $timeout(function() { //bit of a hacky way to redraw the calendar, should be refactored at some point
-            $scope.view = originalView;
-          });
-        });
-
-        //Remove the watcher when the calendar is destroyed
-        var unbindDestroyListener = $scope.$on('$destroy', function() {
-          unbindDestroyListener();
-          unbindWatcher();
-        });
-
-      }
+      controller: 'MwlCalendarCtrl as vm',
+      bindToController: true
     };
+
   });

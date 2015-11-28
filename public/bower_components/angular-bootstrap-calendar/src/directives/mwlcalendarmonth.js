@@ -1,108 +1,109 @@
 'use strict';
 
-/**
- * @ngdoc directive
- * @name angularBootstrapCalendarApp.directive:mwlCalendarMonth
- * @description
- * # mwlCalendarMonth
- */
-angular.module('mwl.calendar')
-  .directive('mwlCalendarMonth', function ($sce, $timeout, $filter, moment, calendarHelper) {
+var angular = require('angular');
+
+angular
+  .module('mwl.calendar')
+  .controller('MwlCalendarMonthCtrl', function($scope, moment, calendarHelper) {
+
+    var vm = this;
+
+    $scope.$on('calendar.refreshView', function() {
+
+      vm.weekDays = calendarHelper.getWeekDayNames();
+
+      vm.view = calendarHelper.getMonthView(vm.events, vm.currentDay, vm.cellModifier);
+      var rows = Math.floor(vm.view.length / 7);
+      vm.monthOffsets = [];
+      for (var i = 0; i < rows; i++) {
+        vm.monthOffsets.push(i * 7);
+      }
+
+      //Auto open the calendar to the current day if set
+      if (vm.autoOpen) {
+        vm.view.forEach(function(day) {
+          if (day.inMonth && moment(vm.currentDay).startOf('day').isSame(day.date) && !vm.openDayIndex) {
+            vm.dayClicked(day, true);
+          }
+        });
+      }
+
+    });
+
+    vm.dayClicked = function(day, dayClickedFirstRun) {
+
+      if (!dayClickedFirstRun) {
+        vm.onTimespanClick({
+          calendarDate: day.date.toDate()
+        });
+      }
+
+      vm.openRowIndex = null;
+      var dayIndex = vm.view.indexOf(day);
+      if (dayIndex === vm.openDayIndex) { //the day has been clicked and is already open
+        vm.openDayIndex = null; //close the open day
+      } else {
+        vm.openDayIndex = dayIndex;
+        vm.openRowIndex = Math.floor(dayIndex / 7);
+      }
+
+    };
+
+    vm.highlightEvent = function(event, shouldAddClass) {
+
+      vm.view.forEach(function(day) {
+        delete day.highlightClass;
+        if (shouldAddClass) {
+          var dayContainsEvent = day.events.indexOf(event) > -1;
+          if (dayContainsEvent) {
+            day.highlightClass = 'day-highlight dh-event-' + event.type;
+          }
+        }
+      });
+
+    };
+
+    vm.handleEventDrop = function(event, newDayDate) {
+
+      var newStart = moment(event.startsAt)
+        .date(moment(newDayDate).date())
+        .month(moment(newDayDate).month());
+
+      var newEnd = calendarHelper.adjustEndDateFromStartDiff(event.startsAt, newStart, event.endsAt);
+
+      vm.onEventTimesChanged({
+        calendarEvent: event,
+        calendarDate: newDayDate,
+        calendarNewEventStart: newStart.toDate(),
+        calendarNewEventEnd: newEnd ? newEnd.toDate() : null
+      });
+    };
+
+  })
+  .directive('mwlCalendarMonth', function(calendarUseTemplates) {
+
     return {
-      templateUrl: 'templates/month.html',
+      template: calendarUseTemplates ? require('./../templates/calendarMonthView.html') : '',
       restrict: 'EA',
       require: '^mwlCalendar',
       scope: {
-        events: '=calendarEvents',
-        currentDay: '=calendarCurrentDay',
-        eventClick: '=calendarEventClick',
-        eventEditClick: '=calendarEditEventClick',
-        eventDeleteClick: '=calendarDeleteEventClick',
-        editEventHtml: '=calendarEditEventHtml',
-        deleteEventHtml: '=calendarDeleteEventHtml',
-        autoOpen: '=calendarAutoOpen',
-        useIsoWeek: '=calendarUseIsoWeek',
-        timespanClick: '=calendarTimespanClick'
+        events: '=',
+        currentDay: '=',
+        onEventClick: '=',
+        onEditEventClick: '=',
+        onDeleteEventClick: '=',
+        onEventTimesChanged: '=',
+        editEventHtml: '=',
+        deleteEventHtml: '=',
+        autoOpen: '=',
+        onTimespanClick: '=',
+        cellModifier: '='
       },
-      link: function postLink(scope, element, attrs, calendarCtrl) {
-
-        var firstRun = false;
-
-        scope.$sce = $sce;
-
-        calendarCtrl.titleFunctions.month = function(currentDay) {
-          return $filter('date')(currentDay, 'MMMM yyyy');
-        };
-
-        function updateView() {
-          scope.view = calendarHelper.getMonthView(scope.events, scope.currentDay, scope.useIsoWeek);
-
-          //Auto open the calendar to the current day if set
-          if (scope.autoOpen && !firstRun) {
-            scope.view.forEach(function(week, rowIndex) {
-              week.forEach(function(day, cellIndex) {
-                if (day.inMonth && moment(scope.currentDay).startOf('day').isSame(day.date.startOf('day'))) {
-                  scope.dayClicked(rowIndex, cellIndex, true);
-                  $timeout(function() {
-                    firstRun = false;
-                  });
-                }
-              });
-            });
-          }
-
-        }
-
-        scope.$watch('currentDay', updateView);
-        scope.$watch('events', updateView, true);
-
-        scope.weekDays = calendarHelper.getWeekDayNames(false, scope.useIsoWeek);
-
-        scope.dayClicked = function(rowIndex, cellIndex, firstRun) {
-
-          if (!firstRun) {
-            scope.timespanClick({$date: scope.view[rowIndex][cellIndex].date.startOf('day').toDate()});
-          }
-
-          var handler = calendarHelper.toggleEventBreakdown(scope.view, rowIndex, cellIndex);
-          scope.view = handler.view;
-          scope.openEvents = handler.openEvents;
-
-        };
-
-        scope.drillDown = function(day) {
-          calendarCtrl.changeView('day', moment(scope.currentDay).clone().date(day).toDate());
-        };
-
-        scope.highlightEvent = function(event, shouldAddClass) {
-
-          scope.view = scope.view.map(function(week) {
-
-            week.isOpened = false;
-
-            return week.map(function(day) {
-
-              delete day.highlightClass;
-              day.isOpened = false;
-
-              if (shouldAddClass) {
-                var dayContainsEvent = day.events.filter(function(e) {
-                  return e.$id == event.$id;
-                }).length > 0;
-
-                if (dayContainsEvent) {
-                  day.highlightClass = 'day-highlight dh-event-' + event.type;
-                }
-              }
-
-              return day;
-
-            });
-
-          });
-
-        };
-
-      }
+      controller: 'MwlCalendarMonthCtrl as vm',
+      link: function(scope, element, attrs, calendarCtrl) {
+        scope.vm.calendarCtrl = calendarCtrl;
+      },
+      bindToController: true
     };
+
   });
