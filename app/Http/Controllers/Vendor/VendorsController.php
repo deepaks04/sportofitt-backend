@@ -38,8 +38,10 @@ class VendorsController extends Controller
                 'store'
             ]
         ]);
-        $this->user = Auth::user();
-        $this->vendor = $this->user->vendor()->first();
+        if(!Auth::guest()) {
+            $this->user = Auth::user();
+            $this->vendor = $this->user->vendor()->first();
+        }
 
     }
 
