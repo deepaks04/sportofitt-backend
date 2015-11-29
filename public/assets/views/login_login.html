@@ -10,7 +10,7 @@
 			<form name="Form" id="form1" novalidate ng-submit="form.submit(Form)">
 				<fieldset>
 					<legend> Sign in to your account </legend>
-					<p>Please enter your name and password to log in.</p>
+					<p>Please enter your email and password to sign in.</p>
 					<div class="form-group"
 						ng-class="{'has-error':Form.email.$dirty && Form.email.$invalid, 'has-success':Form.email.$valid}">
 						<span class="input-icon"> <input type="email"
@@ -20,8 +20,7 @@
 							ng-if="Form.email.$dirty && Form.email.$error.required">Email
 								is required.</span> <span class="error text-small block"
 							ng-if="Form.email.$error.email">Please, enter a valid
-								email address.</span> <span class="success text-small"
-							ng-if="Form.email.$valid">It's a valid e-mail!</span>
+								email address.</span> 
 					</div>
 
 					<div class="form-group form-actions"
@@ -31,8 +30,7 @@
 							name="password" ng-model="user.password" required /> <i
 							class="fa fa-lock"></i> <span class="error text-small block"
 							ng-if="Form.password.$dirty && Form.password.$invalid">Password
-								is required</span> <span class="success text-small"
-							ng-if="Form.password.$valid">Thank You!</span> <a class="forgot"
+								is required</span>  <a class="forgot"
 							ui-sref="login.forgot"> I forgot my password </a>
 						</span>
 					</div>

@@ -96,10 +96,12 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
         $scope.form = {
             submit: function (form) {
                 $scope.userInfo.commission = 0;
+                
                 if ($scope.obj.flow.files[0] !== undefined) {
                     $scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
-                }
-                ;
+                }else{
+                    delete $scope.userInfo.profile_picture;
+                };
                 var updateProfile = userService.updateUserInfo($scope.userInfo);
                 updateProfile.then(function (response) {
                     SweetAlert.swal(response.data.message, "success");

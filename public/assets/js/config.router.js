@@ -30,12 +30,12 @@ function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvi
   	// Login routes
 
 	$stateProvider.state('login', {
-	    url: '/login',
+	    url: '/select',
 	    template: '<div ui-view class="fade-in-right-big smooth"></div>',
       resolve : loadSequence( 'sweet-alert','oitozero.ngSweetAlert','loginService','loginCtrl'),
 	    abstract: true
 	}).state('login.signin', {
-	    url: '/signin',
+	    url: '',
 	    templateUrl: "assets/views/login_login.html",
       title: 'Sign-In'
 	}).state('login.forgot', {

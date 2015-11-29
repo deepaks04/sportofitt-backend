@@ -31,8 +31,8 @@
 									class="form-control" name="name" ng-model="facility.name"
 									required /> <span class="error text-small block"
 									ng-if="Form.name.$dirty && Form.name.$invalid">First
-									Name is required</span> <span class="success text-small"
-									ng-if="Form.name.$valid">Thank You!</span>
+									Name is required</span> 
+
 							</div>
 							<div class="form-group"
 								ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
@@ -43,8 +43,7 @@
 									<option value="">Select Category</option>
 								</select> <span class="error text-small block"
 									ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">First
-									Name is required</span> <span class="success text-small"
-									ng-if="Form.root_category_id.$valid">Thank You!</span>
+									Name is required</span>
 							</div>
 							<div class="form-group"
 								ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
@@ -56,8 +55,7 @@
 									ng-disabled="!selectedCategory">
 								</select> <span class="error text-small block"
 									ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">First
-									Name is required</span> <span class="success text-small"
-									ng-if="Form.sub_category_id.$valid">Thank You!</span>
+									Name is required</span>
 							</div>
 
 							<div class="form-group"
@@ -72,8 +70,7 @@
 									class="img-rounded img-responsive" alt="image" width="154"
 									height="76" /></span> <span class="error text-small block"
 									ng-if="Form.image.$dirty && Form.image.$invalid">First
-									Name is required</span> <span class="success text-small"
-									ng-if="Form.image.$valid">Thank You!</span>
+									Name is required</span> 
 							</div>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary pull-right">

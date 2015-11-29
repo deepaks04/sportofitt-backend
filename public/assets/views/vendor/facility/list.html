@@ -33,22 +33,22 @@
         <td>
         <span  e-name="id" e-form="rowform" editable-hidden="time.id" >
         </span>
-<span editable-select="time.day" e-name="day" e-form="rowform" e-ng-options="s.id as s.text for s in days" e-required>
+<span editable-select="time.day" e-name="day" e-form="rowform" e-ng-options="s.id as s.name for s in days" e-required>
           {{ showDay(time) }}
         </span>
         </td>
         <td>
-        <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="15" e-required>
+        <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="1" e-required>
         {{ (time.start | date:"HH:mm") || 'empty' }}
         </span>
         </td>
         <td>
-        <span editable-bstime="time.end" e-show-meridian="true" e-name="end" e-form="rowform" e-minute-step="15" e-required>
+        <span editable-bstime="time.end" e-show-meridian="true" e-min="time.start" e-name="end" e-form="rowform" e-minute-step="1" e-required>
         {{ (time.end | date:"HH:mm") || 'empty' }}
         </span>
         </td>
         <td>
-        <sapn  editable-checkbox="time.is_peak" e-name="is_peak" e-form="rowform" e-title="Peak Hour?"  e-ng-true-value="1" e-ng-false-value="0">
+        <sapn  editable-checkbox="time.is_peak" e-name="is_peak"  e-form="rowform" e-title="Peak Hour?"  e-ng-true-value="1" e-ng-false-value="0">
         {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
         </span>
         </td>
@@ -204,9 +204,7 @@
         required /> <span class="error text-small block"
         ng-if="Form.name.$dirty && Form.name.$invalid">
         {{Form.name.$error[0]}}
-        </span> <span class="success text-small"
-        ng-if="Form.name.$valid">Thank You!</span>
-        </div>
+        </span>
         <div class="form-group"
         ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
         <label class="control-label"> Root Category <span
@@ -227,12 +225,12 @@
         class="symbol required"></span>
         </label>
         <select class="form-control" name="duration" ng-model="facility.duration"
-        ng-options="duration.id as duration.time for duration in durations" required>
+        ng-options="duration.actual_time as duration.time for duration in durations" required>
         <option value="">Select Duartion</option>
         </select>
         <span class="error text-small block"
-        ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span> <span class="success text-small"
-        ng-if="Form.duration.$valid">Thank You!</span>
+        ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span> 
+        </div>
         </div>
         </div>
 
@@ -245,10 +243,9 @@
         required>
         <option value="">Select Slot</option>
         <option value="{{slot}}" ng-repeat="slot in slots"
-        ng-selected="slot === facility.slots">{{slot}}</option>
+        ng-selected="slot == facility.slots">{{slot}}</option>
         </select> <span class="error text-small block"
-        ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span> <span class="success text-small"
-        ng-if="Form.slots.$valid">Thank You!</span>
+        ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span> 
         </div>
         </div>
         <div class="col-md-6">
@@ -262,11 +259,10 @@
         required>
         <option value="">Select Percentage</option>
         <option value="{{percentage}}" ng-repeat="percentage in percentageArray"
-        ng-selected="percentage === facility.cancellation_before_24hrs">{{percentage}}</option>
+        ng-selected="percentage == facility.cancellation_before_24hrs">{{percentage}}</option>
         </select>
         <span class="error text-small block"
-        ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span> <span class="success text-small"
-        ng-if="Form.cancellation_before_24hrs.$valid">Thank You!</span>
+        ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span>
         </div>
         </div>
         <div class="col-md-6">
@@ -279,10 +275,9 @@
         required>
         <option value="">Select Percentage</option>
         <option value="{{percentage}}" ng-repeat="percentage in percentageArray"
-        ng-selected="percentage === facility.cancellation_after_24hrs">{{percentage}}</option>
+        ng-selected="percentage == facility.cancellation_after_24hrs">{{percentage}}</option>
         </select> <span class="error text-small block"
-        ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span> <span class="success text-small"
-        ng-if="Form.cancellation_after_24hrs.$valid">Thank You!</span>
+        ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span> 
         </div>
         </div>
         <div class="col-md-6">
@@ -321,9 +316,9 @@
             <div ng-controller="facilityListCtrl">
                 <div class="row margin-bottom-10">
                     <div class="col-md-12">
-                        <button ng-click="tableParams.sorting({})"
-                                class="btn btn-default pull-right">Clear sorting</button>
-                    </div>
+                        <button ui-sref="vendor.facility.add"
+                                class="btn btn-default pull-right">Add New Facility</button>
+                    </div>  
                 </div>
                 <table ng-table="tableParams" class="table table-striped">
                     <tr ng-repeat="facility in facilityData">
@@ -336,7 +331,11 @@
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
                                 <a data-ng-click="open('lg', facility)"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Edit"><i class="fa fa-pencil"></i></a> <a
+                                   tooltip="Edit"><i class="fa fa-pencil"></i></a>
+                                   <!-- <a data-ng-click="blockUnblockFacility(facility.id,facility.is_active)"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
+                                   tooltip="Change status"><i class="fa fa-pencil"></i></a> -->
+                                    <a
                                     ui-sref="vendor.facility.calender({facilityId : facility.id})"
                                     class="btn btn-transparent btn-xs tooltips"
                                     tooltip-placement="top" tooltip="Calender"><i
