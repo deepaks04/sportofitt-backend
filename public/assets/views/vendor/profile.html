@@ -110,7 +110,7 @@
 							</table>
 							<div class="text-right">
 								<a class="btn btn-primary btn-o btn-wide" href="#"
-									ng-click="editActive = true;setMap();"> Edit Account </a>
+									ng-click="editActive = true;setMap();"> User Profile </a>
 							</div>
 						</div>
 					</div>
@@ -132,12 +132,12 @@
 						
 					</div>
 				</div>
-				</tab> <!-- end: TAB OVERVIEW --> <!-- start: TAB EDIT ACCOUNT --> <tab
-					heading="Edit Account" active="editActive" ng-click="setMap()">
+				</tab> <!-- end: TAB OVERVIEW --> <!-- start: TAB User Profile --> <tab
+					heading="User Profile" active="editActive" ng-click="setMap()">
 				<form role="form" id="form" novalidate
 					ng-submit="form.submit(userInfo)" enctype="multipart/form-data">
 					<fieldset>
-						<legend> Account Info </legend>
+						<legend> User Info </legend>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group"
@@ -272,7 +272,7 @@
 					</fieldset>
 
 				</form>
-				</tab> <!-- end: TAB EDIT ACCOUNT --> <!-- start: TAB Billing Details -->
+				</tab> <!-- end: TAB User Profile --> <!-- start: TAB Billing Details -->
 				<tab heading="Billing Details">
 				<form role="form" id="form" novalidate
 					ng-submit="billingForm.submit(billingInfo)"
@@ -412,13 +412,14 @@
 									ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
 									<label class="control-label">  Account Type </label> 
                                                                         <label>
-                                                                            <input type="radio" ng-model="bankDetail.account_type" value="saving">
-                                                                            Saving Account
-                                                                        </label>
-                                                                        <label>
                                                                             <input type="radio" ng-model="bankDetail.account_type" value="current">
                                                                             Current Account
                                                                         </label>
+                                                                        <label>
+                                                                            <input type="radio" ng-model="bankDetail.account_type" value="saving">
+                                                                            Saving Account
+                                                                        </label>
+                                                                        
                                                                         
                                                                         <span
 										class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
@@ -455,15 +456,9 @@
 									<div ng-show="uploaderImages.isHTML5">
 										<!-- 3. nv-file-over uploader="link" over-class="className" -->
 										<div class="well my-drop-zone" nv-file-over=""
-											uploader="uploaderImages">Base drop zone</div>
-										<!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
-<!--										<div nv-file-drop="" uploader="uploaderImages"
-											options="{ url: '/foo' }">
-											<div nv-file-over="" uploader="uploaderImages"
-												over-class="another-file-over-class"
-												class="well my-drop-zone">Another drop zone with its
-												own settings</div>
-										</div>-->
+											uploader="uploaderImages">Drag n Drop your images here
+											</div>
+										
 									</div>
 									<!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
 									<span class="btn btn-primary btn-o btn-file"> Select an

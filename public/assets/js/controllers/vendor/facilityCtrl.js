@@ -23,7 +23,7 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
             90: 90,
             100: 100
         };
-        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4};
+        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4,999:999};
         $scope.types = {0: "Peak Time", 1: "Off time"};
 
         $scope.master = $scope.facility = {};
@@ -94,6 +94,21 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
             }
         });
 
+        $scope.blockUnblockFacility = function(facilityId,status){
+
+            var data = {'is_active':status?1:0}
+
+            var statusBlocking = facilityService.blockUnblockFacility(facilityId,data);
+
+            statusBlocking.then(function(response){
+alert(response);
+            });
+
+            statusBlocking.catch(function(response){
+alert(response);
+            });
+        }
+
         $scope.open = function (size, facility) {
 
             var modalInstance = $modal.open({
@@ -130,11 +145,17 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             $scope.durations = durations.duration;
         }
 
+facilityService.getDays()
+                .then(getDaysSuccess);
+
+        function getDaysSuccess(days) {
+            $scope.days = days.data;
+        }
         $scope.openingHours = [];
         $scope.sessions = [];
         $scope.packages = [];
 
-        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4};
+        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4,999:999};
         $scope.types = {0: "Peak Time", 1: "Off time"};
 
         $scope.percentageArray = {
@@ -149,10 +170,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             90: 90,
             100: 100
         };
-
-        $scope.days = [{id: 1, text: "Monday"}, {id: 2, text: "Thusday"},
-            {id: 3, text: "Wednesday"}, {id: 4, text: "Thrusday"}, {id: 5, text: "Friday"}
-            , {id: 6, text: "Saturday"}, {id: 7, text: "Sunday"}];
 
         $scope.months = ["1 Month", "3 Months", "6 Months"];
 
@@ -288,7 +305,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             if (time.day) {
                 selected = $filter('filter')($scope.days, {id: time.day});
             }
-            return selected.length ? selected[0].text : 'Not set';
+            return selected.length ? selected[0].name : 'Not set';
         }
 
         $scope.saveSession = function (data, id, rowform) {
@@ -450,11 +467,17 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
         }
 
 
+   
+  
+
+
         var vm = this;
         var date = new Date();
         var d = date.getDate();
         var m = date.getMonth();
         var y = date.getFullYear();
+
+
         var startDate = y + "-" + (m + 1);
         $scope.events = [];
 
@@ -529,6 +552,12 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
                     $scope.$modalInstance = $modalInstance;
                     $scope.action = action;
                     $scope.event = event;
+
+                     $scope.toggleMin = function() {
+    $scope.minDate = $scope.minDate ? null : new Date();
+  };
+  $scope.toggleMin();
+
                     $scope.addEvent = function () {
                         //$modalInstance.dismiss('cancel');
                         facilityService.blockSession($scope.event).then(function (response) {

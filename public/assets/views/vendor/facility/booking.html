@@ -22,7 +22,7 @@
                                             calendarTitle}}</h2>
                         <h4 class="text-center">Calender for {{facility.name}}</h4>						
                     </div>
-                    <div class="col-xs-8">
+                    <div class="col-xs-6">
                         <div class="btn-group">
                             <button class="btn btn-primary" mwl-date-modifier
                                     date="calendarDay" decrement="calendarView" ng-click="getEvents(calendarDay,calendarView);">
@@ -51,7 +51,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xs-4 text-right">
+                    <div class="col-xs-6 text-right" style="margin-top:20px;">
                         <div class="visible-md visible-lg hidden-sm hidden-xs">
                             <div class="btn-group">
                                 <button class="btn btn-primary btn-o btn-wide"
@@ -107,24 +107,6 @@
                     </div>
                     <div class="form-group">
                     <label>
-                    Start
-                    </label>
-                    <span class="input-icon">
-                    <input type="text" class="form-control underline" ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt" is-open="startOpen" ng-init="startOpen = false" close-text="Close" />
-                    <i class="ti-calendar"></i> </span>
-                    <timepicker ng-model="event.startsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
-                    </div>
-                    <div class="form-group" ng-if="false">
-                    <label>
-                    End
-                    </label>
-                    <span class="input-icon">
-                    <input type="text" class="form-control underline" ng-click="endOpen = !endOpen" datepicker-popup="fullDate" ng-model="event.endsAt" is-open="endOpen" ng-init="endOpen = false" min-date="event.startsAt" max-date="event.startsAt" close-text="Close" />
-                    <i class="ti-calendar"></i> </span>
-                    <timepicker ng-model="event.endsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
-                    </div>
-                    <div class="form-group">
-                    <label>
                     Category
                     </label>
                     <div class="row">
@@ -138,6 +120,25 @@
                     </div>
                     </div>
                     </div>
+                    <div class="form-group">
+                    <label>
+                    Start
+                    </label>
+                    <span class="input-icon">
+                    <input type="text" class="form-control underline" min-date="minDate" ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt" is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
+                    <i class="ti-calendar"></i> </span>
+                    <timepicker ng-model="event.startsAt" show-meridian="true" readonly-input="false" minute-step="1" ng-show="!event.allDay"></timepicker>
+                    </div>
+                    <div class="form-group" ng-if="false">
+                    <label>
+                    End
+                    </label>
+                    <span class="input-icon">
+                    <input type="text" class="form-control underline" ng-click="endOpen = !endOpen" datepicker-popup="fullDate" ng-model="event.endsAt" is-open="endOpen" ng-init="endOpen = false" min-date="event.startsAt" max-date="event.startsAt" close-text="Close" />
+                    <i class="ti-calendar"></i> </span>
+                    <timepicker ng-model="event.endsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
+                    </div>
+                    
                     </div>
                     </div>
                     <div class="modal-footer">

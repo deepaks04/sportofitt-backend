@@ -21,6 +21,7 @@ use App\Billing;
 use Carbon\Carbon;
 use App\AvailableFacility;
 use App\SubCategory;
+use App\VendorImages;
 
 
 class VendorsController extends Controller
@@ -179,9 +180,8 @@ class VendorsController extends Controller
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
         } catch (\Exception $e) {
-            echo $e->getMessage();
             $status = 500;
-            $message="Something Went Wrong";
+            $message= $e->getMessage();
         }
         $response = [
             'message' => $message

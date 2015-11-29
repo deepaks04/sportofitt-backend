@@ -68,9 +68,11 @@ app.controller('registrationCtrl', [
     function($scope, $state, $timeout, SweetAlert, Login) {
       $scope.master = $scope.myModel;
       $scope.errors = {};
+
       $scope.form = {
 
         register : function(form) {
+          $scope.disableSubmit=true;
           var auth = Login.register(form);
           console.log(form);
           auth.success(function(response) {
@@ -80,6 +82,7 @@ app.controller('registrationCtrl', [
             console.log(response);
           });
           auth.error(function(data, status) {
+            $scope.disableSubmit=false;
             $scope.errors = {};
             angular.forEach(data, function(errors, field) {
 

@@ -32,8 +32,7 @@
 									required /> <span class="error text-small block"
 									ng-if="Form.name.$dirty && Form.name.$invalid">
 									{{Form.name.$error[0]}}
-									</span> <span class="success text-small"
-									ng-if="Form.name.$valid">Thank You!</span>
+									</span> 
 							</div>
 							<div class="form-group"
 								ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
@@ -44,8 +43,7 @@
 									<option value="">Select Category</option>
 								</select> <span class="error text-small block"
 									ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">
-										{{Form.root_category_id.$error[0]}}</span> <span class="success text-small"
-									ng-if="Form.root_category_id.$valid">Thank You!</span>
+										{{Form.root_category_id.$error[0]}}</span> 
 							</div>
 							<div class="form-group"
 								ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
@@ -57,8 +55,7 @@
 									ng-disabled="!selectedCategory.length" required>
 									<option value="">Select Category</option>
 								</select> <span class="error text-small block"
-									ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">{{Form.sub_category_id.$error[0]}}</span> <span class="success text-small"
-									ng-if="Form.sub_category_id.$valid">Thank You!</span>
+									ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">{{Form.sub_category_id.$error[0]}}</span> 
 							</div>
 							<div class="form-group"
 								ng-class="{'has-error':Form.duration.$dirty && Form.duration.$invalid, 'has-success':Form.duration.$valid}">
@@ -66,15 +63,13 @@
 									class="symbol required"></span>
 								</label>
 								<select class="form-control" name="duration" ng-model="facility.duration"
-										ng-options="duration.id as duration.time for duration in durations" required>
+										ng-options="duration.actual_time as duration.time for duration in durations" required>
 										<option value="">Select Duartion</option>
 								</select>
 								<span class="error text-small block"
-									ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span> <span class="success text-small"
-									ng-if="Form.duration.$valid">Thank You!</span>
+									ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span>  
 							</div>
 						</div>
-
 						<div class="col-md-6">
 								<div class="form-group"
 									ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
@@ -86,8 +81,7 @@
 										<option value="{{slot}}" ng-repeat="slot in slots"
 											ng-selected="slot === facility.slots">{{slot}}</option>
 									</select> <span class="error text-small block"
-										ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span> <span class="success text-small"
-										ng-if="Form.slots.$valid">Thank You!</span>
+										ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span> 
 								</div>
 						</div>
 						<div class="col-md-6">
@@ -104,8 +98,7 @@
 											ng-selected="percentage === facility.cancellation_before_24hrs">{{percentage}}</option>
 									</select>
 									<span class="error text-small block"
-										ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span> <span class="success text-small"
-										ng-if="Form.cancellation_before_24hrs.$valid">Thank You!</span>
+										ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span> 
 								</div>
 						</div>
 						<div class="col-md-6">
@@ -120,8 +113,7 @@
 										<option value="{{percentage}}" ng-repeat="percentage in percentageArray"
 											ng-selected="percentage === facility.cancellation_after_24hrs">{{percentage}}</option>
 									</select> <span class="error text-small block"
-										ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span> <span class="success text-small"
-										ng-if="Form.cancellation_after_24hrs.$valid">Thank You!</span>
+										ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span> 
 								</div>
 						</div>
 						<div class="col-md-6">
@@ -129,7 +121,7 @@
 								ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
 								<label class="control-label"> Description
 								</label>
-								<textarea name="description"
+								<textarea name="description" class="form-control" 
 									data-ng-model="facility.description"></textarea>
 								<span class="error text-small block"
 									ng-if="Form.description.$dirty && Form.description.$invalid">{{Form.description.$error[0]}}</span>

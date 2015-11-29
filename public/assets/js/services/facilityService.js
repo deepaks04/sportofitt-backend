@@ -10,6 +10,7 @@
         return {
             getRootCategory: getRootCategory,
             addFacility: addFacility,
+            blockUnblockFacility:blockUnblockFacility,
             updateFacility: updateFacility,
             getAllFacilities: getAllFacilities,
             getFacilityById: getFacilityById,
@@ -23,7 +24,8 @@
             savePackage: savePackage,
             blockSession: blockSession,
             getBlockedSessions: getBlockedSessions,
-            getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId
+            getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId,
+            getDays : getDays
         };
 
         function getDuration() {
@@ -35,8 +37,18 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
-        }
-        ;
+        };
+
+        function getDays() {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/user/day-master',
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetError);
+        };
 
         function sendGetError(response) {
 
@@ -78,8 +90,17 @@
             })
                     .then(sendResponseData)
                     .catch(sendGetError);
+        };
+
+        function blockUnblockFacility(facilityId,data){
+return $http({
+                method: 'PUT',
+                url: 'api/v1/vendor/facility/' + facilityId,
+                data
+            })
+                    .then(updateFacilitySuccess)
+                    .catch(updateFacilityError);
         }
-        ;
 
         function getAllFacilities() {
             return $http({

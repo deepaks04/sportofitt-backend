@@ -325,6 +325,7 @@ h5.over-title {
 
 .well {
 	box-shadow: none;
+	height: 200px;
 }
 
 .nav-pills>li.active>a, .nav-pills>li.active>a:hover, .nav-pills>li.active>a:focus
