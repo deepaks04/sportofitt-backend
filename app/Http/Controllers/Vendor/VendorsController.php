@@ -332,13 +332,12 @@ class VendorsController extends Controller
         try {
             $file = $request->image_name;
             $user = Auth::user();
-            $maxUploadLimit = (int) env('VENDOR_IMAGE_UPLOAD_LIMIT');
             $vendor = $user->vendor()->first();
             $images = $vendor->images()->count();
-            if ($images == $maxUploadLimit) { // Do not allowed to upload more than 10 Images
+            if ($images == null) {
                 $status = 406;
-                $message = "Cannot Upload more than " . $maxUploadLimit . " images";
-            } else { // Insert if not reached to max limit
+                $message = "Cannot Upload images";
+            } else {
                 $status = 200;
                 $message = "saved successfully";
                 $data = $request->all();
