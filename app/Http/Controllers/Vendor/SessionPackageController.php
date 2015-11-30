@@ -561,6 +561,7 @@ class SessionPackageController extends Controller
         try{
             $status = 200;
             $data = $request->all();
+            $data= $this->unsetKeys(array('daySpan','dayOffset'),$data);
             $user = Auth::user();
             $sessionBooking = "";
             $date = strtotime($data['startsAt']);
