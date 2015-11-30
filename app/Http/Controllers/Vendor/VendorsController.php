@@ -333,17 +333,12 @@ class VendorsController extends Controller
             $file = $request->image_name;
             $user = Auth::user();
             $vendor = $user->vendor()->first();
-            $images = $vendor->images()->count();
-            if ($images == null) {
-                $status = 406;
-                $message = "Cannot Upload images";
-            } else {
-                $status = 200;
-                $message = "saved successfully";
-                $data = $request->all();
-                /* File Upload Code */
-                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+            $status = 200;
+            $message = "saved successfully";
+            $data = $request->all();
+            /* File Upload Code */
+            $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+            $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory . "/" . "extra_images";
                 /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
@@ -359,16 +354,14 @@ class VendorsController extends Controller
                 $data['created_at'] = Carbon::now();
                 $data['updated_at'] = Carbon::now();
                 $vendor->images()->insert($data);
-            }
+
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong" . $e->getMessage();
         }
-        $images = $vendor->images()->count();
         $response = [
             "message" => $message,
-            "image_count" => $images
-        ];
+         ];
         return response($response, $status);
     }
 
