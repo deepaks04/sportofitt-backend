@@ -120,44 +120,6 @@ Route::group([
     Route::get('day-master', 'UsersController@dayMaster');
 });
 
-/* Admin Routes */
-Route::group(['prefix' => 'api/v1/admin/vendor'], function () {
-    Route::get('all',array('uses' => 'Admin\VendorController@getVendorList'));
-    Route::post('create',array('uses' => 'Admin\VendorController@create'));
-    Route::get('my-profile/{uid}',array('uses' => 'Admin\VendorController@getProfile'));
-    Route::put('my-profile/{uid}',array('uses' => 'Admin\VendorController@updateProfile'));
-    Route::get('billing-info/{uid}',array('uses' => 'Admin\VendorController@getBillingInformation'));
-    Route::put('billing-info/{uid}',array('uses' => 'Admin\VendorController@updateBillingInformation'));
-    Route::get('bank-info/{uid}',array('uses' => 'Admin\VendorController@getBankDetails'));
-    Route::put('bank-info/{uid}',array('uses' => 'Admin\VendorController@updateBankDetails'));
-    Route::post('images/{uid}',array('uses' => 'Admin\VendorController@addImages'));
-    Route::get('images/{uid}',array('uses' => 'Admin\VendorController@getImages'));
-    Route::get('images/{uid}/{id}',array('uses' => 'Admin\VendorController@deleteImage'));
-    Route::post('facility/{uid}',array('uses' => 'Admin\VendorController@createFacility'));
-    Route::get('facility/{uid}',array('uses' => 'Admin\VendorController@getFacility'));
-    Route::get('facility/{uid}/{id}',array('uses' => 'Admin\VendorController@getFacilityById'));
-    Route::put('facility/{uid}/{id}',array('uses' => 'Admin\VendorController@updateFacility'));
-    Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
-    Route::post('package/{uid}',array('uses' => 'Admin\SessionPackageController@createPackage'));
-    Route::put('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updatePackage'));
-    Route::get('package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getPackage'));
-    Route::get('delete-package/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deletePackage'));
-    Route::post('opening-time/{uid}',array('uses' => 'Admin\SessionPackageController@createOpeningTime'));
-    Route::put('opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updateOpeningTime'));
-    Route::get('opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getOpeningTime'));
-    Route::get('delete-opening-time/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deleteOpeningTime'));
-    //Route::post('session-duration/{uid}',array('uses' => 'Admin\SessionPackageController@updateDuration'));
-    //Route::get('facility-detail/{id}',array('uses' => 'Admin\VendorsController@getFacilityDetailInformation'));
-    //Route::get('duration',array('uses' => 'Admin\SessionPackageController@getDuration'));
-    Route::post('multiple-sessions/{uid}',array('uses' => 'Admin\SessionPackageController@createSession'));
-    Route::put('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@updateSession'));
-    Route::get('multiple-sessions/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@deleteSession'));
-    Route::get('sessions-data/{uid}/{id}',array('uses' => 'Admin\SessionPackageController@getSessionData'));
-    Route::post('calendar-block/{uid}',array('uses' => 'Admin\SessionPackageController@blockCalendar'));
-    Route::get('calendar-block/{uid}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockData'));
-    Route::get('calendar-block/{uid}/{id}/{yearmonth}',array('uses' => 'Admin\SessionPackageController@getBlockDataFacilityWise'));
-
-});
 
 Route::get('temp', array(
     'uses' => 'Vendor\VendorsController@index'
