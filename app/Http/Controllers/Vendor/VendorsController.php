@@ -163,19 +163,7 @@ class VendorsController extends Controller
             $vendor = $this->unsetKeys($vendorKeys, $vendor);
             $systemUser = User::find(Auth::user()->id);
             if ($request->file('profile_picture')!=null) {
-                /* File Upload Code */
-                $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser->id);
-                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
-                /* Create Upload Directory If Not Exists */
-                if (! file_exists($vendorImageUploadPath)) {
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                }
-                $extension = $request->file('profile_picture')->getClientOriginalExtension();
-                $filename = sha1($systemUser->id . time()) . ".{$extension}";
-                $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-                /* Rename file */
-                $user['profile_picture'] = $filename;
+                $user['profile_picture'] = $this->imageUpload($request,$systemUser->id,'profile_image');
             }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
@@ -330,31 +318,17 @@ class VendorsController extends Controller
     public function addImages(Requests\ImagesRequest $request)
     {
         try {
-            $file = $request->image_name;
             $user = Auth::user();
             $vendor = $user->vendor()->first();
             $status = 200;
             $message = "saved successfully";
             $data = $request->all();
-            /* File Upload Code */
-            $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-            $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
-                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "extra_images";
-                /* Create Upload Directory If Not Exists */
-                if (! file_exists($vendorImageUploadPath)) {
-                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-                }
-                $random = mt_rand(1, 1000000);
-                $extension = $file->getClientOriginalExtension();
-                $filename = sha1($user->id . $random) . ".{$extension}";
-                $file->move($vendorImageUploadPath, $filename);
-                /* Rename file */
-                $data['image_name'] = $filename;
-                $data['vendor_id'] = $vendor->id;
-                $data['created_at'] = Carbon::now();
-                $data['updated_at'] = Carbon::now();
-                $vendor->images()->insert($data);
-
+            $filename = $this->imageUpload($request,$vendor->id,'extra_images');
+            $data['image_name'] = $filename;
+            $data['vendor_id'] = $vendor->id;
+            $data['created_at'] = Carbon::now();
+            $data['updated_at'] = Carbon::now();
+            $vendor->images()->insert($data);
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong" . $e->getMessage();
@@ -725,5 +699,37 @@ class VendorsController extends Controller
         } else {
             return 0;
         }
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request,$systemUser,$imageType
+     * @return $filname
+     */
+    public function imageUpload($request,$systemUser,$imageType)
+    {
+        /* File Upload Code */
+        $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+        $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser);
+        $vendorImageUploadPath = $vendorOwnDirecory . "/" . $imageType;
+        /* Create Upload Directory If Not Exists */
+        if (! file_exists($vendorImageUploadPath)) {
+            File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+        }
+        if($imageType=='profile_image'){
+            $extension = $request->file('profile_picture')->getClientOriginalExtension();
+            $filename = sha1($systemUser . time()) . ".{$extension}";
+            $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
+
+        }else{
+            $file = $request->image_name;
+            $random = mt_rand(1, 1000000);
+            $extension = $file->getClientOriginalExtension();
+            $filename = sha1($systemUser . $random) . ".{$extension}";
+            $file->move($vendorImageUploadPath, $filename);
+        }
+        return $filename;
     }
 }
