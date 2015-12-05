@@ -55,8 +55,8 @@ class UsersController extends Controller
             $userData['remember_token'] = csrf_token();
             $userData['updated_at'] = Carbon::now();
             $userData['created_at'] = Carbon::now();
-            //unset($userData['business_name']);
-            //unset($userData['password2']);
+            unset($userData['business_name']);
+            unset($userData['password2']);
             $userId = DB::table('users')->insertGetId($userData);
             $vendorData['business_name'] = $request->business_name;
             $vendorData['user_id'] = $userId;

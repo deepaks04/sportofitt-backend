@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use File;
+use Illuminate\Support\Facades\Input;
 use URL;
 
 class CustomersController extends Controller
@@ -44,16 +45,8 @@ class CustomersController extends Controller
             $message = "Updated Successfully";
             $user = Auth::user();
             $customer = $user->customer()->first();
-            $userData = $request->all();
-            $userKeys = array(
-                'birthdate',
-                'gender',
-                '_method',
-                'pincode',
-                'phone_no',
-                'area_id'
-            );
-            $userData = $this->unsetKeys($userKeys, $userData);
+            $userData = Input::only('fname', 'lname', 'profile_picture');
+
             /* File Upload */
             if (isset($userData['profile_picture']) && ! empty($userData['profile_picture'])) {
                 /* File Upload Code */
@@ -73,16 +66,7 @@ class CustomersController extends Controller
                 chmod($vendorImageUploadPath, 0777);
             }
             $user->update($userData);
-            $customerData = $request->all();
-            $customerKeys = array(
-                'fname',
-                'lname',
-                '_method',
-                'profile_picture',
-                'email',
-                'username'
-            );
-            $customerData = $this->unsetKeys($customerKeys, $customerData);
+            $customerData = Input::only('birthdate', 'pincode', 'phone_no','area_id');
             $birthdate = date('Y-m-d', strtotime($request->birthdate));
             $customerData['birthdate'] = $birthdate;
             $customer->update($customerData);

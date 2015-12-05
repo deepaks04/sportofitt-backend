@@ -20,6 +20,7 @@ use App\SessionPackage;
 use App\SessionPackageChild;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Illuminate\Support\Facades\Input;
 
 class SessionPackageController extends Controller
 {
@@ -60,12 +61,10 @@ class SessionPackageController extends Controller
             $packageType = PackageType::where('slug','=','package')->first();
             $request->created_at = Carbon::now();
             $request->updated = Carbon::now();
-            $parentData = $request->all();
-            $childData = $request->all();
-            $parentData = $this->unsetKeys(array('child_id','is_peak','actual_price','discount','package_id','month'),$parentData);
+            $parentData = Input::only('available_facility_id', 'name', 'description');
             $parentData['package_type_id'] = $packageType->id;
             $package = SessionPackage::create($parentData);
-            $childData = $this->unsetKeys(array('child_id','package_id','available_facility_id','package_type_id','name','description'),$childData);
+            $childData = Input::only('is_peak', 'actual_price', 'discount','month');
             $childData['session_package_id'] = $package->id;
             $packageChild = SessionPackageChild::create($childData);
             $packageInformation = SessionPackage::find($package->id);
@@ -97,14 +96,10 @@ class SessionPackageController extends Controller
         try{
             $status = 200;
             $message = "Package data updated successfully";
-            $parentData = $request->all();
-            $childData = $request->all();
-            $parentData = $this->unsetKeys(array('_method','child_id','is_peak','actual_price','discount','package_id','month','available_facility_id','is_active'),$parentData);
-
+            $parentData = Input::only('name', 'description');
             $package = SessionPackage::where('id','=',$id)->update($parentData);
-            $childData = $this->unsetKeys(array('_method','child_id','package_id','available_facility_id','package_type_id','name','description','is_active'),$childData);
+            $childData = Input::only('is_peak', 'actual_price','discount','month');
             $packageChild = SessionPackageChild::where('session_package_id','=',$id)->update($childData);
-
             $packageInformation = SessionPackage::find($id);
             $packageChild = SessionPackageChild::where('session_package_id','=',$id)->first();
             $packageChild = $packageChild->toArray();
@@ -218,7 +213,6 @@ class SessionPackageController extends Controller
 
             /* Check First Duration is Available Or Not */
             $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first();
-
             if($checkFacilityInformation!=null && $checkFacilityInformation->duration!=null){
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if($timeDifference>=$checkFacilityInformation['duration']){ // If time Difference Matched
@@ -226,16 +220,14 @@ class SessionPackageController extends Controller
                         $packageType = PackageType::where('slug','=','session')->first();
                         $request->created_at = Carbon::now();
                         $request->updated = Carbon::now();
-                        $parentData = $request->all();
-                        $childData = $request->all();
-                        $parentData = $this->unsetKeys(array('is_peak','actual_price','discount','session_id','day','start','end'),$parentData);
+                        $parentData = Input::only('available_facility_id');
                         $parentData['package_type_id'] = $packageType->id;
                         //$session = SessionPackage::create($parentData);
                         $session = SessionPackage::where(array(
                             'available_facility_id' => $request->available_facility_id,
                             'package_type_id' => $packageType->id
                         ))->first()->toArray();
-                        $childData = $this->unsetKeys(array('session_id','available_facility_id','name','description'),$childData);
+                        $childData = Input::only('is_peak','start','end','day');
                         $childData['session_package_id'] = $session['id'];
                         $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
@@ -284,15 +276,12 @@ class SessionPackageController extends Controller
             $timeDifference = round(abs($timeDifference) / 60,2);
             $start = date('H:i:s',$start);
             $end = date('H:i:s',$end);
-
             /* Check First Duration is Available Or Not */
             $checkFacilityInformation = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->first();
-
             if($checkFacilityInformation!=null && $checkFacilityInformation->duration!=null){
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if($timeDifference>=$checkFacilityInformation['duration']){ // If time Difference Matched
-                    $childData = $request->all();
-                    $childData = $this->unsetKeys(array('_method','child_id','session_id','available_facility_id','name','description'),$childData);
+                    $childData = Input::only('is_peak','start','end','day');
                     $packageType = PackageType::where('slug','=','session')->first();
                     $sessionParentData = SessionPackage::where('available_facility_id','=',$request->available_facility_id)->where('package_type_id','=',$packageType->id)->first()->toArray();
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND (id!=".$id." AND session_package_id=".$sessionParentData['id'].") AND day=".$childData['day']));

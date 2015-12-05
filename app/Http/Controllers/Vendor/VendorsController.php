@@ -15,6 +15,7 @@ use DB;
 use Auth;
 use App\User;
 use File;
+use Illuminate\Support\Facades\Input;
 use Mockery\Exception;
 use URL;
 use App\Billing;
@@ -133,34 +134,9 @@ class VendorsController extends Controller
     {
         try {
             $status = 200;
-            $message= "Settings updated successfully";
-            $user = $request->all();
-            $vendor = $request->all();
-            $userKeys = array(
-                'email',
-                'username',
-                'business_name',
-                'longitude',
-                'latitude',
-                'area_id',
-                'description',
-                '_method',
-                'address',
-                'contact',
-                'postcode',
-                'commission'
-            );
-            $user = $this->unsetKeys($userKeys, $user);
-            $vendorKeys = array(
-                'email',
-                'username',
-                'fname',
-                'lname',
-                '_method',
-                'profile_picture'
-            );
-
-            $vendor = $this->unsetKeys($vendorKeys, $vendor);
+            $message = "Settings updated successfully";
+            $user = Input::only('fname', 'lname', 'profile_picture');
+            $vendor = Input::only('business_name','address','longitude','latitude','area_id','description','contact','postcode','commission');
             $systemUser = User::find(Auth::user()->id);
             if ($request->file('profile_picture')!=null) {
                 $user['profile_picture'] = $this->imageUpload($request,$systemUser->id,'profile_image');
