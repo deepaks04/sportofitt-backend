@@ -25,6 +25,7 @@ class Vendor extends Model
         'bank_detail_id'
     ];
 
+
     /**
      * vendors belongs to user
      * 
