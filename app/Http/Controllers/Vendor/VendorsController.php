@@ -17,6 +17,7 @@ use App\User;
 use File;
 use Illuminate\Support\Facades\Input;
 use Mockery\Exception;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use URL;
 use App\Billing;
 use Carbon\Carbon;
@@ -28,9 +29,10 @@ use App\VendorImages;
 class VendorsController extends Controller
 {
 
+    protected $user,$vendor;
     public function __construct()
     {
-        $this->middleware('auth', [
+        $this->middleware('jwt.auth', [
             'except' => [
                 'store'
             ]
@@ -40,11 +42,11 @@ class VendorsController extends Controller
                 'store'
             ]
         ]);
+        JWTAuth::parseToken()->authenticate();
         if(!Auth::guest()) {
             $this->user = Auth::user();
             $this->vendor = $this->user->vendor()->first();
         }
-
     }
 
     /**
@@ -515,7 +517,7 @@ class VendorsController extends Controller
             $facility = $request->all();
             $facility = $this->unsetKeys(array(
                 '_method',
-                'duration'
+                'duration',
             ), $facility);
             $status = 200;
             $message = "facility updated successfully";

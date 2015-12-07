@@ -12,8 +12,8 @@ class AvailableFacility extends Model
      */
     protected $table = 'available_facilities';
 
-    protected $guarded = [
-        'id'
+    protected $fillable = [
+        'name','description','sub_category_id','vendor_id','is_active','slots','cancellation_before_24hrs','cancellation_after_24hrs','created_at','updated_at'
     ];
 
     /**

@@ -11,7 +11,7 @@ use App\User;
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\AvailableFacility;
@@ -24,10 +24,12 @@ use Illuminate\Support\Facades\Input;
 
 class SessionPackageController extends Controller
 {
+    protected $user,$vendor;
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('jwt.auth');
         $this->middleware('vendor');
+        JWTAuth::parseToken()->authenticate();
         if(!Auth::guest()) {
             $this->user = Auth::user();
             $this->vendor = $this->user->vendor()->first();

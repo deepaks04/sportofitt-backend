@@ -12,6 +12,7 @@ abstract class Controller extends BaseController
 
     public function unsetKeys($keys, $array)
     {
+        array_push($keys,'token');
         foreach ($keys as $key) {
             unset($array[$key]);
         }
