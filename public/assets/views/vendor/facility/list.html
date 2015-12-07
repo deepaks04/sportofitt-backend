@@ -20,7 +20,7 @@
         </div>
         <div class="modal-body">
         <tabset>
-        <tab heading="Opening Hours" ng-click="getOpeningHours()">
+        <tab heading="Opening Hours" ng-click="getOpeningHours()" active="tab === 'opening_hours'">
         <table class="table table-bordered table-hover table-condensed">
         <tr style="font-weight: bold">
         <td style="width:20%">Day</td>
@@ -72,7 +72,7 @@
         </table>
         <button class="btn btn-default" ng-click="addHours()">Add Time</button>
         </tab>
-        <tab heading="Sessions" ng-click="getSessions()">
+        <tab heading="Sessions" ng-click="getSessions()" active="tab === 'sessions'">
         <table class="table table-bordered table-hover table-condensed">
         <tr style="font-weight: bold">
         <!--	<td style="width:25%">Name</td> -->
@@ -128,7 +128,7 @@
         <button class="btn btn-default" ng-click="addSession()">Add Session</button>
         </tab>
 
-        <tab heading="Packages" ng-click="getPackages()">
+        <tab heading="Packages" ng-click="getPackages()" active="tab === 'packages'">
         <table class="table table-bordered table-hover table-condensed">
         <tr style="font-weight: bold">
         <td style="width:25%">Name</td>
@@ -190,7 +190,7 @@
         </table>
         <button class="btn btn-default" ng-click="addPackage()">Add Package</button>
         </tab>
-        <tab heading="Edit Facility">
+        <tab heading="Edit Facility" ng-click="setTab('edit')" active="tab === 'edit'">
         <form name="Form" id="form1" novalidate
         ng-submit="form.submit(Form)" enctype="multipart/form-data">
         <div class="row">
@@ -303,7 +303,7 @@
         </tabset>
         </div>
         <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="cancel()">OK</button>
+        <button class="btn btn-primary" ng-click="cancel()">Close</button>
         </div>
     </script>
 
@@ -323,15 +323,24 @@
                 <table ng-table="tableParams" class="table table-striped">
                     <tr ng-repeat="facility in facilityData">
                         <td data-title="'Name'" sortable="'name'"><a
-                                data-ng-click="open('lg', facility)">{{facility.name}}</a></td>
+                                data-ng-click="open('lg', facility,'edit')">{{facility.name}}</a></td>
                         <td class="center" data-title="'Category'">{{facility.category.sub.name}}</td>
                         <td data-title="'Slots'" sortable="'slots'">{{facility.slots}}</td>
                         <td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a data-ng-click="open('lg', facility)"
+                                <a data-ng-click="open('lg', facility,'edit')"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Edit"><i class="fa fa-pencil"></i></a>
+                                   tooltip="Edit Profile"><i class="fa fa-pencil"></i></a>
+                                   <a data-ng-click="open('lg', facility,'opening_hours')"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
+                                   tooltip="Opening Hours"><i class="fa fa-pencil"></i></a>
+                                   <a data-ng-click="open('lg', facility,'sessions')"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
+                                   tooltip="Sessions"><i class="fa fa-pencil"></i></a>
+                                   <a data-ng-click="open('lg', facility,'packages')"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
+                                   tooltip="Packages"><i class="fa fa-pencil"></i></a>
                                    <!-- <a data-ng-click="blockUnblockFacility(facility.id,facility.is_active)"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
                                    tooltip="Change status"><i class="fa fa-pencil"></i></a> -->
@@ -349,7 +358,10 @@
                                         <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right dropdown-light" role="menu">
-                                        <li><a data-ng-click="open('lg', facility)"> Edit </a></li>
+                                        <li><a data-ng-click="open('lg', facility,'edit')"> Edit </a></li>
+                                        <li><a data-ng-click="open('lg', facility,'opening_hours')"> Opening Hours </a></li>
+                                        <li><a data-ng-click="open('lg', facility,'sessions')"> Sessions </a></li>
+                                        <li><a data-ng-click="open('lg', facility,'packages')"> Packages </a></li>
                                         <li><a
                                                 ui-sref="vendor.facility.booking({facilityId : facility.id})">
                                                 Book </a></li>
