@@ -279,7 +279,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             facilityService.getPackagesByFacilityId($scope.facility.id)
                     .then(function (packages) {
                         var packages = (packages.data === "") ? [] : packages.data;
-                        parsePackages(packages)
+                        parsePackages(packages);
                     }).catch(function (data) {
                 console.log(data.data);
             });
