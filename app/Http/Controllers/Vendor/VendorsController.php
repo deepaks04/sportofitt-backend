@@ -94,7 +94,7 @@ class VendorsController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getProfile()
+    public function getProfile($type=null)
     {
         $user = Auth::user();
         $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
@@ -121,7 +121,13 @@ class VendorsController extends Controller
             'message' => 'success',
             'profile' => $myProfile
         ];
-        return response($response, $status);
+        if($type=='array'){
+            $data = $response;
+            $data['status'] = $status;
+            return $data;
+        }else{
+            return response($response, $status);
+        }
     }
 
     /**
@@ -143,12 +149,20 @@ class VendorsController extends Controller
             }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
+            $data = $this->getProfile('array');
+            if($data['status']==200){
+                $userProfile = $data['profile'];
+            }else{
+                throw new Exception("Something went wrong, profile update fail");
+            }
         } catch (\Exception $e) {
             $status = 500;
             $message= $e->getMessage();
+            $userProfile = '';
         }
         $response = [
-            'message' => $message
+            'message' => $message,
+            'data' => $userProfile
         ];
         return response($response, $status);
     }
@@ -459,7 +473,7 @@ class VendorsController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getFacilityById($id)
+    public function getFacilityById($id,$type = null)
     {
         $status = 200;
         $message = "success";
@@ -480,7 +494,13 @@ class VendorsController extends Controller
             "message" => $message,
             "facility" => $facility
         ];
-        return response($response, $status);
+        if($type == 'array'){
+            $data = $response;
+            $data['status'] = $status;
+            return $data;
+        }else{
+            return response($response, $status);
+        }
     }
 
 
@@ -543,12 +563,22 @@ class VendorsController extends Controller
             AvailableFacility::where('id', '=', $id)->update($facility);
             $sessionUpdateData['duration'] = $request->duration;
             $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
+
+            $response = $this->getFacilityById($id,'array');
+            if($response['status']==200){
+                $data = $response['facility'];
+            }else{
+                throw new Exception("Facility not found");
+            }
         } catch (\Exception $e) {
             $status = 500;
             $message = "Something went wrong";
+            $data = '';
         }
         $response = [
-            "message" => $message
+            "message" => $message,
+            "data" => $data
+
         ];
         return response($response, $status);
     }
