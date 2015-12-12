@@ -44,8 +44,7 @@ function ($rootScope, $state, $stateParams,$cookieStore,$location) {
 
      $rootScope.$on('$stateChangeStart', function(event, current, previous) {
         var auth = sessionStorage.getItem('auth');
-
-         if(!auth && !$state.includes('login')){
+                  if(!auth && !$state.includes('login')){
 
              $location.path('/select').replace();
          }else {
