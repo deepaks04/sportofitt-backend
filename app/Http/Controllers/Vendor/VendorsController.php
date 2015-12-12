@@ -116,6 +116,7 @@ class VendorsController extends Controller
         $myProfile['area_id'] = $vendor->area_id;
         $myProfile['contact'] = $vendor->contact;
         $myProfile['description'] = $vendor->description;
+        $myProfile['postcode'] = $vendor->postcode;
         $status = 200;
         $response = [
             'message' => 'success',
