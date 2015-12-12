@@ -34,18 +34,18 @@ function ($rootScope, $state, $stateParams,$cookieStore) {
         }
     };
 
-//    var auth = sessionStorage.getItem('auth');
-//             if(!auth && !$state.includes('login')){
-//                $state.go('login.signin');
-//                 $rootScope.user = $cookieStore.get('user');
-//              }
+    var auth = sessionStorage.getItem('auth');
+             if(!auth && !$state.includes('login')){
+                $state.go('login.signin');
+                 $rootScope.user = $cookieStore.get('user');
+              }
 
      $rootScope.$on('$locationChangeStart', function(event, current, previous) {
-//var auth = sessionStorage.getItem('auth');
-//         if(!auth && !$state.includes('login')){
-//            $state.go('login.signin');
-//             $rootScope.user = $cookieStore.get('user');
-//          }
+var auth = sessionStorage.getItem('auth');
+         if(!auth && !$state.includes('login')){
+            $state.go('login.signin');
+             $rootScope.user = $cookieStore.get('user');
+          }
 
         });
         $rootScope.$on('$locationChangeSuccess', function(event, current, previous) {
