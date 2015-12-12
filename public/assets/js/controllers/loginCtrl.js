@@ -13,7 +13,7 @@ app.controller('signCtrl', [
     "SessionService",
     function ($scope, $state, $timeout, $rootScope, SweetAlert, Login,
             SessionService) {
-
+alert('here');
         $scope.master = $scope.user;
         $scope.form = {
             submit: function (form) {

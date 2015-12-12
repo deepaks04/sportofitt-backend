@@ -1,6 +1,6 @@
 var app = angular.module('sportofitApp', ['sportofit']);
-app.run(['$rootScope', '$state', '$stateParams',"$cookieStore",
-function ($rootScope, $state, $stateParams,$cookieStore) {
+app.run(['$rootScope', '$state', '$stateParams',"$cookieStore","$location",
+function ($rootScope, $state, $stateParams,$cookieStore,$location) {
 
     // Attach Fastclick for eliminating the 300ms delay between a physical tap and the firing of a click event on mobile browsers
     FastClick.attach(document.body);
@@ -35,17 +35,21 @@ function ($rootScope, $state, $stateParams,$cookieStore) {
     };
 
     var auth = sessionStorage.getItem('auth');
+    console.log($state.includes('login'));
              if(!auth && !$state.includes('login')){
-                $state.go('login.signin');
-                 $rootScope.user = $cookieStore.get('user');
+                 $location.path('/select').replace();
+
               }
 
-     $rootScope.$on('$locationChangeStart', function(event, current, previous) {
-var auth = sessionStorage.getItem('auth');
+     $rootScope.$on('$stateChangeStart', function(event, current, previous) {
+        var auth = sessionStorage.getItem('auth');
+
          if(!auth && !$state.includes('login')){
-            $state.go('login.signin');
-             $rootScope.user = $cookieStore.get('user');
-          }
+
+             $location.path('/select').replace();
+
+
+         }
 
         });
         $rootScope.$on('$locationChangeSuccess', function(event, current, previous) {

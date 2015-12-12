@@ -25,7 +25,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // APPLICATION ROUTES
         // -----------------------------------
         // For any unmatched url, redirect to /app/dashboard
-        $urlRouterProvider.otherwise("/login/signin");
+        $urlRouterProvider.otherwise("/select/signin");
         //
         // Login routes
 
