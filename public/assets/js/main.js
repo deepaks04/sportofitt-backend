@@ -38,8 +38,9 @@ function ($rootScope, $state, $stateParams,$cookieStore,$location) {
     console.log($state.includes('login'));
              if(!auth && !$state.includes('login')){
                  $location.path('/select').replace();
-
-              }
+              }else {
+                 $rootScope.user = $cookieStore.get('user');
+             }
 
      $rootScope.$on('$stateChangeStart', function(event, current, previous) {
         var auth = sessionStorage.getItem('auth');
@@ -47,7 +48,8 @@ function ($rootScope, $state, $stateParams,$cookieStore,$location) {
          if(!auth && !$state.includes('login')){
 
              $location.path('/select').replace();
-
+         }else {
+             $rootScope.user = $cookieStore.get('user');
 
          }
 
