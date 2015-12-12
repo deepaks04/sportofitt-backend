@@ -33,8 +33,16 @@ class UpdateVendorProfileRequest extends Request
             'description' => 'required|min:3|max:500',
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
-            'postcode' => 'required|integer',
-            'commission' => 'required|integer'
+            'postcode' => 'required|integer|min:6|max:6',
+            'commission' => 'required|integer',
+            'contact' => 'required|integer|min:10|max:10'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'postcode.integer' => 'Please enter valid post code',
+            'area_id.integer' => 'Please select Area',
         ];
     }
 }

@@ -32,4 +32,14 @@ class BankDetails extends Request
             'account_number' => 'required|integer|min:20'
         ];
     }
+    public function messages()
+    {
+        return [
+            'bank_name.required' => 'Bank Name is required',
+            'account_type.required' => 'Account Number is required',
+            'ifsc.required' => 'IFSC Code is required',
+            'account_type.required' => 'Please select the Account Type',
+            'beneficiary.required' => 'Beneficiary Name is required',
+        ];
+    }
 }
