@@ -12,20 +12,20 @@ return sessionStorage.removeItem(key);
 }
 }
 });
-app.factory('Login',function($http,$rootScope,$cookieStore,SessionService){
+app.factory('Login',function($http,$rootScope,$cookieStore,SessionService,$state){
 return{
 auth:function(credentials){
 var request = $http.post('api/v1/user/auth',credentials);
   // Store the data-dump of the FORM scope.
                 request.success(
                     function( response ,status, headers, config) {   
-                     console.log(response);
                            $rootScope.user = response.user;
 
 			SessionService.set('auth',$rootScope.user);
             $cookieStore.put('user', $rootScope.user);
-            
-            return { success: true };
+
+                        $state.go(response.user.role + '.dashboard', {'name': response.user.fname});
+
                     }
                 );
 return request;

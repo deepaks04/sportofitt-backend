@@ -40,6 +40,8 @@ function ($rootScope, $state, $stateParams,$cookieStore,$location) {
                  $location.path('/select').replace();
               }else {
                  $rootScope.user = $cookieStore.get('user');
+
+                 console.log($rootScope.user);
              }
 
      $rootScope.$on('$stateChangeStart', function(event, current, previous) {

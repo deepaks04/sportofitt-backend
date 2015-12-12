@@ -62,7 +62,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
                     resolve: loadSequence('modernizr', 'logger', 'uiMap', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
                     abstract: true
                 }).state('vendor.dashboard', {
-            url: "dashboard",
+            url: "/dashboard",
             templateUrl: "assets/views/vendor/dashboard.html",
             resolve: loadSequence('jquery-sparkline', 'dashboardCtrl'),
             title: 'Dashboard',

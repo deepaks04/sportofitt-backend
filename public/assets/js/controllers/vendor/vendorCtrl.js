@@ -5,7 +5,7 @@
 app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory", "userService", "SweetAlert", 'FileUploader',
     function ($rootScope, $scope, $timeout, flowFactory, userService, SweetAlert, FileUploader) {
 
-
+        $scope.old_profile = "";
 
         $scope.removeProfileImage = function () {
             $scope.userInfo.profile_picture = "";
@@ -22,9 +22,11 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
 
         userService.getVendorProfile().then(function (userInfo) {
             $scope.userInfo = userInfo.profile;
-            console.log($scope.userInfo);
-            if ($scope.userInfo.profile_picture == '') {
+
+            if (!$scope.userInfo.profile_picture) {
                 $scope.noImage = true;
+            }else{
+                $scope.old_profile = $scope.userInfo.profile_picture;
             }
         });
 
@@ -97,11 +99,15 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             submit: function (form) {
                 $scope.userInfo.commission = 0;
                 
-                if ($scope.obj.flow.files[0] !== undefined) {
+                if ($scope.obj.flow.files[0] !== undefined || $scope.obj.flow.files[0]) {
                     $scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
-                }else{
-                    delete $scope.userInfo.profile_picture;
+                }
+                if($scope.old_profile && $scope.old_profile != $scope.userInfo.profile_picture){
+                     $scope.userInfo.profile_picture = null;
                 };
+
+                console.log($scope.userInfo.profile_picture);
+
                 var updateProfile = userService.updateUserInfo($scope.userInfo);
                 updateProfile.then(function (response) {
                     SweetAlert.swal(response.data.message, "success");

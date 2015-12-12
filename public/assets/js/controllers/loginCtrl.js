@@ -40,7 +40,8 @@ app.controller('signCtrl', [
                 } else {
                     var auth = Login.auth($scope.user);
                     auth.success(function (response) {
-                        $state.go(response.user.role + '.dashboard', {'name': response.fname});
+                        console.log(response);
+                        $state.go(response.user.role + '.dashboard', {'name': response.user.fname});
                     });
                     auth.error(function (data, status) {
                         console.log(data);
