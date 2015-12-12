@@ -39,12 +39,12 @@
         </td>
         <td>
         <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="1" e-required>
-        {{ (time.start | date:"HH:mm") || 'empty' }}
+        {{ (time.start | date:"hh:mm:a") || 'empty' }}
         </span>
         </td>
         <td>
-        <span editable-bstime="time.end" e-show-meridian="true" e-min="time.start" e-name="end" e-form="rowform" e-minute-step="1" e-required>
-        {{ (time.end | date:"HH:mm") || 'empty' }}
+        <span editable-bstime="time.end" e-show-meridian="true"  e-name="end" e-form="rowform" e-minute-step="1" e-required>
+        {{ (time.end | date:"hh:mm:a") || 'empty' }}
         </span>
         </td>
         <td>
