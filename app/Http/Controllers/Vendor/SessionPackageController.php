@@ -239,10 +239,12 @@ class SessionPackageController extends Controller
                             $openingHour = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
                         }
                 }else{ // Difference not matched
+                    $status = 402;
                     $message = "Specified duration not matched with current time difference";
                     $openingHour = "";
                 }
             }else{ // No Record Found
+                $status = 402;
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }

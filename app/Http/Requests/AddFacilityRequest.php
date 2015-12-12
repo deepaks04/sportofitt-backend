@@ -57,7 +57,7 @@ class AddFacilityRequest extends Request
         switch ($this->method()) {
             case 'PUT':
                 return [
-                    'name' => 'required|min:5|max:50',
+                    'name' => 'required|alpha|min:5|max:50',
                     // 'image' => 'mimes:jpeg,png,jpg',
                     'is_active' => 'required|integer',
                     'slots' => 'required|integer',

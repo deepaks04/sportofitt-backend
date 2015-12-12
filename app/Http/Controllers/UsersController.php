@@ -44,7 +44,7 @@ class UsersController extends Controller
     {
         try {
             $status = 200;
-            $message="Vendor Registered Successfully! Please login to continue";
+            $message="Account created successfully! Please login to continue";
             $role = Role::where('slug', 'vendor')->first();
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();

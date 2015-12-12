@@ -130,4 +130,11 @@ class SessionRequest extends Request
                 break;
         }
     }
+    public function messages()
+    {
+        return [
+            'available_facility_id.integer' => 'Please select facility',
+            'day.integer' => 'Please select day',
+        ];
+    }
 }
