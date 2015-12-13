@@ -86,3 +86,38 @@ app.controller('registrationCtrl', [
             }
         };
     }]);
+
+app.controller('forgetPasswordCtrl', [
+    "$scope",
+    "$state",
+    "$timeout",
+    "SweetAlert",
+    "Login",
+    function ($scope, $state, $timeout, SweetAlert, Login) {
+        $scope.master = $scope.myModel;
+        $scope.errors = {};
+
+        $scope.form = {
+            forgotPassword: function (form) {
+                $scope.disableSubmit = true;
+                var passwordResponse = Login.forgetPassword(form);
+                console.log(form);
+                passwordResponse.then(function (response) {
+                    SweetAlert.swal("Good job!", response.message,
+                        "success");
+                    $state.go("login.signin");
+                    console.log(response);
+                });
+                passwordResponse.catch(function (response, status) {
+                    //console.log(data);
+                    $scope.disableSubmit = false;
+                    $scope.errors = {};
+                    angular.forEach(response.data, function (errors, field) {
+
+                        $scope.errors[field] = errors.join(', ');
+                    });
+                });
+            }
+        };
+    }]);
+

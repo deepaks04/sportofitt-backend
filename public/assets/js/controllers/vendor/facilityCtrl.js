@@ -10,20 +10,6 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
         facilityService.getDuration()
                 .then(getDurationSuccess);
 
-
-        $scope.percentageArray = {
-            10: 10,
-            20: 20,
-            30: 30,
-            40: 40,
-            50: 50,
-            60: 60,
-            70: 70,
-            80: 80,
-            90: 90,
-            100: 100
-        };
-        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4, 999: 999};
         $scope.types = {0: "Peak Time", 1: "Off time"};
 
         $scope.master = $scope.facility = {};
@@ -32,19 +18,20 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
                 var firstError = null;
 
                 var addFacility = facilityService.addFacility($scope.facility);
+
+                angular.forEach($scope.facility, function (value, field) {
+                    $scope.Form[field].$dirty = false;
+                });
                 addFacility.then(function (response) {
                     SweetAlert.swal(response.message, "success");
                     $state.go("vendor.facility.list");
 
-                    console.log(response);
                 });
                 addFacility.catch(function (data, status) {
                     angular.forEach(data.data, function (errors, field) {
                         $scope.Form[field].$dirty = true;
                         $scope.Form[field].$error = errors;
-                        console.log($scope.Form[field]);
                     });
-
                     SweetAlert.swal(data.data.message, data.data.statusText, "error");
                     return false;
                 })
@@ -293,7 +280,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             }, $scope.packages);
         }
 
-        $scope.saveHours = function (data, id) {
+        $scope.saveHours = function (data, id,rowform) {
             // $scope.user not updated yet
 
             angular.extend(data, {id: id, available_facility_id: $scope.facility.id});
@@ -301,6 +288,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             var saveHours = facilityService.saveOpeningTime(data).then(function (responce) {
                 console.log(responce.data);
             }).catch(function (responce) {
+                rowform.$invalid= true;
                 console.log(responce.data);
             });
         };

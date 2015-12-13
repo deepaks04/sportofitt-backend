@@ -4,9 +4,7 @@
 		<div class="col-sm-8">
 			<h1 class="mainTitle" translate="sidebar.nav.pages.USERPROFILE">USER
 				PROFILE</h1>
-			<span class="mainDescription">There are many systems which
-				have a need for user profile pages which display personal
-				information on each member.</span>
+			<span class="mainDescription"></span>
 		</div>
 		<div ncy-breadcrumb></div>
 	</div>
@@ -70,7 +68,7 @@
 								</thead>
 								<tbody>
 									<tr>
-										<td>Business Name</td>
+										<td>Company Name</td>
 										<td>{{userInfo.business_name}}</td>
 									</tr>
 									<tr>
@@ -130,8 +128,8 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group"
-									ng-class="{'has-error':errors.fname,'has-success':!errors.fname}">
-									<label class="control-label"> First Name </label> <input
+									ng-class="{'has-error':errors.fname,'':!errors.fname}">
+									<label class="control-label"> First Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your first name"
 										class="form-control" name="fname" ng-model="userInfo.fname">
 									<span class="error text-small block" ng-if="errors.fname">{{errors.fname}}</span>
@@ -139,33 +137,30 @@
 								</div>
 								
 								<div class="form-group"
-									ng-class="{'has-error':errors.email,'has-success':!errors.email}">
-									<label class="control-label"> Email Address </label> <input
+									ng-class="{'has-error':errors.email,'':!errors.email}">
+									<label class="control-label"> Email Address <span class="symbol required"></span></label> <input
 										type="email" placeholder="Enter Your Email Address"
 										class="form-control" name="email" ng-model="userInfo.email">
 									<span class="error text-small block" ng-if="errors.email">{{errors.email}}</span>
 
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.address,'has-success':!errors.address}">
-									<label class="control-label"> Address </label> <input
+									ng-class="{'has-error':errors.address,'':!errors.address}">
+									<label class="control-label"> Address <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter Your Address"
 										class="form-control" name="address"
 										ng-model="userInfo.address"> <span
 										class="error text-small block" ng-if="errors.address">{{errors.address}}</span>
-
 								</div>
-								
 								<div class="form-group"
-									ng-class="{'has-error':errors.area_id,'has-success':!errors.area_id}">
-									<label class="control-label"> Area </label>
+									ng-class="{'has-error':errors.area_id,'':!errors.area_id}">
+									<label class="control-label"> Area <span class="symbol required"></span></label>
                                                                         <select class="form-control"
 										ng-model="userInfo.area_id"
 										ng-options="area.id as area.name for area in areas">
 										<option value="">Select Area</option>
 									</select>
 									 <span class="error text-small block" ng-if="errors.area_id">{{errors.area_id}}</span>
-
 								</div>
 								<div class="form-group">
 									<label class="control-label"> Description </label>
@@ -175,16 +170,16 @@
 							</div>
 							<div class="col-md-6">
                                                             <div class="form-group"
-									ng-class="{'has-error':errors.Lname,'has-success':!errors.Lname}">
-									<label class="control-label"> Last Name </label> <input
+									ng-class="{'has-error':errors.Lname,'':!errors.Lname}">
+									<label class="control-label"> Last Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your last name"
 										class="form-control" name="lname" ng-model="userInfo.lname">
 									<span class="error text-small block" ng-if="errors.lname">{{errors.lname}}</span>
 
 								</div>
                                                             <div class="form-group"
-									ng-class="{'has-error':errors.contact,'has-success':!errors.contact}">
-									<label class="control-label"> Contact Number </label> <input
+									ng-class="{'has-error':errors.contact,'':!errors.contact}">
+									<label class="control-label"> Mobile Number <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter Your Contact Number"
 										class="form-control" name="contact"
 										ng-model="userInfo.contact"> <span
@@ -192,8 +187,8 @@
 
 								</div>
                                                             <div class="form-group"
-									ng-class="{'has-error':errors.postcode,'has-success':!errors.postcode}">
-									<label class="control-label"> Post Code </label> <input
+									ng-class="{'has-error':errors.postcode,'':!errors.postcode}">
+									<label class="control-label"> Post Code <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Post code"
 										class="form-control" name="postcode"
 										ng-model="userInfo.postcode"> <span
@@ -202,8 +197,8 @@
 								
 								
 								<div class="form-group"
-									ng-class="{'has-error':errors.profile_picture,'has-success':!errors.profile_picture}">
-									<label> Logo</label>
+									ng-class="{'has-error':errors.profile_picture,'':!errors.profile_picture}">
+									<label> Logo <span class="symbol required"></span></label>
 									<div flow-init="{singleFile:true}" flow-name="obj.flow"
 										flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]">
 										<div class="user-image">
@@ -235,7 +230,7 @@
                                                         </div>
                                                     <div class="row">
 								   <div class="col-md-12">
-										<label class="control-label"> Location </label>
+										<label class="control-label"> Location <span class="symbol required"></span></label>
 										<ui-gmap-google-map center="map.center" zoom="map.zoom"
 											dragging="map.dragging" map-refresh="true"
 											bounds="map.bounds" events="map.events" options="map.options"
@@ -271,8 +266,8 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group"
-									ng-class="{'has-error':errors.company_title,'has-success':!errors.company_title}">
-									<label class="control-label"> Company Name </label> <input
+									ng-class="{'has-error':errors.company_title,'':!errors.company_title}">
+									<label class="control-label"> Company Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Company name"
 										class="form-control" name="company_title"
 										ng-model="billingInfo.company_title"> <span
@@ -280,7 +275,7 @@
 								</div>
 
 								<div class="form-group"
-									ng-class="{'has-error':errors.registration_no,'has-success':!errors.registration_no}">
+									ng-class="{'has-error':errors.registration_no,'':!errors.registration_no}">
 									<label class="control-label"> Registration Number </label> <input
 										type="text" placeholder="Enter your Registration Number"
 										class="form-control" name="registration_no"
@@ -288,7 +283,7 @@
 										class="error text-small block" ng-if="errors.registration_no">{{errors.registration_no}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.service_tax_no,'has-success':!errors.service_tax_no}">
+									ng-class="{'has-error':errors.service_tax_no,'':!errors.service_tax_no}">
 									<label class="control-label"> Service Tax Number </label> <input
 										type="text" placeholder="Enter your Service Tax Number"
 										class="form-control" name="service_tax_no"
@@ -296,7 +291,7 @@
 										class="error text-small block" ng-if="errors.service_tax_no">{{errors.service_tax_no}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.pan_no,'has-success':!errors.pan_no}">
+									ng-class="{'has-error':errors.pan_no,'':!errors.pan_no}">
 									<label class="control-label"> PAN Number </label> <input
 										type="text" placeholder="Enter your PAN Number"
 										class="form-control" name="pan_no"
@@ -305,7 +300,7 @@
 
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.vat,'has-success':!errors.vat}">
+									ng-class="{'has-error':errors.vat,'':!errors.vat}">
 									<label class="control-label"> VAT Number </label> <input
 										type="text" placeholder="Enter your VAT Number"
 										class="form-control" name="vat" ng-model="billingInfo.vat">
@@ -317,8 +312,8 @@
 							</div>
 							<div class="col-md-6">
 								<div class="form-group"
-									ng-class="{'has-error':errors.contact_person_name,'has-success':!errors.contact_person_name}">
-									<label class="control-label"> Contact Person Name </label> <input
+									ng-class="{'has-error':errors.contact_person_name,'':!errors.contact_person_name}">
+									<label class="control-label"> Contact Person Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter Contact person name"
 										class="form-control" name="contact_person_name"
 										ng-model="billingInfo.contact_person_name"> <span
@@ -327,8 +322,8 @@
 
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.contact_person_email,'has-success':!errors.contact_person_email}">
-									<label class="control-label"> Contact Person Email </label> <input
+									ng-class="{'has-error':errors.contact_person_email,'':!errors.contact_person_email}">
+									<label class="control-label"> Contact Person Email <span class="symbol required"></span></label> <input
 										type="email" placeholder="Enter Contact person email"
 										class="form-control" name="contact_person_email"
 										ng-model="billingInfo.contact_person_email"> <span
@@ -337,8 +332,8 @@
 
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.contact_person_phone,'has-success':!errors.contact_person_phone}">
-									<label class="control-label"> Contact Person Phone </label> <input
+									ng-class="{'has-error':errors.contact_person_phone,'':!errors.contact_person_phone}">
+									<label class="control-label"> Contact Person Phone <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter Contact person phone"
 										class="form-control" name="contact_person_phone"
 										ng-model="billingInfo.contact_person_phone"> <span
@@ -367,56 +362,59 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group"
-									ng-class="{'has-error':errors.bank_name,'has-success':!errors.bank_name}">
-									<label class="control-label"> Bank Name </label> <input
+									ng-class="{'has-error':errors.bank_name,'':!errors.bank_name}">
+									<label class="control-label"> Bank Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Bank name"
 										class="form-control" name="bank_name"
 										ng-model="bankDetail.bank_name"> <span
 										class="error text-small block" ng-if="errors.bank_name">{{errors.bank_name}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.account_number,'has-success':!errors.account_number}">
-									<label class="control-label"> Account Number </label> <input
+									ng-class="{'has-error':errors.account_number,'':!errors.account_number}">
+									<label class="control-label"> Account Number <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Account number"
 										class="form-control" name="account_number"
 										ng-model="bankDetail.account_number"> <span
 										class="error text-small block" ng-if="errors.account_number">{{errors.account_number}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.ifsc,'has-success':!errors.ifsc}">
-									<label class="control-label"> IFSC Code </label> <input
+									ng-class="{'has-error':errors.ifsc,'':!errors.ifsc}">
+									<label class="control-label"> IFSC Code <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your IFSC Code"
 										class="form-control" name="ifsc" ng-model="bankDetail.ifsc">
 									<span class="error text-small block" ng-if="errors.ifsc">{{errors.ifsc}}</span>
 								</div>
+								</div>
+							<div class="col-md-6">
 								<div class="form-group"
-									ng-class="{'has-error':errors.branch_name,'has-success':!errors.branch_name}">
-									<label class="control-label"> Branch Name </label> <input
+									ng-class="{'has-error':errors.branch_name,'':!errors.branch_name}">
+									<label class="control-label"> Branch Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Account Type"
 										class="form-control" name="branch_name"
 										ng-model="bankDetail.branch_name"> <span
 										class="error text-small block" ng-if="errors.branch_name">{{errors.branch_name}}</span>
 								</div>
 								<div class="form-group"
-									ng-class="{'has-error':errors.account_type,'has-success':!errors.account_type}">
-									<label class="control-label">  Account Type </label> 
-                                                                        <label>
-                                                                            <input type="radio" ng-model="bankDetail.account_type" value="current">
-                                                                            Current Account
-                                                                        </label>
-                                                                        <label>
-                                                                            <input type="radio" ng-model="bankDetail.account_type" value="saving">
-                                                                            Saving Account
-                                                                        </label>
-                                                                        
-                                                                        
+									ng-class="{'has-error':errors.account_type,'':!errors.account_type}">
+									<label class="control-label block">
+										Account Type <span class="symbol required"></span>
+									</label>
+									<div class="clip-radio radio-primary">
+										<input type="radio" id="wd-current" name="gender" value="current" ng-model="bankDetail.account_type" required="" class="ng-pristine ng-untouched ng-invalid ng-invalid-required">
+										<label for="wd-female">
+											Current Account
+										</label>
+										<input type="radio" id="wd-saving" name="gender" value="saving" ng-model="bankDetail.account_type" required="" class="ng-pristine ng-untouched ng-invalid ng-invalid-required">
+										<label for="wd-male">
+											Saving Account
+										</label>
+									</div>
                                                                         <span
 										class="error text-small block" ng-if="errors.account_type">{{errors.account_type}}</span>
 								</div>
-
 								<div class="form-group"
-									ng-class="{'has-error':errors.beneficiary,'has-success':!errors.beneficiary}">
-									<label class="control-label"> Beneficiary Name </label> <input
+									ng-class="{'has-error':errors.beneficiary,'':!errors.beneficiary}">
+									<label class="control-label"> Beneficiary Name <span class="symbol required"></span></label> <input
 										type="text" placeholder="Enter your Beneficiary Name"
 										class="form-control" name="beneficiary"
 										ng-model="bankDetail.beneficiary"> <span
@@ -428,11 +426,8 @@
 										Submit <i class="fa fa-arrow-circle-right"></i>
 									</button>
 								</div>
-
-
 							</div>
 					</fieldset>
-
 				</form>
 				</tab> <!-- end: TAB Banking Details --> <!-- Tab Images --> <tab
 					heading="Images">

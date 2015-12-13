@@ -16,18 +16,22 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
         $scope.commissions = {10: 10, 20: 20, 30: 30};
 
         $scope.bankDetail = {};
-        userService.getBillingInfo().then(function (billingInfo) {
-            $scope.billingInfo = billingInfo.billing;
-        });
 
         userService.getVendorProfile().then(function (userInfo) {
             $scope.userInfo = userInfo.profile;
+
+            userService.getBillingInfo().then(function (billingInfo) {
+                $scope.billingInfo = billingInfo.billing;
+
+                $scope.billingInfo = {'company_title' : $scope.userInfo.business_name};
+            });
 
             if (!$scope.userInfo.profile_picture) {
                 $scope.noImage = true;
             }else{
                 $scope.old_profile = $scope.userInfo.profile_picture;
             }
+
         });
 
         userService.getAreas().then(function (areas) {
@@ -119,15 +123,12 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
 
                         $scope.errors[field] = errors.join(', ');
                     });
-                    SweetAlert.swal("somethings going wrong", data.data.statusText, "error");
-                    return;
+                    SweetAlert.swal("Somethings going wrong", "Please enter valid details", "error");
                 })
-
             },
             reset: function (form) {
                 $scope.userInfo = angular.copy($scope.master);
                 form.$setPristine(true);
-
             }
         };
 

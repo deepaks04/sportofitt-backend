@@ -31,14 +31,12 @@
 					<div class="form-group"
 						ng-class="{'has-error':errors.business_name,'has-success':!errors.business_name}">
 
-						<input type="text" placeholder="Enter your Business Name"
+						<input type="text" placeholder="Enter your Company Name"
 							class="form-control" name="business_name"
 							ng-model="myModel.business_name"> <span
 							class="error text-small block" ng-if="errors.business_name">{{errors.business_name}}</span>
 
 					</div>
-
-
 					<p>Enter your account details below:</p>
 					<div class="form-group"
 						ng-class="{'has-error':errors.username, 'has-success':!errors.username}">
@@ -68,22 +66,6 @@
 						</span> <span class="error text-small block" ng-if="errors.password">{{errors.password}}</span>
 
 					</div>
-
-					<!-- <div class="form-group" ng-class="{'has-error':errors.password2, 'has-success':!errors.password2}">
-						<span class="input-icon">
-							<input type="password" placeholder="Repeat Password" class="form-control" name="password2" ng-model="myModel.password2" compare-to="myModel.password" />
-<i class="fa fa-lock"></i></span>
-						<span class="error text-small block" ng-if="errors.password2">{{errors.password2}}</span>
-						
-					</div> -->
-					<!-- <div class="form-group">
-						<div class="checkbox clip-check check-primary">
-							<input type="checkbox" id="agree" value="agree">
-							<label for="agree">
-								I agree
-							</label>
-						</div>
-					</div> -->
 					<div class="form-actions">
 						<p>
 							Already have an account? <a ui-sref="login.signin"> Log-in </a>

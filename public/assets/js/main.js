@@ -41,7 +41,6 @@ function ($rootScope, $state, $stateParams,$cookieStore,$location) {
               }else {
                  $rootScope.user = $cookieStore.get('user');
 
-                 console.log($rootScope.user);
              }
 
      $rootScope.$on('$stateChangeStart', function(event, current, previous) {
