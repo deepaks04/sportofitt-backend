@@ -120,13 +120,13 @@ class PasswordController extends Controller
         switch ($response) {
             case Password::RESET_LINK_SENT:
                 $status = 200;
-                $message = 'Password reset link sent successfully!! Please check your email';
+                $message = 'An email with password reset link has been sent to your registered email id';
                 break;
             //return redirect()->back()->with('status', trans($response));
 
             case Password::INVALID_USER:
                 $status = 401;
-                $message = 'Invalid User';
+                $message = 'User with this email id is not exist';
                 break;
             //return redirect()->back()->withErrors(['email' => trans($response)]);
         }

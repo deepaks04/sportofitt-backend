@@ -76,6 +76,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     "alpha_spaces"     => "The :attribute may only contain letters and spaces.",
     "float"     => "The :attribute must be decimal with a precision of 2.",
+    'alpha_specialchars' => "The :attribute may only contain alphabets and special characters like , & . - _",
 
     /*
     |--------------------------------------------------------------------------
@@ -105,6 +106,11 @@ return [
     |
     */
 
-    'attributes' => []
+    'attributes' => [
+        'fname' => 'First Name',
+        'lname' => 'Last Name',
+        'email' => 'E-Mail',
+        'business_name' => 'Business Name',
+    ]
 ]
 ;
