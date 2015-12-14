@@ -25,7 +25,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // APPLICATION ROUTES
         // -----------------------------------
         // For any unmatched url, redirect to /app/dashboard
-        $urlRouterProvider.otherwise("/select/signin");
+        $urlRouterProvider.otherwise("/select");
         //
         // Login routes
 
@@ -44,6 +44,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         }).state('login.registration', {
             url: '/registration',
             templateUrl: "assets/views/login_registration.html"
+        }).state('login.resetpassword', {
+            url: '/reset-password/:token',
+            templateUrl: "assets/views/login_reset_password.html"
         }).state('login.logout', {
             url: '/logout',
             controller: function (Login, $state, SessionService) {

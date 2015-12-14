@@ -37,6 +37,12 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
         forgetPassword: function (credentials) {
             return $http.post('api/v1/user/password/email', credentials);
         },
+        getResetPassword: function (credentials) {
+            return $http.get('api/v1/user/password/reset/' + credentials);
+        },
+        resetPassword: function (credentials) {
+            return $http.post('api/v1/user/password/reset', credentials);
+        },
         logout: function () {
             var request = $http.get('api/v1/user/logout');
             request.success(

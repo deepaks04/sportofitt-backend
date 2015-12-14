@@ -95,12 +95,61 @@ app.controller('forgetPasswordCtrl', [
     "Login",
     function ($scope, $state, $timeout, SweetAlert, Login) {
         $scope.master = $scope.myModel;
-        $scope.errors = {};
 
         $scope.form = {
             forgotPassword: function (form) {
                 $scope.disableSubmit = true;
+                $scope.errors = {};
                 var passwordResponse = Login.forgetPassword(form);
+                console.log(form);
+                passwordResponse.then(function (response) {
+                    SweetAlert.swal("Good job!", response.message,
+                        "success");
+                    $state.go("login.signin");
+                    console.log(response);
+                });
+                passwordResponse.catch(function (response, status) {
+
+                    $scope.disableSubmit = false;
+                    $scope.errors = {};
+                    if(response.status===422) {
+                        angular.forEach(response.data, function (errors, field) {
+
+                            $scope.errors[field] = errors.join(', ');
+                        });
+                    }else{
+                        $scope.errors['email'] = response.data.message;
+                    }
+                });
+            }
+        };
+    }]);
+
+
+app.controller('resetPasswordCtrl', [
+    "$scope",
+    "$state",
+    "$timeout",
+    "SweetAlert",
+    "Login",
+    function ($scope, $state, $timeout, SweetAlert, Login) {
+        //$scope.master = $scope.myModel = {
+        //    'token' : $state.params.token
+        //};
+
+        Login.getResetPassword($state.params.token).then(function(response){
+            $scope.myModel = response.data.data;
+            console.log($scope.myModel);
+        }).catch(function(response){
+            $scope.myModel = {};
+        })
+        $scope.errors = {};
+
+        $scope.form = {
+            resetPassword: function (form) {
+                $scope.disableSubmit = true;
+                $scope.errors = {};
+                var passwordResponse = Login.resetPassword(form);
                 console.log(form);
                 passwordResponse.then(function (response) {
                     SweetAlert.swal("Good job!", response.message,
@@ -120,4 +169,5 @@ app.controller('forgetPasswordCtrl', [
             }
         };
     }]);
+
 
