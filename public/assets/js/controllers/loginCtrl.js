@@ -161,10 +161,14 @@ app.controller('resetPasswordCtrl', [
                     //console.log(data);
                     $scope.disableSubmit = false;
                     $scope.errors = {};
-                    angular.forEach(response.data, function (errors, field) {
+                    if(response.status===422) {
+                        angular.forEach(response.data, function (errors, field) {
 
-                        $scope.errors[field] = errors.join(', ');
-                    });
+                            $scope.errors[field] = errors.join(', ');
+                        });
+                    }else{
+                        $scope.errors['email'] = response.data.message;
+                    }
                 });
             }
         };
