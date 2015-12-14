@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
         {
             return preg_match('/^\d+(\.\d)?$/', $value);
         });
+        Validator::extend('alpha_specialchars', function($attribute, $value)
+        {
+            return preg_match('/(^[A-Za-z ,&._-]+$)+/', $value);
+        });
     }
 
     /**

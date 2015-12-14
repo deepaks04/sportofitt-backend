@@ -24,12 +24,12 @@ class CreateVendorRequest extends Request
     public function rules()
     {
         return [
-            'fname' => 'required|min:3|max:25',
-            'lname' => 'required|min:3|max:25',
+            'fname' => 'required|alpha_spaces|min:3|max:25',
+            'lname' => 'required||alpha_spaces|min:3|max:25',
             'email' => 'required|email|min:5|max:100|unique:users',
             'username' => 'required|min:5|max:25|unique:users',
-            'password' => 'required|min:5|max:25',
-            'business_name' => 'required|min:3|max:160'
+            'password' => 'required|alpha_num|min:6|max:12',
+            'business_name' => 'required|alpha_specialchars|min:3|max:160'
         ];
     }
 }

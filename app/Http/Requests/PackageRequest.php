@@ -166,9 +166,9 @@ class PackageRequest extends Request
                 return [
                     'name' => 'required|min:5|max:50',
                     'description' => 'required|min:5|max:200',
-                    'is_peak' => 'required|digits_between:0,1',
+                    'is_peak' => 'required|between:0,1',
                     'actual_price' => 'required|integer',
-                    'discount' => 'required|integer||digits_between:0,100',
+                    'discount' => 'required|integer|between:0,100',
                     //'package_id' => 'required|integer',
                     'month' => 'required|integer',
                 ];
@@ -178,9 +178,9 @@ class PackageRequest extends Request
                     'available_facility_id' => 'required|integer',
                     'name' => 'required|min:5|max:50',
                     'description' => 'required|min:5|max:200',
-                    'is_peak' => 'required|digits_between:0,1',
+                    'is_peak' => 'required|between:0,1',
                     'actual_price' => 'required|integer',
-                    'discount' => 'required|integer||digits_between:0,100',
+                    'discount' => 'required|integer|between:0,100',
                     //'package_id' => 'required|integer',
                     'month' => 'required|integer',
                 ];

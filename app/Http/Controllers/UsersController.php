@@ -64,7 +64,11 @@ class UsersController extends Controller
             $vendorData['created_at'] = Carbon::now();
             // Calling a method that is from the VendorsController
             $result = (new VendorsController())->store($vendorData);
-            if (!$result['status']) {
+            if($result['status']){
+                Mail::send('emails.welcome', $userData, function($message) use ($userData){
+                    $message->to($userData['email'])->subject('Welcome');
+                });
+            }else{
                 User::destroy($userId);
                 throw new \Exception($result['message']);
             }
