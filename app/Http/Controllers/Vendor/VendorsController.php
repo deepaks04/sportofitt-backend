@@ -536,17 +536,16 @@ class VendorsController extends Controller
             $facility = $request->all();
             $facility = $this->unsetKeys(array(
                 '_method',
-                'duration'
+                'duration',
+                'category'
             ), $facility);
             $status = 200;
             $message = "facility updated successfully";
             /* If File Exists then */
-            if (isset($facility['image']) && ! empty($facility['image'])) {
-                /* File Upload Code */
+            /*if (isset($facility['image']) && ! empty($facility['image'])) {
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath . sha1($this->user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory . "/" . "facility_images";
-                /* Create Upload Directory If Not Exists */
                 if (! file_exists($vendorImageUploadPath)) {
                     File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
                     chmod($vendorOwnDirecory, 0777);
@@ -556,10 +555,8 @@ class VendorsController extends Controller
                 $filename = sha1($this->user->id . time()) . ".{$extension}";
                 $request->file('image')->move($vendorImageUploadPath, $filename);
                 chmod($vendorImageUploadPath, 0777);
-
-                /* Rename file */
                 $facility['image'] = $filename;
-            }
+            }*/
             $facility['vendor_id'] = $this->vendor->id;
             AvailableFacility::where('id', '=', $id)->update($facility);
             $sessionUpdateData['duration'] = $request->duration;
@@ -573,7 +570,7 @@ class VendorsController extends Controller
             }
         } catch (\Exception $e) {
             $status = 500;
-            $message = "Something went wrong";
+            $message = "Something went wrong".$e->getMessage();
             $data = '';
         }
         $response = [

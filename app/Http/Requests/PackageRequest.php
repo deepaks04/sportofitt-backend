@@ -167,8 +167,8 @@ class PackageRequest extends Request
                     'name' => 'required|min:5|max:50',
                     'description' => 'required|min:5|max:200',
                     'is_peak' => 'required|digits_between:0,1',
-                    'actual_price' => 'required',
-                    'discount' => 'required|integer',
+                    'actual_price' => 'required|integer',
+                    'discount' => 'required|integer||digits_between:0,100',
                     //'package_id' => 'required|integer',
                     'month' => 'required|integer',
                 ];
@@ -179,8 +179,8 @@ class PackageRequest extends Request
                     'name' => 'required|min:5|max:50',
                     'description' => 'required|min:5|max:200',
                     'is_peak' => 'required|digits_between:0,1',
-                    'actual_price' => 'required',
-                    'discount' => 'required|integer',
+                    'actual_price' => 'required|integer',
+                    'discount' => 'required|integer||digits_between:0,100',
                     //'package_id' => 'required|integer',
                     'month' => 'required|integer',
                 ];

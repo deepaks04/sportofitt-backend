@@ -75,6 +75,7 @@ return [
     'unique' => 'The :attribute has already been taken.',
     'url' => 'The :attribute format is invalid.',
     "alpha_spaces"     => "The :attribute may only contain letters and spaces.",
+    "float"     => "The :attribute must be decimal with a precision of 2.",
 
     /*
     |--------------------------------------------------------------------------

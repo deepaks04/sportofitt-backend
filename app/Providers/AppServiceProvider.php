@@ -18,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
         {
             return preg_match('/^[\pL\s]+$/u', $value);
         });
+        Validator::extend('float', function($attribute, $value)
+        {
+            return preg_match('/^\d+(\.\d)?$/', $value);
+        });
     }
 
     /**
