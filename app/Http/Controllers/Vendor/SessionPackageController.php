@@ -57,7 +57,6 @@ class SessionPackageController extends Controller
             $facility = AvailableFacility::findOrFail($request->available_facility_id);
             $status = 200;
             $message = "Success";
-            //if($request->package_id==0){ //Create Package First Time
             $packageType = PackageType::where('slug','=','package')->first();
             $request->created_at = Carbon::now();
             $request->updated = Carbon::now();
@@ -603,7 +602,7 @@ class SessionPackageController extends Controller
                     $message = "Blocked Successfully";
                 }else{ //Blocked Time Already Exists for selected time & Date
                     $status = 406;
-                    $message = "Booking or blocking time already exists for selected date & time";
+                    $message = "Facility is already booked for date & time you have selected";
                 }
             }else{ //No Opening Time Available For Selected Time & Date
                 $status = 406;
