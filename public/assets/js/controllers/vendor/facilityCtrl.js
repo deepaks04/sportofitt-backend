@@ -400,9 +400,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.removeOpeningHours = function (index, timeId) {
 
             if (timeId) {
-                alert(timeId);
-
-                SweetAlert.swal({
+                     SweetAlert.swal({
                     title: "Are you sure to delete this opening time?",
                     text: "Your will not be able to recover this event!",
                     type: "warning",
