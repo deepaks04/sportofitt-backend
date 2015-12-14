@@ -31,46 +31,62 @@
                         </tr>
                         <tr ng-repeat="time in openingHours">
                             <td>
-        <span e-name="id" e-form="rowform" editable-hidden="time.id">
+        <span e-name="id" e-form="editHoursForm" editable-hidden="time.id">
         </span>
-<span editable-select="time.day" e-name="day" e-form="rowform" e-ng-options="s.id as s.name for s in days" e-required>
+<span editable-select="time.day" e-name="day" e-form="editHoursForm" e-ng-options="s.id as s.name for s in days"
+      e-required>
           {{ showDay(time) }}
         </span>
+    <span class="has-error" ng-if="editHoursForm.$dirty && hoursErrors.day"><label
+                                        class="help-block">{{hoursErrors.day}}</label></span>
+
                             </td>
                             <td>
-        <span e-name="start" e-form="rowform" editable-bstime="time.start" e-show-meridian="true" e-minute-step="1"
+        <span e-name="start" e-form="editHoursForm" editable-bstime="time.start" e-show-meridian="true"
+              e-minute-step="1"
               e-required>
-        {{ (time.start | date:"hh:mm:a") || 'empty' }}
+        {{ (time.start | date:"hh:mm a")  }}
         </span>
+ <span class="has-error" ng-if="editHoursForm.$dirty && hoursErrors.start"><label
+         class="help-block">{{hoursErrors.start}}</label></span>
                             </td>
                             <td>
-        <span editable-bstime="time.end" e-show-meridian="true" e-name="end" e-form="rowform" e-minute-step="1"
+        <span editable-bstime="time.end" e-show-meridian="true" e-name="end" e-form="editHoursForm" e-minute-step="1"
               e-required>
-        {{ (time.end | date:"hh:mm:a") || 'empty' }}
+        {{ (time.end | date:"hh:mm a")  }}
         </span>
+ <span class="has-error" ng-if="editHoursForm.$dirty && hoursErrors.end"><label
+         class="help-block">{{hoursErrors.end}}</label></span>
                             </td>
                             <td>
-                                <sapn editable-checkbox="time.is_peak" e-name="is_peak" e-form="rowform"
+                                <span editable-checkbox="time.is_peak" e-name="is_peak" e-form="editHoursForm"
                                       e-title="Peak Hour?" e-ng-true-value="1" e-ng-false-value="0">
                                     {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
                                     </span>
                             </td>
                             <td style="white-space: nowrap">
                                 <!-- form -->
-                                <form editable-form name="rowform" onbeforesave="saveHours($data, time.id)"
-                                      ng-show="rowform.$visible" class="form-buttons form-inline"
+                                <form editable-form name="editHoursForm"
+                                      onbeforesave="saveHours($data, time.id,editHoursForm)"
+                                      ng-show="editHoursForm.$visible || editHoursForm.$waiting"
+                                      class="form-buttons form-inline"
                                       shown="inserted == time">
-                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                                    <button type="submit" ng-disabled="editHoursForm.$waiting" class="btn btn-primary">
                                         save
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting"
-                                            ng-click="removeOpeningHours($index)" class="btn btn-default">
+                                    <button type="button" ng-disabled="editHoursForm.$waiting" ng-if="!time.id"
+                                            ng-click="removeOpeningHours($index,time.id)"
+                                            class="btn btn-default">
+                                        cancel
+                                    </button>
+                                    <button type="button" ng-disabled="editHoursForm.$waiting" ng-if="time.id" ng-click="editHoursForm.$hide()"
+                                            class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
-                                <div class="buttons" ng-show="!rowform.$visible">
-                                    <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
-                                    <!--<button class="btn btn-danger" ng-click="removeOpeningHours($index)">del</button>-->
+                                <div class="buttons" ng-show="!editHoursForm.$visible">
+                                    <button class="btn btn-primary" ng-click="editHoursForm.$show()">edit</button>
+                                    <button class="btn btn-danger" ng-click="removeOpeningHours($index,time.id)">del</button>
                                 </div>
                             </td>
                         </tr>
@@ -90,46 +106,58 @@
                         <tr ng-repeat="session in sessions">
                             <!--<td>
                             <span e-name="name" e-form="rowform" editable-text="session.name">
-                            {{ session.name || 'empty' }}
+                            {{ session.name  }}
                             </span>
                             </td>-->
                             <td>
         <span e-name="peak" e-form="rowform" editable-number="session.peak" e-min="0" e-max="10">
-        {{ session.peak || 'empty' }}
+        {{ session.peak  }}
         </span>
+                                <span class="has-error" ng-if="rowform.$dirty && errors.peak"><label
+                                        class="help-block">{{errors.peak}}</label></span>
                             </td>
                             <td>
         <span e-name="off_peak" e-form="rowform" editable-number="session.off_peak" e-min="0" e-max="10">
-        {{ session.off_peak || 'empty' }}
+        {{ session.off_peak  }}
         </span>
+                                <span class="has-error" ng-if="rowform.$dirty && errors.off_peak"><label
+                                        class="help-block">{{errors.off_peak}}</label></span>
                             </td>
                             <td>
         <span e-name="price" e-form="rowform" editable-text="session.price">
-        {{ session.price || 'empty' }}
+        {{ session.price  }}
         </span>
+                                <span class="has-error" ng-if="rowform.$dirty && errors.price"><label
+                                        class="help-block">{{errors.price}}</label></span>
                             </td>
                             <td>
-        <span e-name="discount" e-form="rowform" editable-range="session.discount" e-min="0" e-max="100" e-step="5"
+        <span e-name="discount" e-form="rowform" editable-range="session.discount" e-min="0" e-max="100" e-step="1"
               e-style="width:90%">
-        {{ session.discount || 'empty' }}
+        {{ session.discount  }}
         </span>
+                                <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
+                                        class="help-block">{{errors.discount}}</label></span>
                             </td>
                             <td style="white-space: nowrap">
                                 <!-- form -->
-                                <form editable-form name="rowform" onbeforesave="saveSession($data, session.id)"
-                                      ng-show="rowform.$visible" class="form-buttons form-inline"
-                                      shown="showSessionEdit">
+                                <form editable-form name="rowform" onbeforesave="saveSession($data, session.id,rowform)"
+                                      ng-show="rowform.$visible || rowform.$waiting" class="form-buttons form-inline"
+                                      shown="showSessionEdit" novalidate>
                                     <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
                                         save
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!session.id" ng-click="removeSession($index,session.id)"
+                                            class="btn btn-default">
+                                        cancel
+                                    </button>
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="session.id" ng-click="rowform.$hide()"
                                             class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
-                                    <button class="btn btn-danger" ng-click="removeSession($index)">del</button>
+                                    <button class="btn btn-danger" ng-click="removeSession($index,session.id)">del</button>
                                 </div>
                             </td>
                         </tr>
@@ -152,52 +180,68 @@
                         <tr ng-repeat="package in packages">
                             <td>
         <span e-name="name" e-form="rowform" editable-text="package.name">
-        {{ package.name || 'empty' }}
+        {{ package.name  }}
         </span>
+                                 <span class="has-error" ng-if="rowform.$dirty && errors.name"><label
+                                         class="help-block">{{errors.name}}</label></span>
                             </td>
                             <td>
         <span e-name="month" e-form="rowform" editable-number="package.month" e-min="1" e-max="12">
-        {{ package.month || 'empty' }}
+        {{ package.month  }}
         </span>
+                                 <span class="has-error" ng-if="rowform.$dirty && errors.month"><label
+                                         class="help-block">{{errors.month}}</label></span>
                             </td>
                             <td>
         <span e-name="actual_price" e-form="rowform" editable-text="package.actual_price">
-        {{ package.actual_price || 'empty' }}
+        {{ package.actual_price  }}
         </span>
+                                 <span class="has-error" ng-if="rowform.$dirty && errors.actual_price"><label
+                                         class="help-block">{{errors.actual_price}}</label></span>
                             </td>
                             <td>
                                 <sapn editable-checkbox="package.is_peak" e-name="is_peak" e-form="rowform"
                                       e-title="Peak Hour?" e-ng-true-value="1" e-ng-false-value="0">
                                     {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
                                     </span>
+                                     <span class="has-error" ng-if="rowform.$dirty && errors.is_peak"><label
+                                             class="help-block">{{errors.is_peak}}</label></span>
                             </td>
                             <td>
         <span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5"
               e-style="width:90%">
-        {{ package.discount || 'empty' }}
+        {{ package.discount }}
         </span>
+                                 <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
+                                         class="help-block">{{errors.discount}}</label></span>
                             </td>
                             <td>
         <span e-name="description" e-form="rowform" editable-textarea="package.description">
-        {{ package.description || 'empty' }}
+        {{ package.description || 'No description' }}
         </span>
+                                 <span class="has-error" ng-if="rowform.$dirty && errors.description"><label
+                                         class="help-block">{{errors.description}}</label></span>
                             </td>
                             <td style="white-space: nowrap">
                                 <!-- form -->
-                                <form editable-form name="rowform" onbeforesave="savePackage($data, package.id)"
+                                <form editable-form name="rowform" onbeforesave="savePackage($data, package.id,rowform)"
                                       ng-show="rowform.$visible" class="form-buttons form-inline"
                                       shown="packageInserted == package">
                                     <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-xs">
                                         save
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()"
-                                            class="btn btn-default btn-xs">
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!package.id" ng-click="removeSession($index,session.id)"
+                                            class="btn btn-default">
+                                        cancel
+                                    </button>
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id" ng-click="rowform.$hide()"
+                                            class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <button class="btn btn-primary btn-xs" ng-click="rowform.$show()">edit</button>
-                                    <button class="btn btn-danger btn-xs" ng-click="removePackage($index)">del</button>
+                                    <button class="btn btn-danger btn-xs" ng-click="removePackage($index,package.id)">del</button>
                                 </div>
                             </td>
                         </tr>

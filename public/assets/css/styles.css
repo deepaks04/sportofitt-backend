@@ -5375,9 +5375,9 @@ textarea, select, input[type="text"], input[type="password"], input[type="dateti
 	input[type="time"], input[type="week"], input[type="number"], input[type="email"],
 	input[type="url"], input[type="search"], input[type="tel"], input[type="color"]
 	{
-	-webkit-appearance: none !important;
+	/*-webkit-appearance: none !important;
 	-moz-appearance: none !important;
-	appearance: none !important;
+	appearance: none !important;*/
 	background-color: #FFFFFF !important;
 	background-image: none !important;
 	border: 1px solid #c8c7cc !important;

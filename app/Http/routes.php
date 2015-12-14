@@ -14,6 +14,9 @@ use App\Http\Controllers\Auth\AuthController;
 Route::get('/', function () {
     return view('STANDARD/index');
 });
+Route::get('/select', function () {
+    return view('STANDARD/select/index');
+});
 /* For Vendor Only */
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('create',array('uses' => 'UsersController@storeVendor'));

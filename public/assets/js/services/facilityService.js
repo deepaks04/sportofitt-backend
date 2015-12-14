@@ -17,11 +17,14 @@
             getFacilityDetailsById: getFacilityDetailsById,
             getDuration: getDuration,
             saveOpeningTime: saveOpeningTime,
+            removeOpeningTime:removeOpeningTime,
             getOpeningTimesByFacilityId: getOpeningTimesByFacilityId,
             getSessionsByFacilityId: getSessionsByFacilityId,
             getPackagesByFacilityId: getPackagesByFacilityId,
             saveSession: saveSession,
+            removeSession:removeSession,
             savePackage: savePackage,
+            removePackage:removePackage,
             blockSession: blockSession,
             getBlockedSessions: getBlockedSessions,
             getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId,
@@ -79,7 +82,7 @@
                     .then(sendResponseData)
                     .catch(sendGetError);
         }
-        ;
+
 
         function getPackagesByFacilityId(facilityId) {
             return $http({
@@ -256,6 +259,17 @@ return $http({
             });
         }
 
+        function removeOpeningTime(timeId){
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/delete-opening-time/' + timeId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                .then(sendResponseData)
+                .catch(sendGetError);
+        }
+
         function saveSession(data) {
             var fd = new FormData();
             for (var key in data)
@@ -270,7 +284,16 @@ return $http({
                 headers: {'Content-Type': undefined}
             });
         }
-
+        function removeSession(sessionId){
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/multiple-sessions/' + sessionId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                .then(sendResponseData)
+                .catch(sendGetError);
+        }
         function savePackage(data) {
             var fd = new FormData();
             for (var key in data)
@@ -288,6 +311,16 @@ return $http({
             });
         }
 
+        function removePackage(packageId){
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/delete-package/' + packageId,
+                // transformResponse: transformGetFacilities,
+                // cache: true
+            })
+                .then(sendResponseData)
+                .catch(sendGetError);
+        }
         function blockSession(data) {
             var fd = new FormData();
             for (var key in data)
