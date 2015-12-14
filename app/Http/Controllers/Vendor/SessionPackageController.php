@@ -230,20 +230,21 @@ class SessionPackageController extends Controller
                         $childData['session_package_id'] = $session['id'];
                         $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
+                            $status = 406;
                             $message = "Time Already Exists";
-                            $sessionInformation = "";
+                            $openingHour = "";
                         }else{
                             $sessionChild = OpeningHour::create($childData);
                             $sessionInformation['parent'] = SessionPackage::find($session['id']);
                             $openingHour = $sessionInformation['parent']->ChildOpeningHours()->orderBy('created_at','DESC')->first()->toArray();
                         }
                 }else{ // Difference not matched
-                    $status = 402;
+                    $status = 406;
                     $message = "Specified duration not matched with current time difference";
                     $openingHour = "";
                 }
             }else{ // No Record Found
-                $status = 402;
+                $status = 406;
                 $message = "Please Update Session duration first";
                 $openingHour = "";
             }
