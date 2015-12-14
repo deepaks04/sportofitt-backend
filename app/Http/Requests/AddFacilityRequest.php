@@ -57,8 +57,7 @@ class AddFacilityRequest extends Request
         switch ($this->method()) {
             case 'PUT':
                 return [
-                    'name' => 'required|alpha|min:5|max:50',
-                    // 'image' => 'mimes:jpeg,png,jpg',
+                    'name' => 'required|alpha_spaces|min:5|max:50',
                     'is_active' => 'required|integer',
                     'slots' => 'required|integer',
                     'sub_category_id' => 'required|integer',
@@ -70,7 +69,7 @@ class AddFacilityRequest extends Request
                 break;
             case 'POST':
                 return [
-                    'name' => 'required|min:5|max:50',
+                    'name' => 'required|alpha_spaces|min:5|max:50',
                     'sub_category_id' => 'required|integer',
                     'slots' => 'required|integer',
                     'description' => 'min:5|max:500',
