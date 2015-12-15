@@ -228,7 +228,7 @@ class SessionPackageController extends Controller
                         ))->first()->toArray();
                         $childData = Input::only('is_peak','start','end','day');
                         $childData['session_package_id'] = $session['id'];
-                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']));
+                        $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('".$start."' BETWEEN start AND end OR '".$end."' BETWEEN start AND end) AND day=".$childData['day']." AND session_package_id=".$session['id']." AND is_active<>0"));
                         if($sameTimeExists[0]->cnt>0){ //Check If Same Time Already Exists
                             $status = 406;
                             $message = "Time Already Exists";

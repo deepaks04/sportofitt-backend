@@ -175,7 +175,7 @@ class VendorsController extends Controller
      */
 
 
-    public function getBillingInformation()
+    public function getBillingInformation($type=null)
     {
 
         $billing = $this->vendor->billingInfo()->first();
@@ -187,11 +187,15 @@ class VendorsController extends Controller
             $status = 200;
             $message = 'Please update your billing information';
         }
-        $response = [
-            "message" => $message,
-            "billing" => $billing
-        ];
-        return response($response, $status);
+        if($type=='array'){
+            return $billing;
+        }else{
+            $response = [
+                "message" => $message,
+                "billing" => $billing
+            ];
+            return response($response, $status);
+        }
     }
 
     /**
@@ -228,16 +232,18 @@ class VendorsController extends Controller
                 $data['updated_at'] = Carbon::now();
                 $this->vendor->billingInfo()->insert($data);
             }
-
             $status = 200;
             $message = "saved successfully";
+            $billingData = $this->getBillingInformation('array');
         } catch (\Exception $e) {
             echo $e->getMessage();
             $status = 500;
             $message = "something went wrong";
+            $billingData = '';
         }
         $response = [
-            "message" => $message
+            "message" => $message,
+            "data" => $billingData
         ];
         return response($response, $status);
     }
@@ -247,7 +253,7 @@ class VendorsController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getBankDetails()
+    public function getBankDetails($type=null)
     {
         $bank = $this->vendor->bankInfo()->first();
         if ($bank != null) {
@@ -258,11 +264,15 @@ class VendorsController extends Controller
             $status = 200;
             $message = 'Please update your bank details';
         }
-        $response = [
-            "message" => $message,
-            "bank" => $bank
-        ];
-        return response($response, $status);
+        if($type=='array'){
+            return $bank;
+        }else{
+            $response = [
+                "message" => $message,
+                "bank" => $bank
+            ];
+            return response($response, $status);
+        }
     }
 
     /**
@@ -289,13 +299,16 @@ class VendorsController extends Controller
             }
             $status = 200;
             $message = "saved successfully";
+            $bankData = $this->getBankDetails('array');
         } catch (\Exception $e) {
             echo $e->getMessage();
             $status = 500;
             $message = "something went wrong";
+            $bankData = '';
         }
         $response = [
-            "message" => $message
+            "message" => $message,
+            "data" => $bankData
         ];
         return response($response, $status);
     }
