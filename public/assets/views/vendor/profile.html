@@ -389,7 +389,7 @@
 								<div class="form-group"
 									ng-class="{'has-error':errors.branch_name,'':!errors.branch_name}">
 									<label class="control-label"> Branch Name <span class="symbol required"></span></label> <input
-										type="text" placeholder="Enter your Account Type"
+										type="text" placeholder="Enter your branch name"
 										class="form-control" name="branch_name"
 										ng-model="bankDetail.branch_name"> <span
 										class="error text-small block" ng-if="errors.branch_name">{{errors.branch_name}}</span>
@@ -400,12 +400,13 @@
 										Account Type <span class="symbol required"></span>
 									</label>
 									<div class="clip-radio radio-primary">
-										<input type="radio" id="wd-current" name="gender" value="current" ng-model="bankDetail.account_type" required="" class="ng-pristine ng-untouched ng-invalid ng-invalid-required">
-										<label for="wd-female">
+										<input type="radio" id="wd-current" name="account_type" value="current" ng-model="bankDetail.account_type"
+											   required="" >
+										<label for="wd-current">
 											Current Account
 										</label>
-										<input type="radio" id="wd-saving" name="gender" value="saving" ng-model="bankDetail.account_type" required="" class="ng-pristine ng-untouched ng-invalid ng-invalid-required">
-										<label for="wd-male">
+										<input type="radio" id="wd-saving" name="account_type" value="saving" ng-model="bankDetail.account_type" required="" >
+										<label for="wd-saving">
 											Saving Account
 										</label>
 									</div>

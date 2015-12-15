@@ -23,7 +23,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             userService.getBillingInfo().then(function (billingInfo) {
                 $scope.billingInfo = billingInfo.billing;
 
-                $scope.billingInfo = {'company_title' : $scope.userInfo.business_name};
+                $scope.billingInfo.company_title = $scope.userInfo.business_name;
             });
 
             if (!$scope.userInfo.profile_picture) {
