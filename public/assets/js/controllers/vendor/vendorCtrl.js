@@ -106,7 +106,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
                 if ($scope.obj.flow.files[0] !== undefined || $scope.obj.flow.files[0]) {
                     $scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
                 }
-                if($scope.old_profile && $scope.old_profile != $scope.userInfo.profile_picture){
+                if($scope.old_profile && $scope.old_profile == $scope.userInfo.profile_picture){
                      $scope.userInfo.profile_picture = null;
                 };
 
