@@ -107,7 +107,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
                     $scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
                 }
                 if($scope.old_profile && $scope.old_profile == $scope.userInfo.profile_picture){
-                     $scope.userInfo.profile_picture = null;
+                     delete $scope.userInfo.profile_picture;
                 };
 
                 console.log($scope.userInfo.profile_picture);
