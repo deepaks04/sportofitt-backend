@@ -77,6 +77,8 @@ return [
     "alpha_spaces"     => "The :attribute may only contain letters and spaces.",
     "float"     => "The :attribute must be decimal with a precision of 2.",
     'alpha_specialchars' => "The :attribute may only contain alphabets and special characters like , & . - _",
+    "zip" => "Zip Code must be 6 digit",
+    "mobile" => "Contact no must be 10 digit",
 
     /*
     |--------------------------------------------------------------------------
