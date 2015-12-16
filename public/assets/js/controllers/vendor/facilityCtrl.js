@@ -702,6 +702,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
 
                 $scope.addEvent = function () {
                     //$modalInstance.dismiss('cancel');
+                    $scope.event.startsAt =$scope.event.startsAt.toLocaleString()
                     facilityService.blockSession($scope.event).then(function (response) {
                         $modalInstance.close($scope.event, 'add');
                         $modalInstance.dismiss('cancel');

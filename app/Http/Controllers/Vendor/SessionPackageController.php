@@ -555,12 +555,12 @@ class SessionPackageController extends Controller
             $data= $this->unsetKeys(array('daySpan','dayOffset'),$data);
             $user = Auth::user();
             $sessionBooking = "";
-            $date = strtotime($data['startsAt']);
-            $start = strtotime($data['startsAt']);
-            $data['startsAt'] = date('Y-m-d H:i:s', $start);
-            $startTime = date('H:i:s', $start);
-            $day = date('l', $date);
-            $day = strtolower($day);
+            $start = new Carbon($data['startsAt']);
+//           print_r($data['startsAt']);
+//dd(strtotime($data['startsAt']));
+            $data['startsAt'] = $start->toDateTimeString();
+            $startTime = $start->toTimeString();
+            $day = strtolower($start->format('l'));
             $dayMaster = DayMaster::where('slug','=',$day)->first();
             $data['day'] = $dayMaster->id;
             $packageType = PackageType::where('slug','=','session')->first();
@@ -570,11 +570,9 @@ class SessionPackageController extends Controller
             ))->first();
 
             if($sessionPackageMaster!=null){
-                $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
-                $time = strtotime($data['startsAt']);
-                $data['endsAt'] = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-                $end =  strtotime($data['endsAt']);
-                $endTime = date('H:i:s', $end);
+                $sessionDuration = $sessionPackageMaster->duration;
+                $data['endsAt'] = $start->addMinute($sessionDuration);
+                $endTime = $start->addMinute($sessionDuration)->toTimeString();
             }
             $openingTimeExists = OpeningHour::where('start','<=',$startTime)
                             ->where('end','>=',$startTime)
@@ -584,6 +582,9 @@ class SessionPackageController extends Controller
                             ->where('is_active','=',1)
                             ->where('session_package_id','=',$sessionPackageMaster->id)
                             ->first();
+//            echo $startTime .'+>>'.$endTime;
+//            echo $openingTimeExists->toSql();
+//            dd($endTime);
             if($openingTimeExists!=null ){ //Opening Time Available
                 $startAt = $data['startsAt'];
                 $endAt = $data['endsAt'];

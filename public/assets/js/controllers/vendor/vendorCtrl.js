@@ -21,7 +21,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             $scope.userInfo = userInfo.profile;
 
             userService.getBillingInfo().then(function (billingInfo) {
-                $scope.billingInfo = billingInfo.billing;
+                $scope.billingInfo = billingInfo.billing || {};
 
                 $scope.billingInfo.company_title = $scope.userInfo.business_name;
             });

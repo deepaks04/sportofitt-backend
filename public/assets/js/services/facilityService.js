@@ -325,7 +325,6 @@ return $http({
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            console.log(fd);
             return		$http.post('api/v1/vendor/calendar-block', fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}

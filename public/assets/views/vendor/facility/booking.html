@@ -125,7 +125,9 @@
                     Start
                     </label>
                     <span class="input-icon">
-                    <input type="text" class="form-control underline" min-date="minDate" ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt" is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
+                    <input type="text" class="form-control underline" min-date="minDate" readonly
+                           ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt"
+                           is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
                     <i class="ti-calendar"></i> </span>
                     <timepicker ng-model="event.startsAt" show-meridian="true" readonly-input="false" minute-step="1" ng-show="!event.allDay"></timepicker>
                     </div>
