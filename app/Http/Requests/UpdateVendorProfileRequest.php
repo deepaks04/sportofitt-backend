@@ -33,9 +33,9 @@ class UpdateVendorProfileRequest extends Request
             'description' => 'required|min:3|max:500',
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
-            'postcode' => 'required|integer|min:6|max:6',
+            'postcode' => 'required|numeric|zip',
             'commission' => 'required|integer',
-            'contact' => 'required|integer|min:10|max:10'
+            'contact' => 'required|numeric|mobile'
         ];
     }
     public function messages()

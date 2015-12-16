@@ -26,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
         {
             return preg_match('/(^[A-Za-z ,&._-]+$)+/', $value);
         });
+        Validator::extend('zip', function($attribute, $value)
+        {
+            return preg_match('/^[0-9]{6}(\-[0-9]{4})?$/', $value);
+        });
+        Validator::extend('mobile', function($attribute, $value)
+        {
+            return preg_match('/^[0-9]{10}(\-[0-9]{4})?$/', $value);
+        });
     }
 
     /**
