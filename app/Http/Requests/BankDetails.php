@@ -24,11 +24,11 @@ class BankDetails extends Request
     public function rules()
     {
         return [
-            'bank_name' => 'required|min:3|max:80',
-            'ifsc' => 'required|min:5|max:30',
+            'bank_name' => 'required|alpha_spaces|min:3|max:80',
+            'ifsc' => 'required|alpha_num|min:5|max:30',
             'account_type' => 'required|min:5|max:255',
-            'branch_name' => 'required|min:5|max:50',
-            'beneficiary' => 'required|min:5|max:50',
+            'branch_name' => 'required|alpha_spaces|min:5|max:50',
+            'beneficiary' => 'required|alpha_spaces|min:5|max:50',
             'account_number' => 'required|numeric|min:20'
         ];
     }
