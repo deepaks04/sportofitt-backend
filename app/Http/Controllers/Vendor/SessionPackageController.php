@@ -726,8 +726,8 @@ class SessionPackageController extends Controller
                     );
                     $blockingData = SessionBooking::where('available_facility_id',$facility['id'])
                         ->where('is_active',1)
-                        ->where('startAt','>=',$start)
-                        ->where('endAt','<=',$end)
+                        ->where('startsAt','>=',$start)
+                        ->where('endsAt','<=',$end)
                         ->get();
                     if(!$blockingData->isEmpty()){
                         $blockData = $blockingData->toArray();
