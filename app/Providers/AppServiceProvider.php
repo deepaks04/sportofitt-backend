@@ -38,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
         {
             return preg_match('/^[A-Za-z0-9]{11}(\-[0-9]{4})?$/', $value);
         });
+        Validator::extend('alpha_space_num', function($attribute, $value)
+        {
+            return preg_match('/(^[A-Za-z0-9 ]+$)+/', $value);
+        });
     }
 
     /**

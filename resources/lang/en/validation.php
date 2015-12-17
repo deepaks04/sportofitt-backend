@@ -80,6 +80,7 @@ return [
     "zip" => "Zip Code must be 6 digit",
     "mobile" => "Contact no must be 10 digit",
     "ifsc" => "IFSC code must be Alphanumeric and 11 characters in size.",
+    "alpha_space_num" => "The :attribute may only contain alphabet, number and space character.",
 
     /*
     |--------------------------------------------------------------------------
