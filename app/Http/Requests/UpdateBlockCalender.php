@@ -28,7 +28,8 @@ class UpdateBlockCalender extends Request
             case 'PUT':
                 $id = $this->route('id');
                 $bookedBlock = SessionBooking::find($id);
-                if($bookedBlock==null){
+//                dd($bookedBlock);
+                if(!$bookedBlock){
                     return false;
                 }else{
                      $isOwner = SessionBooking::where('id','=',$id)->where('user_id','=',$user['id'])->count();

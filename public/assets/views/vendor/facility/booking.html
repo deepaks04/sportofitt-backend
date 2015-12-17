@@ -20,7 +20,7 @@
                     <div class="col-md-12">
                         <h2 class="text-center margin-bottom-20 ">{{
                                             calendarTitle}}</h2>
-                        <h4 class="text-center">Calender for {{facility.name}}</h4>						
+                        <h4 class="text-center">Calender for {{facility.name}}</h4>
                     </div>
                     <div class="col-xs-6">
                         <div class="btn-group">
@@ -103,7 +103,9 @@
                     <label>
                     Event title
                     </label>
-                    <input type="text" placeholder="Enter title" class="form-control underline text-large" value="Booked {{selectedFacility.name}}" ng-model="event.title" >
+                        <input type="text"  class="form-control underline text-large"  ng-model="event.id" >
+
+                        <input type="text" placeholder="Enter title" class="form-control underline text-large" value="Booked {{selectedFacility.name}}" ng-model="event.title" >
                     </div>
                     <div class="form-group">
                     <label>
@@ -140,18 +142,20 @@
                     <i class="ti-calendar"></i> </span>
                     <timepicker ng-model="event.endsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
                     </div>
-                    
+
                     </div>
                     </div>
                     <div class="modal-footer">
-                   
-                    <button class="btn btn-primary btn-o" ng-if="!event.id" ng-click="addEvent()">
+
+                    <button class="btn btn-primary btn-o" ng-click="addEvent()">
                     Ok
                     </button>
             <button class="btn btn-warning btn-o" ng-click="cancel()">
-            <span ng-if="!event.id">Cancel</span>
-            <span ng-if="event.id">Ok</span>
+            <span >Cancel</span>
                     </button>
+                        <button class="btn btn-danger btn-o" ng-if="event.id" ng-click="deleteEvent(event.id)">
+                            <span >Delete</span>
+                        </button>
             <div>
              <div class="form-group has-error" >
             <span class="error block" ng-repeat="error in errors" >

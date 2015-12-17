@@ -651,20 +651,24 @@ class SessionPackageController extends Controller
          try {
              $session=$request->all();
              $session= $this->unsetKeys(array('_method','daySpan','dayOffset'),$session);
+             $date = new Carbon($session['startsAt']);
              $sessionBookingData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))->first();
              $sessionPackageMaster = SessionPackage::where(array('available_facility_id'=>$sessionBookingData['available_facility_id']))->first();
              if($sessionPackageMaster != null){
-             $sessionDuration = "+".$sessionPackageMaster->duration." minutes";
-             $time = strtotime($session['startsAt']);
-             $endsAt = date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
+                 $session['startsAt'] = $date->toDateTimeString();
+            $startsAt = $date->toTimeString();
+
+                 $sessionDuration = $date->addMinute($sessionPackageMaster->duration);
+//                 dd($sessionPackageMaster);
+                 $session['endsAt'] =  $sessionDuration->toDateTimeString();
+                 $endsAt = $sessionDuration->toTimeString(); //date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
+//           dd($endsAt);
             }
-             $date = strtotime($session['startsAt']);
-             $day = date('l', $date);
-             $day = strtolower($day);
+             $day = strtolower($date->format('l'));
              $dayMaster = DayMaster::where('slug','=',$day)->first();
              $session['day'] = $dayMaster->id;
-             $openingTimeExists = OpeningHour::where('start','<=',$session['startsAt'])
-                 ->where('end','>=',$session['startsAt'])
+             $openingTimeExists = OpeningHour::where('start','<=',$startsAt)
+                 ->where('end','>=',$startsAt)
                  ->where('start','<=',$endsAt)
                  ->where('end','>=',$endsAt)
                  ->where('day','=',$session['day'])
@@ -672,15 +676,18 @@ class SessionPackageController extends Controller
                  ->where('session_package_id','=',$sessionPackageMaster->id)
                  ->first();
              if($openingTimeExists!=null ){
-                 $startAt = $session['startsAt'];
-                 $endAt = $endsAt;
-                 $blockTimeExists = SessionBooking::select('*')->whereRaw(" ('$startAt' between startsAt and endsAt or '$endAt' between startsAt and endsAt )")
+$startsAt = $session['startsAt'];
+                 $endsAt = $session['endsAt'];
+//                 dd($startsAt);
+                 $blockTimeExists = SessionBooking::select('*')
+                     ->whereRaw(" ('$startsAt' between startsAt and endsAt or '$endsAt' between startsAt and endsAt )")
                      ->where('is_active','=',1)
                      ->where('available_facility_id','=',$sessionBookingData['available_facility_id'])
                      ->get();
                  $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);//dd($availableFacility->slots);
                  if($availableFacility->slots>$blockTimeExists->count()){ //If Blocked Time Not Exists Already
-                     $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))->update(array('startsAt'=>$session['startsAt'],'endsAt'=>$endsAt));
+                     $blockData = SessionBooking::where(array('id'=>$id,'user_id'=>$this->user->id))
+                         ->update(array('startsAt'=>$startsAt,'endsAt'=>$endsAt));
                      $status = 200;
                      $message = " Blocked Entry updated Successfully";
                  }else{

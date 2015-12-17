@@ -10,25 +10,26 @@
         return {
             getRootCategory: getRootCategory,
             addFacility: addFacility,
-            blockUnblockFacility:blockUnblockFacility,
+            blockUnblockFacility: blockUnblockFacility,
             updateFacility: updateFacility,
             getAllFacilities: getAllFacilities,
             getFacilityById: getFacilityById,
             getFacilityDetailsById: getFacilityDetailsById,
             getDuration: getDuration,
             saveOpeningTime: saveOpeningTime,
-            removeOpeningTime:removeOpeningTime,
+            removeOpeningTime: removeOpeningTime,
             getOpeningTimesByFacilityId: getOpeningTimesByFacilityId,
             getSessionsByFacilityId: getSessionsByFacilityId,
             getPackagesByFacilityId: getPackagesByFacilityId,
             saveSession: saveSession,
-            removeSession:removeSession,
+            removeSession: removeSession,
             savePackage: savePackage,
-            removePackage:removePackage,
+            removePackage: removePackage,
             blockSession: blockSession,
+            removeBlockedSession :removeBlockedSession,
             getBlockedSessions: getBlockedSessions,
             getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId,
-            getDays : getDays
+            getDays: getDays
         };
 
         function getDuration() {
@@ -38,8 +39,8 @@
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetError);
+                .then(sendResponseData)
+                .catch(sendGetError);
         };
 
         function getDays() {
@@ -49,8 +50,8 @@
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetError);
+                .then(sendResponseData)
+                .catch(sendGetError);
         };
 
         function sendGetError(response) {
@@ -67,8 +68,8 @@
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetError);
+                .then(sendResponseData)
+                .catch(sendGetError);
         }
         ;
 
@@ -79,8 +80,8 @@
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetError);
+                .then(sendResponseData)
+                .catch(sendGetError);
         }
 
 
@@ -91,18 +92,18 @@
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetError);
+                .then(sendResponseData)
+                .catch(sendGetError);
         };
 
-        function blockUnblockFacility(facilityId,data){
-return $http({
+        function blockUnblockFacility(facilityId, data) {
+            return $http({
                 method: 'PUT',
                 url: 'api/v1/vendor/facility/' + facilityId,
                 data
             })
-                    .then(updateFacilitySuccess)
-                    .catch(updateFacilityError);
+                .then(updateFacilitySuccess)
+                .catch(updateFacilityError);
         }
 
         function getAllFacilities() {
@@ -112,8 +113,8 @@ return $http({
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetFaclityError);
+                .then(sendResponseData)
+                .catch(sendGetFaclityError);
         }
         ;
 
@@ -123,8 +124,8 @@ return $http({
                 url: 'api/v1/user/get-root-category',
                 cache: true
             })
-                    .then(sendResponseData)
-                    .catch(sendGetRootCategoriesError);
+                .then(sendResponseData)
+                .catch(sendGetRootCategoriesError);
         }
         ;
 
@@ -167,14 +168,14 @@ return $http({
         function getFacilityById(facilityId) {
 
             return $http.get('api/v1/vendor/facility/' + facilityId)
-                    .then(sendResponseData)
-                    .catch(sendGetFaclityError);
+                .then(sendResponseData)
+                .catch(sendGetFaclityError);
 
         }
 
         function getFacilityDetailsById(facilityId) {
             return $http.get('api/v1/vendor/facility-detail/' + facilityId).then(sendResponseData)
-                    .catch(sendGetFaclityError);
+                .catch(sendGetFaclityError);
         }
 
         function updateFacility(facility) {
@@ -183,8 +184,8 @@ return $http({
                 url: 'api/v1/vendor/facility/' + facility.id,
                 data: facility
             })
-                    .then(updateFacilitySuccess)
-                    .catch(updateFacilityError);
+                .then(updateFacilitySuccess)
+                .catch(updateFacilityError);
         }
 
         function updateFacilitySuccess(response) {
@@ -206,7 +207,7 @@ return $http({
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            return		$http.post('api/v1/vendor/facility', fd, {
+            return $http.post('api/v1/vendor/facility', fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
@@ -227,39 +228,37 @@ return $http({
         }
 
         function saveOpeningTime(data) {
-            if (data.start instanceof Date)
-            {
+            if (data.start instanceof Date) {
                 data.start = data.start.getHours() + ":" + ("0" + data.start.getMinutes()).slice(-2);
 
             }
 
-            if (data.end instanceof Date)
-            {
+            if (data.end instanceof Date) {
                 data.end = data.end.getHours() + ":" + ("0" + data.end.getMinutes()).slice(-2);
 
             }
 //            var url = (data.id) ? 'api/v1/vendor/opening-time/' + data.id : 'api/v1/vendor/opening-time';
 
             var url = 'api/v1/vendor/opening-time';
-            
-           
+
+
             var fd = new FormData();
             for (var key in data) {
                 fd.append(key, data[key]);
             }
-            
-             if (data.id) {
+
+            if (data.id) {
                 url += "/" + data.id;
                 fd.append("_method", "PUT");
             }
-            
+
             return $http.post(url, fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
         }
 
-        function removeOpeningTime(timeId){
+        function removeOpeningTime(timeId) {
             return $http({
                 method: 'GET',
                 url: 'api/v1/vendor/delete-opening-time/' + timeId,
@@ -279,12 +278,13 @@ return $http({
                 url += "/" + data.id;
                 fd.append("_method", "PUT");
             }
-            return		$http.post(url, fd, {
+            return $http.post(url, fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
         }
-        function removeSession(sessionId){
+
+        function removeSession(sessionId) {
             return $http({
                 method: 'GET',
                 url: 'api/v1/vendor/multiple-sessions/' + sessionId,
@@ -294,24 +294,25 @@ return $http({
                 .then(sendResponseData)
                 .catch(sendGetError);
         }
+
         function savePackage(data) {
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-           
+
             var url = 'api/v1/vendor/package';
             if (data.id !== "") {
                 url += "/" + data.id;
                 fd.append("_method", "PUT");
             }
-            
-            return		$http.post(url, fd, {
+
+            return $http.post(url, fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
         }
 
-        function removePackage(packageId){
+        function removePackage(packageId) {
             return $http({
                 method: 'GET',
                 url: 'api/v1/vendor/delete-package/' + packageId,
@@ -321,28 +322,42 @@ return $http({
                 .then(sendResponseData)
                 .catch(sendGetError);
         }
+
         function blockSession(data) {
+
+            var localData = angular.copy(data);
+            localData.startsAt = localData.startsAt.toLocaleString();
             var fd = new FormData();
-            for (var key in data)
-                fd.append(key, data[key]);
-            return		$http.post('api/v1/vendor/calendar-block', fd, {
-                transformRequest: angular.indentity,
-                headers: {'Content-Type': undefined}
-            });
+            for (var key in localData)
+                fd.append(key, localData[key]);
+
+            if (localData.id) {
+                return $http.put('api/v1/vendor/calendar-block/' + localData.id, localData);
+            } else {
+                return $http.post('api/v1/vendor/calendar-block', fd, {
+                    transformRequest: angular.indentity,
+                    headers: {'Content-Type': undefined}
+                });
+            }
         }
 
         function getBlockedSessionsByFacilityId(facilityId, startDate) {
             return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" + startDate)
-                    .then(sendResponseData)
-                    .catch(sendGetFaclityError);
+                .then(sendResponseData)
+                .catch(sendGetFaclityError);
         }
 
         function getBlockedSessions(startDate) {
-            return $http.get('api/v1/vendor/calendar-block/' + startDate)
-                    .then(sendResponseData)
-                    .catch(sendGetFaclityError);
+            return $http.get('api/v1/vendor/get-calendar-block/' + startDate)
+                .then(sendResponseData)
+                .catch(sendGetFaclityError);
         }
-
+        function removeBlockedSession(sessionId){
+            return $http.get('api/v1/vendor/calendar-block/' + sessionId)
+                .then(sendResponseData)
+                .catch(sendGetFaclityError);
+        }
+        f
 //		function deleteBook(bookID) {
 
 //		deleteSummaryFromCache();
