@@ -79,6 +79,7 @@ return [
     'alpha_specialchars' => "The :attribute may only contain alphabets and special characters like , & . - _",
     "zip" => "Zip Code must be 6 digit",
     "mobile" => "Contact no must be 10 digit",
+    "ifsc" => "IFSC code must be Alphanumeric and 11 characters in size.",
 
     /*
     |--------------------------------------------------------------------------
