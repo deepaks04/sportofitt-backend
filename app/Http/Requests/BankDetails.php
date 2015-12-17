@@ -29,7 +29,7 @@ class BankDetails extends Request
             'account_type' => 'required|min:5|max:255',
             'branch_name' => 'required|min:5|max:50',
             'beneficiary' => 'required|min:5|max:50',
-            'account_number' => 'required|integer|min:20'
+            'account_number' => 'required|numeric|min:20'
         ];
     }
     public function messages()

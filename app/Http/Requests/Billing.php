@@ -24,10 +24,10 @@ class Billing extends Request
     public function rules()
     {
         return [
-            'company_title' => 'required|min:3|max:50',
-            'contact_person_name' => 'required|min:5|max:30',
-            'contact_person_email' => 'required|min:5|max:80|email',
-            'contact_person_phone' => 'required|min:5|max:20'
+            'company_title' => 'required|alpha_spaces|min:3|max:50',
+            'contact_person_name' => 'required|alpha_spaces|min:5|max:30',
+            'contact_person_email' => 'required|email|min:5|max:100',
+            'contact_person_phone' => 'required|numeric|mobile'
 
         ];
     }
