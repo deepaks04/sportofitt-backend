@@ -83,7 +83,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
     $scope.blockUnblockFacility = function (facilityId, status) {
 
-        var data = {'is_active': status ? 1 : 0}
+        var data = {'is_active': status ? 1 : 0};
 
         var statusBlocking = facilityService.blockUnblockFacility(facilityId, data);
 
@@ -94,7 +94,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
         statusBlocking.catch(function (response) {
             alert(response);
         });
-    }
+    };
 
     $scope.open = function (size, facility, tabActive) {
 
@@ -195,8 +195,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             if ($scope.sessions.length) {
                 return $scope.sessions;
             }
-            ;
-
             facilityService.getSessionsByFacilityId($scope.facility.id).then(function (sessions) {
                 var sessions = (sessions.data === "") ? [] : sessions.data;
                 parseSessions(sessions);
@@ -260,8 +258,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             if ($scope.packages.length) {
                 return $scope.packages;
             }
-            ;
-
             facilityService.getPackagesByFacilityId($scope.facility.id)
                 .then(function (packages) {
                     var packages = (packages.data === "") ? [] : packages.data;
@@ -282,8 +278,8 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.checkHoursData = function (data, editHoursForm) {
 
             editHoursForm.$show();
-            return;
-        }
+
+        };
 
         $scope.saveHours = function (data, id, editHoursForm) {
             // $scope.user not updated yet
@@ -326,7 +322,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 selected = $filter('filter')($scope.days, {id: time.day});
             }
             return selected.length ? selected[0].name : 'Not set';
-        }
+        };
 
         $scope.saveSession = function (data, id, rowform) {
             // $scope.user not updated yet
@@ -580,7 +576,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         } else if ($scope.tab === 'packages') {
             $scope.getPackages();
         }
-        ;
     }]);
 app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($scope, $modalInstance) {
     $scope.items = items;
@@ -613,16 +608,16 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
     }
 
     var vm = this;
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-    var startDate = y + "-" + (m + 1);
+
 
     $scope.events = [];
 //console.log($scope.facilityId);
-     function init() {
-
+    function init() {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        var startDate = y + "-" + (m + 1);
         facilityService.getAllFacilities()
             .then(getAllFacilitySuccess);
         if ($scope.facilityId) {
@@ -632,33 +627,32 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
         } else {
             getBlockedSession(startDate);
         }
-    };
-
+    }
     init();
 
-    function getBlockedSessionByFacilityId() {
+    function getBlockedSessionByFacilityId(startDate) {
         facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate)
             .then(function (events) {
                 parseEvents(events.data);
             });
     }
 
-    function getBlockedSession() {
+    function getBlockedSession(startDate) {
         facilityService.getBlockedSessions(startDate).then(function (events) {
             parseEvents(events.data);
         });
     }
 
     function parseEvents(events) {
-        $scope.events = events;
-        //angular.forEach(events, function (event, keys) {
-        //    var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8);
-        //    event.startsAt = new Date(thisStartT);
-        //
-        //    var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8);
-        //    event.endsAt = new Date(thisEndT);
-        //    this.push(event);
-        //}, $scope.events);
+        $scope.events = [];
+        angular.forEach(events, function (event, keys) {
+            var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
+            event.startsAt = new Date(thisStartT);
+//console.log(event.startsAt);
+            var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
+            event.endsAt = new Date(thisEndT);
+            this.push(event);
+        }, $scope.events);
     }
 
     $scope.calendarView = 'week';
@@ -666,9 +660,10 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
     $scope.calendarDay = new Date();
 
     $scope.getEvents = function (calendarDay, calendarView) {
+        console.log(calendarDay);
+        console.log(calendarView);
         if (calendarView === "month") {
             var startDate = calendarDay.getFullYear() + "-" + (calendarDay.getMonth() + 1);
-
             if ($scope.facilityId) {
 
                 getBlockedSessionByFacilityId(startDate);
@@ -676,7 +671,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
                 getBlockedSession(startDate);
             }
         }
-    }
+    };
 
     function showModal(action, event) {
         var modalInstance = $aside.open({
