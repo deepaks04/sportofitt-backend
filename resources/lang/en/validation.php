@@ -81,6 +81,7 @@ return [
     "mobile" => "Contact no must be 10 digit",
     "ifsc" => "IFSC code must be Alphanumeric and 11 characters in size.",
     "alpha_space_num" => "The :attribute may only contain alphabet, number and space character.",
+    'password_custom' => 'The :attribute may only contain alphabet, number and minimum 1 alphabet & 1 number should be there',
 
     /*
     |--------------------------------------------------------------------------

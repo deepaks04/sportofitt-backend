@@ -24,9 +24,9 @@ class ChangePasswordRequest extends Request
     public function rules()
     {
         return [
-            'old' => 'required|min:5|max:60',
-            'new' => 'required|min:5|max:60',
-            'confirm' => 'required|min:5|max:60|same:new'
+            'old' => 'required|min:6|max:12',
+            'new' => 'required|min:6|max:12|password_custom',
+            'confirm' => 'required|min:6|max:12|same:new'
         ];
     }
 }

@@ -42,6 +42,10 @@ class AppServiceProvider extends ServiceProvider
         {
             return preg_match('/(^[A-Za-z0-9 ]+$)+/', $value);
         });
+        Validator::extend('password_custom', function($attribute, $value)
+        {
+            return preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{0,20}$/', $value);
+        });
     }
 
     /**

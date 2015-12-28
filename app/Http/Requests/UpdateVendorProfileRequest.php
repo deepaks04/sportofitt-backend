@@ -24,9 +24,9 @@ class UpdateVendorProfileRequest extends Request
     public function rules()
     {
         return [
-            'fname' => 'required|min:3|max:20',
-            'lname' => 'required|min:3|max:20',
-            'business_name' => 'required|min:3|max:255',
+            'fname' => 'required|alpha|min:3|max:25',
+            'lname' => 'required||alpha|min:3|max:25',
+            'business_name' => 'required|alpha_specialchars|min:3|max:160',
             'address' => 'required|min:10|max:255',
             'longitude' => 'required|min:3|max:20',
             'latitude' => 'required|min:3|max:20',
