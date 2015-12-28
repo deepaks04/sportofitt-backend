@@ -18,7 +18,7 @@ class CreateSessionPackageTabel extends Migration
             $table->integer('package_type_id')->unsigned();
             $table->string('name', 255)->nullable();
             $table->text('description')->nullable();
-            $table->string('duration', 4)->nullable();
+            $table->integer('duration')->nullable();
             $table->timestamps();
         });
     }
