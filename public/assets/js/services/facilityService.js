@@ -183,21 +183,7 @@
                 method: 'PUT',
                 url: 'api/v1/vendor/facility/' + facility.id,
                 data: facility
-            })
-                .then(updateFacilitySuccess)
-                .catch(updateFacilityError);
-        }
-
-        function updateFacilitySuccess(response) {
-
-            return 'Facility updated: ' + response.config.data.title;
-
-        }
-
-        function updateFacilityError(response) {
-
-            return $q.reject('Error updating Facility.(HTTP status: ' + response.status + ')');
-
+            });
         }
 
         function addFacility(data) {

@@ -60,7 +60,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
     $scope.facilityData = {};
     facilityService.getAllFacilities()
-        .then(getFacilitySuccess);
+        .then(getFacilitySuccess);;
 
     function getFacilitySuccess(facilityData) {
         $scope.facilityData = facilityData.facility;
@@ -129,6 +129,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.tab = tab;
         facilityService.getDuration()
             .then(getDurationSuccess);
+
+        facilityService.getRootCategory()
+            .then(getRootCategorySuccess)
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
@@ -536,10 +539,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
                 var addFacility = facilityService.updateFacility($scope.facility);
                 addFacility.then(function (response) {
-                    SweetAlert.swal(response.message, "success");
-                    $state.go("vendor.facility.list");
-
-                    //console.log(response);
+                    SweetAlert.swal("Success",response.data.message, "success");
                 });
                 addFacility.catch(function (data, status) {
                     angular.forEach(data.data, function (errors, field) {
@@ -563,6 +563,11 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
+            angular.forEach($scope.categoryData,function(data,id){
+               if(data.id == $scope.facility.category.root.id){
+                   $scope.selectedCategory = data.sub_category;
+               }
+            });
         }
 
         function getDurationSuccess(durations) {
@@ -621,7 +626,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "
         facilityService.getAllFacilities()
             .then(getAllFacilitySuccess);
         if ($scope.facilityId) {
-            facilityService.getFacilityById($scope.facilityId)
+            facilityService.getFacilityById($scope.facilityId,startDate)
                 .then(getFacilitySuccess);
             getBlockedSessionByFacilityId();
         } else {
