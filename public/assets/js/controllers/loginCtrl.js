@@ -35,7 +35,7 @@ app.controller('signCtrl', [
                     // SweetAlert.swal("The form cannot be submitted because
                     // it contains validation errors!", "Errors are marked
                     // with a red, dashed border!", "error");
-                    return;
+
 
                 } else {
                     var auth = Login.auth($scope.user);
@@ -103,7 +103,7 @@ app.controller('forgetPasswordCtrl', [
                 var passwordResponse = Login.forgetPassword(form);
                 console.log(form);
                 passwordResponse.then(function (response) {
-                    SweetAlert.swal("Good job!", response.message,
+                    SweetAlert.swal("Password reset done!", response.data.message,
                         "success");
                     $state.go("login.signin");
                     console.log(response);
@@ -139,10 +139,10 @@ app.controller('resetPasswordCtrl', [
 
         Login.getResetPassword($state.params.token).then(function(response){
             $scope.myModel = response.data.data;
-            console.log($scope.myModel);
+            //console.log($scope.myModel.data);
         }).catch(function(response){
             $scope.myModel = {};
-        })
+        });
         $scope.errors = {};
 
         $scope.form = {
@@ -150,12 +150,12 @@ app.controller('resetPasswordCtrl', [
                 $scope.disableSubmit = true;
                 $scope.errors = {};
                 var passwordResponse = Login.resetPassword(form);
-                console.log(form);
+                //console.log(form);
                 passwordResponse.then(function (response) {
-                    SweetAlert.swal("Good job!", response.message,
+                    SweetAlert.swal("Password change done!", response.data.message,
                         "success");
                     $state.go("login.signin");
-                    console.log(response);
+                    console.log(response.data);
                 });
                 passwordResponse.catch(function (response, status) {
                     //console.log(data);

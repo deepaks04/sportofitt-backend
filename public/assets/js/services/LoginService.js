@@ -22,7 +22,7 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
                     $rootScope.user = response.user;
 
                     SessionService.set('auth', $rootScope.user);
-                    $cookieStore.put('user', $rootScope.user);
+                    $cookieStore.put('auth', $rootScope.user);
 
                     $state.go(response.user.role + '.dashboard', {'name': response.user.fname});
 
@@ -49,7 +49,7 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
                 function (response, status, headers, config) {
                     SessionService.unset('auth');
                     $rootScope.user = {};
-                    $cookieStore.remove('user');
+                    $cookieStore.remove('auth');
                     return {success: true};
                 }
             );

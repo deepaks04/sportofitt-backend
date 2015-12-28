@@ -1,28 +1,26 @@
 <?php
 namespace App\Http\Controllers\Vendor;
 
+use App\AvailableFacility;
 use App\BillingInfo;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\OpeningHour;
 use App\PackageType;
 use App\RootCategory;
 use App\SessionPackage;
 use App\SessionPackageChild;
-use App\Vendor;
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use DB;
-use Auth;
+use App\SubCategory;
 use App\User;
+use App\VendorImages;
+use Auth;
+use Carbon\Carbon;
+use DB;
 use File;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Mockery\Exception;
 use URL;
-use App\Billing;
-use Carbon\Carbon;
-use App\AvailableFacility;
-use App\SubCategory;
-use App\VendorImages;
 
 
 class VendorsController extends Controller
@@ -90,48 +88,6 @@ class VendorsController extends Controller
     }
 
     /**
-     * Get Vendor Profile Data
-     *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function getProfile($type=null)
-    {
-        $user = Auth::user();
-        $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-        $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "profile_image/";
-        $vendor = $user->vendor;
-        $myProfile['fname'] = $user->fname;
-        $myProfile['lname'] = $user->lname;
-        $myProfile['email'] = $user->email;
-        if ($user->profile_picture == null) {
-            $myProfile['profile_picture'] = $user->profile_picture;
-        } else {
-            $myProfile['profile_picture'] = $vendorOwnDirecory . $user->profile_picture;
-        }
-        $myProfile['username'] = $user->username;
-        $myProfile['business_name'] = $vendor->business_name;
-        $myProfile['address'] = $vendor->address;
-        $myProfile['longitude'] = $vendor->longitude;
-        $myProfile['latitude'] = $vendor->latitude;
-        $myProfile['area_id'] = $vendor->area_id;
-        $myProfile['contact'] = $vendor->contact;
-        $myProfile['description'] = $vendor->description;
-        $myProfile['postcode'] = $vendor->postcode;
-        $status = 200;
-        $response = [
-            'message' => 'success',
-            'profile' => $myProfile
-        ];
-        if($type=='array'){
-            $data = $response;
-            $data['status'] = $status;
-            return $data;
-        }else{
-            return response($response, $status);
-        }
-    }
-
-    /**
      * Vendor Update Profile Settings
      *
      * @param Requests\UpdateVendorProfileRequest $request
@@ -169,31 +125,74 @@ class VendorsController extends Controller
     }
 
     /**
-     * get billing information
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request ,$systemUser,$imageType
+     * @return $filname
+     */
+    public function imageUpload($request, $systemUser, $imageType)
+    {
+        /* File Upload Code */
+        $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
+        $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser);
+        $vendorImageUploadPath = $vendorOwnDirecory . "/" . $imageType;
+        /* Create Upload Directory If Not Exists */
+        if (!file_exists($vendorImageUploadPath)) {
+            File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+        }
+        if ($imageType == 'profile_image') {
+            $extension = $request->file('profile_picture')->getClientOriginalExtension();
+            $filename = sha1($systemUser . time()) . ".{$extension}";
+            $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
+
+        } else {
+            $file = $request->image_name;
+            $random = mt_rand(1, 1000000);
+            $extension = $file->getClientOriginalExtension();
+            $filename = sha1($systemUser . $random) . ".{$extension}";
+            $file->move($vendorImageUploadPath, $filename);
+        }
+        return $filename;
+    }
+
+    /**
+     * Get Vendor Profile Data
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-
-
-    public function getBillingInformation($type=null)
+    public function getProfile($type = null)
     {
-
-        $billing = $this->vendor->billingInfo()->first();
-        if ($billing != null) {
-            $message = 'success';
-            $status = 200;
-            $billing = $billing->toArray();
+        $user = Auth::user();
+        $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+        $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "profile_image/";
+        $vendor = $user->vendor;
+        $myProfile['fname'] = $user->fname;
+        $myProfile['lname'] = $user->lname;
+        $myProfile['email'] = $user->email;
+        if ($user->profile_picture == null) {
+            $myProfile['profile_picture'] = $user->profile_picture;
         } else {
-            $status = 200;
-            $message = 'Please update your billing information';
+            $myProfile['profile_picture'] = $vendorOwnDirecory . $user->profile_picture;
         }
+        $myProfile['username'] = $user->username;
+        $myProfile['business_name'] = $vendor->business_name;
+        $myProfile['address'] = $vendor->address;
+        $myProfile['longitude'] = $vendor->longitude;
+        $myProfile['latitude'] = $vendor->latitude;
+        $myProfile['area_id'] = $vendor->area_id;
+        $myProfile['contact'] = $vendor->contact;
+        $myProfile['description'] = $vendor->description;
+        $myProfile['postcode'] = $vendor->postcode;
+        $status = 200;
+        $response = [
+            'message' => 'success',
+            'profile' => $myProfile
+        ];
         if($type=='array'){
-            return $billing;
+            $data = $response;
+            $data['status'] = $status;
+            return $data;
         }else{
-            $response = [
-                "message" => $message,
-                "billing" => $billing
-            ];
             return response($response, $status);
         }
     }
@@ -249,27 +248,30 @@ class VendorsController extends Controller
     }
 
     /**
-     * Get Bank Details
+     * get billing information
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getBankDetails($type=null)
+
+
+    public function getBillingInformation($type = null)
     {
-        $bank = $this->vendor->bankInfo()->first();
-        if ($bank != null) {
+
+        $billing = $this->vendor->billingInfo()->first();
+        if ($billing != null) {
             $message = 'success';
             $status = 200;
-            $bank = $bank->toArray();
+            $billing = $billing->toArray();
         } else {
             $status = 200;
-            $message = 'Please update your bank details';
+            $message = 'Please update your billing information';
         }
         if($type=='array'){
-            return $bank;
+            return $billing;
         }else{
             $response = [
                 "message" => $message,
-                "bank" => $bank
+                "billing" => $billing
             ];
             return response($response, $status);
         }
@@ -311,6 +313,33 @@ class VendorsController extends Controller
             "data" => $bankData
         ];
         return response($response, $status);
+    }
+
+    /**
+     * Get Bank Details
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getBankDetails($type = null)
+    {
+        $bank = $this->vendor->bankInfo()->first();
+        if ($bank != null) {
+            $message = 'success';
+            $status = 200;
+            $bank = $bank->toArray();
+        } else {
+            $status = 200;
+            $message = 'Please update your bank details';
+        }
+        if ($type == 'array') {
+            return $bank;
+        } else {
+            $response = [
+                "message" => $message,
+                "bank" => $bank
+            ];
+            return response($response, $status);
+        }
     }
 
     /**
@@ -444,13 +473,39 @@ class VendorsController extends Controller
     }
 
     /**
+     * @param $facilityId
+     * @param $sessionUpdateData
+     *
+     * @return bool
+     */
+    public function updateDuration($facilityId, $sessionUpdateData)
+    {
+        try {
+            $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $facilityId)->first();
+            if ($checkFacilityInformation != null) { // Update If Found
+                $durationData = SessionPackage::where('available_facility_id', '=', $facilityId)->update($sessionUpdateData);
+            } else { // Insert New If Not Found
+                $sessionUpdateData['available_facility_id'] = $facilityId;
+                $sessionUpdateData['created_at'] = Carbon::now();
+                $sessionUpdateData['updated_at'] = Carbon::now();
+                $packageType = PackageType::where('slug', '=', 'session')->first();
+                $sessionUpdateData['package_type_id'] = $packageType->id;
+                $durationData = SessionPackage::create($sessionUpdateData);
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
      * Get All facility created by vendor
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function getFacility()
     {
-        $facilityCount = $this->vendor->facility()->count();
+        $facilityCount = $this->vendor->facility()->where('is_active', '=', 1)->count();
         if ($facilityCount == 0) {
             $status = 200;
             $message = "Facility not found. Please create some";
@@ -460,6 +515,7 @@ class VendorsController extends Controller
             $status = 200;
             $message = "success";
             $facility = $this->vendor->facility()
+                ->where('is_active', '=', 1)
                 ->get()
                 ->toArray();
             for ($i = 0; $i < $facilityCount; $i ++) {
@@ -483,40 +539,24 @@ class VendorsController extends Controller
     }
 
     /**
-     * @param $id
+     * @param $facilityId
      *
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return int
      */
-    public function getFacilityById($id,$type = null)
+    public function getDurationData($facilityId)
     {
-        $status = 200;
-        $message = "success";
-        $facility = $this->vendor->facility()->find($id);
-        if ($facility != null) {
-            $facility = $facility->toArray();
-            $sessionDuration = $this->getDurationData($facility['id']);
-            $facility['duration'] = $sessionDuration;
-            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
-            $facility['image'] = $url . $facility['image'];
+        $packageType = PackageType::where('slug', '=', 'session')->first();
+        $data = array(
+            'available_facility_id' => $facilityId,
+            'package_type_id' => $packageType->id
+        );
+        $durationData = SessionPackage::where($data)->first();
+        if ($durationData != null) {
+            return $durationData->duration;
         } else {
-            $status = 200;
-            $message = "Facility not found. Please create some";
-            $facility = null;
-        }
-        $response = [
-            "message" => $message,
-            "facility" => $facility
-        ];
-        if($type == 'array'){
-            $data = $response;
-            $data['status'] = $status;
-            return $data;
-        }else{
-            return response($response, $status);
+            return 0;
         }
     }
-
 
     public function enableDisableFacility(Requests\EnabledisableRequest $request,$id)
     {
@@ -535,7 +575,6 @@ class VendorsController extends Controller
         ];
         return response($response, $status);
     }
-
 
     /**
      * @param Requests\AddFacilityRequest $request
@@ -592,6 +631,41 @@ class VendorsController extends Controller
 
         ];
         return response($response, $status);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getFacilityById($id, $type = null)
+    {
+        $status = 200;
+        $message = "success";
+        $facility = $this->vendor->facility()->find($id);
+        if ($facility != null) {
+            $facility = $facility->toArray();
+            $sessionDuration = $this->getDurationData($facility['id']);
+            $facility['duration'] = $sessionDuration;
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
+            $facility['image'] = $url . $facility['image'];
+        } else {
+            $status = 200;
+            $message = "Facility not found. Please create some";
+            $facility = null;
+        }
+        $response = [
+            "message" => $message,
+            "facility" => $facility
+        ];
+        if ($type == 'array') {
+            $data = $response;
+            $data['status'] = $status;
+            return $data;
+        } else {
+            return response($response, $status);
+        }
     }
 
     /**
@@ -670,83 +744,5 @@ class VendorsController extends Controller
             "packageInformation" => $packageInformation
         ];
         return response($response, $status);
-    }
-
-    /**
-     * @param $facilityId
-     * @param $sessionUpdateData
-     *
-     * @return bool
-     */
-    public function updateDuration($facilityId, $sessionUpdateData)
-    {
-        try {
-            $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $facilityId)->first();
-            if ($checkFacilityInformation != null) { // Update If Found
-                $durationData = SessionPackage::where('available_facility_id', '=', $facilityId)->update($sessionUpdateData);
-            } else { // Insert New If Not Found
-                $sessionUpdateData['available_facility_id'] = $facilityId;
-                $sessionUpdateData['created_at'] = Carbon::now();
-                $sessionUpdateData['updated_at'] = Carbon::now();
-                $packageType = PackageType::where('slug', '=', 'session')->first();
-                $sessionUpdateData['package_type_id'] = $packageType->id;
-                $durationData = SessionPackage::create($sessionUpdateData);
-            }
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
-     * @param $facilityId
-     *
-     * @return int
-     */
-    public function getDurationData($facilityId)
-    {
-        $packageType = PackageType::where('slug', '=', 'session')->first();
-        $data = array(
-            'available_facility_id' => $facilityId,
-            'package_type_id' => $packageType->id
-        );
-        $durationData = SessionPackage::where($data)->first();
-        if ($durationData != null) {
-            return $durationData->duration;
-        } else {
-            return 0;
-        }
-    }
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request,$systemUser,$imageType
-     * @return $filname
-     */
-    public function imageUpload($request,$systemUser,$imageType)
-    {
-        /* File Upload Code */
-        $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-        $vendorOwnDirecory = $vendorUploadPath . sha1($systemUser);
-        $vendorImageUploadPath = $vendorOwnDirecory . "/" . $imageType;
-        /* Create Upload Directory If Not Exists */
-        if (! file_exists($vendorImageUploadPath)) {
-            File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
-        }
-        if($imageType=='profile_image'){
-            $extension = $request->file('profile_picture')->getClientOriginalExtension();
-            $filename = sha1($systemUser . time()) . ".{$extension}";
-            $request->file('profile_picture')->move($vendorImageUploadPath, $filename);
-
-        }else{
-            $file = $request->image_name;
-            $random = mt_rand(1, 1000000);
-            $extension = $file->getClientOriginalExtension();
-            $filename = sha1($systemUser . $random) . ".{$extension}";
-            $file->move($vendorImageUploadPath, $filename);
-        }
-        return $filename;
     }
 }

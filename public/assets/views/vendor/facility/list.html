@@ -38,7 +38,7 @@
           {{ showDay(time) }}
         </span>
     <span class="has-error" ng-if="editHoursForm.$dirty && hoursErrors.day"><label
-                                        class="help-block">{{hoursErrors.day}}</label></span>
+            class="help-block">{{hoursErrors.day}}</label></span>
 
                             </td>
                             <td>
@@ -79,14 +79,16 @@
                                             class="btn btn-default">
                                         cancel
                                     </button>
-                                    <button type="button" ng-disabled="editHoursForm.$waiting" ng-if="time.id" ng-click="editHoursForm.$hide()"
+                                    <button type="button" ng-disabled="editHoursForm.$waiting" ng-if="time.id"
+                                            ng-click="editHoursForm.$hide()"
                                             class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!editHoursForm.$visible">
                                     <button class="btn btn-primary" ng-click="editHoursForm.$show()">edit</button>
-                                    <button class="btn btn-danger" ng-click="removeOpeningHours($index,time.id)">del</button>
+                                    <button class="btn btn-danger" ng-click="removeOpeningHours($index,time.id)">del
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -146,18 +148,21 @@
                                     <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
                                         save
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!session.id" ng-click="removeSession($index,session.id)"
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!session.id"
+                                            ng-click="removeSession($index,session.id)"
                                             class="btn btn-default">
                                         cancel
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="session.id" ng-click="rowform.$hide()"
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="session.id"
+                                            ng-click="rowform.$hide()"
                                             class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
-                                    <button class="btn btn-danger" ng-click="removeSession($index,session.id)">del</button>
+                                    <button class="btn btn-danger" ng-click="removeSession($index,session.id)">del
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -230,18 +235,22 @@
                                     <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary btn-xs">
                                         save
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!package.id" ng-click="removeSession($index,session.id)"
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!package.id"
+                                            ng-click="removeSession($index,session.id)"
                                             class="btn btn-default btn-xs">
                                         cancel
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id" ng-click="rowform.$hide()"
+                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id"
+                                            ng-click="rowform.$hide()"
                                             class="btn btn-default btn-xs">
                                         cancel
                                     </button>
                                 </form>
                                 <div class="buttons" ng-show="!rowform.$visible">
                                     <button class="btn btn-primary btn-xs" ng-click="rowform.$show()">edit</button>
-                                    <button class="btn btn-danger btn-xs" ng-click="removePackage($index,package.id)">del</button>
+                                    <button class="btn btn-danger btn-xs" ng-click="removePackage($index,package.id)">
+                                        del
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -387,7 +396,7 @@
                     </div>
                 </div>
                 <table ng-table="tableParams" class="table table-striped">
-                    <tr ng-repeat="facility in facilityData">
+                    <tr ng-repeat="facility in facilityData" ng-if="facility.is_active">
                         <td data-title="'Name'" sortable="'name'"><a
                                 data-ng-click="open('lg', facility,'edit')">{{facility.name}}</a></td>
                         <td class="center" data-title="'Category'">{{facility.category.sub.name}}</td>
@@ -395,26 +404,23 @@
                         <td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
+                                <a data-ng-click="open('lg', facility,'opening_hours',true)"
+                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
+                                   tooltip="Add"><i class="fa fa-plus"></i></a>
                                 <a data-ng-click="open('lg', facility,'edit')"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
                                    tooltip="Edit Profile"><i class="fa fa-pencil"></i></a>
-                                <a data-ng-click="open('lg', facility,'opening_hours')"
-                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Opening Hours"><i class="fa fa-pencil"></i></a>
-                                <a data-ng-click="open('lg', facility,'sessions')"
-                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Sessions"><i class="fa fa-pencil"></i></a>
-                                <a data-ng-click="open('lg', facility,'packages')"
-                                   class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Packages"><i class="fa fa-pencil"></i></a>
-                                <!-- <a data-ng-click="blockUnblockFacility(facility.id,facility.is_active)"
-                                class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                tooltip="Change status"><i class="fa fa-pencil"></i></a> -->
+                                <!--<a ng-if="facility.is_active" data-ng-click="blockUnblockFacility(facility)"-->
+                                <!--class="btn btn-transparent btn-xs" tooltip-placement="top"-->
+                                <!--tooltip="Block facility"><i class="fa fa-toggle-off"></i></a>-->
+                                <a data-ng-click="blockUnblockFacility(facility)"
+                                   class="btn btn-transparent  btn-xs" tooltip-placement="top"
+                                   tooltip="Delete facility"><i class=" danger fa fa-remove"></i></a>
                                 <a
                                         ui-sref="vendor.facility.calender({facilityId : facility.id})"
                                         class="btn btn-transparent btn-xs tooltips"
-                                        tooltip-placement="top" tooltip="Calender"><i
-                                        class="fa fa-calendar"></i></a>
+                                        tooltip-placement="top" tooltip="Calender"><i class="fa fa-calendar"></i>
+                                </a>
                             </div>
                             <div class="visible-xs visible-sm hidden-md hidden-lg">
                                 <div class="btn-group" dropdown is-open="status.isopen">
@@ -424,11 +430,10 @@
                                         <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right dropdown-light" role="menu">
-                                        <li><a data-ng-click="open('lg', facility,'edit')"> Edit </a></li>
-                                        <li><a data-ng-click="open('lg', facility,'opening_hours')"> Opening Hours </a>
+                                        <li><a data-ng-click="open('lg', facility,'opening_hours',true)"> Add </a>
                                         </li>
-                                        <li><a data-ng-click="open('lg', facility,'sessions')"> Sessions </a></li>
-                                        <li><a data-ng-click="open('lg', facility,'packages')"> Packages </a></li>
+                                        <li><a data-ng-click="open('lg', facility,'edit')"> Edit </a></li>
+                                        <li><a data-ng-click="blockUnblockFacility(facility)"> Delete </a></li>
                                         <li><a
                                                 ui-sref="vendor.facility.booking({facilityId : facility.id})">
                                             Book </a></li>

@@ -29,40 +29,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         //
         // Login routes
 
-        $stateProvider.state('login', {
-            url: '/select',
-            template: '<div ui-view class="fade-in-right-big smooth"></div>',
-            resolve: loadSequence('sweet-alert', 'oitozero.ngSweetAlert', 'loginService', 'loginCtrl'),
-            abstract: true
-        }).state('login.signin', {
-            url: '',
-            templateUrl: "assets/views/login_login.html",
-            title: 'Sign-In'
-        }).state('login.forgot', {
-            url: '/forgot',
-            templateUrl: "assets/views/login_forgot.html"
-        }).state('login.registration', {
-            url: '/registration',
-            templateUrl: "assets/views/login_registration.html"
-        }).state('login.resetpassword', {
-            url: '/reset-password/:token',
-            templateUrl: "assets/views/login_reset_password.html"
-        }).state('login.logout', {
-            url: '/logout',
-            controller: function (Login, $state, SessionService) {
-                Login.logout().then(function () {
-                    SessionService.unset('auth');
-                    $state.go('login.signin');
-                });
-            }
-        })
+        $stateProvider
 
                 //vendor routes
 
                 .state('vendor', {
                     url: "/select/:name",
                     templateUrl: "assets/views/vendor/app.html",
-                    resolve: loadSequence('modernizr', 'logger', 'uiMap', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'vAccordion', 'sweet-alert', 'chartjs', 'tc.chartjs', 'oitozero.ngSweetAlert', 'chatCtrl'),
+                    resolve: loadSequence('modernizr', 'logger', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'sweet-alert', 'oitozero.ngSweetAlert'),
                     abstract: true
                 }).state('vendor.dashboard', {
             url: "/dashboard",
@@ -109,6 +83,32 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
                 label: 'Facility Booking'
             },
             resolve: loadSequence('moment', 'mwl.calendar')
+        }).state('login', {
+            url: '/select',
+            template: '<div ui-view class="fade-in-right-big smooth"></div>',
+            resolve: loadSequence('sweet-alert', 'oitozero.ngSweetAlert', 'loginService', 'loginCtrl'),
+            abstract: true
+        }).state('login.signin', {
+            url: '',
+            templateUrl: "assets/views/login_login.html",
+            title: 'Sign-In'
+        }).state('login.forgot', {
+            url: '/forgot',
+            templateUrl: "assets/views/login_forgot.html"
+        }).state('login.registration', {
+            url: '/registration',
+            templateUrl: "assets/views/login_registration.html"
+        }).state('login.resetpassword', {
+            url: '/reset-password/:token',
+            templateUrl: "assets/views/login_reset_password.html"
+        }).state('login.logout', {
+            url: '/logout',
+            controller: function (Login, $state, SessionService) {
+                Login.logout().then(function () {
+                    SessionService.unset('auth');
+                    $state.go('login.signin');
+                });
+            }
         });
 
         // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)

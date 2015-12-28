@@ -41,8 +41,7 @@
             })
                 .then(sendResponseData)
                 .catch(sendGetError);
-        };
-
+        }
         function getDays() {
             return $http({
                 method: 'GET',
@@ -52,15 +51,12 @@
             })
                 .then(sendResponseData)
                 .catch(sendGetError);
-        };
-
+        }
         function sendGetError(response) {
 
             return $q.reject('Error retrieving data(s). (HTTP status: ' + response.status + ')');
 
         }
-        ;
-
         function getSessionsByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
@@ -71,8 +67,6 @@
                 .then(sendResponseData)
                 .catch(sendGetError);
         }
-        ;
-
         function getOpeningTimesByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
@@ -94,16 +88,13 @@
             })
                 .then(sendResponseData)
                 .catch(sendGetError);
-        };
-
+        }
         function blockUnblockFacility(facilityId, data) {
             return $http({
                 method: 'PUT',
-                url: 'api/v1/vendor/facility/' + facilityId,
+                url: 'api/v1/vendor/facility/update-status/' + facilityId,
                 data
-            })
-                .then(updateFacilitySuccess)
-                .catch(updateFacilityError);
+            });
         }
 
         function getAllFacilities() {
@@ -116,8 +107,6 @@
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
-        ;
-
         function getRootCategory() {
             return $http({
                 method: 'GET',
@@ -127,14 +116,10 @@
                 .then(sendResponseData)
                 .catch(sendGetRootCategoriesError);
         }
-        ;
-
         function deleteAllBooksResponseFromCache() {
             var httpCache = $cacheFactory.get('$http');
             httpCache.remove('api/books');
         }
-        ;
-
         function transformGetFacilities(data, headersGetter) {
             var transformed = angular.fromJson(data);
 
@@ -145,8 +130,6 @@
             // console.log(transformed);
             return transformed;
         }
-        ;
-
         function sendResponseData(response) {
 
             return response.data;
@@ -343,7 +326,8 @@
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
-        f
+
+        f;
 //		function deleteBook(bookID) {
 
 //		deleteSummaryFromCache();

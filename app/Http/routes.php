@@ -10,7 +10,6 @@
  * | and give it the controller to call when that URI is requested.
  * |
  */
-use App\Http\Controllers\Auth\AuthController;
 Route::get('/', function () {
     return view('STANDARD/index');
 });
@@ -33,8 +32,9 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
     Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
     Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
-    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@enableDisableFacility'));
     Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
+    Route::put('facility/update-status/{id}', array('uses' => 'Vendor\VendorsController@enableDisableFacility'));
+
     //NEW
     Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
     Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));

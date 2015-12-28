@@ -14,7 +14,7 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
         $rootScope.app = {
             name: 'SPORTOFIT', // name of your project
             author: 'SPORTOFIT', // author's name or company name
-            description: 'Book gym', // brief description
+            description: 'Book GYM', // brief description
             version: '2.0', // current version
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
             isMobile: (function () {// true if the browser is a mobile device
@@ -22,7 +22,6 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
                 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                     check = true;
                 }
-                ;
                 return check;
             })(),
             layout: {
@@ -36,19 +35,19 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
         };
 
 
-        $rootScope.$on('$stateChangeStart', function (event, current, previous) {
-            var auth = sessionStorage.getItem('auth');
+        $rootScope.$on('$locationChangeStart', function (event, current, previous) {
+            var auth = $cookieStore.get('auth');
             //event.preventDefault();
-            var currentLocation = $location.path().split('/')  || '';
+            //console.log($state.includes('login'));
+            var currentLocation = $location.path().split('/') || '';
             var publicUrls = ['', 'forgot', 'registration', 'signin', 'reset-password', 'logout'];
-console.log(currentLocation[3]);
-            if (!auth && ($.inArray(currentLocation[2], publicUrls) === -1)){
-                if(currentLocation[2] !== 'reset-password' && currentLocation[3] !== undefined)
-            {
-                $location.path('/select').replace();
-            }
+//console.log(auth);
+            if (!auth && ($.inArray(currentLocation[2], publicUrls) === -1)) {
+                if (currentLocation[2] !== 'reset-password' && currentLocation[3] !== undefined) {
+                    $location.path('/select').replace();
+                }
             } else {
-                $rootScope.user = $cookieStore.get('user');
+                $rootScope.user = auth;
             }
 
         });

@@ -23,15 +23,20 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
                 $scope.Form[field].$dirty = false;
             });
             addFacility.then(function (response) {
-                SweetAlert.swal(response.message, "success");
+                SweetAlert.swal("Created!", response.data.message, "success");
                 $state.go("vendor.facility.list");
 
             });
-            addFacility.catch(function (data, status) {
-                angular.forEach(data.data, function (errors, field) {
-                    $scope.Form[field].$dirty = true;
-                    $scope.Form[field].$error = errors;
-                });
+            addFacility.catch(function (data) {
+                if (data.status === 422) {
+                    angular.forEach(data.data, function (errors, field) {
+                        $scope.Form[field].$dirty = true;
+                        $scope.Form[field].$error = errors;
+                    });
+                } else {
+                    $scope.Form['name'].$dirty = true;
+                    $scope.Form['name'].$error = data.data.message;
+                }
                 SweetAlert.swal(data.data.message, data.data.statusText, "error");
                 return false;
             })
@@ -55,83 +60,104 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 }]);
 
 //List of facility
-app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTableParams", "facilityService", function ($scope, $filter, $modal,
-                                                                                                                         $log, ngTableParams, facilityService) {
+app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTableParams", "facilityService", "SweetAlert",
+    function ($scope, $filter, $modal, $log, ngTableParams, facilityService, SweetAlert) {
 
-    $scope.facilityData = {};
-    facilityService.getAllFacilities()
-        .then(getFacilitySuccess);;
+        $scope.facilityData = {};
+        facilityService.getAllFacilities()
+            .then(getFacilitySuccess);
 
-    function getFacilitySuccess(facilityData) {
-        $scope.facilityData = facilityData.facility;
-    }
-
-    $scope.tableParams = new ngTableParams({
-        page: 1, // show first page
-        count: 5, // count per page
-        sorting: {
-            name: 'asc' // initial sorting
+        function getFacilitySuccess(facilityData) {
+            $scope.facilityData = facilityData.facility;
         }
-    }, {
-        total: $scope.facilityData.length, // length of data
-        getData: function ($defer, params) {
-            // use build-in angular filter
-            var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
-            $defer.resolve(orderedData);
-        }
-    });
 
-    $scope.blockUnblockFacility = function (facilityId, status) {
+        $scope.tableParams = new ngTableParams({
+            page: 1, // show first page
+            count: 5, // count per page
+            sorting: {
+                name: 'desc' // initial sorting
+            }
+        }, {
+            total: $scope.facilityData.length, // length of data
+            getData: function ($defer, params) {
+                // use build-in angular filter
+                var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
 
-        var data = {'is_active': status ? 1 : 0};
-
-        var statusBlocking = facilityService.blockUnblockFacility(facilityId, data);
-
-        statusBlocking.then(function (response) {
-            alert(response);
-        });
-
-        statusBlocking.catch(function (response) {
-            alert(response);
-        });
-    };
-
-    $scope.open = function (size, facility, tabActive) {
-
-        var modalInstance = $modal.open({
-            templateUrl: 'sessionPackageModal.html',
-            controller: 'SessionModalInstanceCtrl',
-            size: size,
-            resolve: {
-                selectedFacility: function () {
-                    return facility;
-                },
-                tab: function () {
-                    return tabActive;
-                }
+                $defer.resolve(orderedData);
             }
         });
 
+        $scope.blockUnblockFacility = function (facility) {
+            SweetAlert.swal({
+                title: "Are you sure?",
+                text: "Your will not be able to recover this event!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: true,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    facility.is_active = !facility.is_active;
+                    var data = {'is_active': facility.is_active};
 
-        modalInstance.result.then(function (selectedItem) {
-            $scope.selected = selectedItem;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
-}]);
+                    var statusBlocking = facilityService.blockUnblockFacility(facility.id, data);
+
+                    statusBlocking.then(function (response) {
+                        SweetAlert.swal("Deleted!", response.data.message, "success");
+                    });
+
+                    statusBlocking.catch(function (response) {
+                        SweetAlert.swal("Not Deleted", response.data.message, "error");
+                    });
+                } else {
+                    SweetAlert.swal("Cancelled", "facility is safe :)", "error");
+                }
+            });
+
+        };
+
+        $scope.open = function (size, facility, tabActive, isAdd) {
+
+            var isAdd = isAdd || false;
+            var modalInstance = $modal.open({
+                templateUrl: 'sessionPackageModal.html',
+                controller: 'SessionModalInstanceCtrl',
+                size: size,
+                resolve: {
+                    selectedFacility: function () {
+                        return facility;
+                    },
+                    tab: function () {
+                        return tabActive;
+                    },
+                    isAdd: function () {
+                        return isAdd;
+                    }
+                }
+            });
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+    }]);
 
 
-app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "tab", "facilityService", "SweetAlert",
-    function ($scope, $modalInstance, $filter, selectedFacility, tab, facilityService, SweetAlert) {
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert",
+    function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert) {
 
         $scope.facility = selectedFacility;
         $scope.tab = tab;
+        $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit'];
         facilityService.getDuration()
             .then(getDurationSuccess);
 
         facilityService.getRootCategory()
-            .then(getRootCategorySuccess)
+            .then(getRootCategorySuccess);
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
@@ -148,21 +174,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.sessions = [];
         $scope.packages = [];
 
-        $scope.slots = {1: 1, 2: 2, 3: 3, 4: 4, 999: 999};
         $scope.types = {0: "Peak Time", 1: "Off time"};
-
-        $scope.percentageArray = {
-            10: 10,
-            20: 20,
-            30: 30,
-            40: 40,
-            50: 50,
-            60: 60,
-            70: 70,
-            80: 80,
-            90: 90,
-            100: 100
-        };
 
         $scope.months = ["1 Month", "3 Months", "6 Months"];
 
@@ -194,14 +206,16 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         };
 
         $scope.getSessions = function () {
-            $scope.tab = 'sessions';
-            if ($scope.sessions.length) {
-                return $scope.sessions;
+            $scope.setTab('sessions');
+            if (!isAdd) {
+                if ($scope.sessions.length) {
+                    return $scope.sessions;
+                }
+                facilityService.getSessionsByFacilityId($scope.facility.id).then(function (sessions) {
+                    var sessions = (sessions.data === "") ? [] : sessions.data;
+                    parseSessions(sessions);
+                });
             }
-            facilityService.getSessionsByFacilityId($scope.facility.id).then(function (sessions) {
-                var sessions = (sessions.data === "") ? [] : sessions.data;
-                parseSessions(sessions);
-            });
         };
 
         function parseSessions(sessions) {
@@ -213,17 +227,18 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         }
 
         $scope.getOpeningHours = function () {
-            $scope.tab = 'opening_hours';
+            $scope.setTab('opening_hours');
+            if (!isAdd) {
+                if ($scope.openingHours.length) {
+                    return $scope.openingHours;
+                }
 
-            if ($scope.openingHours.length) {
-                return $scope.openingHours;
+                facilityService.getOpeningTimesByFacilityId($scope.facility.id)
+                    .then(function (openingHours) {
+                        var openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                        parseOpeningHours(openingHours);
+                    });
             }
-
-            facilityService.getOpeningTimesByFacilityId($scope.facility.id)
-                .then(function (openingHours) {
-                    var openingHours = (openingHours.data === "") ? [] : openingHours.data;
-                    parseOpeningHours(openingHours);
-                });
         };
 
         function parseOpeningHours(openingHours) {
@@ -257,17 +272,20 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         }
 
         $scope.getPackages = function () {
-            $scope.tab = 'packages';
-            if ($scope.packages.length) {
-                return $scope.packages;
+            $scope.setTab('packages');
+            if (!isAdd) {
+
+                if ($scope.packages.length) {
+                    return $scope.packages;
+                }
+                facilityService.getPackagesByFacilityId($scope.facility.id)
+                    .then(function (packages) {
+                        var packages = (packages.data === "") ? [] : packages.data;
+                        parsePackages(packages);
+                    }).catch(function (data) {
+                    //console.log(data.data);
+                });
             }
-            facilityService.getPackagesByFacilityId($scope.facility.id)
-                .then(function (packages) {
-                    var packages = (packages.data === "") ? [] : packages.data;
-                    parsePackages(packages);
-                }).catch(function (data) {
-                //console.log(data.data);
-            });
         };
 
         function parsePackages(packages) {
@@ -539,7 +557,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
                 var addFacility = facilityService.updateFacility($scope.facility);
                 addFacility.then(function (response) {
-                    SweetAlert.swal("Success",response.data.message, "success");
+                    SweetAlert.swal("Success", response.data.message, "success");
                 });
                 addFacility.catch(function (data, status) {
                     angular.forEach(data.data, function (errors, field) {
@@ -563,10 +581,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
-            angular.forEach($scope.categoryData,function(data,id){
-               if(data.id == $scope.facility.category.root.id){
-                   $scope.selectedCategory = data.sub_category;
-               }
+            angular.forEach($scope.categoryData, function (data, id) {
+                if (data.id == $scope.facility.category.root.id) {
+                    $scope.selectedCategory = data.sub_category;
+                }
             });
         }
 
@@ -597,220 +615,229 @@ app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($s
     };
 });
 
-app.controller('facilityBookingCtrl', ["$scope", "$state", "$aside", "moment", "facilityService", "SweetAlert", function ($scope, $state, $aside, moment, facilityService, SweetAlert) {
-    $scope.facilityId = $state.params.facilityId;
+app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "moment", "facilityService", "SweetAlert",
+    function ($scope, $stateParams, $aside, moment, facilityService, SweetAlert) {
+        $scope.facilityId = $stateParams.facilityId;
 
 
-    $scope.facilityData = {};
+        $scope.facilityData = {};
 
 
-    function getAllFacilitySuccess(facilityData) {
-        $scope.facilityData = facilityData.facility;
-    }
+        var vm = this;
 
-    function getFacilitySuccess(facilityData) {
-        $scope.facility = facilityData.facility;
-    }
-
-    var vm = this;
-
-
-    $scope.events = [];
-//console.log($scope.facilityId);
-    function init() {
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-        var startDate = y + "-" + (m + 1);
-        facilityService.getAllFacilities()
-            .then(getAllFacilitySuccess);
-        if ($scope.facilityId) {
-            facilityService.getFacilityById($scope.facilityId,startDate)
-                .then(getFacilitySuccess);
-            getBlockedSessionByFacilityId();
-        } else {
-            getBlockedSession(startDate);
-        }
-    }
-    init();
-
-    function getBlockedSessionByFacilityId(startDate) {
-        facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate)
-            .then(function (events) {
-                parseEvents(events.data);
-            });
-    }
-
-    function getBlockedSession(startDate) {
-        facilityService.getBlockedSessions(startDate).then(function (events) {
-            parseEvents(events.data);
-        });
-    }
-
-    function parseEvents(events) {
         $scope.events = [];
-        angular.forEach(events, function (event, keys) {
-            var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
-            event.startsAt = new Date(thisStartT);
-//console.log(event.startsAt);
-            var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
-            event.endsAt = new Date(thisEndT);
-            this.push(event);
-        }, $scope.events);
-    }
+//console.log($scope.facilityId);
+        function init() {
 
-    $scope.calendarView = 'week';
-    $scope.calendarTitle = 'Name';
-    $scope.calendarDay = new Date();
-
-    $scope.getEvents = function (calendarDay, calendarView) {
-        console.log(calendarDay);
-        console.log(calendarView);
-        if (calendarView === "month") {
-            var startDate = calendarDay.getFullYear() + "-" + (calendarDay.getMonth() + 1);
+            facilityService.getAllFacilities()
+                .then(getAllFacilitySuccess);
+            //console.log($scope.facilityId);
             if ($scope.facilityId) {
+                facilityService.getFacilityById($scope.facilityId)
+                    .then(getFacilitySuccess);
+            }
+            getBlockData();
+        }
 
-                getBlockedSessionByFacilityId(startDate);
+        init();
+
+        function getBlockData() {
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+            var startDate = y + "-" + (m + 1);
+            if ($scope.facilityId) {
+                getBlockedSessionByFacilityId(startDate)
             } else {
                 getBlockedSession(startDate);
             }
         }
-    };
 
-    function showModal(action, event) {
-        var modalInstance = $aside.open({
-            templateUrl: 'calendarEvent.html',
-            placement: 'right',
-            size: 'sm',
-            backdrop: true,
-            resolve: {
-                selectedFacility: function () {
-                    return $scope.facility;
-                },
-                facilityData: function () {
-                    return $scope.facilityData;
+        function getAllFacilitySuccess(facilityData) {
+            $scope.facilityData = facilityData.facility;
+        }
+
+        function getFacilitySuccess(facilityData) {
+            $scope.facility = facilityData.facility;
+        }
+
+        function getBlockedSessionByFacilityId(startDate) {
+            facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate)
+                .then(function (events) {
+                    parseEvents(events.data);
+                });
+        }
+
+        function getBlockedSession(startDate) {
+            facilityService.getBlockedSessions(startDate).then(function (events) {
+                parseEvents(events.data);
+            });
+        }
+
+        function parseEvents(events) {
+            $scope.events = [];
+            angular.forEach(events, function (event, keys) {
+                var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
+                event.startsAt = new Date(thisStartT);
+//console.log(event.startsAt);
+                var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
+                event.endsAt = new Date(thisEndT);
+                this.push(event);
+            }, $scope.events);
+        }
+
+        $scope.calendarView = 'week';
+        $scope.calendarTitle = 'Name';
+        $scope.calendarDay = new Date();
+
+        $scope.getEvents = function (calendarDay, calendarView) {
+            //console.log(calendarDay);
+            //console.log(calendarView);
+            if (calendarView === "month") {
+                var startDate = calendarDay.getFullYear() + "-" + (calendarDay.getMonth() + 1);
+                if ($scope.facility.id) {
+
+                    getBlockedSessionByFacilityId(startDate);
+                } else {
+                    getBlockedSession(startDate);
                 }
-            },
-            controller: function ($scope, $modalInstance, selectedFacility, facilityData, facilityService) {
-                $scope.facilityData = facilityData;
-                $scope.selectedFacility = selectedFacility;
-                $scope.$modalInstance = $modalInstance;
-                $scope.action = action;
-                $scope.event = angular.copy(event);
-
-                $scope.toggleMin = function () {
-                    $scope.minDate = $scope.minDate ? null : new Date();
-                };
-                $scope.toggleMin();
-
-                $scope.addEvent = function () {
-                    //$modalInstance.dismiss('cancel');
-                    //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()
-                    facilityService.blockSession($scope.event).then(function (response) {
-                        //$modalInstance.close($scope.event, 'add');
-                        init();
-
-                        $modalInstance.dismiss('cancel');
-
-                    }).catch(function (response) {
-                        $scope.errors = {};
-                        angular.forEach(response.data, function (errors, field) {
-
-                            $scope.errors[field] = (angular.isArray(errors)) ? errors.join(', ') : errors;
-                        });
-                    });
-
-                };
-                $scope.cancel = function () {
-                    $modalInstance.dismiss('cancel');
-                };
-                $scope.deleteEvent = function (eventId) {
-                    SweetAlert.swal({
-                        title: "Are you sure?",
-                        text: "Your will not be able to recover this event!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, delete it!",
-                        cancelButtonText: "No, cancel plx!",
-                        closeOnConfirm: true,
-                        closeOnCancel: false
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            facilityService.removeBlockedSession(eventId).then(function (response) {
-                                //$modalInstance.close($scope.event, 'add');
-                                console.log(response);
-                                init();
-                                $modalInstance.close($scope.event, $scope.event)
-
-                            }).catch(function (response) {
-                                console.log(response);
-                            });
-                            //$scope.events.splice(event.$id, 1);
-                            //SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
-                        } else {
-                            SweetAlert.swal("Cancelled", "Event is safe :)", "error");
-                        }
-                    });
-                    //$modalInstance.close($scope.event, $scope.event);
-                };
-
             }
-        });
-        modalInstance.result.then(function (selectedEvent, action) {
-
-            $scope.addEvent(selectedEvent);
-
-        });
-    }
-
-
-    $scope.eventClicked = function (event) {
-        var event = {
-            title: "Blocked",
-            startsAt: new Date(),
-            available_facility_id: $scope.facilityId
         };
-        showModal('Clicked', event);
-    };
-    $scope.addEvent = function (event) {
-        $scope.events.push(event);
 
-    };
+        function showModal(action, event) {
+            var modalInstance = $aside.open({
+                templateUrl: 'calendarEvent.html',
+                placement: 'right',
+                size: 'sm',
+                backdrop: true,
+                resolve: {
+                    selectedFacility: function () {
+                        return $scope.facility;
+                    },
+                    facilityData: function () {
+                        return $scope.facilityData;
+                    }
+                },
+                controller: function ($scope, $modalInstance, selectedFacility, facilityData, facilityService) {
+                    $scope.facilityData = facilityData;
+                    $scope.selectedFacility = selectedFacility;
+                    $scope.$modalInstance = $modalInstance;
+                    $scope.action = action;
+                    $scope.event = angular.copy(event);
 
-    $scope.eventEdited = function (event) {
-        showModal('Edited', event);
-    };
+                    $scope.toggleMin = function () {
+                        $scope.minDate = $scope.minDate ? null : new Date();
+                    };
+                    $scope.toggleMin();
 
-    $scope.eventDeleted = function (event) {
+                    $scope.addEvent = function () {
+                        //$modalInstance.dismiss('cancel');
+                        //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()
+                        facilityService.blockSession($scope.event).then(function (response) {
+                            //$modalInstance.close($scope.event, 'add');
+                            getBlockData();
 
-        SweetAlert.swal({
-            title: "Are you sure?",
-            text: "Your will not be able to recover this event!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel plx!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        }, function (isConfirm) {
-            if (isConfirm) {
-                $scope.events.splice(event.$id, 1);
-                SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
-            } else {
-                SweetAlert.swal("Cancelled", "Event is safe :)", "error");
-            }
-        });
-    };
+                            $modalInstance.dismiss('cancel');
+
+                        }).catch(function (response) {
+                            $scope.errors = {};
+                            angular.forEach(response.data, function (errors, field) {
+
+                                $scope.errors[field] = (angular.isArray(errors)) ? errors.join(', ') : errors;
+                            });
+                        });
+
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+                    $scope.deleteEvent = function (eventId) {
+                        SweetAlert.swal({
+                            title: "Are you sure?",
+                            text: "Your will not be able to recover this event!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel plx!",
+                            closeOnConfirm: true,
+                            closeOnCancel: false
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                facilityService.removeBlockedSession(eventId).then(function (response) {
+                                    //$modalInstance.close($scope.event, 'add');
+                                    console.log(response);
+                                    getBlockData();
+                                    $modalInstance.close($scope.event, $scope.event)
+
+                                }).catch(function (response) {
+                                    console.log(response);
+                                });
+                                //$scope.events.splice(event.$id, 1);
+                                //SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
+                            } else {
+                                SweetAlert.swal("Cancelled", "Event is safe :)", "error");
+                            }
+                        });
+                        //$modalInstance.close($scope.event, $scope.event);
+                    };
+
+                }
+            });
+            modalInstance.result.then(function (selectedEvent, action) {
+
+                $scope.addEvent(selectedEvent);
+
+            });
+        }
 
 
-    $scope.toggle = function ($event, field, event) {
-        $event.preventDefault();
-        $event.stopPropagation();
+        $scope.eventClicked = function (event) {
+            var event = {
+                title: "Blocked",
+                startsAt: new Date(),
+                available_facility_id: $scope.facilityId
+            };
+            showModal('Clicked', event);
+        };
+        $scope.addEvent = function (event) {
+            $scope.events.push(event);
 
-        event[field] = !event[field];
-    };
+        };
 
-}]);
+        $scope.eventEdited = function (event) {
+            showModal('Edited', event);
+        };
+
+        $scope.eventDeleted = function (event) {
+
+            SweetAlert.swal({
+                title: "Are you sure?",
+                text: "Your will not be able to recover this event!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel plx!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $scope.events.splice(event.$id, 1);
+                    SweetAlert.swal("Deleted!", "Event has been deleted.", "success");
+                } else {
+                    SweetAlert.swal("Cancelled", "Event is safe :)", "error");
+                }
+            });
+        };
+
+
+        $scope.toggle = function ($event, field, event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            event[field] = !event[field];
+        };
+
+    }]);

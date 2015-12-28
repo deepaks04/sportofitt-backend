@@ -1,16 +1,16 @@
 "use strict";
 
 
-app.factory('SessionService',function(){
+app.factory('SessionService', function ($cookieStore) {
 return{
 get:function(key){
-return sessionStorage.getItem(key);
+    return $cookieStore.get(key);
 },
 set:function(key,val){
-return sessionStorage.setItem(key,val);
+    return $cookieStore.put(key, val);
 },
 unset:function(key){
-return sessionStorage.removeItem(key);
+    return $cookieStore.remove(key);
 }
 }
 });
