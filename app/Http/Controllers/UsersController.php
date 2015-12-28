@@ -48,6 +48,8 @@ class UsersController extends Controller
             $role = Role::where('slug', 'vendor')->first();
             $userStatus = Status::where('slug', 'pending')->first();
             $userData = $request->all();
+            $userData['fname'] = trim($request->fname);
+            $userData['lname'] = trim($request->lname);
             $userData['password'] = bcrypt($request->password);
             $userData['is_active'] = 1; // Vendor need to verify email address so is_active set 1 to always
             $userData['status_id'] = $userStatus->id; // By Default Pending
@@ -58,7 +60,7 @@ class UsersController extends Controller
             unset($userData['business_name']);
             unset($userData['password2']);
             $userId = DB::table('users')->insertGetId($userData);
-            $vendorData['business_name'] = $request->business_name;
+            $vendorData['business_name'] = trim($request->business_name);
             $vendorData['user_id'] = $userId;
             $vendorData['updated_at'] = Carbon::now();
             $vendorData['created_at'] = Carbon::now();
