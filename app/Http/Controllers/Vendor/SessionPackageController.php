@@ -737,30 +737,30 @@ class SessionPackageController extends Controller
             $message = "success";
             $status = 200;
             $user = Auth::user();//->with('vendor');
-            $facilityData = $user->vendor->facility;
+            $facilityData = $user->vendor->facility()->where('is_active', 1)->get();
             if (!$facilityData->isEmpty()) {
                 $facilities = $facilityData->toArray();
                 $start = $yearMonth . '-01 00:00:00';
                 $end = $yearMonth . '-31 11:59:59';
-                $blockData = "";
+                $blockData = [];
                 $blockId = 0;
-//                foreach ($facilities as $facility) {
-//                    $data = array(
-//                        'available_facility_id' => $facility['id'],
-//                        'is_active' => 1
-//                    );
-                $blockingData = SessionBooking::
-//                    where('available_facility_id', $facility['id'])
-//                        ->
-                where('is_active', 1)
-                    ->where('startsAt', '>=', $start)
-                    ->where('endsAt', '<=', $end)
+                foreach ($facilities as $facility) {
+                    $data = array(
+                        'available_facility_id' => $facility['id'],
+                        'is_active' => 1
+                    );
+                    $blockingData = SessionBooking::
+                    where('available_facility_id', $facility['id'])
+                        ->
+                        where('is_active', 1)
+                        ->where('startsAt', '>=', $start)
+                        ->where('endsAt', '<=', $end)
                         ->get();
-                if (!$blockingData->isEmpty()) {
-                        $blockData = $blockingData->toArray();
-                        $blockId++;
+                    if (!$blockingData->isEmpty()) {
+                        $blockData = array_merge($blockData, $blockingData->toArray());
+//                        $blockId++;
                     }
-//                }
+                }
             }
         } catch (\Exception $e) {
             $status = 500;

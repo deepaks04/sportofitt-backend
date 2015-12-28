@@ -326,7 +326,6 @@
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
-
         f;
 //		function deleteBook(bookID) {
 
