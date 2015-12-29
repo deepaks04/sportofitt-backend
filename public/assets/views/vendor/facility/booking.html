@@ -60,12 +60,14 @@
                                 </button>
 
                                 <label
-                                    class="btn btn-primary" ng-model="calendarView"
-                                    btn-radio="'month'"> Month </label> <label
-                                    class="btn btn-primary" ng-model="calendarView"
-                                    btn-radio="'week'"> Week </label> <label
-                                    class="btn btn-primary" ng-model="calendarView"
-                                    btn-radio="'day'"> Day </label>
+                                        class="btn btn-primary" ng-model="calendarView"
+                                        btn-radio="'month'" ng-click="getEvents(calendarDay,'month');"> Month </label>
+                                <label
+                                        class="btn btn-primary" ng-model="calendarView"
+                                        btn-radio="'week'" ng-click="getEvents(calendarDay,'week');"> Week </label>
+                                <label
+                                        class="btn btn-primary" ng-model="calendarView"
+                                        btn-radio="'day'" ng-click="getEvents(calendarDay,'day');"> Day </label>
                             </div>
                         </div>
                         <div class="visible-xs visible-sm hidden-md hidden-lg">
@@ -78,11 +80,14 @@
                                     <li><a class="btn btn-primary btn-o btn-sm"
                                         ng-click="addEvent()">
                                     <i class="ti-plus"></i> Add event</a></li>
-                                    <li><a ng-model="calendarView" btn-radio="'month'" href="">
+                                    <li><a ng-model="calendarView" btn-radio="'month'" href=""
+                                           ng-click="getEvents(calendarDay,'month');">
                                             Month </a></li>
-                                    <li><a ng-model="calendarView" btn-radio="'week'" href="">
+                                    <li><a ng-model="calendarView" btn-radio="'week'" href=""
+                                           ng-click="getEvents(calendarDay,'week');">
                                             Week </a></li>
-                                    <li><a ng-model="calendarView" btn-radio="'day'" href="">
+                                    <li><a ng-model="calendarView" btn-radio="'day'" href=""
+                                           ng-click="getEvents(calendarDay,'day');">
                                             Day </a></li>
                                 </ul>
                             </div>
