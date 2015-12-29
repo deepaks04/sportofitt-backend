@@ -692,8 +692,8 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.calendarDay = new Date();
 
         $scope.getEvents = function (calendarDay, calendarView) {
-            console.log(calendarDay);
-            console.log(calendarView);
+            //console.log(calendarDay);
+            //console.log(calendarView);
             if (calendarView === "month") {
                 var startDate = calendarDay.getFullYear() + "-" + (calendarDay.getMonth() + 1);
                 if ($scope.facilityId) {
