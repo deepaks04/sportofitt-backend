@@ -832,7 +832,7 @@ class SessionPackageController extends Controller
             $facilityData = AvailableFacility::where('id',$facility_id)->first();
             if ($facilityData) {
                 $peak = ($facilityData->off_peak_hour_price * $off_peak_count)+($facilityData->peak_hour_price * $peak_count);
-                $price = ['Actual Price' => $peak];
+                $price = ['actual_price' => $peak];
             }
         } catch (\Exception $e) {
             $status = 500;
