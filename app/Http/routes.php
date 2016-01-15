@@ -60,6 +60,8 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
     Route::put('calendar-block/{id}',array('uses' => 'Vendor\SessionPackageController@updateBlockedData'));
 
+    //peak off peak prices
+    Route::get('calculate-price/{id}/{off_peak_count}/{peak_count}',array('uses' => 'Vendor\SessionPackageController@getActualSessionPrice'));
 });
 // Route::controllers([
 // 'auth' => 'Auth\AuthController',

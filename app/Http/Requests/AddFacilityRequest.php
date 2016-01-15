@@ -64,7 +64,9 @@ class AddFacilityRequest extends Request
                     'description' => 'min:5|max:500',
                     'duration' => 'required|integer',
                     'cancellation_before_24hrs' => 'required|numeric|between:0,100',
-                    'cancellation_after_24hrs' => 'required|numeric|between:0,100'
+                    'cancellation_after_24hrs' => 'required|numeric|between:0,100',
+                    'off_peak_hour_price' => 'required|numeric|digits_between:0,5',
+                    'peak_hour_price' => 'required|numeric|digits_between:0,5'
                 ];
                 break;
             case 'POST':
@@ -75,7 +77,9 @@ class AddFacilityRequest extends Request
                     'description' => 'min:5|max:500',
                     'duration' => 'required|integer',
                     'cancellation_before_24hrs' => 'required|numeric|between:0,100',
-                    'cancellation_after_24hrs' => 'required|numeric|between:0,100'
+                    'cancellation_after_24hrs' => 'required|numeric|between:0,100',
+                    'off_peak_hour_price' => 'required|numeric|digits_between:0,5',
+                    'peak_hour_price' => 'required|numeric|digits_between:0,5'
                 ];
                 break;
             default:

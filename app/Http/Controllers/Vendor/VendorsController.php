@@ -5,6 +5,7 @@ use App\AvailableFacility;
 use App\BillingInfo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\MultipleSession;
 use App\OpeningHour;
 use App\PackageType;
 use App\RootCategory;
@@ -610,7 +611,13 @@ class VendorsController extends Controller
                 $facility['image'] = $filename;
             }*/
             $facility['vendor_id'] = $this->vendor->id;
+            $DbFacility = $this->vendor->facility()->find($id);
             AvailableFacility::where('id', '=', $id)->update($facility);
+            if(($facility['off_peak_hour_price']!= $DbFacility->off_peak_hour_price)||($facility['peak_hour_price']!= $DbFacility->peak_hour_price)){
+                $this->UpdateSessionPrices($id);
+            }else{
+                dd('out');
+            }
             $sessionUpdateData['duration'] = $request->duration;
             $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
 
@@ -744,5 +751,23 @@ class VendorsController extends Controller
             "packageInformation" => $packageInformation
         ];
         return response($response, $status);
+    }
+
+
+    /**
+     *
+     * @param                              $id
+     *
+     * @return true after update of all multiple session
+     */
+    public function UpdateSessionPrices($id){
+        $facilities = $this->vendor->facility()->where(array('id'=>$id))->first();
+        $sessionsInfo = MultipleSession::where('available_facility_id', '=', $id)->get();
+        $allSessions = $sessionsInfo->toArray();
+        foreach($allSessions as $session){
+            $price = ($session['off_peak']*$facilities->off_peak_hour_price)+($session['peak']*$facilities->peak_hour_price);
+            MultipleSession::where('id',$session['id'])->update(['price'=> $price]);
+        }
+        return true;
     }
 }

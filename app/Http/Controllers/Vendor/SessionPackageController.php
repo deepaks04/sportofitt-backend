@@ -817,4 +817,33 @@ class SessionPackageController extends Controller
         ];
         return response($response, $status);
     }
+
+
+    /**
+     * @param Request $request
+     * @param         $facility_id,$off_peak_count,$peak_count
+     *
+     * @return actual calculated price
+     */
+    public function getActualSessionPrice(Requests\SessionPriceRequest $request,$facility_id,$off_peak_count,$peak_count){
+        try {
+            $message = "success";
+            $status = 200;
+            $facilityData = AvailableFacility::where('id',$facility_id)->first();
+            if ($facilityData) {
+                $peak = ($facilityData->off_peak_hour_price * $off_peak_count)+($facilityData->peak_hour_price * $peak_count);
+                $price = ['Actual Price' => $peak];
+            }
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "Something went wrong " . $e->getMessage();
+            $price = "";
+        }
+        $response = [
+            "message" => $message,
+            "data" => $price
+        ];
+        return response($response, $status);
+
+    }
 }
