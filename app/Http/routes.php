@@ -11,8 +11,13 @@
  * |
  */
 Route::get('/', function () {
-    return view('STANDARD/index');
+    return view('views/home',
+            ['cell' => '9457912886',
+            'email' => 'select@sportofitt.com',
+               ]);
 });
+
+Route::post('/contact','PreGuestController@saveGuestUser');
 Route::get('/select', function () {
     return view('STANDARD/select/index');
 });
