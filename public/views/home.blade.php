@@ -85,7 +85,7 @@
                         <a href="mailto:{{$email}}">Email: {{$email}}</a>
                     </div>
 
-                    <form action="/contact" id="phpcontactform" method="POST">
+                    <form action="{{url('/contact')}}" id="phpcontactform" method="POST">
 
                         <div class="form-group">
                             <label>Full Name</label>
