@@ -17,6 +17,10 @@ Route::get('/', function () {
                ]);
 });
 
+Route::get('/test', function () {
+    return 'test';
+});
+
 Route::post('/contact','PreGuestController@saveGuestUser');
 Route::get('/select', function () {
     return view('STANDARD/select/index');
