@@ -281,6 +281,7 @@
 
         <div class="row">
             <div class="col-md-6">
+                <h5 class="faq-title text-center">USERS</h5>
                 <h6 class="faq-title">What is SPORTOFITT?</h6>
                 <p>SPORTOFITT is your one stop destination for your fitness and therapy needs. It provides booking your favorite sport, fitness, adventure, and spa session online 
                     without any hassle. It also allows you to buy short and long-term plans suit your 
@@ -298,6 +299,7 @@
                 <p>You can book the activity and facility of your choice 24X7.</p>
             </div>
             <div class="col-md-6">
+                <h5 class="faq-title text-center">SELECT PARTNER</h5>
                 <h6 class="faq-title">Whats in it for me?</h6>
                 <p>We help you reach to wider customer base helping you grow your business.</p>
                 <h6 class="faq-title">Why SPORTOFITT?</h6>

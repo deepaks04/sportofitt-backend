@@ -5,9 +5,9 @@
     <div class="container">
         <div class="navbar-header mobile-center">
             <a class="navbar-brand" href="{{url('/')}}">
-                <img src="assets/home/images/logo.png" alt="Sportofitt" /> 
+                <img src="{{url('assets/home/images/logo.png')}}" alt="Sportofitt" /> 
             </a>
-            <span class="click-to-call"  style="margin-top: 20px;" ><a href="{{url('/select')}}" target="_blank">Become A Vendor</a></span>
+            <span class="click-to-call"  style="margin-top: 20px;" ><a href="{{url('/select')}}" target="_blank">Become A Select Partner</a></span>
         </div>
         
 
