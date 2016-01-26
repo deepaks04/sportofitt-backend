@@ -17,8 +17,10 @@ Route::get('/', function () {
                ]);
 });
 
-Route::get('/test', function () {
-    return 'test';
+Route::get('/sportofittpartneragreement', function () {
+    return view('views/agreement',['cell' => '9457912886',
+            'email' => 'select@sportofitt.com',
+               ]);
 });
 
 Route::post('/contact','PreGuestController@saveGuestUser');

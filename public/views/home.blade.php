@@ -67,7 +67,7 @@
                 </div>
 <!--                <p class="bottom-space">.</p>-->
 
-                <img src="assets/home/images/Badminton.jpg" class="img-responsive" alt="Badminton">
+                <img src="{{url('assets/home/images/Badminton.jpg')}}" class="img-responsive" alt="Badminton">
 
             </div>
             <!-- // end .col -->
@@ -164,7 +164,7 @@
             </div>
             <div class="col-md-4">
 
-                <div class="col-md-10 col-md-offset-1"> <img src="assets/home/images/fitness-pic-2.jpg" class="img-responsive center-block" alt="Yoga Parvatasana Pose"></div>
+                <div class="col-md-10 col-md-offset-1"> <img src="{{url('assets/home/images/fitness-pic-2.jpg')}}" class="img-responsive center-block" alt="Yoga Parvatasana Pose"></div>
 
             </div>
             <div class="col-md-4">
@@ -220,7 +220,7 @@
         <div class="row">
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
-                    <img src="assets/home/images/tennis.jpg" alt="Sports,Tennis">
+                    <img src="{{url('assets/home/images/tennis.jpg')}}" alt="Sports,Tennis">
                     <div class="caption">
                         <h6 class="caption-title text-dark">SPORTS</h6>
                         <p class="caption-text">Learn and play new sports be a beginner become a master. </p>
@@ -229,7 +229,7 @@
             </div>
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
-                    <img src="assets/home/images/Adventure.jpg" alt="Adventure">
+                    <img src="{{url('assets/home/images/Adventure.jpg')}}" alt="Adventure">
                     <div class="caption">
                         <h6 class="caption-title text-dark">OUTDOORS</h6>
                         <p class="caption-text">Replace those boring getaways with a rush of adrenaline.</p>
@@ -241,7 +241,7 @@
 
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
-                    <img src="assets/home/images/Fitness.jpg" alt="Fitness">
+                    <img src="{{url('assets/home/images/Fitness.jpg')}}" alt="Fitness">
                     <div class="caption">
                         <h6 class="caption-title text-dark">FITNESS</h6>
                         <p class="caption-text">Try different workouts based on your goals and avoid monotony.&nbsp;.&nbsp;.&nbsp;</p>
@@ -251,7 +251,7 @@
 
             <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
-                    <img src="assets/home/images/spa.jpg" alt="SPA">
+                    <img src="{{url('assets/home/images/spa.jpg')}}" alt="SPA">
                     <div class="caption">
                         <h6 class="caption-title text-dark">THERAPIES</h6>
                         <p class="caption-text">Feel tired with all the work, reward your body with relaxing spa therapies.</p>
@@ -281,16 +281,35 @@
 
         <div class="row">
             <div class="col-md-6">
-                <h6 class="faq-title">How can I get to the centre?</h6>
-                <p>The map and Contact details are listed within the contact information. You may also call to get more accurate details.</p>
-                <h6 class="faq-title">I have medical problems. Can I join?</h6>
-                <p>Sure. Our instructors will warn before doing fitness job that are harmful for that medical condition. So keep away from doing that. </p>
+                <h6 class="faq-title">What is SPORTOFITT?</h6>
+                <p>SPORTOFITT is your one stop destination for your fitness and therapy needs. It provides booking your favorite sport, fitness, adventure, and spa session online 
+                    without any hassle. It also allows you to buy short and long-term plans suit your 
+                    needs.</p>
+                <h6 class="faq-title">Why SPORTOFITT?</h6>
+                <p>1. You never to worry about physically booking your activity session</p>
+                <p>2. Hundreds of option to choose from.</p>
+                <p>3. Get bonus points when you pay online</p>
+                <p>4. Get discounts on buying sessions or packages for the activity</p>
+                <p>5. Find partner to play your favorite sport</p>
+                <p>6. Split payment with your partner</p>
+                <h6 class="faq-title">How do I book and use the facility?</h6>
+                <p>All you have to do is register with online, search for the activity in the area of your choice, pay online to book the facility, and show the confirmation at the reception of the facility and use it.</p>
+                <h6 class="faq-title">When can I book the facility to use?</h6>
+                <p>You can book the activity and facility of your choice 24X7.</p>
             </div>
             <div class="col-md-6">
-                <h6 class="faq-title">What payment types do you accept?</h6>
-                <p>All payments are processed via PayPal. You may also pay at the centre. But please call us to join the club.</p>
-                <h6 class="faq-title">Can I get a refund?</h6>
-                <p>Yes. The first 3 days of your membership is completely free. You may cancel your subscription if you are not satisfied. </p>
+                <h6 class="faq-title">Whats in it for me?</h6>
+                <p>We help you reach to wider customer base helping you grow your business.</p>
+                <h6 class="faq-title">Why SPORTOFITT?</h6>
+                <p>1. Create unlimited sessions/packages which suits your customer base</p>
+                <p> 2. Free, secure online booking system</p>
+                <p> 3. Unlock your inventory by creating various programs</p>
+                <p> 4. Update, add programs, pictures, pricing etc. at any time</p>
+                <p> 5. Zero upfront and marketing cost</p>
+                <p> 6. Get your own web page on our website</p>
+                <p> 7. Manage sales and inventory effortlessly</p>
+                <h6 class="faq-title">How do I become a SELECT PARTNER?</h6>
+                <p> Write to us at <a href="mailto:select@sportofitt.com">select@sportofitt.com</a>, call us at 9457912886 or just register with us at <a href="{{url('/select')}}" target="_blank">www.sportofitt.com/select</a></p>
             </div>
         </div>
     </div>
