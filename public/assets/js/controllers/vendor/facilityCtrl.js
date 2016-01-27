@@ -536,7 +536,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         };
 
         $scope.calculateSessionPricing = function (rowData,session) {
-   
+     console.log(rowData);
             var peakPricing = $scope.facility.peak_hour_price * rowData.peak;
             var offPeakPricing = $scope.facility.off_peak_hour_price * rowData.off_peak;
             
