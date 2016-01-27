@@ -542,7 +542,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             
             session['peak'] = rowData.peak;
             session['off_peak'] = rowData.off_peak;
-            session['price'] = peakPricing + offPeakPricing;         
+            session['price'] = peakPricing + offPeakPricing;
+            
+            console.log(session);
         };
 
         // add Sessions
