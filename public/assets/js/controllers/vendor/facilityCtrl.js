@@ -536,15 +536,14 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         };
 
         $scope.calculateSessionPricing = function (rowData,session) {
-     console.log(rowData);
-            var peakPricing = $scope.facility.peak_hour_price * rowData.peak;
-            var offPeakPricing = $scope.facility.off_peak_hour_price * rowData.off_peak;
+   
+            var peakPricing = ($scope.facility.peak_hour_price || 0)* rowData.peak;
+            var offPeakPricing = ($scope.facility.off_peak_hour_price || 0) * rowData.off_peak;
             
             session['peak'] = rowData.peak;
             session['off_peak'] = rowData.off_peak;
             session['price'] = peakPricing + offPeakPricing;
             
-            console.log(session);
         };
 
         // add Sessions
