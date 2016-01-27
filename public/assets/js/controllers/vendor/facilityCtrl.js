@@ -4,60 +4,60 @@
  */
 app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert", function ($scope, $state, $log, facilityService, SweetAlert) {
 
-    facilityService.getRootCategory()
-        .then(getRootCategorySuccess);
+        facilityService.getRootCategory()
+                .then(getRootCategorySuccess);
 
-    facilityService.getDuration()
-        .then(getDurationSuccess);
+        facilityService.getDuration()
+                .then(getDurationSuccess);
 
-    $scope.types = {0: "Peak Time", 1: "Off time"};
+        $scope.types = {0: "Peak Time", 1: "Off time"};
 
-    $scope.master = $scope.facility = {};
-    $scope.form = {
-        submit: function (form) {
-            var firstError = null;
+        $scope.master = $scope.facility = {};
+        $scope.form = {
+            submit: function (form) {
+                var firstError = null;
 
-            var addFacility = facilityService.addFacility($scope.facility);
+                var addFacility = facilityService.addFacility($scope.facility);
 
-            angular.forEach($scope.facility, function (value, field) {
-                $scope.Form[field].$dirty = false;
-            });
-            addFacility.then(function (response) {
-                SweetAlert.swal("Created!", response.data.message, "success");
-                $state.go("vendor.facility.list");
+                angular.forEach($scope.facility, function (value, field) {
+                    $scope.Form[field].$dirty = false;
+                });
+                addFacility.then(function (response) {
+                    SweetAlert.swal("Created!", response.data.message, "success");
+                    $state.go("vendor.facility.list");
 
-            });
-            addFacility.catch(function (data) {
-                if (data.status === 422) {
-                    angular.forEach(data.data, function (errors, field) {
-                        $scope.Form[field].$dirty = true;
-                        $scope.Form[field].$error = errors;
-                    });
-                } else {
-                    $scope.Form['name'].$dirty = true;
-                    $scope.Form['name'].$error = data.data.message;
-                }
-                SweetAlert.swal(data.data.message, data.data.statusText, "error");
-                return false;
-            })
+                });
+                addFacility.catch(function (data) {
+                    if (data.status === 422) {
+                        angular.forEach(data.data, function (errors, field) {
+                            $scope.Form[field].$dirty = true;
+                            $scope.Form[field].$error = errors;
+                        });
+                    } else {
+                        $scope.Form['name'].$dirty = true;
+                        $scope.Form['name'].$error = data.data.message;
+                    }
+                    SweetAlert.swal(data.data.message, data.data.statusText, "error");
+                    return false;
+                })
 
-        },
-        reset: function (form) {
+            },
+            reset: function (form) {
 
-            $scope.facility = angular.copy($scope.master);
-            form.$setPristine(true);
+                $scope.facility = angular.copy($scope.master);
+                form.$setPristine(true);
 
+            }
+        };
+
+        function getRootCategorySuccess(categoryData) {
+            $scope.categoryData = categoryData.category;
         }
-    };
 
-    function getRootCategorySuccess(categoryData) {
-        $scope.categoryData = categoryData.category;
-    }
-
-    function getDurationSuccess(durations) {
-        $scope.durations = durations.duration;
-    }
-}]);
+        function getDurationSuccess(durations) {
+            $scope.durations = durations.duration;
+        }
+    }]);
 
 //List of facility
 app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTableParams", "facilityService", "SweetAlert",
@@ -65,7 +65,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
         $scope.facilityData = {};
         facilityService.getAllFacilities()
-            .then(getFacilitySuccess);
+                .then(getFacilitySuccess);
 
         function getFacilitySuccess(facilityData) {
             $scope.facilityData = facilityData.facility;
@@ -154,17 +154,17 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.tab = tab;
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit'];
         facilityService.getDuration()
-            .then(getDurationSuccess);
+                .then(getDurationSuccess);
 
         facilityService.getRootCategory()
-            .then(getRootCategorySuccess);
+                .then(getRootCategorySuccess);
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
         }
 
         facilityService.getDays()
-            .then(getDaysSuccess);
+                .then(getDaysSuccess);
 
         function getDaysSuccess(days) {
             $scope.days = days.data;
@@ -234,10 +234,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 }
 
                 facilityService.getOpeningTimesByFacilityId($scope.facility.id)
-                    .then(function (openingHours) {
-                        var openingHours = (openingHours.data === "") ? [] : openingHours.data;
-                        parseOpeningHours(openingHours);
-                    });
+                        .then(function (openingHours) {
+                            var openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                            parseOpeningHours(openingHours);
+                        });
             }
         };
 
@@ -279,10 +279,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     return $scope.packages;
                 }
                 facilityService.getPackagesByFacilityId($scope.facility.id)
-                    .then(function (packages) {
-                        var packages = (packages.data === "") ? [] : packages.data;
-                        parsePackages(packages);
-                    }).catch(function (data) {
+                        .then(function (packages) {
+                            var packages = (packages.data === "") ? [] : packages.data;
+                            parsePackages(packages);
+                        }).catch(function (data) {
                     //console.log(data.data);
                 });
             }
@@ -530,8 +530,19 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 price: "",
                 discount: 0
             };
+            $scope.calculateSessionPricing($scope.sessionInserted,$scope.sessionInserted);
             $scope.sessions.push($scope.sessionInserted);
             $scope.showSessionEdit = true;
+        };
+
+        $scope.calculateSessionPricing = function (rowData,session) {
+   
+            var peakPricing = $scope.facility.peak_hour_price * rowData.peak;
+            var offPeakPricing = $scope.facility.off_peak_hour_price * rowData.off_peak;
+            
+            session['peak'] = rowData.peak;
+            session['off_peak'] = rowData.off_peak;
+            session['price'] = peakPricing + offPeakPricing;         
         };
 
         // add Sessions
@@ -630,11 +641,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         function init() {
 
             facilityService.getAllFacilities()
-                .then(getAllFacilitySuccess);
+                    .then(getAllFacilitySuccess);
             //console.log($scope.facilityId);
             if ($scope.facilityId) {
                 facilityService.getFacilityById($scope.facilityId)
-                    .then(getFacilitySuccess);
+                        .then(getFacilitySuccess);
             }
             getBlockData();
         }
@@ -664,9 +675,9 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
 
         function getBlockedSessionByFacilityId(startDate) {
             facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate)
-                .then(function (events) {
-                    parseEvents(events.data);
-                });
+                    .then(function (events) {
+                        parseEvents(events.data);
+                    });
         }
 
         function getBlockedSession(startDate) {

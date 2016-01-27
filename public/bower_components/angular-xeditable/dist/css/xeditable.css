@@ -4,7 +4,7 @@ Edit-in-place for angular.js
 Build date: 2015-03-22 
 */
 .editable-wrap {
-	display: inline-block;
+	display: block;
 	white-space: nowrap;
 	margin: 0
 }
@@ -24,11 +24,12 @@ Build date: 2015-03-22
 
 .editable-buttons {
 	display: inline-block;
-	vertical-align: top
+	vertical-align: top;
 }
 
 .editable-buttons button {
-	margin-left: 5px
+	margin-left: 5px;        
+        float: right
 }
 
 .editable-input.editable-has-buttons {

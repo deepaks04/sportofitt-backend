@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-sm-8">
             <h1 class="mainTitle">ADD FACILITY</h1>
-			<span class="mainDescription">Create new facility for your
-				business</span>
+            <span class="mainDescription">Create new facility for your
+                business</span>
         </div>
         <div ncy-breadcrumb></div>
     </div>
@@ -31,9 +31,9 @@
                                 </label> <input type="text" placeholder="Enter Facility Name"
                                                 class="form-control" name="name" ng-model="facility.name"
                                                 required/> <span class="error text-small block"
-                                                                 ng-if="Form.name.$dirty && Form.name.$invalid">
-									{{Form.name.$error[0]}}
-									</span>
+                                                ng-if="Form.name.$dirty && Form.name.$invalid">
+                                    {{Form.name.$error[0]}}
+                                </span>
                             </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
@@ -43,10 +43,10 @@
                                                  ng-model="selectedCategory"
                                                  ng-options="cat.sub_category as cat.name for cat in categoryData"
                                                  required>
-                                <option value="">Select Category</option>
-                            </select> <span class="error text-small block"
-                                            ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">
-										{{Form.root_category_id.$error[0]}}</span>
+                                    <option value="">Select Category</option>
+                                </select> <span class="error text-small block"
+                                                ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">
+                                    {{Form.root_category_id.$error[0]}}</span>
                             </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
@@ -57,9 +57,9 @@
                                                  ng-model="facility.sub_category_id"
                                                  ng-options="cat.id as cat.name for cat in selectedCategory"
                                                  ng-disabled="!selectedCategory.length" required>
-                                <option value="">Select Category</option>
-                            </select> <span class="error text-small block"
-                                            ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">{{Form.sub_category_id.$error[0]}}</span>
+                                    <option value="">Select Category</option>
+                                </select> <span class="error text-small block"
+                                                ng-if="Form.sub_category_id.$dirty && Form.sub_category_id.$invalid">{{Form.sub_category_id.$error[0]}}</span>
                             </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.duration.$dirty && Form.duration.$invalid, 'has-success':Form.duration.$valid}">
@@ -71,11 +71,9 @@
                                         required>
                                     <option value="">Select Duartion</option>
                                 </select>
-								<span class="error text-small block"
+                                <span class="error text-small block"
                                       ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group"
                                  ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
                                 <label class="control-label"> Slots <span
@@ -83,11 +81,36 @@
                                 </label> <input type="number" min="1" class="form-control" name="slots"
                                                 ng-model="facility.slots"
                                                 required>
-										<span class="error text-small block"
-                                              ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span>
+                                <span class="error text-small block"
+                                      ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span>
                             </div>
                         </div>
+
                         <div class="col-md-6">
+                            <div class="form-group"
+                                 ng-class="{'has-error':Form.peak_hour_price.$dirty && Form.peak_hour_price.$invalid,
+									'has-success':Form.peak_hour_price.$valid}">
+                                <label class="control-label"> Peak Pricing<span
+                                        class="symbol required"></span>
+                                </label>
+                                <input type="number" min="0" class="form-control"
+                                       name="peak_hour_price" ng-model="facility.peak_hour_price"
+                                       required>
+                                <span class="error text-small block"
+                                      ng-if="Form.peak_hour_price.$dirty && Form.peak_hour_price.$invalid">{{Form.peak_hour_price.$error[0]}}</span>
+                            </div>
+                            <div class="form-group"
+                                 ng-class="{'has-error':Form.off_peak_hour_price.$dirty && Form.off_peak_hour_price.$invalid,
+									'has-success':Form.off_peak_hour_price.$valid}">
+                                <label class="control-label"> Off Peak Pricing<span
+                                        class="symbol required"></span>
+                                </label>
+                                <input type="number" min="0" class="form-control"
+                                       name="off_peak_hour_price" ng-model="facility.off_peak_hour_price"
+                                       required>
+                                <span class="error text-small block"
+                                      ng-if="Form.off_peak_hour_price.$dirty && Form.off_peak_hour_price.$invalid">{{Form.off_peak_hour_price.$error[0]}}</span>
+                            </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.cancellation_before_24hrs.$dirty && Form.cancellation_before_24hrs.$invalid,
 									'has-success':Form.cancellation_before_24hrs.$valid}">
@@ -97,11 +120,9 @@
                                 <input type="number" min="0" class="form-control"
                                        name="cancellation_before_24hrs" ng-model="facility.cancellation_before_24hrs"
                                        required>
-									<span class="error text-small block"
-                                          ng-if="Form.cancellation_before_24hrs.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span>
+                                <span class="error text-small block"
+                                      ng-if="Form.cancellation_before_24hrs.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group"
                                  ng-class="{'has-error':Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid, 'has-success':Form.cancellation_after_24hrs.$valid}">
                                 <label class="control-label"> Cancelation after 24 hours (%)<span
@@ -110,18 +131,16 @@
                                 <input type="number" class="form-control" min="0" name="cancellation_after_24hrs"
                                        ng-model="facility.cancellation_after_24hrs"
                                        required>
-											  <span class="error text-small block"
-                                                    ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span>
+                                <span class="error text-small block"
+                                      ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group"
                                  ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
                                 <label class="control-label"> Description
                                 </label>
-								<textarea name="description" class="form-control"
+                                <textarea name="description" class="form-control"
                                           data-ng-model="facility.description"></textarea>
-								<span class="error text-small block"
+                                <span class="error text-small block"
                                       ng-if="Form.description.$dirty && Form.description.$invalid">{{Form.description.$error[0]}}</span>
                             </div>
 

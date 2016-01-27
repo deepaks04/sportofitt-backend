@@ -104,6 +104,7 @@
                             <td style="width:15%">No of Off peak Time</td>
                             <td style="width:20%">Actual Price</td>
                             <td style="width:25%">Discount</td>
+                    <td style="width:25%">Actions</td>
                         </tr>
                         <tr ng-repeat="session in sessions">
                             <!--<td>
@@ -112,21 +113,21 @@
                             </span>
                             </td>-->
                             <td>
-        <span e-name="peak" e-form="rowform" editable-number="session.peak" e-min="0" e-max="10">
+        <span e-name="peak" e-form="rowform" editable-number="session.peak" e-min="0" e-max="10" e-ng-click="calculateSessionPricing(rowform.$data,session)" e-ng-change="calculateSessionPricing(rowform.$data,session)">
         {{ session.peak  }}
         </span>
                                 <span class="has-error" ng-if="rowform.$dirty && errors.peak"><label
                                         class="help-block">{{errors.peak}}</label></span>
                             </td>
                             <td>
-        <span e-name="off_peak" e-form="rowform" editable-number="session.off_peak" e-min="0" e-max="10">
+        <span e-name="off_peak" e-form="rowform" editable-number="session.off_peak" e-min="0" e-max="10" e-ng-click="calculateSessionPricing(rowform.$data,session)" e-ng-change="calculateSessionPricing(rowform.$data,session)">
         {{ session.off_peak  }}
         </span>
                                 <span class="has-error" ng-if="rowform.$dirty && errors.off_peak"><label
                                         class="help-block">{{errors.off_peak}}</label></span>
                             </td>
                             <td>
-        <span e-name="price" e-form="rowform" editable-text="session.price">
+        <span e-name="price" e-form="rowform" editable-text="session.price" e-readonly>
         {{ session.price  }}
         </span>
                                 <span class="has-error" ng-if="rowform.$dirty && errors.price"><label
@@ -140,12 +141,13 @@
                                 <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
                                         class="help-block">{{errors.discount}}</label></span>
                             </td>
-                            <td style="white-space: nowrap">
+                            <td>
                                 <!-- form -->
                                 <form editable-form name="rowform" onbeforesave="saveSession($data, session.id,rowform)"
-                                      ng-show="rowform.$visible || rowform.$waiting" class="form-buttons form-inline"
+                                      ng-show="rowform.$visible || rowform.$waiting" class="form-buttons form-inline "
                                       shown="showSessionEdit" novalidate>
-                                    <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                     <div class="buttons pull-right">                        
+            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
                                         save
                                     </button>
                                     <button type="button" ng-disabled="rowform.$waiting" ng-if="!session.id"
@@ -158,8 +160,9 @@
                                             class="btn btn-default">
                                         cancel
                                     </button>
+                            </div>
                                 </form>
-                                <div class="buttons" ng-show="!rowform.$visible">
+                                <div class="buttons pull-right" ng-show="!rowform.$visible">
                                     <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
                                     <button class="btn btn-danger" ng-click="removeSession($index,session.id)">del
                                     </button>
@@ -236,13 +239,13 @@
                                         save
                                     </button>
                                     <button type="button" ng-disabled="rowform.$waiting" ng-if="!package.id"
-                                            ng-click="removeSession($index,session.id)"
+                                            ng-click="removePackage($index,package.id)"
                                             class="btn btn-default btn-xs">
                                         cancel
                                     </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id"
+                                  <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id"
                                             ng-click="rowform.$hide()"
-                                            class="btn btn-default btn-xs">
+                                            class="btn btn-default">
                                         cancel
                                     </button>
                                 </form>
@@ -271,8 +274,8 @@
                                                     class="form-control" name="name" ng-model="facility.name"
                                                     required/> <span class="error text-small block"
                                                                      ng-if="Form.name.$dirty && Form.name.$invalid">
-									{{Form.name.$error[0]}}
-									</span>
+                                                                        {{Form.name.$error[0]}}
+                                                                        </span>
                                 </div>
                                 <div class="form-group"
                                      ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
@@ -285,7 +288,7 @@
                                     <option value="">Select Category</option>
                                 </select> <span class="error text-small block"
                                                 ng-if="Form.root_category_id.$dirty && Form.root_category_id.$invalid">
-										{{Form.root_category_id.$error[0]}}</span>
+                                                                                {{Form.root_category_id.$error[0]}}</span>
                                 </div>
                                 <div class="form-group"
                                      ng-class="{'has-error':Form.sub_category_id.$dirty && Form.sub_category_id.$invalid, 'has-success':Form.sub_category_id.$valid}">
@@ -310,7 +313,7 @@
                                             required>
                                         <option value="">Select Duartion</option>
                                     </select>
-								<span class="error text-small block"
+                                                                <span class="error text-small block"
                                       ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span>
                                 </div>
                             </div>
@@ -322,14 +325,14 @@
                                     </label> <input type="number" min="1" class="form-control" name="slots"
                                                     ng-model="facility.slots"
                                                     required>
-										<span class="error text-small block"
+                                                                                <span class="error text-small block"
                                               ng-if="Form.slots.$dirty && Form.slots.$invalid">{{Form.slots.$error[0]}}</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group"
                                      ng-class="{'has-error':Form.cancellation_before_24hrs.$dirty && Form.cancellation_before_24hrs.$invalid,
-									'has-success':Form.cancellation_before_24hrs.$valid}">
+                                                                        'has-success':Form.cancellation_before_24hrs.$valid}">
                                     <label class="control-label"> Cancellation before 24 hours (%)<span
                                             class="symbol required"></span>
                                     </label>
@@ -337,7 +340,7 @@
                                            name="cancellation_before_24hrs"
                                            ng-model="facility.cancellation_before_24hrs"
                                            required>
-									<span class="error text-small block"
+                                                                        <span class="error text-small block"
                                           ng-if="Form.slots.$dirty && Form.cancellation_before_24hrs.$invalid">{{Form.cancellation_before_24hrs.$error[0]}}</span>
                                 </div>
                             </div>
@@ -350,7 +353,7 @@
                                     <input type="number" class="form-control" min="0" name="cancellation_after_24hrs"
                                            ng-model="facility.cancellation_after_24hrs"
                                            required>
-											  <span class="error text-small block"
+                                                                                          <span class="error text-small block"
                                                     ng-if="Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid">{{Form.cancellation_after_24hrs.$error[0]}}</span>
                                 </div>
                             </div>
@@ -359,9 +362,9 @@
                                      ng-class="{'has-error':Form.description.$dirty && Form.description.$invalid, 'has-success':Form.description.$valid}">
                                     <label class="control-label"> Description
                                     </label>
-								<textarea name="description" class="form-control"
+                                                                <textarea name="description" class="form-control"
                                           data-ng-model="facility.description"></textarea>
-								<span class="error text-small block"
+                                                                <span class="error text-small block"
                                       ng-if="Form.description.$dirty && Form.description.$invalid">{{Form.description.$error[0]}}</span>
                                 </div>
 
@@ -398,16 +401,16 @@
                 <table ng-table="tableParams" class="table table-striped">
                     <tr ng-repeat="facility in facilityData" ng-if="facility.is_active">
                         <td data-title="'Name'" sortable="'name'"><a
-                                data-ng-click="open('lg', facility,'edit')">{{facility.name}}</a></td>
+                                data-ng-click="open('lg', facility, 'edit')">{{facility.name}}</a></td>
                         <td class="center" data-title="'Category'">{{facility.category.sub.name}}</td>
                         <td data-title="'Slots'" sortable="'slots'">{{facility.slots}}</td>
                         <td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
                         <td class="center">
                             <div class="visible-md visible-lg hidden-sm hidden-xs">
-                                <a data-ng-click="open('lg', facility,'opening_hours',true)"
+                                <a data-ng-click="open('lg', facility, 'opening_hours', true)"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
                                    tooltip="Add"><i class="fa fa-plus"></i></a>
-                                <a data-ng-click="open('lg', facility,'edit')"
+                                <a data-ng-click="open('lg', facility, 'edit')"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
                                    tooltip="Edit Profile"><i class="fa fa-pencil"></i></a>
                                 <!--<a ng-if="facility.is_active" data-ng-click="blockUnblockFacility(facility)"-->
@@ -417,9 +420,9 @@
                                    class="btn btn-transparent  btn-xs" tooltip-placement="top"
                                    tooltip="Delete facility"><i class=" danger fa fa-remove"></i></a>
                                 <a
-                                        ui-sref="vendor.facility.calender({facilityId : facility.id})"
-                                        class="btn btn-transparent btn-xs tooltips"
-                                        tooltip-placement="top" tooltip="Calender"><i class="fa fa-calendar"></i>
+                                    ui-sref="vendor.facility.calender({facilityId : facility.id})"
+                                    class="btn btn-transparent btn-xs tooltips"
+                                    tooltip-placement="top" tooltip="Calender"><i class="fa fa-calendar"></i>
                                 </a>
                             </div>
                             <div class="visible-xs visible-sm hidden-md hidden-lg">
@@ -430,13 +433,13 @@
                                         <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right dropdown-light" role="menu">
-                                        <li><a data-ng-click="open('lg', facility,'opening_hours',true)"> Add </a>
+                                        <li><a data-ng-click="open('lg', facility, 'opening_hours', true)"> Add </a>
                                         </li>
-                                        <li><a data-ng-click="open('lg', facility,'edit')"> Edit </a></li>
+                                        <li><a data-ng-click="open('lg', facility, 'edit')"> Edit </a></li>
                                         <li><a data-ng-click="blockUnblockFacility(facility)"> Delete </a></li>
                                         <li><a
                                                 ui-sref="vendor.facility.booking({facilityId : facility.id})">
-                                            Book </a></li>
+                                                Book </a></li>
                                     </ul>
                                 </div>
                             </div>
