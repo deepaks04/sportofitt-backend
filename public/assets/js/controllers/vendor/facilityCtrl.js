@@ -119,16 +119,16 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
         };
 
-        $scope.open = function (size, facility, tabActive, isAdd) {
+        $scope.open = function (size, selectedFacility, tabActive, isAdd) {
 
-            var isAdd = isAdd || false;
+            var isAdd = isAdd;
             var modalInstance = $modal.open({
                 templateUrl: 'sessionPackageModal.html',
                 controller: 'SessionModalInstanceCtrl',
                 size: size,
                 resolve: {
                     selectedFacility: function () {
-                        return facility;
+                        return selectedFacility;
                     },
                     tab: function () {
                         return tabActive;
@@ -150,7 +150,16 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert",
     function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert) {
 
-        $scope.facility = selectedFacility;
+//        $scope.facility = selectedFacility;
+
+        console.log(selectedFacility);
+        facilityService.getFacilityById(selectedFacility.id)
+                .then(getFacilitySuccess);
+
+        function getFacilitySuccess(facilityData) {
+            $scope.facility = facilityData.facility;
+        }
+        
         $scope.tab = tab;
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit'];
         facilityService.getDuration()
@@ -530,22 +539,22 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 price: "",
                 discount: 0
             };
-            $scope.calculateSessionPricing($scope.sessionInserted,$scope.sessionInserted);
+            $scope.calculateSessionPricing($scope.sessionInserted, $scope.sessionInserted);
             $scope.sessions.push($scope.sessionInserted);
             $scope.showSessionEdit = true;
         };
 
-        $scope.calculateSessionPricing = function (rowData,session) {
-   
-   console.log($scope.facility,rowData,session);
- 
+        $scope.calculateSessionPricing = function (rowData, session) {
+
             var peakPricing = $scope.facility.peak_hour_price * rowData.peak;
             var offPeakPricing = $scope.facility.off_peak_hour_price * rowData.off_peak;
-            
+
             session['peak'] = rowData.peak;
             session['off_peak'] = rowData.off_peak;
             session['price'] = peakPricing + offPeakPricing;
-            
+
+
+            console.log(session);
         };
 
         // add Sessions
@@ -565,32 +574,24 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         // edit facility
 
-        $scope.form = {
-            submit: function (form) {
-                var firstError = null;
+        $scope.update = function (form) {
+            var firstError = null;
 
-                var addFacility = facilityService.updateFacility($scope.facility);
-                addFacility.then(function (response) {
-                    SweetAlert.swal("Success", response.data.message, "success");
+            var addFacility = facilityService.updateFacility($scope.facility);
+            addFacility.then(function (response) {
+                SweetAlert.swal("Success", response.data.message, "success");
+            });
+            addFacility.catch(function (data, status) {
+                angular.forEach(data.data, function (errors, field) {
+                    $scope.Form[field].$dirty = true;
+                    $scope.Form[field].$error = errors;
+                    //console.log($scope.Form[field]);
                 });
-                addFacility.catch(function (data, status) {
-                    angular.forEach(data.data, function (errors, field) {
-                        $scope.Form[field].$dirty = true;
-                        $scope.Form[field].$error = errors;
-                        //console.log($scope.Form[field]);
-                    });
 
-                    SweetAlert.swal(data.data.message, data.data.statusText, "error");
-                    return false;
-                })
+                SweetAlert.swal(data.data.message, data.data.statusText, "error");
+                return false;
+            })
 
-            },
-            reset: function (form) {
-
-                $scope.facility = angular.copy($scope.master);
-                form.$setPristine(true);
-
-            }
         };
 
         function getRootCategorySuccess(categoryData) {
