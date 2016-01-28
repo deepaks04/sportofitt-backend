@@ -25,16 +25,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // APPLICATION ROUTES
         // -----------------------------------
         // For any unmatched url, redirect to /app/dashboard
-        $urlRouterProvider.otherwise("/select");
+        $urlRouterProvider.otherwise("/");
         //
-        // Login routes
-
         $stateProvider
 
                 //vendor routes
 
                 .state('vendor', {
-                    url: "/select/:name",
+                    url: "/:name",
                     templateUrl: "assets/views/vendor/app.html",
                     resolve: loadSequence('modernizr', 'logger', 'moment', 'angularMoment', 'uiSwitch', 'perfect-scrollbar-plugin', 'toaster', 'ngAside', 'sweet-alert', 'oitozero.ngSweetAlert'),
                     abstract: true
@@ -84,7 +82,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             },
             resolve: loadSequence('moment', 'mwl.calendar')
         }).state('login', {
-            url: '/select',
+            url: '/',
             template: '<div ui-view class="fade-in-right-big smooth"></div>',
             resolve: loadSequence('sweet-alert', 'oitozero.ngSweetAlert', 'loginService', 'loginCtrl'),
             abstract: true

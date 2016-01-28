@@ -69,7 +69,7 @@
                                 <select class="form-control" name="duration" ng-model="facility.duration"
                                         ng-options="duration.actual_time as duration.time for duration in durations"
                                         required>
-                                    <option value="">Select Duartion</option>
+                                    <option value="">Select Duration</option>
                                 </select>
                                 <span class="error text-small block"
                                       ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span>
@@ -90,7 +90,7 @@
                             <div class="form-group"
                                  ng-class="{'has-error':Form.peak_hour_price.$dirty && Form.peak_hour_price.$invalid,
 									'has-success':Form.peak_hour_price.$valid}">
-                                <label class="control-label"> Peak Pricing<span
+                                <label class="control-label"> Session Pricing - Peak<span
                                         class="symbol required"></span>
                                 </label>
                                 <input type="number" min="0" class="form-control"
@@ -102,7 +102,7 @@
                             <div class="form-group"
                                  ng-class="{'has-error':Form.off_peak_hour_price.$dirty && Form.off_peak_hour_price.$invalid,
 									'has-success':Form.off_peak_hour_price.$valid}">
-                                <label class="control-label"> Off Peak Pricing<span
+                                <label class="control-label"> Session Pricing  - Off-Peak<span
                                         class="symbol required"></span>
                                 </label>
                                 <input type="number" min="0" class="form-control"

@@ -41,7 +41,7 @@ app.controller('signCtrl', [
                     var auth = Login.auth($scope.user);
                     auth.success(function (response) {
                         console.log(response);
-                        $state.go(response.user.role + '.dashboard', {'name': response.user.fname});
+                        $state.go(response.user.role + '.dashboard', {'name': response.user.extra.business_name});
                     });
                     auth.error(function (data, status) {
                         console.log(data);
@@ -104,7 +104,7 @@ app.controller('forgetPasswordCtrl', [
                 console.log(form);
                 passwordResponse.then(function (response) {
                     SweetAlert.swal("Password reset done!", response.data.message,
-                        "success");
+                            "success");
                     $state.go("login.signin");
                     console.log(response);
                 });
@@ -112,12 +112,12 @@ app.controller('forgetPasswordCtrl', [
 
                     $scope.disableSubmit = false;
                     $scope.errors = {};
-                    if(response.status===422) {
+                    if (response.status === 422) {
                         angular.forEach(response.data, function (errors, field) {
 
                             $scope.errors[field] = errors.join(', ');
                         });
-                    }else{
+                    } else {
                         $scope.errors['email'] = response.data.message;
                     }
                 });
@@ -137,10 +137,10 @@ app.controller('resetPasswordCtrl', [
         //    'token' : $state.params.token
         //};
 
-        Login.getResetPassword($state.params.token).then(function(response){
+        Login.getResetPassword($state.params.token).then(function (response) {
             $scope.myModel = response.data.data;
             //console.log($scope.myModel.data);
-        }).catch(function(response){
+        }).catch(function (response) {
             $scope.myModel = {};
         });
         $scope.errors = {};
@@ -153,7 +153,7 @@ app.controller('resetPasswordCtrl', [
                 //console.log(form);
                 passwordResponse.then(function (response) {
                     SweetAlert.swal("Password change done!", response.data.message,
-                        "success");
+                            "success");
                     $state.go("login.signin");
                     console.log(response.data);
                 });
@@ -161,12 +161,12 @@ app.controller('resetPasswordCtrl', [
                     //console.log(data);
                     $scope.disableSubmit = false;
                     $scope.errors = {};
-                    if(response.status===422) {
+                    if (response.status === 422) {
                         angular.forEach(response.data, function (errors, field) {
 
                             $scope.errors[field] = errors.join(', ');
                         });
-                    }else{
+                    } else {
                         $scope.errors['email'] = response.data.message;
                     }
                 });

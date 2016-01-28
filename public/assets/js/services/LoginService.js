@@ -23,8 +23,7 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
 
                     SessionService.set('auth', $rootScope.user);
                     $cookieStore.put('auth', $rootScope.user);
-
-                    $state.go(response.user.role + '.dashboard', {'name': response.user.fname});
+                    $state.go(response.user.role + '.dashboard', {'name': response.user.extra.business_name});
 
                 }
             );
@@ -59,7 +58,7 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
             });
             return request;
         }
-    }
+    };
 });
 
 
