@@ -571,9 +571,16 @@ class SessionPackageController extends Controller
             $data = $this->unsetKeys(array('daySpan', 'dayOffset'), $data);
             $user = Auth::user();
             $sessionBooking = "";
-            $start = new Carbon($data['startsAt']);
-//           print_r($data['startsAt']);
-//dd(strtotime($data['startsAt']));
+            $explodedDate = explode(" ",$data['startsAt']);
+            $explodedDate[2] = strtoupper($explodedDate[2]);
+            $data['startsAt'] = implode(" ",$explodedDate);
+            $convertedDate = date('Y-m-d',strtotime($explodedDate[0]));
+            $convertedTime = date('H:i:s',strtotime($explodedDate[1]));
+            $convertedDateTime = $convertedDate." ".$convertedTime." ".$explodedDate[2];
+            //$date = date_parse_from_format('m/d/Y H:i:s',$data['startsAt']);
+            //$time = mktime($date['hour'], $date['minute'], $date['second'], $date['month'], $date['day'], $date['year']);
+            $formattedDate = date('Y-m-d H:i:s',strtotime($convertedDateTime));
+            $start = new Carbon($formattedDate);
             $data['startsAt'] = $start->toDateTimeString();
             $startTime = $start->toTimeString();
             $day = strtolower($start->format('l'));
@@ -586,9 +593,10 @@ class SessionPackageController extends Controller
             ))->first();
 
             if ($sessionPackageMaster != null) {
+                $end = new Carbon($formattedDate);
                 $sessionDuration = $sessionPackageMaster->duration;
-                $data['endsAt'] = $start->addMinute($sessionDuration);
-                $endTime = $start->addMinute($sessionDuration)->toTimeString();
+                $data['endsAt'] = $end->addMinute($sessionDuration);
+                $endTime = $end->toTimeString();
             }
             $openingTimeExists = OpeningHour::where('start', '<=', $startTime)
                 ->where('end', '>=', $startTime)
