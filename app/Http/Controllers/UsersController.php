@@ -64,8 +64,12 @@ class UsersController extends Controller
             $vendorData['user_id'] = $userId;
             $vendorData['updated_at'] = Carbon::now();
             $vendorData['created_at'] = Carbon::now();
+            $vendorData['fname'] = trim($request->fname);
+            $vendorData['lname'] = trim($request->lname);
+            $vendorData['email'] = $userData['email'];
             // Calling a method that is from the VendorsController
             $result = (new VendorsController())->store($vendorData);
+
             if($result['status']){
                 Mail::send('emails.welcome', $userData, function($message) use ($userData){
                     $message->to($userData['email'])->subject('Welcome');

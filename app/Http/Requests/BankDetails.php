@@ -29,7 +29,7 @@ class BankDetails extends Request
             'account_type' => 'required|min:5|max:255',
             'branch_name' => 'required|alpha_space_num|min:5|max:50',
             'beneficiary' => 'required|alpha_spaces|min:5|max:50',
-            'account_number' => 'required|numeric|min:20'
+            'account_number' => 'required|numeric|digits_between:9,18'
         ];
     }
     public function messages()
