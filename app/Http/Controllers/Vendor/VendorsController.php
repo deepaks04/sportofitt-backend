@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\AvailableFacility;
+use App\Billing;
 use App\BillingInfo;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
@@ -57,7 +58,19 @@ class VendorsController extends Controller
         $result = array();
         $result['status'] = true;
         try{
-            DB::table('vendors')->insert($vendorData);
+            $billingInfo = $vendorData;
+            unset($vendorData['fname']);
+            unset($vendorData['lname']);
+            unset($vendorData['email']);
+            $vendorId = DB::table('vendors')->insertGetId($vendorData);
+            $billingData['contact_person_name'] = trim($billingInfo['fname'] ." " .$billingInfo['lname']);
+            $billingData['contact_person_email'] = trim($billingInfo['email']);
+            $billingData['vendor_id'] = $vendorId;
+            $billingData['updated_at'] = Carbon::now();
+            $billingData['created_at'] = Carbon::now();
+
+            Billing::insert($billingData);
+
         }catch (\Exception $e){
             $result['status'] = false;
             $result['message'] = $e->getMessage();
