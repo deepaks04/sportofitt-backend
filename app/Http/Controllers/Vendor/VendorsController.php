@@ -115,8 +115,10 @@ class VendorsController extends Controller
             $user = Input::only('fname', 'lname', 'profile_picture');
             $vendor = Input::only('business_name','address','longitude','latitude','area_id','description','contact','postcode','commission');
             $systemUser = User::find(Auth::user()->id);
-            if ($request->file('profile_picture')!=null) {
+            if ($request->file('profile_picture')!=null && isset($request->profile_picture)) {
                 $user['profile_picture'] = $this->imageUpload($request,$systemUser->id,'profile_image');
+            }else{
+                unset($user['profile_picture']);
             }
             $systemUser->update($user);
             $systemUser->vendor()->update($vendor);
