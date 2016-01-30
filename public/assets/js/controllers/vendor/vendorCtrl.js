@@ -101,16 +101,17 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
 
         $scope.form = {
             submit: function (form) {
+
+                var firstError = null;
+                $scope.errors = {};
                 $scope.userInfo.commission = 0;
-                
+
                 if ($scope.obj.flow.files[0] !== undefined || $scope.obj.flow.files[0]) {
                     $scope.userInfo.profile_picture = $scope.obj.flow.files[0].file;
                 }
                 if($scope.old_profile && $scope.old_profile == $scope.userInfo.profile_picture){
                      delete $scope.userInfo.profile_picture;
                 };
-
-                console.log($scope.userInfo.profile_picture);
 
                 var updateProfile = userService.updateUserInfo($scope.userInfo);
                 updateProfile.then(function (response) {

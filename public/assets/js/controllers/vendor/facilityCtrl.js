@@ -15,13 +15,21 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
         $scope.master = $scope.facility = {};
         $scope.form = {
             submit: function (form) {
-                var firstError = null;
+                var field = null, firstError = null;
+                for (field in form) {
+                    if (field[0] != '$') {
+                        if (firstError === null && !form[field].$valid) {
+                            firstError = form[field].$name;
+                        }
+
+                        form[field].$dirty = true;
+                        form[field].$invalid = false;
+                        form[field].$valid = true;
+                    }
+                }
 
                 var addFacility = facilityService.addFacility($scope.facility);
 
-                angular.forEach($scope.facility, function (value, field) {
-                    $scope.Form[field].$dirty = false;
-                });
                 addFacility.then(function (response) {
                     SweetAlert.swal("Created!", response.data.message, "success");
                     $state.go("vendor.facility.list");
@@ -30,14 +38,16 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
                 addFacility.catch(function (data) {
                     if (data.status === 422) {
                         angular.forEach(data.data, function (errors, field) {
-                            $scope.Form[field].$dirty = true;
-                            $scope.Form[field].$error = errors;
+                            form[field].$dirty = true;
+                            form[field].$invalid = true;
+                            form[field].$valid = false;
+                            form[field].$error = errors;
                         });
                     } else {
-                        $scope.Form['name'].$dirty = true;
-                        $scope.Form['name'].$error = data.data.message;
+                        form['name'].$dirty = true;
+                       form['name'].$error = data.data.message;
                     }
-                    SweetAlert.swal(data.data.message, data.data.statusText, "error");
+                   // SweetAlert.swal(data.data.message, data.data.statusText, "error");
                     return false;
                 })
 
@@ -95,7 +105,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel plx!",
+                cancelButtonText: "No, cancel it!",
                 closeOnConfirm: true,
                 closeOnCancel: false
             }, function (isConfirm) {
@@ -430,7 +440,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel plx!",
+                    cancelButtonText: "No, cancel it!",
                     closeOnConfirm: false,
                     closeOnCancel: false
                 }, function (isConfirm) {
@@ -462,7 +472,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel plx!",
+                    cancelButtonText: "No, cancel it!",
                     closeOnConfirm: false,
                     closeOnCancel: false
                 }, function (isConfirm) {
@@ -494,7 +504,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, delete it!",
-                    cancelButtonText: "No, cancel plx!",
+                    cancelButtonText: "No, cancel it!",
                     closeOnConfirm: false,
                     closeOnCancel: false
                 }, function (isConfirm) {
@@ -574,20 +584,28 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         // edit facility
 
         $scope.update = function (form) {
-            var firstError = null;
+             var field = null, firstError = null;
+            for (field in form) {
+                if (field[0] != '$') {
+                    if (firstError === null && !form[field].$valid) {
+                        firstError = form[field].$name;
+                    }
 
+                        form[field].$dirty = true;
+                        form[field].$invalid = false;
+                    form[field].$valid = true;
+                    }
+            }
             var addFacility = facilityService.updateFacility($scope.facility);
             addFacility.then(function (response) {
                 SweetAlert.swal("Success", response.data.message, "success");
             });
             addFacility.catch(function (data, status) {
                 angular.forEach(data.data, function (errors, field) {
-                    $scope.Form[field].$dirty = true;
-                    $scope.Form[field].$error = errors;
-                    //console.log($scope.Form[field]);
+                 form[field].$invalid = true;
+                   form[field].$error = errors;
                 });
 
-                SweetAlert.swal(data.data.message, data.data.statusText, "error");
                 return false;
             })
 
@@ -774,7 +792,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
                             confirmButtonText: "Yes, delete it!",
-                            cancelButtonText: "No, cancel plx!",
+                            cancelButtonText: "No, cancel it!",
                             closeOnConfirm: true,
                             closeOnCancel: false
                         }, function (isConfirm) {
@@ -833,7 +851,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel plx!",
+                cancelButtonText: "No, cancel it!",
                 closeOnConfirm: false,
                 closeOnCancel: false
             }, function (isConfirm) {

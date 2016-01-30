@@ -78,7 +78,7 @@
                                  ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
                                 <label class="control-label"> Slots <span
                                         class="symbol required"></span>
-                                </label> <input type="number" min="1" class="form-control" name="slots"
+                                </label> <input type="text" min="1" class="form-control" name="slots"
                                                 ng-model="facility.slots"
                                                 required>
                                 <span class="error text-small block"
@@ -93,7 +93,7 @@
                                 <label class="control-label"> Session Pricing - Peak<span
                                         class="symbol required"></span>
                                 </label>
-                                <input type="number" min="0" class="form-control"
+                                <input type="text" min="0" class="form-control"
                                        name="peak_hour_price" ng-model="facility.peak_hour_price"
                                        required>
                                 <span class="error text-small block"
@@ -105,7 +105,7 @@
                                 <label class="control-label"> Session Pricing  - Off-Peak<span
                                         class="symbol required"></span>
                                 </label>
-                                <input type="number" min="0" class="form-control"
+                                <input type="text" min="0" class="form-control"
                                        name="off_peak_hour_price" ng-model="facility.off_peak_hour_price"
                                        required>
                                 <span class="error text-small block"
@@ -117,7 +117,7 @@
                                 <label class="control-label"> Cancellation before 24 hours (%) <span
                                         class="symbol required"></span>
                                 </label>
-                                <input type="number" min="0" class="form-control"
+                                <input type="text" min="0" class="form-control"
                                        name="cancellation_before_24hrs" ng-model="facility.cancellation_before_24hrs"
                                        required>
                                 <span class="error text-small block"
@@ -128,7 +128,7 @@
                                 <label class="control-label"> Cancelation after 24 hours (%)<span
                                         class="symbol required"></span>
                                 </label>
-                                <input type="number" class="form-control" min="0" name="cancellation_after_24hrs"
+                                <input type="text" class="form-control" min="0" name="cancellation_after_24hrs"
                                        ng-model="facility.cancellation_after_24hrs"
                                        required>
                                 <span class="error text-small block"
