@@ -50,7 +50,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             $scope.map = {
                 show: true,
                 control: {},
-                version: "uknown",
+                version: "unknown",
                 heatLayerCallback: function (layer) {
                     // set the heat layers backend data
                     var mockHeatLayer = new MockHeatLayer(layer);
@@ -75,7 +75,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
                 markers2: [
                     {
                         id: 2,
-                        // icon: 'assets/images/blue_marker.png',
+                      //  icon: 'assets/images/blue_marker.png',
                         latitude: $scope.latitute,
                         longitude: $scope.longitude,
                         showWindow: false,
@@ -230,8 +230,6 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
         uploaderImages.onCompleteAll = function () {
             console.info('onCompleteAll');
         };
-
-        console.info('uploader', uploaderImages);
 
         $scope.getVendorImages = function () {
             userService.getVendorImages().then(function (images) {

@@ -14,5 +14,5 @@ angular.module("sportofit", [
 	'cfp.loadingBar',
 	'ncy-angular-breadcrumb',
 	'duScroll',
-	'pascalprecht.translate',
+	'pascalprecht.translate'
 ]);
