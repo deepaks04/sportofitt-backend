@@ -150,9 +150,8 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert",
     function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert) {
 
-//        $scope.facility = selectedFacility;
+        $scope.facility = selectedFacility;
 
-        console.log(selectedFacility);
         facilityService.getFacilityById(selectedFacility.id)
                 .then(getFacilitySuccess);
 
