@@ -571,6 +571,7 @@ class SessionPackageController extends Controller
             $data = $this->unsetKeys(array('daySpan', 'dayOffset'), $data);
             $user = Auth::user();
             $sessionBooking = "";
+            $data['startsAt'] = str_replace('/', '-', $data['startsAt']);
             $explodedDate = explode(" ",$data['startsAt']);
             $explodedDate[2] = strtoupper($explodedDate[2]);
             $data['startsAt'] = implode(" ",$explodedDate);
@@ -591,7 +592,6 @@ class SessionPackageController extends Controller
                 'available_facility_id' => $data['available_facility_id'],
                 'package_type_id' => $packageType->id
             ))->first();
-
             if ($sessionPackageMaster != null) {
                 $end = new Carbon($formattedDate);
                 $sessionDuration = $sessionPackageMaster->duration;
@@ -654,10 +654,19 @@ class SessionPackageController extends Controller
     {
         try {
             $session = $request->all();
-            $status = 200;
-            $message = "Blocked Time Successfully Deleted";
-            unset($session['_method']);
-            $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))->update(array('is_active' => 0));
+            $getBlockData = SessionBooking::where('id' ,$id)->first();
+            $blockTime = strtotime($getBlockData->startsAt);
+            $nowDate = strtotime(Carbon::now());
+            if($blockTime > $nowDate){
+                $status = 200;
+                $message = "Blocked Time Successfully Deleted";
+                unset($session['_method']);
+                $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))->update(array('is_active' => 0));
+            } else {
+                $status = 406;
+                $message = "Previous session can not be deleted.";
+            }
+
         } catch (\Exception $e) {
             $status = 500;
             $message = "something went wrong";
