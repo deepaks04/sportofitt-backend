@@ -295,7 +295,7 @@
         function blockSession(data) {
 
             var localData = angular.copy(data);
-            localData.startsAt = localData.startsAt.toLocaleString();
+            localData.startsAt = localData.startsAt.getTime();
             var fd = new FormData();
             for (var key in localData)
                 fd.append(key, localData[key]);

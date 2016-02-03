@@ -50,7 +50,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             ncyBreadcrumb: {
                 label: 'Vendor Profile Setting'
             },
-            resolve: loadSequence('flow', 'angularFileUpload', 'userService', 'vendorCtrl')
+            resolve: loadSequence('flow', 'angularFileUpload', 'userService','logger','uiMap', 'vendorCtrl')
         }).state('vendor.facility', {
             url: '/facility',
             template: '<div ui-view class="fade-in-up"></div>',

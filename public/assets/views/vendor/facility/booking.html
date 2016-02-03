@@ -40,7 +40,7 @@
                             <button type="button"
                                     class="btn btn-wide btn-primary dropdown-toggle" dropdown-toggle
                                     ng-disabled="disabled">
-                                Select facility <span class="caret"></span>
+                                {{ facility.name || 'All'}} <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li ><a ui-sref="vendor.facility.calender({facilityId : ''})">

@@ -234,7 +234,6 @@ class SessionPackageController extends Controller
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE
 ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND day=" . $childData['day'] . "
  AND session_package_id=" . $session['id'] . " AND is_active = 1"));
-//                    dd($sameTimeExists);
                     if ($sameTimeExists[0]->cnt > 0) { //Check If Same Time Already Exists
                         $status = 406;
                         $message = "Time Already Exists";
@@ -571,16 +570,7 @@ class SessionPackageController extends Controller
             $data = $this->unsetKeys(array('daySpan', 'dayOffset'), $data);
             $user = Auth::user();
             $sessionBooking = "";
-            $data['startsAt'] = str_replace('/', '-', $data['startsAt']);
-            $explodedDate = explode(" ",$data['startsAt']);
-            $explodedDate[2] = strtoupper($explodedDate[2]);
-            $data['startsAt'] = implode(" ",$explodedDate);
-            $convertedDate = date('Y-m-d',strtotime($explodedDate[0]));
-            $convertedTime = date('H:i:s',strtotime($explodedDate[1]));
-            $convertedDateTime = $convertedDate." ".$convertedTime." ".$explodedDate[2];
-            //$date = date_parse_from_format('m/d/Y H:i:s',$data['startsAt']);
-            //$time = mktime($date['hour'], $date['minute'], $date['second'], $date['month'], $date['day'], $date['year']);
-            $formattedDate = date('Y-m-d H:i:s',strtotime($convertedDateTime));
+            $formattedDate = date('Y-m-d H:i:s',($data['startsAt']) / 1000);
             $start = new Carbon($formattedDate);
             $data['startsAt'] = $start->toDateTimeString();
             $startTime = $start->toTimeString();
@@ -606,9 +596,6 @@ class SessionPackageController extends Controller
                 ->where('is_active', '=', 1)
                 ->where('session_package_id', '=', $sessionPackageMaster->id)
                 ->first();
-//            echo $startTime .'+>>'.$endTime;
-//            echo $openingTimeExists->toSql();
-//            dd($endTime);
             if ($openingTimeExists != null) { //Opening Time Available
                 $startAt = $data['startsAt'];
                 $endAt = $data['endsAt'];
@@ -616,7 +603,7 @@ class SessionPackageController extends Controller
                     ->where('is_active', '=', 1)
                     ->where('available_facility_id', '=', $data['available_facility_id'])
                     ->get();//->count();
-                $availableFacility = AvailableFacility::find($data['available_facility_id']);//dd($availableFacility->slots);
+                $availableFacility = AvailableFacility::find($data['available_facility_id']);
                 if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
                     $data['user_id'] = $user->id;
                     $data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
@@ -693,10 +680,8 @@ class SessionPackageController extends Controller
                 $startsAt = $date->toTimeString();
 
                 $sessionDuration = $date->addMinute($sessionPackageMaster->duration);
-//                 dd($sessionPackageMaster);
                 $session['endsAt'] = $sessionDuration->toDateTimeString();
                 $endsAt = $sessionDuration->toTimeString(); //date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-//           dd($endsAt);
             }
             $day = strtolower($date->format('l'));
             $dayMaster = DayMaster::where('slug', '=', $day)->first();
@@ -712,13 +697,12 @@ class SessionPackageController extends Controller
             if ($openingTimeExists != null) {
                 $startsAt = $session['startsAt'];
                 $endsAt = $session['endsAt'];
-//                 dd($startsAt);
                 $blockTimeExists = SessionBooking::select('*')
                     ->whereRaw(" ('$startsAt' between startsAt and endsAt or '$endsAt' between startsAt and endsAt )")
                     ->where('is_active', '=', 1)
                     ->where('available_facility_id', '=', $sessionBookingData['available_facility_id'])
                     ->get();
-                $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);//dd($availableFacility->slots);
+                $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);
                 if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
                     $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))
                         ->update(array('startsAt' => $startsAt, 'endsAt' => $endsAt));
