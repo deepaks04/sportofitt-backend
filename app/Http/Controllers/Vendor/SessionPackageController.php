@@ -671,50 +671,59 @@ class SessionPackageController extends Controller
     {
         try {
             $session = $request->all();
-            $session = $this->unsetKeys(array('_method', 'daySpan', 'dayOffset'), $session);
-            $date = new Carbon($session['startsAt']);
-            $sessionBookingData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))->first();
-            $sessionPackageMaster = SessionPackage::where(array('available_facility_id' => $sessionBookingData['available_facility_id']))->first();
-            if ($sessionPackageMaster != null) {
-                $session['startsAt'] = $date->toDateTimeString();
-                $startsAt = $date->toTimeString();
+            $getBlockData = SessionBooking::where('id' ,$id)->first();
+            $blockTime = strtotime($getBlockData->startsAt);
+            $nowDate = strtotime(Carbon::now());
+            if($blockTime > $nowDate){
+                $session = $this->unsetKeys(array('_method', 'daySpan', 'dayOffset'), $session);
+                $session['startsAt'] = date('Y-m-d H:i:s',($session['startsAt']) / 1000);
+                $date = new Carbon($session['startsAt']);
+                $sessionBookingData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))->first();
+                $sessionPackageMaster = SessionPackage::where(array('available_facility_id' => $sessionBookingData['available_facility_id']))->first();
+                if ($sessionPackageMaster != null) {
+                    $session['startsAt'] = $date->toDateTimeString();
+                    $startsAt = $date->toTimeString();
 
-                $sessionDuration = $date->addMinute($sessionPackageMaster->duration);
-                $session['endsAt'] = $sessionDuration->toDateTimeString();
-                $endsAt = $sessionDuration->toTimeString(); //date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
-            }
-            $day = strtolower($date->format('l'));
-            $dayMaster = DayMaster::where('slug', '=', $day)->first();
-            $session['day'] = $dayMaster->id;
-            $openingTimeExists = OpeningHour::where('start', '<=', $startsAt)
-                ->where('end', '>=', $startsAt)
-                ->where('start', '<=', $endsAt)
-                ->where('end', '>=', $endsAt)
-                ->where('day', '=', $session['day'])
-                ->where('is_active', '=', 1)
-                ->where('session_package_id', '=', $sessionPackageMaster->id)
-                ->first();
-            if ($openingTimeExists != null) {
-                $startsAt = $session['startsAt'];
-                $endsAt = $session['endsAt'];
-                $blockTimeExists = SessionBooking::select('*')
-                    ->whereRaw(" ('$startsAt' between startsAt and endsAt or '$endsAt' between startsAt and endsAt )")
+                    $sessionDuration = $date->addMinute($sessionPackageMaster->duration);
+                    $session['endsAt'] = $sessionDuration->toDateTimeString();
+                    $endsAt = $sessionDuration->toTimeString(); //date("Y-m-d H:i:s", strtotime($sessionDuration, $time));
+                }
+                $day = strtolower($date->format('l'));
+                $dayMaster = DayMaster::where('slug', '=', $day)->first();
+                $session['day'] = $dayMaster->id;
+                $openingTimeExists = OpeningHour::where('start', '<=', $startsAt)
+                    ->where('end', '>=', $startsAt)
+                    ->where('start', '<=', $endsAt)
+                    ->where('end', '>=', $endsAt)
+                    ->where('day', '=', $session['day'])
                     ->where('is_active', '=', 1)
-                    ->where('available_facility_id', '=', $sessionBookingData['available_facility_id'])
-                    ->get();
-                $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);
-                if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
-                    $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))
-                        ->update(array('startsAt' => $startsAt, 'endsAt' => $endsAt));
-                    $status = 200;
-                    $message = " Blocked Entry updated Successfully";
+                    ->where('session_package_id', '=', $sessionPackageMaster->id)
+                    ->first();
+                if ($openingTimeExists != null) {
+                    $startsAt = $session['startsAt'];
+                    $endsAt = $session['endsAt'];
+                    $blockTimeExists = SessionBooking::select('*')
+                        ->whereRaw(" ('$startsAt' between startsAt and endsAt or '$endsAt' between startsAt and endsAt )")
+                        ->where('is_active', '=', 1)
+                        ->where('available_facility_id', '=', $sessionBookingData['available_facility_id'])
+                        ->get();
+                    $availableFacility = AvailableFacility::find($sessionBookingData['available_facility_id']);
+                    if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
+                        $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))
+                            ->update(array('startsAt' => $startsAt, 'endsAt' => $endsAt));
+                        $status = 200;
+                        $message = " Blocked Entry updated Successfully";
+                    } else {
+                        $status = 406;
+                        $message = "Booking or blocking time already exists for selected date & time";
+                    }
                 } else {
                     $status = 406;
-                    $message = "Booking or blocking time already exists for selected date & time";
+                    $message = "Opening time isn't available for selected time & date";
                 }
             } else {
                 $status = 406;
-                $message = "Opening time isn't available for selected time & date";
+                $message = "Previous session can not be edited.";
             }
         } catch (\Exception $e) {
             $status = 500;
