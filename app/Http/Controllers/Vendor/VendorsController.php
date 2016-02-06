@@ -185,9 +185,7 @@ class VendorsController extends Controller
         $myProfile['fname'] = $user->fname;
         $myProfile['lname'] = $user->lname;
         $myProfile['email'] = $user->email;
-        if ($user->profile_picture == null) {
-            //$myProfile['profile_picture'] = $user->profile_picture;
-        } else {
+        if ($user->profile_picture != null) {
             $myProfile['profile_picture'] = $vendorOwnDirecory . $user->profile_picture;
         }
         $myProfile['username'] = $user->username;
