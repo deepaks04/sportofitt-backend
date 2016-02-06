@@ -571,55 +571,64 @@ class SessionPackageController extends Controller
             $user = Auth::user();
             $sessionBooking = "";
             $formattedDate = date('Y-m-d H:i:s',($data['startsAt']) / 1000);
-            $start = new Carbon($formattedDate);
-            $data['startsAt'] = $start->toDateTimeString();
-            $startTime = $start->toTimeString();
-            $day = strtolower($start->format('l'));
-            $dayMaster = DayMaster::where('slug', '=', $day)->first();
-            $data['day'] = $dayMaster->id;
-            $packageType = PackageType::where('slug', '=', 'session')->first();
-            $sessionPackageMaster = SessionPackage::where(array(
-                'available_facility_id' => $data['available_facility_id'],
-                'package_type_id' => $packageType->id
-            ))->first();
-            if ($sessionPackageMaster != null) {
-                $end = new Carbon($formattedDate);
-                $sessionDuration = $sessionPackageMaster->duration;
-                $data['endsAt'] = $end->addMinute($sessionDuration);
-                $endTime = $end->toTimeString();
-            }
-            $openingTimeExists = OpeningHour::where('start', '<=', $startTime)
-                ->where('end', '>=', $startTime)
-                ->where('start', '<=', $endTime)
-                ->where('end', '>=', $endTime)
-                ->where('day', '=', $data['day'])
-                ->where('is_active', '=', 1)
-                ->where('session_package_id', '=', $sessionPackageMaster->id)
-                ->first();
-            if ($openingTimeExists != null) { //Opening Time Available
-                $startAt = $data['startsAt'];
-                $endAt = $data['endsAt'];
-                $blockTimeExists = SessionBooking::select('*')->whereRaw(" ('$startAt' between startsAt and endsAt or '$endAt' between startsAt and endsAt )")
-                    ->where('is_active', '=', 1)
-                    ->where('available_facility_id', '=', $data['available_facility_id'])
-                    ->get();//->count();
-                $availableFacility = AvailableFacility::find($data['available_facility_id']);
-                if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
-                    $data['user_id'] = $user->id;
-                    $data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
-                    $data['created_at'] = Carbon::now();
-                    $data['updated_at'] = Carbon::now();
-                    $openingTimeExists = $openingTimeExists->toArray();
-                    $data['opening_hour_id'] = $openingTimeExists['id'];
-                    $sessionBooking = SessionBooking::create($data);
-                    $message = "Blocked Successfully";
-                } else { //Blocked Time Already Exists for selected time & Date
-                    $status = 406;
-                    $message = "Facility is already booked for date & time you have selected";
+
+
+            $currentBlockTime = strtotime($formattedDate);
+            $nowDate = strtotime(Carbon::now());
+            if($currentBlockTime > $nowDate){
+                $start = new Carbon($formattedDate);
+                $data['startsAt'] = $start->toDateTimeString();
+                $startTime = $start->toTimeString();
+                $day = strtolower($start->format('l'));
+                $dayMaster = DayMaster::where('slug', '=', $day)->first();
+                $data['day'] = $dayMaster->id;
+                $packageType = PackageType::where('slug', '=', 'session')->first();
+                $sessionPackageMaster = SessionPackage::where(array(
+                    'available_facility_id' => $data['available_facility_id'],
+                    'package_type_id' => $packageType->id
+                ))->first();
+                if ($sessionPackageMaster != null) {
+                    $end = new Carbon($formattedDate);
+                    $sessionDuration = $sessionPackageMaster->duration;
+                    $data['endsAt'] = $end->addMinute($sessionDuration);
+                    $endTime = $end->toTimeString();
                 }
-            } else { //No Opening Time Available For Selected Time & Date
+                $openingTimeExists = OpeningHour::where('start', '<=', $startTime)
+                    ->where('end', '>=', $startTime)
+                    ->where('start', '<=', $endTime)
+                    ->where('end', '>=', $endTime)
+                    ->where('day', '=', $data['day'])
+                    ->where('is_active', '=', 1)
+                    ->where('session_package_id', '=', $sessionPackageMaster->id)
+                    ->first();
+                if ($openingTimeExists != null) { //Opening Time Available
+                    $startAt = $data['startsAt'];
+                    $endAt = $data['endsAt'];
+                    $blockTimeExists = SessionBooking::select('*')->whereRaw(" ('$startAt' between startsAt and endsAt or '$endAt' between startsAt and endsAt )")
+                        ->where('is_active', '=', 1)
+                        ->where('available_facility_id', '=', $data['available_facility_id'])
+                        ->get();//->count();
+                    $availableFacility = AvailableFacility::find($data['available_facility_id']);
+                    if ($availableFacility->slots > $blockTimeExists->count()) { //If Blocked Time Not Exists Already
+                        $data['user_id'] = $user->id;
+                        $data['booked_or_blocked'] = 2; //1 For Booked And 2 for Blocked.
+                        $data['created_at'] = Carbon::now();
+                        $data['updated_at'] = Carbon::now();
+                        $openingTimeExists = $openingTimeExists->toArray();
+                        $data['opening_hour_id'] = $openingTimeExists['id'];
+                        $sessionBooking = SessionBooking::create($data);
+                        $message = "Blocked Successfully";
+                    } else { //Blocked Time Already Exists for selected time & Date
+                        $status = 406;
+                        $message = "Facility is already booked for date & time you have selected";
+                    }
+                } else { //No Opening Time Available For Selected Time & Date
+                    $status = 406;
+                    $message = "Opening time isn't available for selected time & date";
+                }
+            }else{
                 $status = 406;
-                $message = "Opening time isn't available for selected time & date";
+                $message = "You cannot block past entries.";
             }
         } catch (\Exception $e) {
             $status = 500;
@@ -651,7 +660,7 @@ class SessionPackageController extends Controller
                 $blockData = SessionBooking::where(array('id' => $id, 'user_id' => $this->user->id))->update(array('is_active' => 0));
             } else {
                 $status = 406;
-                $message = "Previous session can not be deleted.";
+                $message = "You cannot delete the past entries";
             }
 
         } catch (\Exception $e) {
