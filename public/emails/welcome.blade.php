@@ -6,11 +6,15 @@
 <body>
 
 
-<p>Welcome to Sportofit! {{$fname}} {{$lname}},
+<p>Dear Partner,</p><br/>
 
-<p>Stay Fit,<br>
-    The team at Spotofit</p>
-<p>Thank you</p>
+<p>Thanks for registering at www.Sportofitt.com. We are glad you have chosen to be a part of our platform to make Sports | Fitness | Adventure | Therapies accessible and we hope you enjoy your partnership with us to promote your business and reach out to a larger set of Audience
+</p><br/>
+
+<p>Regards,<br>
+Sportofitt Support
+</p>
+<p>select@sportofitt.com | Call +91-9457912886 | <a href="http://www.sportofitt.com" target="_blank">www.sportofitt.com</a></p>
 
 </body>
 </html>

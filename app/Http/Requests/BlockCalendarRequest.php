@@ -102,4 +102,11 @@ class BlockCalendarRequest extends Request
             default:break;
         }
     }
+
+    public function messages()
+    {
+        return [
+            'available_facility_id.required' => 'Please select a category'
+        ];
+    }
 }

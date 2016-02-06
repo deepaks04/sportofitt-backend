@@ -186,7 +186,7 @@ class VendorsController extends Controller
         $myProfile['lname'] = $user->lname;
         $myProfile['email'] = $user->email;
         if ($user->profile_picture == null) {
-            $myProfile['profile_picture'] = $user->profile_picture;
+            //$myProfile['profile_picture'] = $user->profile_picture;
         } else {
             $myProfile['profile_picture'] = $vendorOwnDirecory . $user->profile_picture;
         }
@@ -372,7 +372,7 @@ class VendorsController extends Controller
             $status = 200;
             $message = "saved successfully";
             $data = $request->all();
-            $filename = $this->imageUpload($request,$vendor->id,'extra_images');
+            $filename = $this->imageUpload($request,$user->id,'extra_images');
             $data['image_name'] = $filename;
             $data['vendor_id'] = $vendor->id;
             $data['created_at'] = Carbon::now();
@@ -630,8 +630,6 @@ class VendorsController extends Controller
             AvailableFacility::where('id', '=', $id)->update($facility);
             if(($facility['off_peak_hour_price']!= $DbFacility->off_peak_hour_price)||($facility['peak_hour_price']!= $DbFacility->peak_hour_price)){
                 $this->UpdateSessionPrices($id);
-            }else{
-                dd('out');
             }
             $sessionUpdateData['duration'] = $request->duration;
             $sessionUpdatedData = $this->updateDuration($id, $sessionUpdateData);
