@@ -134,6 +134,8 @@ Route::group([
     Route::post('password/reset', 'Auth\PasswordController@postReset');
     /* Day master */
     Route::get('day-master', 'UsersController@dayMaster');
+    Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
+    Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
 
 

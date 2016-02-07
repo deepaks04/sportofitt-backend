@@ -80,8 +80,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $guarded = [
         'email',
         'is_active',
-        'status_id',
-        'role_id',
+       // 'status_id',
+        ///'role_id',
         'remember_token'
     ];
 

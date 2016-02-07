@@ -12,9 +12,12 @@ use App\Http\Requests\LoginUserRequest;
 use App\Role;
 use App\Status;
 use Illuminate\Support\Facades\URL;
+use App\Http\Helpers\APIResponse;
+use App\Http\Requests\AuthenticationRequest;
+use App\Http\Services\AuthService;
+use JWTAuth;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
     /*
      * |--------------------------------------------------------------------------
      * | Registration & Login Controller
@@ -25,16 +28,18 @@ class AuthController extends Controller
      * | a simple trait to add these behaviors. Why don't you explore it?
      * |
      */
-    
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+use AuthenticatesAndRegistersUsers,
+    ThrottlesLogins;
+
+    public $service;
     /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
+        $this->service  = new AuthService;
         //$this->middleware('guest', ['except' => 'logout','authenticate']);
     }
 
@@ -44,12 +49,11 @@ class AuthController extends Controller
      * @param array $data            
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
-    {
+    protected function validator(array $data) {
         return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6'
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:users',
+                    'password' => 'required|confirmed|min:6'
         ]);
     }
 
@@ -59,12 +63,11 @@ class AuthController extends Controller
      * @param array $data            
      * @return User
      */
-    protected function create(array $data)
-    {
+    protected function create(array $data) {
         return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => bcrypt($data['password'])
         ]);
     }
 
@@ -73,28 +76,27 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    protected function authenticate(LoginUserRequest $request)
-    {
+    protected function authenticate(LoginUserRequest $request) {
         $user = User::where('email', $request->email)->first();
         if ($user == NULL) {
             $status = 404;
-            $message="Sorry!! Incorrect email or password";
-            $user="";
+            $message = "Sorry!! Incorrect email or password";
+            $user = "";
         } elseif ($user->is_active == 0) {
             $status = 401;
-            $message="Please confirm your email id first";
-            $user="";
+            $message = "Please confirm your email id first";
+            $user = "";
         } elseif (Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ])) {
+                    'email' => $request->email,
+                    'password' => $request->password
+                ])) {
             // Authentication passed...
             $status = 200;
             $user = Auth::User();
             $role = Role::find($user->role_id);
             $currentStatus = Status::find($user->status_id);
             $user['role'] = $role->slug;
-            
+
             if ($user['profile_picture'] == null) {
                 $user['profile_picture'] = $user['profile_picture'];
             } else {
@@ -107,7 +109,7 @@ class AuthController extends Controller
                 $userOwnDirecory = $uploadPath . "/" . sha1($user['id']) . "/" . "profile_image/";
                 $user['profile_picture'] = $userOwnDirecory . $user['profile_picture'];
             }
-            
+
             if ($role->slug == "vendor") {
                 $vendor = $user->vendor()->first();
                 $user['is_processed'] = (int) $vendor->is_processed;
@@ -122,12 +124,11 @@ class AuthController extends Controller
                 $user['extra'] = $customer;
             }
             $user['status'] = $currentStatus->slug;
-            $message="Login Successful";
-
+            $message = "Login Successful";
         } else {
             $status = 404;
-                $message="Sorry!! Incorrect email or password";
-                $user="";
+            $message = "Sorry!! Incorrect email or password";
+            $user = "";
         }
         $response = [
             "message" => $message,
@@ -139,8 +140,7 @@ class AuthController extends Controller
     /**
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    protected function logout()
-    {
+    protected function logout() {
         Auth::logout();
         $status = 200;
         $response = [
@@ -148,4 +148,68 @@ class AuthController extends Controller
         ];
         return response($response, $status);
     }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postRegisterUser(AuthenticationRequest $request) {
+        $data = $request->all();
+        APIResponse::$message['error'] = $request->validate();
+        if (!APIResponse::$message['error']) {
+            $user = $this->service->register($data);
+            if (APIResponse::$isError == false && $user != null) {
+                $token = JWTAuth::fromUser($user);
+                APIResponse::$data = [
+                    'first_name' => $user->fname,
+                    'last_name' => $user->lname,
+                    'email' => $user->email,
+                    'access_token' => $token 
+                ];
+                APIResponse::$message['success'] = 'Registered Successfully! Please check your email for the instructions on how to confirm your account';
+                return APIResponse::sendResponse();
+            }
+        }
+        
+        APIResponse::$isError = true;
+        return APIResponse::sendResponse();
+    }
+  
+    /**
+     *  Allowing user to access the system
+     * 
+     * @param AuthenticationRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postLoginUser(AuthenticationRequest $request) {
+        $data = $request->all();
+        $rules = array('email' => 'required|email|max:255',
+                                'password' => 'required');
+        APIResponse::$message['error'] = $request->validate($data,$rules);
+         if (!APIResponse::$message['error']) {
+             $user = $this->service->login($request);
+             if ($user != null) {
+                $token = JWTAuth::fromUser($user);
+                if(0 == $user->is_active) {
+                    APIResponse::$message['error']  = 'You are account is inactive kindly contact with the administrator';
+                    APIResponse::$status = 401;
+                } else {
+                    APIResponse::$data = [
+                        'first_name' => $user->fname,
+                        'last_name' => $user->lname,
+                        'email' => $user->email,
+                        'access_token' => $token
+                    ];
+                    APIResponse::$message['success'] = 'Login successfully';
+                    return APIResponse::sendResponse();
+                }
+             }
+         }
+         
+        APIResponse::$isError = true;
+         return APIResponse::sendResponse();
+    }
+
 }
