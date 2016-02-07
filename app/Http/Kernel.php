@@ -33,6 +33,10 @@ class Kernel extends HttpKernel
         'vendor' => \App\Http\Middleware\CheckIfVendor::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'verify.vendor' => \App\Http\Middleware\isVendor::class,
-        'validsource' => \App\Http\Middleware\ValidSourceOfRequest::class
+        'validsource' => \App\Http\Middleware\ValidSourceOfRequest::class,
+        'jwt.auth' => Tymon\JWTAuth\Middleware\GetUserFromToke::class,
+        'jwt.refresh' => Tymon\JWTAuth\Middleware\RefreshToken::class,
+        'userfromtoken' => \App\Http\Middleware\UserFromToken::class,
+        
     ];
 }

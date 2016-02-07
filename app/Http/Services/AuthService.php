@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Status;
 use App\Role;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Services\BaseService;
@@ -13,7 +15,8 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Mail;
 
-class AuthService extends BaseService {
+class AuthService extends BaseService
+{
     /*
       |--------------------------------------------------------------------------
       | Registration & Login Controller
@@ -41,7 +44,8 @@ use AuthenticatesAndRegistersUsers,
      * @param array $data
      * @return mixed (null | App\User)
      */
-    public function register($data) {
+    public function register($data)
+    {
         try {
             return $this->create($data);
         } catch (Exception $exception) {
@@ -57,20 +61,27 @@ use AuthenticatesAndRegistersUsers,
      * @param  \Illuminate\Http\Request  $request
      * @return mixed (null | App\User)
      */
-    public function login(Request $request) {
-        $user = null;
+    public function login(Request $request)
+    {
         try {
             $credentials = $this->getCredentials($request);
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
-            } else {
-                APIResponse::$message['error'] = 'Username and Password does not match';
+            try {
+                // attempt to verify the credentials and create a token for the user
+                if (!$token = JWTAuth::attempt($credentials)) {
+                    APIResponse::$status = 401;
+                    APIResponse::$message['error'] = 'invalid credentials';
+                }
+            } catch (JWTException $e) {
+                APIResponse::$status = 500;
+                APIResponse::$message['error'] = 'could not create token';
             }
+
+            return compact('token');
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }
 
-        return $user;
+        return null;
     }
 
     /**
@@ -79,7 +90,8 @@ use AuthenticatesAndRegistersUsers,
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data) {
+    protected function create(array $data)
+    {
 
         try {
             $remember_token = csrf_token();
@@ -106,5 +118,4 @@ use AuthenticatesAndRegistersUsers,
             APIResponse::handleException($exception);
         }
     }
-
 }

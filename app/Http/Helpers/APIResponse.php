@@ -101,7 +101,7 @@ class APIResponse extends Response {
      * @param \App\Http\Helpers\Exception $exception
      */
     public function handleException(Exception $exception) {
-        APIResponse::$status = APIResponse::HTTP_INTERNAL_SERVER_ERROR;
+        APIResponse::$status = $exception->getStatusCode();
         APIResponse::$isError = true;
         APIResponse::$message['error'] = $exception->getMessage();
     }

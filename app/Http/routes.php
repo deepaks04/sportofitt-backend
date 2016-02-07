@@ -139,6 +139,10 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => 'validsource'], functio
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
+Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfromtoken']], function () {
+    Route::post('autheticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
+    Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
+});
 
 Route::get('temp', array(
     'uses' => 'Vendor\VendorsController@index'
