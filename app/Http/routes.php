@@ -134,10 +134,11 @@ Route::group([
     Route::post('password/reset', 'Auth\PasswordController@postReset');
     /* Day master */
     Route::get('day-master', 'UsersController@dayMaster');
+});
+Route::group(['prefix' => 'api/v1/user/','middleware' => 'validsource'], function () {
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
-
 
 Route::get('temp', array(
     'uses' => 'Vendor\VendorsController@index'

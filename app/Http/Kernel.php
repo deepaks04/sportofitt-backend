@@ -32,6 +32,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'vendor' => \App\Http\Middleware\CheckIfVendor::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        'verify.vendor' => \App\Http\Middleware\isVendor::class
+        'verify.vendor' => \App\Http\Middleware\isVendor::class,
+        'validsource' => \App\Http\Middleware\ValidSourceOfRequest::class
     ];
 }
