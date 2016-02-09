@@ -14,6 +14,9 @@ class RootCategorySeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table('root_categories')->truncate();
+        $this->command->info('Table truncated and inserting records...');
         DB::table('root_categories')->insert([
             [
                 'name' => 'SPORT',
@@ -32,7 +35,15 @@ class RootCategorySeeder extends Seeder
                 'slug' => 'therapy',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ],
+            [
+                'name' => 'OUTDOOR',
+                'slug' => 'outdoor',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]
         ]);
+         $this->command->info('Inserting of records completed...');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 }
