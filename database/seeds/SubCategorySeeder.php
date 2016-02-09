@@ -14,7 +14,7 @@ class SubCategorySeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('root_categories')->truncate();
+        DB::statement('TRUNCATE TABLE sub_categories');
         $this->command->info('Table truncated and inserting records...');
         DB::table('sub_categories')->insert([
             [
@@ -167,98 +167,98 @@ class SubCategorySeeder extends Seeder
             [
                 'name' => 'Accupressure',
                 'slug' => 'accupressure',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Aromatherapy',
                 'slug' => 'aromatherapy',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Ayurveda',
                 'slug' => 'ayurveda',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Body Treatment',
                 'slug' => 'body-treatment',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Day Spa',
                 'slug' => 'day-spa',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Deep Tissue Massage',
                 'slug' => 'deep-tissue-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Face Treatment',
                 'slug' => 'face-treatment',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Foot Massage',
                 'slug' => 'foot-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Hair Treatment',
                 'slug' => 'hair-treatment',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Reflexology',
                 'slug' => 'reflexology',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Shiatsu Massage',
                 'slug' => 'shiatsu-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Stone Massage',
                 'slug' => 'stone-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Swedish Massage',
                 'slug' => 'swedish-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
                 'name' => 'Thai Massage',
                 'slug' => 'thai-massage',
-                'root_category_id' => 2,
+                'root_category_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],

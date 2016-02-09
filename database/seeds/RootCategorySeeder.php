@@ -15,7 +15,7 @@ class RootCategorySeeder extends Seeder
     public function run()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('root_categories')->truncate();
+        DB::statement('TRUNCATE TABLE root_categories');
         $this->command->info('Table truncated and inserting records...');
         DB::table('root_categories')->insert([
             [
