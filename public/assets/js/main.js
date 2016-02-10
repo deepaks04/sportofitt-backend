@@ -44,7 +44,7 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
 //console.log(auth);
             if (!auth && ($.inArray(currentLocation[2], publicUrls) === -1)) {
                 if (currentLocation[2] !== 'reset-password' && currentLocation[3] !== undefined) {
-                    $location.path('/select').replace();
+                    $location.path('/').replace();
                 }
             } else {
                 $rootScope.user = auth;
