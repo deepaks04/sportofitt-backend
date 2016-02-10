@@ -54,7 +54,7 @@ return [
     */
 
     'from' => [
-        'address' => 'test@woxiprogrammers.com',
+        'address' => 'select@sportofitt.com',
         'name' => 'SportoFit'
     ],
 
