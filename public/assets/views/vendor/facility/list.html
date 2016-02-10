@@ -61,7 +61,7 @@
                             <td>
                                 <span editable-checkbox="time.is_peak" e-name="is_peak" e-form="editHoursForm"
                                       e-title="Peak Hour?" e-ng-true-value="1" e-ng-false-value="0">
-                                    {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
+                                    {{ (time.is_peak == "1")?"Peak Hour":"Off Peak Hour" }}
                                     </span>
                             </td>
                             <td style="white-space: nowrap">
@@ -102,10 +102,10 @@
                             <!--	<td style="width:25%">Name</td> -->
                             <td style="width:15%">No of Peak Time</td>
                             <td style="width:15%">No of Off peak Time</td>
-                            <td style="width:20%">Actual Price</td>
+                            <td style="width:15%">Actual Price</td>
                             <td style="width:25%">Discount</td>
-                            <td style="width:25%">Discounted Price</td>
-                    <td style="width:25%">Actions</td>
+                            <td style="width:10%">Discounted Price</td>
+                    <td style="width:28%">Actions</td>
                         </tr>
                         <tr ng-repeat="session in sessions">
                             <!--<td>
@@ -220,14 +220,14 @@
                             <td>
                                 <sapn editable-checkbox="package.is_peak" e-name="is_peak" e-form="rowform"
                                       e-title="Peak Hour?" e-ng-true-value="1" e-ng-false-value="0">
-                                    {{ (time.is_peak)?"Peak Hour":"Off Peak Hour" }}
+                                    {{ (package.is_peak)?"Peak Hour":"Off Peak Hour" }}
                                     </span>
                                      <span class="has-error" ng-if="rowform.$dirty && errors.is_peak"><label
                                              class="help-block">{{errors.is_peak}}</label></span>
                             </td>
                             <td>
         <span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5"
-              e-style="width:90%">
+              e-style="width:88%">
         {{ package.discount }}
         </span>
                                  <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
@@ -254,7 +254,7 @@
                                     </button>
                                   <button type="button" ng-disabled="rowform.$waiting" ng-if="package.id"
                                             ng-click="rowform.$hide()"
-                                            class="btn btn-default">
+                                            class="btn btn-default btn-xs">
                                         cancel
                                     </button>
                                 </form>
@@ -376,7 +376,7 @@
                             </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.cancellation_after_24hrs.$dirty && Form.cancellation_after_24hrs.$invalid, 'has-success':Form.cancellation_after_24hrs.$valid}">
-                                <label class="control-label"> Cancelation after 24 hours (%)<span
+                                <label class="control-label"> Cancellation within 24 hours (%)<span
                                         class="symbol required"></span>
                                 </label>
                                 <input type="text" class="form-control" min="0" name="cancellation_after_24hrs"
