@@ -1,6 +1,6 @@
 var app = angular.module('sportofitApp', ['sportofit']);
-app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
-    function ($rootScope, $state, $stateParams, $cookieStore, $location) {
+app.run(['$rootScope', '$state', '$stateParams',
+    function ($rootScope, $state, $stateParams) {
 
         // Attach Fastclick for eliminating the 300ms delay between a physical tap and the firing of a click event on mobile browsers
         FastClick.attach(document.body);
@@ -34,30 +34,26 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
             }
         };
 
-
-        $rootScope.$on('$locationChangeStart', function (event, current, previous) {
-            var auth = $cookieStore.get('auth');
-            //event.preventDefault();
-            //console.log($state.includes('login'));
-            var currentLocation = $location.path().split('/') || '';
-            var publicUrls = ['', 'forgot', 'registration', 'signin', 'reset-password', 'logout'];
-//console.log(auth);
-            if (!auth && ($.inArray(currentLocation[2], publicUrls) === -1)) {
-                if (currentLocation[2] !== 'reset-password' && currentLocation[3] !== undefined) {
-                    $location.path('/').replace();
+        if (!$rootScope.user) {
+            event.preventDefault();
+            $state.go('login.signin');
+        }
+        $rootScope.$on('$stateChangeStart',
+            function (event, toState, toParams, fromState, fromParams) {
+             console.log(toState.data);
+              if (toState.data && toState.data.noLogin) {
+                    return;
                 }
-            } else {
-                $rootScope.user = auth;
+                if (!$rootScope.user) {
+                    event.preventDefault();
+                    $state.go('login.signin');
+                }
             }
-
+        );
+        $rootScope.$on('auth.request.error', function () {
+            $rootScope.isLoggedIn = false;
+            $state.go('login.signin');
         });
-
-        $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
-
-            $location.path('/select').replace();
-
-        });
-
     }]);
 // translate config
 app.config(['$translateProvider',

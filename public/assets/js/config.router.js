@@ -3,8 +3,8 @@
 /**
  * Config for the router
  */
-app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$ocLazyLoadProvider', 'JS_REQUIRES',
-    function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $ocLazyLoadProvider, jsRequires) {
+app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$ocLazyLoadProvider', 'JS_REQUIRES','$httpProvider',
+    function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $ocLazyLoadProvider, jsRequires,$httpProvider) {
 
         app.controller = $controllerProvider.register;
         app.directive = $compileProvider.directive;
@@ -17,7 +17,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // LAZY MODULES
 
         $ocLazyLoadProvider.config({
-            debug: false,
+            debug: true,
             events: true,
             modules: jsRequires.modules
         });
@@ -25,12 +25,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // APPLICATION ROUTES
         // -----------------------------------
         // For any unmatched url, redirect to /app/dashboard
-        $urlRouterProvider.otherwise("/");
+        //$urlRouterProvider.otherwise("/");
         //
         $stateProvider
 
                 //vendor routes
-
                 .state('vendor', {
                     url: "/:name",
                     templateUrl: "assets/views/vendor/app.html",
@@ -85,30 +84,49 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             url: '/',
             template: '<div ui-view class="fade-in-right-big smooth"></div>',
             resolve: loadSequence('sweet-alert', 'oitozero.ngSweetAlert', 'loginService', 'loginCtrl'),
-            abstract: true
+            abstract: true,
+            data: {
+                noLogin: !0
+            }
         }).state('login.signin', {
             url: '',
             templateUrl: "assets/views/login_login.html",
-            title: 'Sign-In'
+            title: 'Sign-In',
+            data: {
+                noLogin: !0
+            }
         }).state('login.forgot', {
-            url: '/forgot',
-            templateUrl: "assets/views/login_forgot.html"
+            url: 'forgot',
+            templateUrl: "assets/views/login_forgot.html",
+            data: {
+                noLogin: !0
+            }
         }).state('login.registration', {
-            url: '/registration',
-            templateUrl: "assets/views/login_registration.html"
+            url: 'registration',
+            templateUrl: "assets/views/login_registration.html",
+            data: {
+                noLogin: !0
+            }
         }).state('login.resetpassword', {
-            url: '/reset-password/:token',
-            templateUrl: "assets/views/login_reset_password.html"
+            url: 'reset-password/:token',
+            templateUrl: "assets/views/login_reset_password.html",
+            data: {
+                noLogin: !0
+            }
         }).state('login.logout', {
-            url: '/logout',
+            url: 'logout',
             controller: function (Login, $state, SessionService) {
                 Login.logout().then(function () {
                     SessionService.unset('auth');
                     $state.go('login.signin');
                 });
+            },
+            data: {
+                noLogin: !0
             }
         });
 
+        $httpProvider.interceptors.push('authInterceptor');
         // Generates a resolve object previously configured in constant.JS_REQUIRES (config.constant.js)
         function loadSequence() {
             var _args = arguments;
