@@ -1,4 +1,4 @@
-<?php
+        <?php
 return [
     
     /*
@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY', 'CzgUnkDPgQvpGmzJi0bKeBRNcHfjtfuN'),
+    'key' => env('APP_KEY', 'KWka7Pcia9rFfaSgz3Uh0Pf8RBzMmY8S'),
     
     'cipher' => 'AES-256-CBC',
 

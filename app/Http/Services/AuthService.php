@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\Status;
 use App\Role;
@@ -13,7 +12,7 @@ use App\Http\Helpers\APIResponse;
 use App\Http\Services\BaseService;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Mail;
+use App\Jobs\SendWelcomeEmail;
 
 class AuthService extends BaseService
 {
@@ -106,13 +105,12 @@ use AuthenticatesAndRegistersUsers,
             $user->role_id = $role->id;
             $user->remember_token = $remember_token;
             $user->save();
-
-            /* if (!empty($user) && $user->id > 0) {
-              $params = array('fname' => $user->fname,'lname' => $user->fname,'email' => $user->fname,'remember_token' => $remember_token);
-              Mail::send('emails.activation', $params, function($message) use($user){
-              $message->to($user->email, $user->fname)->subject('Welcome!');
-              });
-              } */
+            
+            
+            // Adding job to queue for processing to the mail will be send via the queue
+            $job = (new SendWelcomeEmail($user))->delay(60);
+            $this->dispatch($job);
+            
             return $user;
         } catch (Exception $exception) {
             APIResponse::handleException($exception);

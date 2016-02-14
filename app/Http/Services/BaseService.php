@@ -3,10 +3,12 @@
 namespace App\Http\Services;
 
 use JWTAuth;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 abstract class BaseService
 {
-
+    
+    use DispatchesJobs;
     public static $token = null;
     
     /**

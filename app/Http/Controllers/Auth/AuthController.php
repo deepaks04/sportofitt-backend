@@ -166,7 +166,6 @@ use AuthenticatesAndRegistersUsers,
     public function postRegisterUser(AuthenticationRequest $request)
     {
         $data = $request->all();
-        APIResponse::$message['error'] = $request->validate();
         if (!APIResponse::$message['error']) {
             $user = $this->service->register($data);
             if (APIResponse::$isError == false && $user != null) {
@@ -197,18 +196,18 @@ use AuthenticatesAndRegistersUsers,
         $data = $request->all();
         $rules = array('email' => 'required|email|max:255',
             'password' => 'required');
-        APIResponse::$message['error'] = $request->validate($data, $rules);
+        $request->setRules($rules);
         if (!APIResponse::$message['error']) {
             $token = $this->service->login($request);
             if (empty($token['token'])) {
-                    APIResponse::$message['error'] = 'Could not able to create access token provide valid credentials';
-                    APIResponse::$status = 401;
-                } else {
-                    APIResponse::$data = [
-                        'access_token' => $token['token']
-                    ];
-                    return APIResponse::sendResponse();
-                }
+                APIResponse::$message['error'] = 'Could not able to create access token provide valid credentials';
+                APIResponse::$status = 401;
+            } else {
+                APIResponse::$data = [
+                    'access_token' => $token['token']
+                ];
+                return APIResponse::sendResponse();
+            }
         }
 
         APIResponse::$isError = true;
@@ -237,6 +236,6 @@ use AuthenticatesAndRegistersUsers,
         }
         // the token is valid and we have found the user via the sub claim
         return APIResponse::sendResponse();
-  }
+    }
 
 }
