@@ -2,13 +2,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- SEO -->
-    <meta name="author" content="Surjith S M">
-    <meta name="description" content="Mediclick is a 4 in 1 health landing page template for Medical, Spa, Fitness and Yoga">
-    <meta name="keywords" content="Mediclick, landing, spa, fitness, yoga, medical, responsive">
+    <meta name="description" content="SPORTOFITT - Destination for Sport | Fitness | Outdoor | Therapies">
+    <meta name="keywords" content="SPORTOFITT - Destination for Sport | Fitness | Outdoor | Therapies">
     <!-- Favicons -->
     <link rel="shortcut icon" href="images/favicon.ico">
     <!-- Page Title -->
-    <title>Fitness / Gym 01 - Mediclick Landing Page Template</title>
+    <title>SPORTOFITT - Destination for Sport | Fitness | Outdoor | Therapies</title>
     <!-- Bootstrap -->  
     <link href="assets/home/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom Google Font : Josefin Sans -->

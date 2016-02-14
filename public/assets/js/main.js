@@ -13,7 +13,7 @@ app.run(['$rootScope', '$state', '$stateParams', "$cookieStore", "$location",
         // set below basic information
         $rootScope.app = {
             name: 'SPORTOFIT', // name of your project
-            author: 'SPORTOFIT', // author's name or company name
+            author: 'Aquanta Consulting Services LLP', // author's name or company name
             description: 'Book GYM', // brief description
             version: '2.0', // current version
             year: ((new Date()).getFullYear()), // automatic current year (for copyright information)
