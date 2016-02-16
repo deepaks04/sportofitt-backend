@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\City;
 use Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
