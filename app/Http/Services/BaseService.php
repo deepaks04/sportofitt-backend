@@ -7,10 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 
 abstract class BaseService
 {
-    
+
     use DispatchesJobs;
-    public static $token = null;
-    
+
     /**
      *  Getting autheticated user from access token
      * 
@@ -33,7 +32,7 @@ abstract class BaseService
             APIResponse::$message['error'] = 'token_absent';
             APIResponse::$status = $e->getStatusCode();
         }
-        
+
         return $user;
     }
 

@@ -74,57 +74,27 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     //peak off peak prices
     Route::get('calculate-price/{id}/{off_peak_count}/{peak_count}',array('uses' => 'Vendor\SessionPackageController@getActualSessionPrice'));
 });
-// Route::controllers([
-// 'auth' => 'Auth\AuthController',
-// 'password' => 'Auth\PasswordController',
-// ]);
+
 /* For Customer Only */
-Route::group([
-    'prefix' => 'api/v1/customer/'
-], function () {
-    Route::post('create/', array(
-        'uses' => 'UsersController@storeCustomer'
-    ));
-    // New
-    Route::put('profile', array(
-        'uses' => 'Customer\CustomersController@updateProfileInformation'
-    ));
-    Route::get('profile', array(
-        'uses' => 'Customer\CustomersController@getProfileInformation'
-    ));
+Route::group(['prefix' => 'api/v1/customer/'], function () {
+    Route::post('create/', array('uses' => 'UsersController@storeCustomer'));
+    Route::put('profile', array('uses' => 'Customer\CustomersController@updateProfileInformation'));
+    Route::get('profile', array('uses' => 'Customer\CustomersController@getProfileInformation'));
 });
 
 /* For Superadmin Only */
-Route::group([
-    'prefix' => 'api/v1/superadmin/'
-], function () {});
+Route::group(['prefix' => 'api/v1/superadmin/'], function () {});
 
 /* Common to All Users */
-Route::group([
-    'prefix' => 'api/v1/user/'
-], function () {
-    Route::get('confirm/{token}', array(
-        'uses' => 'UsersController@confirm'
-    ));
-    Route::post('auth', array(
-        'uses' => 'Auth\AuthController@authenticate'
-    ));
-    Route::get('logout', array(
-        'uses' => 'Auth\AuthController@logout'
-    ));
-    Route::get('get-root-category', array(
-        'uses' => 'UsersController@getRootCategory'
-    ));
-    Route::get('get-sub-category/{id}', array(
-        'uses' => 'UsersController@getSubCategory'
-    ));
-    Route::get('areas', array(
-        'uses' => 'UsersController@getArea'
-    ));
+Route::group(['prefix' => 'api/v1/user/'], function () {
+    Route::get('confirm/{token}', array('uses' => 'UsersController@confirm'));
+    Route::post('auth', array('uses' => 'Auth\AuthController@authenticate'));
+    Route::get('logout', array('uses' => 'Auth\AuthController@logout'));
+    Route::get('get-root-category', array('uses' => 'UsersController@getRootCategory'));
+    Route::get('get-sub-category/{id}', array('uses' => 'UsersController@getSubCategory'));
+    Route::get('areas', array('uses' => 'UsersController@getArea'));
     // New
-    Route::put('change-password', array(
-        'uses' => 'Auth\PasswordController@change'
-    ));
+    Route::put('change-password', array('uses' => 'Auth\PasswordController@change'));
     // Password reset link request routes...
     Route::post('password/email', 'Auth\PasswordController@postEmail');
 
@@ -142,8 +112,7 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => 'validsource'], functio
 Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfromtoken']], function () {
     Route::post('autheticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
+    Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
 });
 
-Route::get('temp', array(
-    'uses' => 'Vendor\VendorsController@index'
-));
+Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));

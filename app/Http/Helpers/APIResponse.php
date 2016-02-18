@@ -2,9 +2,11 @@
 
 namespace App\Http\Helpers;
 
+use JWTAuth;
 use Illuminate\Support\Facades\Response as Response;
 
-class APIResponse extends Response {
+class APIResponse extends Response
+{
 
     // [Informational 1xx]
     const HTTP_CONTINUE = 100;
@@ -86,13 +88,22 @@ class APIResponse extends Response {
      * 
      * @return json
      */
-    public static function sendResponse() {
-        return self::json([
-                    'status' => self::$status,
-                    'isError' => self::$isError,
-                    'message' => self::$message,
-                    'data' => self::$data
-        ]);
+    public static function sendResponse()
+    {
+        $token = null;
+        try {
+            $token = JWTAuth::getToken();
+        } catch (Exception $exception) {
+            self::handleException($exception);
+        }
+
+
+        $data = ['isError' => self::$isError,
+            'message' => self::$message,
+            'data' => self::$data
+        ];
+
+        return self::json($data, self::$status, ['token' => $token]);
     }
 
     /**
@@ -100,7 +111,8 @@ class APIResponse extends Response {
      *  
      * @param \App\Http\Helpers\Exception $exception
      */
-    public function handleException(Exception $exception) {
+    public function handleException(Exception $exception)
+    {
         APIResponse::$status = $exception->getStatusCode();
         APIResponse::$isError = true;
         APIResponse::$message['error'] = $exception->getMessage();

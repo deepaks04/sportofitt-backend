@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\URL;
 use App\Http\Helpers\APIResponse;
 use App\Http\Requests\AuthenticationRequest;
 use App\Http\Services\AuthService;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -169,13 +169,6 @@ use AuthenticatesAndRegistersUsers,
         if (!APIResponse::$message['error']) {
             $user = $this->service->register($data);
             if (APIResponse::$isError == false && $user != null) {
-                $token = JWTAuth::fromUser($user);
-                APIResponse::$data = [
-                    'first_name' => $user->fname,
-                    'last_name' => $user->lname,
-                    'email' => $user->email,
-                    'access_token' => $token
-                ];
                 APIResponse::$message['success'] = 'Registered Successfully! Please check your email for the instructions on how to confirm your account';
                 return APIResponse::sendResponse();
             }
@@ -188,15 +181,12 @@ use AuthenticatesAndRegistersUsers,
     /**
      *  Allowing user to access the system
      * 
-     * @param AuthenticationRequest $request
+     * @param LoginUserRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function postLoginUser(AuthenticationRequest $request)
+    public function postLoginUser(LoginUserRequest $request)
     {
         $data = $request->all();
-        $rules = array('email' => 'required|email|max:255',
-            'password' => 'required');
-        $request->setRules($rules);
         if (!APIResponse::$message['error']) {
             $token = $this->service->login($request);
             if (empty($token['token'])) {

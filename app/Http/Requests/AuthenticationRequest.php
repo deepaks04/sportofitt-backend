@@ -29,11 +29,6 @@ class AuthenticationRequest extends Request
         return $this->rules;
     }
 
-    public function setRules($rules = array())
-    {
-        $this->rules = $rules;
-    }
-
     public function messages()
     {
         return [
