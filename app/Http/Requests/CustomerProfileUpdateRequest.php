@@ -52,8 +52,8 @@ class CustomerProfileUpdateRequest extends Request
             'birthdate.date_format' => 'Enter brith date in format of d-m-Y',
             'area_id.required' => 'Please select your area',
             'pincode.required' => 'Pincode must not be blank',
-            'pincode.min' => 'Pincode must be minimum 6 character long',
-            'pincode.max' => 'Pincode must not be greater than 6 character'
+            'pincode.min' => 'pincode must be 6 digit number',
+            'pincode.max' => 'pincode must be 6 digit number '
         ];
     }
 
