@@ -40,7 +40,7 @@ class SendWelcomeEmail extends Job implements SelfHandling, ShouldQueue
     {
         $params = array('fname' => ucfirst($this->user->fname),
             'lname' => ucfirst($this->user->lname),
-            'email' => $this->user->fname,
+            'email' => $this->user->email,
             'remember_token' => $this->user->remember_token);
         $user = $this->user;
         $log = new Logger('queue_log');
