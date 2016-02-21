@@ -13,9 +13,9 @@
                     <th>Email</th>
                 </tr>
                 <tr>
-                    <td>{{$user->fname}}</td>
-                    <td>{{$user->lname}}</td>
-                    <td>{{$user->email}}</td>
+                    <td>{{fname}}</td>
+                    <td>{{lname}}</td>
+                    <td>{{email}}</td>
                 </tr>
             </table>
         </div>
