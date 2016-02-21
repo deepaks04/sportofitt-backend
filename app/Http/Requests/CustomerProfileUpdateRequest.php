@@ -30,7 +30,7 @@ class CustomerProfileUpdateRequest extends Request
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'birthdate' => 'date_format:d-m-Y',
             'area_id' => 'required',
-            'pincode' => 'required|numeric|regex:/\b\d{6}\b/'
+            'pincode' => 'required|regex:/\b\d{6}\b/'
         ];
     }
     
