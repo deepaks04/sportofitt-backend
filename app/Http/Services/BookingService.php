@@ -1,4 +1,6 @@
-<?php namespace App\Http\Services;
+<?php
+
+namespace App\Http\Services;
 
 use URL;
 use File;
@@ -6,9 +8,11 @@ use App\City;
 use App\User;
 use App\Customer;
 use App\Http\Services\BaseService;
+use App\Http\Helpers\APIResponse;
 use App\Http\Helpers\FileHelper;
 
-class DashboardService extends BaseService {
+class DashboardService extends BaseService
+{
 
     /**
      * Getting users profile inforamtion of authenticated user based on
@@ -37,8 +41,8 @@ class DashboardService extends BaseService {
             $userMeta = $user->customer()->select('pincode', 'area_id', 'phone_no', 'gender', 'birthdate')->get();
             if (!empty($userMeta)) {
                 $customer = $userMeta->toArray();
-                if ($customer && $customer[0]['birthdate']) {
-                    $customer[0]['birthdate'] = date("d-m-Y", strtotime($customer[0]['birthdate']));
+                if($customer && $customer[0]['birthdate']) {
+                    $customer[0]['birthdate'] = date("d-m-Y",strtotime($customer[0]['birthdate']));
                 }
             }
 
@@ -49,7 +53,7 @@ class DashboardService extends BaseService {
                 'customer' => $customer
             ];
         } catch (Exception $exception) {
-            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+            APIResponse::handelException($exception);
         }
 
         return null;
@@ -99,7 +103,7 @@ class DashboardService extends BaseService {
 
             return $this->getUserProfile();
         } catch (Exception $exception) {
-            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+            APIResponse::handelException($exception);
         }
     }
 
@@ -113,18 +117,18 @@ class DashboardService extends BaseService {
     private function addOrUpdateCustomerInformation(User $user, array $data)
     {
         $customer = $user->customer()->first();
-
+        
         if (empty($customer)) {
             $customer = new Customer();
         }
-
+        
         $customer->pincode = !empty($data['pincode']) ? $data['pincode'] : NULL;
         $customer->area_id = !empty($data['area_id']) ? $data['area_id'] : NULL;
         $customer->phone_no = !empty($data['phoneno']) ? $data['phoneno'] : NULL;
         $customer->gender = !empty($data['gender']) ? $data['gender'] : NULL;
-        $customer->birthdate = !empty($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : NULL;
+        $customer->birthdate = !empty($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : NULL;        
         $customer->user_id = $user->id;
-
+        
         $customer->save();
     }
 

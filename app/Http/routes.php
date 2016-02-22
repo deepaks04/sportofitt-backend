@@ -113,6 +113,7 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfro
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
+    Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
 });
 
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
