@@ -30,7 +30,10 @@ class CustomerProfileUpdateRequest extends Request
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'birthdate' => 'date_format:d-m-Y',
             'area_id' => 'required',
-            'pincode' => 'required|min:6|max:6'
+            'pincode' => 'required|regex:/\b\d{6}\b/',
+            'phoneno' => 'digits:10',
+            'gender' => 'in:male,female',
+            
         ];
     }
     
@@ -52,8 +55,9 @@ class CustomerProfileUpdateRequest extends Request
             'birthdate.date_format' => 'Enter brith date in format of d-m-Y',
             'area_id.required' => 'Please select your area',
             'pincode.required' => 'Pincode must not be blank',
-            'pincode.min' => 'Pincode must be minimum 6 character long',
-            'pincode.max' => 'Pincode must not be greater than 6 character'
+            'pincode.regex' => 'pincode must be 6 digit number ',
+            'phoneno.digits' => 'mobile number must be 10 digit number',
+            'gender.in' => 'gender must have value as male or female',
         ];
     }
 

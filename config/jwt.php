@@ -18,7 +18,7 @@ return [
     |
     | Don't forget to set this, as it will be used to sign your tokens.
     | A helper command is provided for this: `php artisan jwt:generate`
-    |
+    | 
     */
 
     'secret' => env('JWT_SECRET', 'huzqe76UDe5njqe3oCiCyyV3gJruMKPm'),

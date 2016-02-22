@@ -110,7 +110,7 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => 'validsource'], functio
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
 Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfromtoken']], function () {
-    Route::post('autheticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
+    Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
 });
