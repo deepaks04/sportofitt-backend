@@ -211,8 +211,8 @@ use AuthenticatesAndRegistersUsers,
      */
     public function getAuthenticatedUser()
     {
-        $user = $this->service->getAuthenticatedUser();
-        if (0 == $user->is_active) {
+        $user = $this->service->user;
+        if (!empty($user) && 0 == $user->is_active) {
             APIResponse::$message['error'] = 'You are account is inactive kindly contact with the administrator';
             APIResponse::$status = 401;
         } else {

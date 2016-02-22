@@ -56,12 +56,19 @@ class BookingController extends Controller {
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        try {
+            $booking = $this->service->getBookigDetails($id);
+            APIResponse::$data = $booking;
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+        
+        return APIResponse::sendResponse();
     }
 
     /**

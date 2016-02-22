@@ -13,7 +13,12 @@ class BookingService extends BaseService {
 
     public function __construct()
     {
-        $this->sessionBooking = new SessionBooking();
+        try {
+            parent::__construct();
+            $this->sessionBooking = new SessionBooking();
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getStatusCode(), $exception);
+        }
     }
 
     /**
@@ -25,8 +30,31 @@ class BookingService extends BaseService {
     public function getUsersBooking()
     {
         try {
-            $user = $this->getAuthenticatedUser();
-            return $this->sessionBooking->getUsersBooking($user->id, $this->offset, $this->limit);
+            return $this->sessionBooking->getUsersBooking($this->user->id, $this->offset, $this->limit);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    /**
+     * Get booking details by id 
+     * 
+     * @param integer $id
+     * @return array
+     * @throws Exception
+     */
+    public function getBookigDetails($id)
+    {
+        try {
+            $response = array();
+            $booking = $this->sessionBooking->findBookingDetails($id); 
+            $response['booking'] = $booking;
+            $response['facility'] = $booking->facility()->first();
+            $response['facility']['vendor'] = $booking->facility()->first()->vendor;
+            $response['facility']['subCategory'] = $booking->facility()->first()->subCategory;
+            $response['facility']['subCategory']['rootCategory'] = $booking->facility()->first()->subCategory()->first()->rootCategory;
+            
+            return $response;
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }

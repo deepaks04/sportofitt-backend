@@ -114,6 +114,7 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfro
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
     Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
+    Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
 });
 
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));

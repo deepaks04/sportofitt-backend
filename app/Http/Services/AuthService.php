@@ -9,12 +9,11 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
-use App\Http\Services\BaseService;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Jobs\SendWelcomeEmail;
 
-class AuthService extends BaseService
+class AuthService 
 {
     /*
       |--------------------------------------------------------------------------

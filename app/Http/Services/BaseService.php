@@ -6,20 +6,31 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 abstract class BaseService {
 
     use DispatchesJobs;
-    
+
+    public $user = null;
     protected $limit = 10;
     protected $offset = 0;
+    
+    public function __construct()
+    {
+        try {
+            $this->getAuthenticatedUser();
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getStatusCode(), $exception);
+        }
+    }
 
     /**
-     *  Getting autheticated user from access token
+     * Getting authenticated user from access token
      * 
-     * @return App\user
+     * @return App\User
+     * @throws Exception
      */
     public function getAuthenticatedUser()
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
-            if (!$user) {
+            $this->user = JWTAuth::parseToken()->authenticate();
+            if (!$this->user) {
                 return response()->json(['user_not_found'], 404);
             }
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
@@ -29,8 +40,6 @@ abstract class BaseService {
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
             throw new Exception('token_absent', $e->getStatusCode(), $e);
         }
-
-        return $user;
     }
 
 }
