@@ -12,8 +12,9 @@ use App\Http\Helpers\APIResponse;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Jobs\SendWelcomeEmail;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class AuthService 
+class AuthService
 {
     /*
       |--------------------------------------------------------------------------
@@ -27,7 +28,8 @@ class AuthService
      */
 
 use AuthenticatesAndRegistersUsers,
-    ThrottlesLogins;
+    ThrottlesLogins,
+    DispatchesJobs;
 
     /**
      * Where to redirect users after login / registration.
@@ -104,15 +106,16 @@ use AuthenticatesAndRegistersUsers,
             $user->role_id = $role->id;
             $user->remember_token = $remember_token;
             $user->save();
-            
-            
+
+
             // Adding job to queue for processing to the mail will be send via the queue
             $job = (new SendWelcomeEmail($user))->delay(60);
             $this->dispatch($job);
-            
+
             return $user;
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }
     }
+
 }
