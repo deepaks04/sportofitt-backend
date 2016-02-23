@@ -31,32 +31,36 @@ class SendWelcomeEmail extends Job implements SelfHandling, ShouldQueue
         $this->user = $user;
     }
 
+
     /**
-     * Execute the job.
-     *
-     * @return void
+     *  Execute the job
+     * 
+     * @throws Exception
      */
     public function handle()
     {
-        $params = array('fname' => ucfirst($this->user->fname),
-            'lname' => ucfirst($this->user->lname),
-            'email' => $this->user->email,
-            'remember_token' => $this->user->remember_token);
-        $user = $this->user;
-        $log = new Logger('queue_log');
-        $log->pushHandler(new StreamHandler(storage_path('logs/laravel.log'), Logger::ERROR));
-        
-        Mail::queue('emails.activation', $params, function($message) use($user, $log) {
-            $message->to($user->email, $user->fname)->subject('Welcome!');
-            $log->addError(PHP_EOL . ' Email Sent' . PHP_EOL);
-        });
-        
-        $adminEmailDetails =  Config::get('mail.from');
-         Mail::queue('emails.admin.newnotification', $params, function($message) use($log,$adminEmailDetails) {
-            $message->to($adminEmailDetails['address'], $adminEmailDetails['name'])->subject('New User Registration!');
-            $log->addError(PHP_EOL . ' Email Sent To ADMIN'  . PHP_EOL);
-        });
-        
+        try {
+            $params = array('fname' => ucfirst($this->user->fname),
+                'lname' => ucfirst($this->user->lname),
+                'email' => $this->user->email,
+                'remember_token' => $this->user->remember_token);
+            $user = $this->user;
+            $log = new Logger('queue_log');
+            $log->pushHandler(new StreamHandler(storage_path('logs/laravel.log'), Logger::ERROR));
+
+            Mail::queue('emails.activation', $params, function($message) use($user, $log) {
+                $message->to($user->email, $user->fname)->subject('Welcome!');
+                $log->addError(PHP_EOL . ' Email Sent' . PHP_EOL);
+            });
+
+            $adminEmailDetails = Config::get('mail.from');
+            Mail::queue('emails.admin.newnotification', $params, function($message) use($log, $adminEmailDetails) {
+                $message->to($adminEmailDetails['address'], $adminEmailDetails['name'])->subject('New User Registration!');
+                $log->addError(PHP_EOL . ' Email Sent To ADMIN' . PHP_EOL);
+            });
+        } catch (Exception $exc) {
+            throw new Exception($exc->getMessage(), $exc->getCode(), $exc);
+        }
     }
 
 }
