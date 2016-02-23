@@ -32,7 +32,6 @@ class DashboardService extends BaseService
     {
         $areaDetails = $cityDetails = $customer = array();
         try {
-            $user = $this->getAuthenticatedUser();
             $city = City::select('id', 'name')->where('name', '=', 'pune')->first();
             if (!empty($city) && $city->id > 0) {
                 $areas = $city->areas()->select('id', 'name', 'city_id')->get();
@@ -40,13 +39,13 @@ class DashboardService extends BaseService
                 $areaDetails = $areas->toArray();
             }
 
-            if ($user->profile_picture != null) {
+            if ($this->user->profile_picture != null) {
                 $vendorUploadPath = URL::asset(env('CUSTOMER_FILE_UPLOAD'));
-                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($user->id) . "/" . "profile_image/";
-                $user['profile_picture'] = $vendorOwnDirecory . "thumb_267X267_" . $user->profile_picture;
+                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "profile_image/";
+                $this->user['profile_picture'] = $vendorOwnDirecory . "thumb_267X267_" . $this->user->profile_picture;
             }
 
-            $userMeta = $user->customer()->select('pincode', 'area_id', 'phone_no', 'gender', 'birthdate')->get();
+            $userMeta = $this->user->customer()->select('pincode', 'area_id', 'phone_no', 'gender', 'birthdate')->get();
             if (!empty($userMeta)) {
                 $customer = $userMeta->toArray();
                 if ($customer && $customer[0]['birthdate']) {
@@ -55,7 +54,7 @@ class DashboardService extends BaseService
             }
 
             return [
-                'user' => $user->toArray(),
+                'user' => $this->user->toArray(),
                 'cities' => $cityDetails,
                 'areas' => $areaDetails,
                 'customer' => $customer
@@ -76,13 +75,12 @@ class DashboardService extends BaseService
     public function updateProfileInformation(array $data)
     {
         try {
-            $user = $this->getAuthenticatedUser();
-            $user->fname = !empty($data['fname']) ? $data['fname'] : $user->fname;
-            $user->lname = !empty($data['lname']) ? $data['lname'] : $user->lname;
+            $this->user->fname = !empty($data['fname']) ? $data['fname'] : $this->user->fname;
+            $this->user->lname = !empty($data['lname']) ? $data['lname'] : $this->user->lname;
 
             if (!empty($data['profile_picture'])) {
                 $vendorUploadPath = public_path() . env('CUSTOMER_FILE_UPLOAD');
-                $vendorOwnDirecory = $vendorUploadPath . sha1($user->id);
+                $vendorOwnDirecory = $vendorUploadPath . sha1($this->user->id);
                 $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
 
                 /* Create Upload Directory If Not Exists */
@@ -93,7 +91,7 @@ class DashboardService extends BaseService
                 }
 
                 $extension = $data['profile_picture']->getClientOriginalExtension();
-                $fileName = sha1($user->id . time()) . ".{$extension}";
+                $fileName = sha1($this->user->id . time()) . ".{$extension}";
                 $data['profile_picture']->move($vendorImageUploadPath, $fileName);
                 chmod($vendorImageUploadPath, 0777);
 
@@ -103,11 +101,11 @@ class DashboardService extends BaseService
                 $fileHelper->destinationPath = $vendorImageUploadPath . "/";
                 $fileHelper->resizeImage('user', true);
 
-                $user->profile_picture = $fileName;
+                $this->user->profile_picture = $fileName;
             }
 
-            $user->save();
-            $this->addOrUpdateCustomerInformation($user, $data);
+            $this->user->save();
+            $this->addOrUpdateCustomerInformation($this->user, $data);
 
             return $this->getUserProfile();
         } catch (Exception $exception) {
@@ -119,7 +117,7 @@ class DashboardService extends BaseService
      * If it is existing user update customer user information else add new 
      * entry for the user with the provided data as customer
      * 
-     * @param User $user
+     * @param User $this->user
      * @param array $data
      */
     private function addOrUpdateCustomerInformation(User $user, array $data)
@@ -135,7 +133,7 @@ class DashboardService extends BaseService
         $customer->phone_no = !empty($data['phoneno']) ? $data['phoneno'] : NULL;
         $customer->gender = !empty($data['gender']) ? $data['gender'] : NULL;
         $customer->birthdate = !empty($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : NULL;
-        $customer->user_id = $user->id;
+        $customer->user_id = $this->user->id;
 
         $customer->save();
     }
