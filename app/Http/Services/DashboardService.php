@@ -1,4 +1,6 @@
-<?php namespace App\Http\Services;
+<?php
+
+namespace App\Http\Services;
 
 use URL;
 use File;
@@ -8,7 +10,17 @@ use App\Customer;
 use App\Http\Services\BaseService;
 use App\Http\Helpers\FileHelper;
 
-class DashboardService extends BaseService {
+class DashboardService extends BaseService
+{
+
+    public function __construct()
+    {
+        try {
+            parent::__construct();
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getStatusCode(), $exception);
+        }
+    }
 
     /**
      * Getting users profile inforamtion of authenticated user based on
