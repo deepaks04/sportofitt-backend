@@ -211,18 +211,29 @@ use AuthenticatesAndRegistersUsers,
      */
     public function getAuthenticatedUser()
     {
-        $user = $this->service->user;
-        if (!empty($user) && 0 == $user->is_active) {
-            APIResponse::$message['error'] = 'You are account is inactive kindly contact with the administrator';
-            APIResponse::$status = 401;
-        } else {
-            $token = JWTAuth::getToken();
-            APIResponse::$data = [
-                'first_name' => $user->fname,
-                'last_name' => $user->lname,
-                'email' => $user->email,
-                'access_token' => $token->__toString()
-            ];
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            if (!$user) {
+                return response()->json(['user_not_found'], 404);
+            }
+            if (0 == $user->is_active) {
+                APIResponse::$message['error'] = 'You are account is inactive kindly contact with the administrator';
+                APIResponse::$status = 401;
+            } else {
+                $token = JWTAuth::getToken();
+                APIResponse::$data = [
+                    'first_name' => $user->fname,
+                    'last_name' => $user->lname,
+                    'email' => $user->email,
+                    'access_token' => $token->__toString()
+                ];
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            APIResponse::handleException($e);
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            APIResponse::handleException($e);
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            APIResponse::handleException($e);
         }
         // the token is valid and we have found the user via the sub claim
         return APIResponse::sendResponse();
