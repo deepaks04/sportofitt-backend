@@ -1,5 +1,4 @@
 <?php
-
 /*
  * |--------------------------------------------------------------------------
  * | Application Routes
@@ -11,68 +10,67 @@
  * |
  */
 Route::get('/', function () {
-    return view('views/home',
-            ['cell' => '9457912886',
-            'email' => 'select@sportofitt.com',
-               ]);
+    return view('views/home', ['cell' => '9457912886',
+        'email' => 'select@sportofitt.com',
+    ]);
 });
 
 Route::get('/sportofittpartneragreement', function () {
-    return view('views/agreement',['cell' => '9457912886',
-            'email' => 'select@sportofitt.com',
-               ]);
+    return view('views/agreement', ['cell' => '9457912886',
+        'email' => 'select@sportofitt.com',
+    ]);
 });
 
-Route::post('/contact','PreGuestController@saveGuestUser');
+Route::post('/contact', 'PreGuestController@saveGuestUser');
 Route::get('/select', function () {
     return view('STANDARD/select/index');
 });
 /* For Vendor Only */
 Route::group(['prefix' => 'api/v1/vendor/'], function () {
-    Route::post('create',array('uses' => 'UsersController@storeVendor'));
-    Route::put('update-first-login',array('uses' => 'Vendor\VendorsController@updateFirstLoginFlag'));
-    Route::get('my-profile',array('uses' => 'Vendor\VendorsController@getProfile'));
-    Route::put('my-profile',array('uses' => 'Vendor\VendorsController@updateProfile'));
-    Route::get('billing-info',array('uses' => 'Vendor\VendorsController@getBillingInformation'));
-    Route::put('billing-info',array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
-    Route::get('bank-info',array('uses' => 'Vendor\VendorsController@getBankDetails'));
-    Route::put('bank-info',array('uses' => 'Vendor\VendorsController@updateBankDetails'));
-    Route::post('images',array('uses' => 'Vendor\VendorsController@addImages'));
-    Route::get('images',array('uses' => 'Vendor\VendorsController@getImages'));
-    Route::get('images/{id}',array('uses' => 'Vendor\VendorsController@deleteImage'));
-    Route::post('facility',array('uses' => 'Vendor\VendorsController@createFacility'));
-    Route::get('facility',array('uses' => 'Vendor\VendorsController@getFacility'));
-    Route::get('facility/{id}',array('uses' => 'Vendor\VendorsController@getFacilityById'));
-    Route::put('facility/{id}',array('uses' => 'Vendor\VendorsController@updateFacility'));
+    Route::post('create', array('uses' => 'UsersController@storeVendor'));
+    Route::put('update-first-login', array('uses' => 'Vendor\VendorsController@updateFirstLoginFlag'));
+    Route::get('my-profile', array('uses' => 'Vendor\VendorsController@getProfile'));
+    Route::put('my-profile', array('uses' => 'Vendor\VendorsController@updateProfile'));
+    Route::get('billing-info', array('uses' => 'Vendor\VendorsController@getBillingInformation'));
+    Route::put('billing-info', array('uses' => 'Vendor\VendorsController@updateBillingInformation'));
+    Route::get('bank-info', array('uses' => 'Vendor\VendorsController@getBankDetails'));
+    Route::put('bank-info', array('uses' => 'Vendor\VendorsController@updateBankDetails'));
+    Route::post('images', array('uses' => 'Vendor\VendorsController@addImages'));
+    Route::get('images', array('uses' => 'Vendor\VendorsController@getImages'));
+    Route::get('images/{id}', array('uses' => 'Vendor\VendorsController@deleteImage'));
+    Route::post('facility', array('uses' => 'Vendor\VendorsController@createFacility'));
+    Route::get('facility', array('uses' => 'Vendor\VendorsController@getFacility'));
+    Route::get('facility/{id}', array('uses' => 'Vendor\VendorsController@getFacilityById'));
+    Route::put('facility/{id}', array('uses' => 'Vendor\VendorsController@updateFacility'));
     Route::put('facility/update-status/{id}', array('uses' => 'Vendor\VendorsController@enableDisableFacility'));
 
     //NEW
-    Route::get('package-types',array('uses' => 'Vendor\SessionPackageController@types'));
-    Route::post('package',array('uses' => 'Vendor\SessionPackageController@createPackage'));
-    Route::put('package/{id}',array('uses' => 'Vendor\SessionPackageController@updatePackage'));
-    Route::get('package/{id}',array('uses' => 'Vendor\SessionPackageController@getPackage'));
-    Route::get('delete-package/{id}',array('uses' => 'Vendor\SessionPackageController@deletePackage'));
-    Route::post('opening-time',array('uses' => 'Vendor\SessionPackageController@createOpeningTime'));
-    Route::put('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@updateOpeningTime'));
+    Route::get('package-types', array('uses' => 'Vendor\SessionPackageController@types'));
+    Route::post('package', array('uses' => 'Vendor\SessionPackageController@createPackage'));
+    Route::put('package/{id}', array('uses' => 'Vendor\SessionPackageController@updatePackage'));
+    Route::get('package/{id}', array('uses' => 'Vendor\SessionPackageController@getPackage'));
+    Route::get('delete-package/{id}', array('uses' => 'Vendor\SessionPackageController@deletePackage'));
+    Route::post('opening-time', array('uses' => 'Vendor\SessionPackageController@createOpeningTime'));
+    Route::put('opening-time/{id}', array('uses' => 'Vendor\SessionPackageController@updateOpeningTime'));
 
-    Route::get('opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));
-    Route::get('delete-opening-time/{id}',array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));
-    Route::post('session-duration',array('uses' => 'Vendor\SessionPackageController@updateDuration'));
-    Route::get('facility-detail/{id}',array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
-    Route::get('duration',array('uses' => 'Vendor\SessionPackageController@getDuration'));
-    Route::post('multiple-sessions',array('uses' => 'Vendor\SessionPackageController@createSession'));
-    Route::put('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@updateSession'));
-    Route::get('multiple-sessions/{id}',array('uses' => 'Vendor\SessionPackageController@deleteSession'));
-    Route::get('sessions-data/{id}',array('uses' => 'Vendor\SessionPackageController@getSessionData'));
+    Route::get('opening-time/{id}', array('uses' => 'Vendor\SessionPackageController@getOpeningTime'));
+    Route::get('delete-opening-time/{id}', array('uses' => 'Vendor\SessionPackageController@deleteOpeningTime'));
+    Route::post('session-duration', array('uses' => 'Vendor\SessionPackageController@updateDuration'));
+    Route::get('facility-detail/{id}', array('uses' => 'Vendor\VendorsController@getFacilityDetailInformation'));
+    Route::get('duration', array('uses' => 'Vendor\SessionPackageController@getDuration'));
+    Route::post('multiple-sessions', array('uses' => 'Vendor\SessionPackageController@createSession'));
+    Route::put('multiple-sessions/{id}', array('uses' => 'Vendor\SessionPackageController@updateSession'));
+    Route::get('multiple-sessions/{id}', array('uses' => 'Vendor\SessionPackageController@deleteSession'));
+    Route::get('sessions-data/{id}', array('uses' => 'Vendor\SessionPackageController@getSessionData'));
 
-    Route::post('calendar-block',array('uses' => 'Vendor\SessionPackageController@blockCalendar'));
-    Route::get('calendar-block/{id}',array('uses' => 'Vendor\SessionPackageController@deleteBlockedData'));
-    Route::get('get-calendar-block/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockData'));
-    Route::get('calendar-block/{id}/{yearmonth}',array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
-    Route::put('calendar-block/{id}',array('uses' => 'Vendor\SessionPackageController@updateBlockedData'));
+    Route::post('calendar-block', array('uses' => 'Vendor\SessionPackageController@blockCalendar'));
+    Route::get('calendar-block/{id}', array('uses' => 'Vendor\SessionPackageController@deleteBlockedData'));
+    Route::get('get-calendar-block/{yearmonth}', array('uses' => 'Vendor\SessionPackageController@getBlockData'));
+    Route::get('calendar-block/{id}/{yearmonth}', array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
+    Route::put('calendar-block/{id}', array('uses' => 'Vendor\SessionPackageController@updateBlockedData'));
 
     //peak off peak prices
-    Route::get('calculate-price/{id}/{off_peak_count}/{peak_count}',array('uses' => 'Vendor\SessionPackageController@getActualSessionPrice'));
+    Route::get('calculate-price/{id}/{off_peak_count}/{peak_count}', array('uses' => 'Vendor\SessionPackageController@getActualSessionPrice'));
 });
 
 /* For Customer Only */
@@ -83,7 +81,9 @@ Route::group(['prefix' => 'api/v1/customer/'], function () {
 });
 
 /* For Superadmin Only */
-Route::group(['prefix' => 'api/v1/superadmin/'], function () {});
+Route::group(['prefix' => 'api/v1/superadmin/'], function () {
+    
+});
 
 /* Common to All Users */
 Route::group(['prefix' => 'api/v1/user/'], function () {
@@ -105,11 +105,11 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     /* Day master */
     Route::get('day-master', 'UsersController@dayMaster');
 });
-Route::group(['prefix' => 'api/v1/user/','middleware' => 'validsource'], function () {
+Route::group(['prefix' => 'api/v1/user/', 'middleware' => 'validsource'], function () {
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
-Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfromtoken']], function () {
+Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userfromtoken']], function () {
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
@@ -117,4 +117,8 @@ Route::group(['prefix' => 'api/v1/user/','middleware' => ['validsource','userfro
     Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
 });
 
+Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], function() {
+    Route::get('featured', array('uses' => 'IndexController@featuredListing'));
+    Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
+});
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));

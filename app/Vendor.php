@@ -24,8 +24,9 @@ class Vendor extends Model
         'billing_info_id',
         'bank_detail_id'
     ];
-
-
+    
+    protected $hidden = ['created_at','updated_at'];
+    
     /**
      * vendors belongs to user
      * 

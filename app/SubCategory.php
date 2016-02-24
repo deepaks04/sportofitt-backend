@@ -11,6 +11,8 @@ class SubCategory extends Model
      * @var string
      */
     protected $table = 'sub_categories';
+    
+    protected $hidden = ['created_at','updated_at'];
 
     /**
      *

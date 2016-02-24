@@ -7,10 +7,24 @@ abstract class BaseService {
 
     use DispatchesJobs;
 
+    /**
+     *
+     * @var mixed null | App\User 
+     */
     public $user = null;
+
+    /**
+     *
+     * @var integer
+     */
     protected $limit = 10;
+
+    /**
+     *
+     * @var integer
+     */
     protected $offset = 0;
-    
+
     public function __construct()
     {
         try {
