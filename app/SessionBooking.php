@@ -28,7 +28,7 @@ class SessionBooking extends Model {
     public function getUsersBooking($userId, $offset = 0, $limit = 10)
     {
         return self::select('session_bookings.*', 'name', 'description', 'image')
-                        ->join('facility', 'session_bookings.available_facility_id', '=', 'id')
+                        ->join('available_facilities', 'session_bookings.available_facility_id', '=', 'available_facilities.id')
                         ->where('user_id', '=', $userId)
                         ->take($limit)
                         ->skip($offset)
