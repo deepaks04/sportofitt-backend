@@ -122,3 +122,6 @@ Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], fun
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
 });
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
+Route::get('messages', array('uses' => 'Admin\MessagesController@index'))->name('messages');
+Route::post('savemessages', array('uses' => 'Admin\MessagesController@save'));
+Route::get('success', array('uses' => 'Admin\MessagesController@show'))->name('success');
