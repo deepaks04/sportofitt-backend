@@ -1,46 +1,24 @@
-<!DOCTYPE html>
 <html>
-<head>
-<title>Laravel</title>
+    <body>
+        <span><a href="{{url('messages')}}">Edit Messages</a></span>
+        <table cellspacing="1" cellpadding=1 border="1">
+            <tr>
+                <th>Attribute</th>
+                <th>Rule</th>
+                <th>Message</th>
+            </tr>
+            @foreach($messages as $key => $message) 
+            @if(is_array($message))
+            @foreach($message as $rule => $value)
+            <tr>
+                <td>{{ucfirst(str_replace("_"," ",$key))}} </td>
+                <td>{{$rule}}</td>
+                <td>{{$value}}</td>
+            </tr>
+            @endforeach
+            @endif
+            @endforeach
+        </table>
 
-<link href="https://fonts.googleapis.com/css?family=Lato:100"
-	rel="stylesheet" type="text/css">
-
-<style>
-html, body {
-	height: 100%;
-}
-
-body {
-	margin: 0;
-	padding: 0;
-	width: 100%;
-	display: table;
-	font-weight: 100;
-	font-family: 'Lato';
-}
-
-.container {
-	text-align: center;
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.content {
-	text-align: center;
-	display: inline-block;
-}
-
-.title {
-	font-size: 96px;
-}
-</style>
-</head>
-<body>
-	<div class="container">
-		<div class="content">
-			<div class="title">Laravel 5</div>
-		</div>
-	</div>
-</body>
+    </body>
 </html>

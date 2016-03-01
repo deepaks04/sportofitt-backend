@@ -1,51 +1,48 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Admin;
 
-use App\Http\Helpers\APIResponse;
-use App\Http\Services\IndexService;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-class IndexController extends Controller {
-    
-    /**
-     *
-     * @var mixed null | App\Http\Services\IndexService
-     */
-    private $service = null;
+class MessagesController extends Controller {
 
-    public function __construct()
+    public function index()
     {
-        $this->service = new IndexService();
+        $messages = include(app_path('../resources/lang/en/validation.php'));
+        return response()->view('views.messages.index', ['messages' => $messages['custom']]);
     }
 
-    /**
-     * Get featured facilities.
-     * 
-     * @return App\AvailableFacilities
-     */
-    public function featuredListing()
+    public function save(Request $request)
     {
-        try {
-            APIResponse::$data = $this->service->getFacilities(array('is_featured', '=', 1));
-        } catch (Exception $exception) {
-            APIResponse::handleException($exception);
+        $messages = include(app_path('../resources/lang/en/validation.php'));
+        $all = $request->all();
+        foreach ($all as $attribute => $message) {
+            $exploded = explode("/", $attribute);
+            $messages['custom'][$exploded[0]][$exploded[1]] = $message;
         }
 
-        return APIResponse::sendResponse();
+        $h = fopen(app_path('../resources/lang/en/validation.php'), 'w');
+        fwrite($h, '<?php return ');
+        fwrite($h, var_export($messages, true));
+        fwrite($h, ';');
+        fclose($h);
+
+        $headers = ["Expires" => gmdate("D, d M Y H:i:s", time()) . " GMT",
+            "Last-Modified" => gmdate("D, d M Y H:i:s") . " GMT",
+            "Cache-Control" => "no-cache, must-revalidate",
+            "Pragma" => "no-cache"];
+
+        return redirect(route('success'), 302, $headers);
     }
-    
-    /**
-     * Get all lates available facilities those are added recently.
-     * 
-     * @return App\AvailableFacilities
-     */
-    public function latestFacilities()
-    {
-        try {
-            APIResponse::$data = $this->service->getFacilities(array('is_featured', '!=', 1));
-        } catch (Exception $exception) {
-            APIResponse::handleException($exception);
-        }
 
-        return APIResponse::sendResponse();
+    public function show()
+    {
+        $headers = ["Expires" => gmdate("D, d M Y H:i:s", time()) . " GMT",
+            "Last-Modified" => gmdate("D, d M Y H:i:s") . " GMT",
+            "Cache-Control" => "no-cache, must-revalidate",
+            "Pragma" => "no-cache"];
+
+        $messages = require app_path('../resources/lang/en/validation.php');
+        return response()->view('views.messages.show', ['messages' => $messages['custom']], 302, $headers);
     }
 
 }
