@@ -1,20 +1,11 @@
-<?php
-
-namespace App\Http\Controllers\Customer;
+<?php namespace App\Http\Controllers\Customer;
 
 use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\DashboardService;
 use App\Http\Requests\CustomerProfileUpdateRequest;
 
-class DashboardController extends Controller
-{
-
-    /**
-     *
-     * @var mixed NULL| App\Http\Services\DashboardService
-     */
-    private $service = null;
+class DashboardController extends Controller {
 
     public function __construct()
     {

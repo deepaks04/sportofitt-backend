@@ -28,22 +28,4 @@ class AuthenticationRequest extends Request
     {
         return $this->rules;
     }
-
-    public function messages()
-    {
-        return [
-            'first_name.required' => 'First name must not be blank',
-            'first_name.alpha' => 'First name must include only letters',
-            'last_name.alpha' => 'Last name must include only letters',
-            'last_name.required' => 'Last name must not be blank',
-            'email.required' => 'Email  must not be blank',
-            'email.email' => 'Enter valid email address',
-            'email.unique' => 'Email address has been already taken',
-            'password.required' => 'Password must not be blank',
-            'password.min' => 'Password must be atleast 6 charcter long',
-            'confirmation_password' => 'Password does not match',
-            'password.regex' => 'Password format not matching',
-        ];
-    }
-
 }

@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers\Auth;
+<?php namespace App\Http\Controllers\Auth;
 
 use App\Area;
 use App\User;
@@ -17,9 +15,9 @@ use App\Http\Helpers\APIResponse;
 use App\Http\Requests\AuthenticationRequest;
 use App\Http\Services\AuthService;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Traits\AuthenticatedUserTrait;
 
-class AuthController extends Controller
-{
+class AuthController extends Controller {
     /*
      * |--------------------------------------------------------------------------
      * | Registration & Login Controller
@@ -32,7 +30,8 @@ class AuthController extends Controller
      */
 
 use AuthenticatesAndRegistersUsers,
-    ThrottlesLogins;
+    ThrottlesLogins,
+    AuthenticatedUserTrait;
 
     public $service;
 
@@ -201,41 +200,6 @@ use AuthenticatesAndRegistersUsers,
         }
 
         APIResponse::$isError = true;
-        return APIResponse::sendResponse();
-    }
-
-    /**
-     *  Getting authenticated user from the token provided in the headers
-     * 
-     * @return json
-     */
-    public function getAuthenticatedUser()
-    {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            if (!$user) {
-                return response()->json(['user_not_found'], 404);
-            }
-            if (0 == $user->is_active) {
-                APIResponse::$message['error'] = 'You are account is inactive kindly contact with the administrator';
-                APIResponse::$status = 401;
-            } else {
-                $token = JWTAuth::getToken();
-                APIResponse::$data = [
-                    'first_name' => $user->fname,
-                    'last_name' => $user->lname,
-                    'email' => $user->email,
-                    'access_token' => $token->__toString()
-                ];
-            }
-        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            APIResponse::handleException($e);
-        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            APIResponse::handleException($e);
-        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-            APIResponse::handleException($e);
-        }
-        // the token is valid and we have found the user via the sub claim
         return APIResponse::sendResponse();
     }
 

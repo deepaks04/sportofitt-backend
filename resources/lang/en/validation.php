@@ -1,17 +1,5 @@
 <?php
-return [
-    
-    /*
-     * |--------------------------------------------------------------------------
-     * | Validation Language Lines
-     * |--------------------------------------------------------------------------
-     * |
-     * | The following language lines contain the default error messages used by
-     * | the validator class. Some of these rules have multiple versions such
-     * | as the size rules. Feel free to tweak each of these messages here.
-     * |
-     */
-    
+return array(
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
     'after' => 'The :attribute must be a date after :date.',
@@ -20,12 +8,13 @@ return [
     'alpha_num' => 'The :attribute may only contain letters and numbers.',
     'array' => 'The :attribute must be an array.',
     'before' => 'The :attribute must be a date before :date.',
-    'between' => [
+    'between' =>
+    array(
         'numeric' => 'The :attribute must be between :min and :max.',
         'file' => 'The :attribute must be between :min and :max kilobytes.',
         'string' => 'The :attribute must be between :min and :max characters.',
-        'array' => 'The :attribute must have between :min and :max items.'
-    ],
+        'array' => 'The :attribute must have between :min and :max items.',
+    ),
     'boolean' => 'The :attribute field must be true or false.',
     'confirmed' => 'The :attribute confirmation does not match.',
     'date' => 'The :attribute is not a valid date.',
@@ -41,19 +30,21 @@ return [
     'integer' => 'The :attribute must be an integer.',
     'ip' => 'The :attribute must be a valid IP address.',
     'json' => 'The :attribute must be a valid JSON string.',
-    'max' => [
+    'max' =>
+    array(
         'numeric' => 'The :attribute may not be greater than :max.',
         'file' => 'The :attribute may not be greater than :max kilobytes.',
         'string' => 'The :attribute may not be greater than :max characters.',
-        'array' => 'The :attribute may not have more than :max items.'
-    ],
+        'array' => 'The :attribute may not have more than :max items.',
+    ),
     'mimes' => 'The :attribute must be a file of type: :values.',
-    'min' => [
+    'min' =>
+    array(
         'numeric' => 'The :attribute must be at least :min.',
         'file' => 'The :attribute must be at least :min kilobytes.',
         'string' => 'The :attribute must be at least :min characters.',
-        'array' => 'The :attribute must have at least :min items.'
-    ],
+        'array' => 'The :attribute must have at least :min items.',
+    ),
     'not_in' => 'The selected :attribute is invalid.',
     'numeric' => 'The :attribute must be a number.',
     'regex' => 'The :attribute format is invalid.',
@@ -64,58 +55,64 @@ return [
     'required_without' => 'The :attribute field is required when :values is not present.',
     'required_without_all' => 'The :attribute field is required when none of :values are present.',
     'same' => 'The :attribute and :other must match.',
-    'size' => [
+    'size' =>
+    array(
         'numeric' => 'The :attribute must be :size.',
         'file' => 'The :attribute must be :size kilobytes.',
         'string' => 'The :attribute must be :size characters.',
-        'array' => 'The :attribute must contain :size items.'
-    ],
+        'array' => 'The :attribute must contain :size items.',
+    ),
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid zone.',
     'unique' => 'The :attribute has already been taken.',
     'url' => 'The :attribute format is invalid.',
-    "alpha_spaces"     => "The :attribute may only contain letters and spaces.",
-    "float"     => "The :attribute must be decimal with a precision of 2.",
-    'alpha_specialchars' => "The :attribute may only contain alphabets and special characters like , & . - _",
-    "zip" => "Zip Code must be 6 digit",
-    "mobile" => "Contact no must be 10 digit",
-    "ifsc" => "IFSC code must be Alphanumeric and 11 characters in size.",
-    "alpha_space_num" => "The :attribute may only contain alphabet, number and space character.",
+    'alpha_spaces' => 'The :attribute may only contain letters and spaces.',
+    'float' => 'The :attribute must be decimal with a precision of 2.',
+    'alpha_specialchars' => 'The :attribute may only contain alphabets and special characters like , & . - _',
+    'zip' => 'Zip Code must be 6 digit',
+    'mobile' => 'Contact no must be 10 digit',
+    'ifsc' => 'IFSC code must be Alphanumeric and 11 characters in size.',
+    'alpha_space_num' => 'The :attribute may only contain alphabet, number and space character.',
     'password_custom' => 'The :attribute may only contain alphabet, number and minimum 1 alphabet & 1 number should be there',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify custom validation messages for attributes using the
-    | convention "attribute.rule" to name the lines. This makes it quick to
-    | specify a specific custom language line for a given attribute rule.
-    |
-    */
-
-    'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message'
-        ]
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap attribute place-holders
-    | with something more reader friendly such as E-Mail Address instead
-    | of "email". This simply helps us make messages a little cleaner.
-    |
-    */
-
-    'attributes' => [
+    'custom' =>
+    array(
+        'first_name' =>
+        array(
+            'required' => 'First name',
+            'alpha' => 'First name must not be',
+        ),
+        'last_name' =>
+        array(
+            'required' => 'Last name must not be blank',
+            'alpha' => 'Last name must not be blank',
+        ),
+        'email' =>
+        array(
+            'required' => 'Email must not be blank',
+            'email' => 'Enter valid email address',
+            'unique' => 'Email address has been already taken1',
+        ),
+        'password' =>
+        array(
+            'required' => 'Password must not be blank',
+            'min' => 'Password must be atleast 6 charcter long',
+            'confirmation_password' => 'Password does not match',
+            'regex' => 'Password does not match',
+        ),
+        'weight' => array('required' => 'Select weight'),
+        'height' => array('required' => 'Select height'),
+        'waist' => array('required' => 'Select waist'),
+        'chest' => array('required' => 'Select chest'),
+        'forarm' => array('required' => 'Select forarm'),
+        'wrist' => array('required' => 'Select wrist'),
+        'hip' => array('required' => 'Select hip size'),
+        'activity_level' => array('required' => 'Select activity level'),
+    ),
+    'attributes' =>
+    array(
         'fname' => 'First Name',
         'lname' => 'Last Name',
         'email' => 'E-Mail',
         'business_name' => 'Business Name',
-    ]
-]
-;
+    ),
+);

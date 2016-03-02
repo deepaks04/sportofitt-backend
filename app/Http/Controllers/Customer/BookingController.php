@@ -1,14 +1,11 @@
 <?php namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
 use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\BookingService;
 
 class BookingController extends Controller {
-
-    private $service = null;
 
     public function __construct()
     {
@@ -24,6 +21,9 @@ class BookingController extends Controller {
     {
         try {
             $userBookings = $this->service->getUsersBooking();
+            if (0 == $userBookings->count()) {
+                APIResponse::$message['success'] = 'Ooops ! I think you have not made your first booking yet!';
+            }
             APIResponse::$data = $userBookings;
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
@@ -67,7 +67,7 @@ class BookingController extends Controller {
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }
-        
+
         return APIResponse::sendResponse();
     }
 

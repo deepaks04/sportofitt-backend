@@ -115,6 +115,8 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userf
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
     Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
     Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
+    Route::get('bodystats', array('uses' => 'Customer\BodyStatsController@index'));
+    Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));
 });
 
 Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], function() {

@@ -1,12 +1,9 @@
-<?php
-
-namespace App\Http\Helpers;
+<?php namespace App\Http\Helpers;
 
 use JWTAuth;
 use Illuminate\Support\Facades\Response as Response;
 
-class APIResponse extends Response
-{
+class APIResponse extends Response {
 
     // [Informational 1xx]
     const HTTP_CONTINUE = 100;
@@ -111,7 +108,7 @@ class APIResponse extends Response
      *  
      * @param \App\Http\Helpers\Exception $exception
      */
-    public function handleException(Exception $exception)
+    public static function handleException(Exception $exception)
     {
         APIResponse::$status = $exception->getStatusCode();
         APIResponse::$isError = true;
