@@ -64,7 +64,7 @@ class APIResponse extends Response {
      * 
      * @var string
      */
-    public static $message = [];
+    public static $message = ['success' => array(), 'error' => array()];
 
     /**
      * Sending necessary data to request
