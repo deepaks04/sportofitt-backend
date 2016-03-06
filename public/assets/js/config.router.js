@@ -55,30 +55,30 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             url: '/facility',
             template: '<div ui-view class="fade-in-up"></div>',
             resolve: loadSequence('ngTable', 'xeditable', 'facilityService', 'facilityCtrl'),
-            title: 'Facility',
+            title: 'Venue',
             ncyBreadcrumb: {
-                label: 'Facility'
+                label: 'Venue'
             }}).state('vendor.facility.list', {
             url: '/list',
             templateUrl: "assets/views/vendor/facility/list.html",
-            title: 'Facility List',
+            title: 'Venue List',
             ncyBreadcrumb: {
-                label: 'Facility List'
+                label: 'Venue List'
             }
         }).state('vendor.facility.add', {
             url: '/add',
             templateUrl: "assets/views/vendor/facility/add.html",
-            title: 'Facility Add',
+            title: 'Venue Add',
             ncyBreadcrumb: {
-                label: 'Facility Add'
+                label: 'Venue Add'
             },
             resolve: loadSequence('ui.select', 'monospaced.elastic', 'ui.mask', 'touchspin-plugin', 'selectCtrl')
         }).state('vendor.facility.calender', {
             url: '/calender/:facilityId',
             templateUrl: "assets/views/vendor/facility/booking.html",
-            title: 'Facility Booking',
+            title: 'Venue Booking',
             ncyBreadcrumb: {
-                label: 'Facility Booking'
+                label: 'Venue Booking'
             },
             resolve: loadSequence('moment', 'mwl.calendar')
         }).state('login', {

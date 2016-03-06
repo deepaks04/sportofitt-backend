@@ -2,8 +2,8 @@
 <section id="page-title">
     <div class="row">
         <div class="col-sm-8">
-            <h1 class="mainTitle">ADD FACILITY</h1>
-            <span class="mainDescription">Create new facility for your
+            <h1 class="mainTitle">ADD VENUE</h1>
+            <span class="mainDescription">Create new venue for your
                 business</span>
         </div>
         <div ncy-breadcrumb></div>
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-12">
             <h5 class="over-title margin-bottom-15">
-                <span class="text-bold">New Facility</span>
+                <span class="text-bold">New Venue</span>
             </h5>
 
             <p></p>
@@ -28,7 +28,7 @@
                                  ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
                                 <label class="control-label"> Name <span
                                         class="symbol required"></span>
-                                </label> <input type="text" placeholder="Enter Facility Name"
+                                </label> <input type="text" placeholder="Enter Venue Name"
                                                 class="form-control" name="name" ng-model="facility.name"
                                                 required/> <span class="error text-small block"
                                                 ng-if="Form.name.$dirty && Form.name.$invalid">
@@ -151,7 +151,5 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>

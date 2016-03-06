@@ -2,8 +2,8 @@
 <section id="page-title">
     <div class="row">
         <div class="col-sm-8">
-            <h1 class="mainTitle">FACILITY LIST</h1>
-            <span class="mainDescription">List of available facility for
+            <h1 class="mainTitle">VENUE LIST</h1>
+            <span class="mainDescription">List of available venue for
                 your business</span>
         </div>
         <div ncy-breadcrumb></div>
@@ -279,7 +279,7 @@
                                  ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
                                 <label class="control-label"> Name <span
                                         class="symbol required"></span>
-                                </label> <input type="text" placeholder="Enter Facility Name"
+                                </label> <input type="text" placeholder="Enter Venue Name"
                                                 class="form-control" name="name" ng-model="facility.name"
                                                 required/> <span class="error text-small block"
                                                 ng-if="Form.name.$dirty && Form.name.$invalid">
@@ -416,21 +416,21 @@
     <div class="row">
         <div class="col-md-12">
             <h5 class="over-title margin-bottom-15">
-                <span class="text-bold">FACILITY</span>
+                <span class="text-bold">VENUE</span>
             </h5>
             <!-- /// controller:  'ngTableCtrl2' -  localtion: assets/js/controllers/ngTableCtrl.js /// -->
             <div ng-controller="facilityListCtrl">
                 <div class="row margin-bottom-10">
                     <div class="col-md-12">
                         <button ui-sref="vendor.facility.add"
-                                class="btn btn-default pull-right">Add New Facility
+                                class="btn btn-default pull-right">Add New Venue
                         </button>
                     </div>
                 </div>
                 <table ng-table="tableParams" class="table table-striped">
                     <tr ng-repeat="facility in facilityData" ng-if="facility.is_active">
                         <td data-title="'Name'" sortable="'name'"><a
-                                data-ng-click="open('lg', facility, 'edit',false)">{{facility.name}}</a></td>
+                                data-ng-click="open('lg', facility, 'edit', false)">{{facility.name}}</a></td>
                         <td class="center" data-title="'Category'">{{facility.category.sub.name}}</td>
                         <td data-title="'Slots'" sortable="'slots'">{{facility.slots}}</td>
                         <td data-title="'Created At'" sortable="'created_at'">{{facility.created_at}}</td>
@@ -439,15 +439,15 @@
                                 <a data-ng-click="open('lg', facility, 'opening_hours', true)"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
                                    tooltip="Add"><i class="fa fa-plus"></i></a>
-                                <a data-ng-click="open('lg', facility, 'edit',false)"
+                                <a data-ng-click="open('lg', facility, 'edit', false)"
                                    class="btn btn-transparent btn-xs" tooltip-placement="top"
-                                   tooltip="Edit Profile"><i class="fa fa-pencil"></i></a>
+                                   tooltip="Edit Venue"><i class="fa fa-pencil"></i></a>
                                 <!--<a ng-if="facility.is_active" data-ng-click="blockUnblockFacility(facility)"-->
                                 <!--class="btn btn-transparent btn-xs" tooltip-placement="top"-->
                                 <!--tooltip="Block facility"><i class="fa fa-toggle-off"></i></a>-->
                                 <a data-ng-click="blockUnblockFacility(facility)"
                                    class="btn btn-transparent  btn-xs" tooltip-placement="top"
-                                   tooltip="Delete facility"><i class=" danger fa fa-remove"></i></a>
+                                   tooltip="Delete Venue"><i class=" danger fa fa-remove"></i></a>
                                 <a
                                     ui-sref="vendor.facility.calender({facilityId : facility.id})"
                                     class="btn btn-transparent btn-xs tooltips"
@@ -464,7 +464,7 @@
                                     <ul class="dropdown-menu pull-right dropdown-light" role="menu">
                                         <li><a data-ng-click="open('lg', facility, 'opening_hours', true)"> Add </a>
                                         </li>
-                                        <li><a data-ng-click="open('lg', facility, 'edit',false)"> Edit </a></li>
+                                        <li><a data-ng-click="open('lg', facility, 'edit', false)"> Edit </a></li>
                                         <li><a data-ng-click="blockUnblockFacility(facility)"> Delete </a></li>
                                         <li><a
                                                 ui-sref="vendor.facility.booking({facilityId : facility.id})">
