@@ -468,8 +468,15 @@ class VendorsController extends Controller
                 $message = "Facility already exists";
             } else { // If not then create
                 $status = 200;
+                if(isset($facility['sub_category_id']) && $facility['sub_category_id'] > 0) {
+                    $subCategory = SubCategory::find($facility['sub_category_id']);
+                    $facility['root_category_id'] = $subCategory->root_category_id;
+                }
+                
                 $message = "New facility added successfully";
                 $facility['vendor_id'] = $this->vendor->id;
+                $facility['area_id'] = $this->vendor->area_id;
+                $facility['pincode'] = $this->vendor->postcode;
                 $facility['created_at'] = Carbon::now();
                 $facility['updated_at'] = Carbon::now();
                 $newFacility = AvailableFacility::create($facility);
@@ -625,6 +632,13 @@ class VendorsController extends Controller
             }*/
             $facility['vendor_id'] = $this->vendor->id;
             $DbFacility = $this->vendor->facility()->find($id);
+            if(isset($facility['sub_category_id']) && $facility['sub_category_id'] > 0) {
+                $subCategory = SubCategory::find($facility['sub_category_id']);
+                $facility['root_category_id'] = $subCategory->root_category_id;
+            }
+            $facility['area_id'] = $this->vendor->area_id;
+            $facility['pincode'] = $this->vendor->postcode;                
+            
             AvailableFacility::where('id', '=', $id)->update($facility);
             if(($facility['off_peak_hour_price']!= $DbFacility->off_peak_hour_price)||($facility['peak_hour_price']!= $DbFacility->peak_hour_price)){
                 $this->UpdateSessionPrices($id);
