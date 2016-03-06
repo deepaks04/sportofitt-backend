@@ -65,6 +65,7 @@ use AuthenticatesAndRegistersUsers,
     {
         try {
             $credentials = $this->getCredentials($request);
+            $credentials['is_active'] = 1;
             try {
                 // attempt to verify the credentials and create a token for the user
                 if (!$token = JWTAuth::attempt($credentials)) {
