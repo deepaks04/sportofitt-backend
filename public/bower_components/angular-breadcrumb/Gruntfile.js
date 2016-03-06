@@ -163,7 +163,7 @@ module.exports = function (grunt) {
     },
     open: {
       server: {
-        url: 'http://localhost:<%= connect.options.port %>/index.html'
+        url: 'http://localhost:<%= connect.options.port %>/index.php'
       }
     },
     bump: {

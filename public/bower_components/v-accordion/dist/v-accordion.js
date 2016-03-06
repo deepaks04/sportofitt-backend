@@ -1,6 +1,6 @@
 /**
  * vAccordion - AngularJS multi-level accordion component
- * @version v1.2.7
+ * @version v1.2.9
  * @link http://lukaszwatroba.github.io/v-accordion
  * @author Łukasz Wątroba <l@lukaszwatroba.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -21,12 +21,11 @@ angular.module('vAccordion.config', [])
 
 // Modules
 angular.module('vAccordion.directives', []);
-angular.module('vAccordion', 
+angular.module('vAccordion',
   [
     'vAccordion.config',
     'vAccordion.directives'
   ]);
-
 
 
 
@@ -50,7 +49,7 @@ function vAccordionDirective () {
       transclude(scope.$parent, function(clone) {
         iElement.append(clone);
       });
-      
+
       var protectedApiMethods = ['toggle', 'expand', 'collapse', 'expandAll', 'collapseAll'];
 
       function checkCustomControlAPIMethods () {
@@ -76,7 +75,7 @@ function vAccordionDirective () {
 
         var mergedControl = angular.extend({}, scope.internalControl, scope.control);
         scope.control = scope.internalControl = mergedControl;
-      } 
+      }
       else {
         scope.control = scope.internalControl;
       }
@@ -91,10 +90,10 @@ function AccordionDirectiveController ($scope) {
   var isDisabled = false;
 
   $scope.panes = [];
-	
+
 	$scope.expandCb = (angular.isFunction($scope.expandCb)) ? $scope.expandCb : angular.noop;
 	$scope.collapseCb = (angular.isFunction($scope.collapseCb)) ? $scope.collapseCb : angular.noop;
-	
+
   ctrl.hasExpandedPane = function () {
     var bool = false;
 
@@ -109,13 +108,29 @@ function AccordionDirectiveController ($scope) {
 
     return bool;
   };
-  
+
   ctrl.getPaneByIndex = function (index) {
-    return $scope.panes[index];
+    var thePane;
+
+    angular.forEach($scope.panes, function (iteratedPane) {
+      if (iteratedPane.$parent && angular.isDefined(iteratedPane.$parent.$index) && iteratedPane.$parent.$index === index) {
+        thePane = iteratedPane;
+      }
+    });
+
+    return (thePane) ? thePane : $scope.panes[index];
   };
 
   ctrl.getPaneIndex = function (pane) {
-    return $scope.panes.indexOf(pane);
+    var theIndex;
+
+    angular.forEach($scope.panes, function (iteratedPane) {
+      if (iteratedPane.$parent && angular.isDefined(iteratedPane.$parent.$index) && iteratedPane === pane) {
+        theIndex = iteratedPane.$parent.$index;
+      }
+    });
+
+    return (angular.isDefined(theIndex)) ? theIndex : $scope.panes.indexOf(pane);
   };
 
 
@@ -131,13 +146,13 @@ function AccordionDirectiveController ($scope) {
     if (!$scope.allowMultiple) {
       if (ctrl.hasExpandedPane() && paneToAdd.isExpanded) {
         throw new Error('The `multiple` attribute can\'t be found');
-      } 
+      }
     }
 
     $scope.panes.push(paneToAdd);
 
     if (paneToAdd.isExpanded) {
-      $scope.expandCb({ index: ctrl.getPaneIndex(paneToAdd), target: paneToAdd,  });
+      $scope.expandCb({ index: ctrl.getPaneIndex(paneToAdd), target: paneToAdd });
     }
   };
 
@@ -214,7 +229,7 @@ function AccordionDirectiveController ($scope) {
 
   ctrl.collapse = function (paneToCollapse) {
     if (isDisabled || !paneToCollapse) { return; }
-    
+
     if (paneToCollapse.isExpanded) {
       paneToCollapse.isExpanded = false;
       $scope.collapseCb({ index: ctrl.getPaneIndex(paneToCollapse) });
@@ -259,7 +274,6 @@ function AccordionDirectiveController ($scope) {
   };
 }
 AccordionDirectiveController.$inject = ['$scope'];
-
 
 
 
@@ -334,7 +348,6 @@ function vPaneHeaderDirective () {
 
 
 
-
 // vPane directive
 angular.module('vAccordion.directives')
   .directive('vPane', vPaneDirective);
@@ -347,7 +360,8 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
     transclude: true,
     controller: PaneDirectiveController,
     scope: {
-      isExpanded: '=?expanded'
+      isExpanded: '=?expanded',
+      isDisabled: '=?ngDisabled'
     },
     link: function (scope, iElement, iAttrs, accordionCtrl, transclude) {
       transclude(scope.$parent, function (clone) {
@@ -356,6 +370,10 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
 
       if (!angular.isDefined(scope.isExpanded)) {
         scope.isExpanded = angular.isDefined(iAttrs.expanded);
+      }
+
+      if (angular.isDefined(iAttrs.disabled)) {
+        scope.isDisabled = true;
       }
 
       var states = accordionConfig.states;
@@ -372,12 +390,14 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
         throw new Error('The `v-pane-content` directive can\'t be found');
       }
 
-      accordionCtrl.addPane(scope);
+      scope.$evalAsync(function () {
+        accordionCtrl.addPane(scope);
+      });
 
       scope.paneElement = iElement;
       scope.paneContentElement = paneContent;
       scope.paneInnerElement = paneInner;
-      
+
       scope.accordionCtrl = accordionCtrl;
 
       function expand () {
@@ -449,7 +469,7 @@ function vPaneDirective ($timeout, $animate, accordionConfig) {
       scope.$watch('isExpanded', function (newValue, oldValue) {
         if (newValue === oldValue) { return true; }
         if (newValue) { expand(); }
-        else { collapse(); }            
+        else { collapse(); }
       });
     }
   };
@@ -462,7 +482,7 @@ function PaneDirectiveController ($scope) {
   var ctrl = this;
 
   ctrl.toggle = function () {
-    if (!$scope.isAnimating) {
+    if (!$scope.isAnimating && !$scope.isDisabled) {
       $scope.accordionCtrl.toggle($scope);
     }
   };
@@ -476,6 +496,5 @@ function PaneDirectiveController ($scope) {
   };
 }
 PaneDirectiveController.$inject = ['$scope'];
-
 
 })(angular);

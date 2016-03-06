@@ -1,0 +1,60 @@
+<div id="page-canvas">
+    <!--Off Canvas Navigation-->
+    <nav class="off-canvas-navigation">
+        <header>Navigation</header>
+        <div class="main-navigation navigation-off-canvas"></div>
+    </nav>
+    <!--Page Content-->
+<div id="page-content">
+    <section class="container">
+        <div class="block">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
+                    <header>
+                        <h1 class="page-title">Register</h1>
+                    </header>
+                    <hr>
+                    <form role="form" id="form-register" method="post" novalidate data-ng-submit="vm.form.register(vm.user)">
+                        <div class="form-group" ng-class="{'has-error':vm.errors.first_name,'has-success':!vm.errors.first_name}">
+                            <label for="first_name">First Name:</label>
+                            <input type="text" class="form-control" name="first_name" data-ng-model="vm.user.first_name" required>
+                            <span class="error text-small block" ng-if="vm.errors.first_name">{{vm.errors.first_name}}</span>
+                        </div><!-- /.form-group -->
+                        <div class="form-group" ng-class="{'has-error':vm.errors.last_name,'has-success':!vm.errors.last_name}">
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" class="form-control" name="last_name" data-ng-model="vm.user.last_name" required>
+                            <span class="error text-small block" ng-if="vm.errors.last_name">{{vm.errors.last_name}}</span>
+                        </div><!-- /.form-group -->
+                        <div class="form-group" ng-class="{'has-error':vm.errors.email,'has-success':!vm.errors.email}">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control"  name="email" data-ng-model="vm.user.email" required>
+                            <span class="error text-small block" ng-if="vm.errors.email">{{vm.errors.email}}</span>
+                        </div><!-- /.form-group -->
+                        <div class="form-group" ng-class="{'has-error':vm.errors.password,'has-success':!vm.errors.password}">
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" name="password" data-ng-model="vm.user.password" required>
+                            <span class="error text-small block" ng-if="vm.errors.password">{{vm.errors.password}}</span>
+                        </div><!-- /.form-group -->
+                        <div class="form-group" ng-class="{'has-error':vm.errors.password_confirmation,'has-success':!vm.errors.password_confirmation}">
+                            <label for="form-register-confirm-password">Confirm Password:</label>
+                            <input type="password" class="form-control" id="form-register-confirm-password" data-ng-model="vm.user.password_confirmation"
+                                   name="password_confirmation" required>
+                            <span class="error text-small block" ng-if="vm.errors.password_confirmation">{{vm.errors.password_confirmation}}</span>
+                        </div><!-- /.form-group -->
+
+                        <div class="form-group clearfix">
+                            <button type="submit" class="btn pull-right btn-default" id="account-submit">Create an Account</button>
+                        </div><!-- /.form-group -->
+                    </form>
+                    <hr>
+                    <div class="center">
+                        <figure class="note">By clicking the “Create an Account” button you agree with our <a href="terms-conditions.html" class="link">Terms and conditions</a></figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.block-->
+</div>
+<!-- end Page Content-->
+</div>

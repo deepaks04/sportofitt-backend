@@ -5,7 +5,7 @@ var open = require('open');
 
 gulp.task('watch', ['server'], function() {
   gp.livereload.listen();
-  gulp.watch(['./index.html', './docs/**', './src/**']).on('change', gp.livereload.changed);
+  gulp.watch(['./index.php', './docs/**', './src/**']).on('change', gp.livereload.changed);
 });
 
 gulp.task('server', function() {

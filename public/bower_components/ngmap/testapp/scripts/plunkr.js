@@ -58,7 +58,7 @@ plunkr.service('Plnkr', function() {
     postData['tags[]'] = 'auglarjs';
     postData['files[script.js]'] = js;
     postData['files[style.css]'] = css;
-    postData['files[index.html]'] = 
+    postData['files[index.php]'] =
       '<!doctype html>\n' +
       '<html ng-app="' + appName + '">\n' +
       '  <head>\n' +
