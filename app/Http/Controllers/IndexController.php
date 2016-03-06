@@ -9,7 +9,7 @@ class IndexController extends Controller {
      *
      * @var mixed null | App\Http\Services\IndexService
      */
-    private $service = null;
+    protected $service = null;
 
     public function __construct()
     {
