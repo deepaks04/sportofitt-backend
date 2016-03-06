@@ -2,7 +2,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-
+use Auth;
 class UpdateVendorProfileRequest extends Request
 {
 
@@ -23,7 +23,7 @@ class UpdateVendorProfileRequest extends Request
      */
     public function rules()
     {
-        return [
+        $rules =  [
             'fname' => 'required|alpha|min:3|max:25',
             'lname' => 'required||alpha|min:3|max:25',
             'business_name' => 'required|alpha_specialchars|min:3|max:160',
@@ -35,8 +35,15 @@ class UpdateVendorProfileRequest extends Request
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'postcode' => 'required|numeric|zip',
             'commission' => 'required|integer',
-            'contact' => 'required|numeric|mobile'
+            'contact' => 'required|numeric|mobile|unique:users'
         ];
+        
+        if(Auth::check()) {
+            $userId = Auth::user()->id;
+            $rules['contact'] = 'required|numeric|mobile|unique:vendors,contact,' . $userId . ',user_id';
+        }        
+        
+        return $rules;
     }
     public function messages()
     {
