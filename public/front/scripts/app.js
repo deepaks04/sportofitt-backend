@@ -36,5 +36,5 @@ angular
 
       // Satellizer configuration that specifies which API
       // route the JWT should be retrieved from
-      $authProvider.loginUrl = "/sportofit/public/api/v1/user/sign-in";
+      $authProvider.loginUrl = "/api/v1/user/sign-in";
 });
