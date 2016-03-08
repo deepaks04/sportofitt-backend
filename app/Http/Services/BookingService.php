@@ -1,9 +1,12 @@
-<?php namespace App\Http\Services;
+<?php
+
+namespace App\Http\Services;
 
 use App\SessionBooking;
 use App\Http\Services\BaseService;
 
-class BookingService extends BaseService {
+class BookingService extends BaseService
+{
 
     /**
      *
@@ -47,13 +50,15 @@ class BookingService extends BaseService {
     {
         try {
             $response = array();
-            $booking = $this->sessionBooking->findBookingDetails($id); 
-            $response['booking'] = $booking;
-            $response['facility'] = $booking->facility()->first();
-            $response['facility']['vendor'] = $booking->facility()->first()->vendor;
-            $response['facility']['subCategory'] = $booking->facility()->first()->subCategory;
-            $response['facility']['subCategory']['rootCategory'] = $booking->facility()->first()->subCategory()->first()->rootCategory;
-            
+            $booking = $this->sessionBooking->findBookingDetails($id);
+            if (!empty($booking)) {
+                $response['booking'] = $booking;
+                $response['facility'] = $booking->facility()->first();
+                $response['facility']['vendor'] = $booking->facility()->first()->vendor;
+                $response['facility']['subCategory'] = $booking->facility()->first()->subCategory;
+                $response['facility']['subCategory']['rootCategory'] = $booking->facility()->first()->subCategory()->first()->rootCategory;
+            }
+
             return $response;
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
