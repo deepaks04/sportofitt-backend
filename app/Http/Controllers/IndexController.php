@@ -1,10 +1,14 @@
-<?php namespace App\Http\Controllers;
+<?php
 
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Services\IndexService;
 
-class IndexController extends Controller {
-    
+class IndexController extends Controller
+{
+
     /**
      *
      * @var mixed null | App\Http\Services\IndexService
@@ -14,6 +18,19 @@ class IndexController extends Controller {
     public function __construct()
     {
         $this->service = new IndexService();
+    }
+
+    public function index(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $vendors = $this->service->getVendors($data);
+            APIResponse::$data = $vendors;
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
     }
 
     /**
@@ -31,7 +48,7 @@ class IndexController extends Controller {
 
         return APIResponse::sendResponse();
     }
-    
+
     /**
      * Get all lates available facilities those are added recently.
      * 

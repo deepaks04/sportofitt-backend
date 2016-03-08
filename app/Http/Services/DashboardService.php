@@ -13,15 +13,6 @@ use App\Http\Helpers\FileHelper;
 class DashboardService extends BaseService
 {
 
-    public function __construct()
-    {
-        try {
-            parent::__construct();
-        } catch (Exception $exception) {
-            throw new Exception($exception->getMessage(), $exception->getStatusCode(), $exception);
-        }
-    }
-
     /**
      * Getting users profile inforamtion of authenticated user based on
      * the token

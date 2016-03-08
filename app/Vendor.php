@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
@@ -24,9 +25,8 @@ class Vendor extends Model
         'billing_info_id',
         'bank_detail_id'
     ];
-    
-    protected $hidden = ['created_at','updated_at'];
-    
+    protected $hidden = ['created_at', 'updated_at'];
+
     /**
      * vendors belongs to user
      * 
@@ -76,4 +76,21 @@ class Vendor extends Model
     {
         return $this->hasMany('App\AvailableFacility', 'vendor_id');
     }
+
+    public function getVendorsAccordingToLatLong($squareLatLong, $latitude, $longitude)
+    {
+        $query = self::select('id')
+                ->where('latitude', '<=', $squareLatLong['latNorth'])
+                ->where('latitude', '>=', $squareLatLong['latSouth'])
+                ->where('longitude', '<=', $squareLatLong['lonEast'])
+                ->where('longitude', '>=', $squareLatLong['lonWest'])
+                ->where('latitude', '!=', $latitude)
+                ->where('longitude', '!=', $longitude)
+                ->where('is_active', '=', \DB::raw(1));
+                //->get();
+        echo $query->toSql();die;
+//SELECT * FROM zipcodedistance 
+//WHERE (latitude <= $latN AND latitude >= $latS AND longitude <= $lonE AND longitude >= $lonW) AND (latitude != $lat1 AND longitude != $lon1) AND city != '' ORDER BY state, city, latitude, longitude        
+    }
+
 }

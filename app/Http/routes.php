@@ -122,6 +122,7 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userf
 Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
+    Route::get('search', array('uses' => 'IndexController@index'));
 });
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
 Route::get('messages', array('uses' => 'Admin\MessagesController@index'))->name('messages');

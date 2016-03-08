@@ -1,11 +1,14 @@
-<?php namespace App\Http\Controllers\Customer;
+<?php
+
+namespace App\Http\Controllers\Customer;
 
 use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\DashboardService;
 use App\Http\Requests\CustomerProfileUpdateRequest;
 
-class DashboardController extends Controller {
+class DashboardController extends Controller
+{
 
     public function __construct()
     {
@@ -38,6 +41,7 @@ class DashboardController extends Controller {
     public function updateProfile(CustomerProfileUpdateRequest $request)
     {
         try {
+
             $data = $request->all();
             $profileDetails = $this->service->updateProfileInformation($data);
             if (empty(APIResponse::$message['error'])) {
