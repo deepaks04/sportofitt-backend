@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Area;
+use App\SubCategory;
 use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Services\IndexService;
@@ -20,12 +22,53 @@ class IndexController extends Controller
         $this->service = new IndexService();
     }
 
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
     public function index(Request $request)
     {
+        $reponse = array();
         try {
             $data = $request->all();
             $vendors = $this->service->getVendors($data);
-            APIResponse::$data = $vendors;
+            APIResponse::$message['success'] = 'No result found. Kindly zoom out the map to search more services.';
+            if (!empty($data['category']) && $subCategory = SubCategory::getSubCategoryById($data['category'])) {
+                $subCategory->rootCategory;
+                $reponse['category'] = $subCategory;
+            }
+
+            if (!empty($data['area_id']) && $area = Area::getAreaById($data['area_id'])) {
+                $area->cities;
+                $reponse['area'] = $area;
+            }
+
+            if ($vendors) {
+                $reponse['vendors'] = $vendors;
+                APIResponse::$data = $reponse;
+                APIResponse::$message['success'] = "";
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
+    
+    /**
+     * Get details of respective search record. That is showing the all the 
+     * details of the vendor including its all facilities in all categories.
+     * 
+     * @param Request $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function show(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $response = $this->service->getSearchRecordDetails($data);
+            APIResponse::$data = $response;
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }

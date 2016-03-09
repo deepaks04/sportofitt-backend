@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Config;
 use Illuminate\Database\Eloquent\Model;
 
 class Vendor extends Model
@@ -77,20 +78,70 @@ class Vendor extends Model
         return $this->hasMany('App\AvailableFacility', 'vendor_id');
     }
 
-    public function getVendorsAccordingToLatLong($squareLatLong, $latitude, $longitude)
+    /**
+     * Get all vendors available with in the specific distance of mile for 
+     * particular area and category.
+     * 
+     * @param mixed null | float $latitude
+     * @param mixed null | $longitude
+     * @param mixed integer | null $areaId
+     * @param mixed integer | null $category
+     * @param integer $offset
+     * @param integer $limit
+     * @return array
+     */
+    public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $offset = 0, $limit = 10)
     {
-        $query = self::select('id')
-                ->where('latitude', '<=', $squareLatLong['latNorth'])
-                ->where('latitude', '>=', $squareLatLong['latSouth'])
-                ->where('longitude', '<=', $squareLatLong['lonEast'])
-                ->where('longitude', '>=', $squareLatLong['lonWest'])
-                ->where('latitude', '!=', $latitude)
-                ->where('longitude', '!=', $longitude)
-                ->where('is_active', '=', \DB::raw(1));
-                //->get();
-        echo $query->toSql();die;
-//SELECT * FROM zipcodedistance 
-//WHERE (latitude <= $latN AND latitude >= $latS AND longitude <= $lonE AND longitude >= $lonW) AND (latitude != $lat1 AND longitude != $lon1) AND city != '' ORDER BY state, city, latitude, longitude        
+        $vendors = array();
+        $sql = "vendors.id AS vendor_id,vendors.business_name,vendors.description,vendors.address,vendors.postcode,
+            u.fname AS firstName,u.lname AS lastName,u.profile_picture,af.name as facilityName,af.image as facilityImage ";
+        if (null != $latitude && null != $longitude) {
+            $sql .= ", ( 3959 * acos( cos( radians($latitude) ) 
+        * cos( radians( latitude ) ) 
+        * cos( radians( longitude ) - radians($longitude)) + sin( radians($latitude) ) 
+        * sin( radians( latitude  ) ) ) ) AS distance";
+        }
+
+        $query = self::select(\DB::raw($sql))
+                ->join('users AS u', 'vendors.user_id', '=', 'u.id')
+                ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
+                ->where('vendors.is_processed', '=', \DB::raw(1))
+                ->where('af.is_active', '=', \DB::raw(1));
+        if (null != $areaId) {
+            $query->where('vendors.area_id', '=', $areaId);
+        }
+
+        if (null != $category) {
+            $query->where('af.sub_category_id', '=', $category);
+        }
+
+        if (null != $latitude && null != $longitude) {
+            $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
+                    ->orderBy('distance', 'ASC');
+        }
+        
+        $result = $query->skip($offset)->take($limit)->get();
+        if (!empty($result) && $result->count() > 0) {
+            $vendors = $result->toArray();
+            
+        }
+
+        return $vendors;
+    }
+
+    /**
+     * Get vendor details according to Id
+     * 
+     * @param integer  $vendorId
+     * @return mixed App\Vendor | boolean
+     */
+    public function getVendorDetailsById($vendorId)
+    {
+        if ($vendorId) {
+            return self::find($vendorId);
+        }
+
+        return false;
     }
 
 }

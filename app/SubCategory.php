@@ -20,6 +20,22 @@ class SubCategory extends Model
      */
     public function rootCategory()
     {
-        return $this->belongsTo('App\RootCategory', 'id');
+        return $this->belongsTo('App\RootCategory');
+    }
+    
+    /**
+     * Get subcategory by id 
+     * 
+     * @param integer $id
+     * @return mixed App\SubCategory | boolean
+     */
+    public static function getSubCategoryById($id) 
+    {
+        $subCategory = self::find($id);
+        if(!empty($subCategory) && $subCategory->id > 0) {
+            return $subCategory;
+        }
+        
+        return false;
     }
 }
