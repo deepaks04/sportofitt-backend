@@ -30,10 +30,10 @@ class IndexService extends BaseService
      */
     public function getVendors(array $requestData)
     {
-        //if (!empty($requestData['lat']) && !empty($requestData['long'])) {
+        if (!empty($requestData['lat']) && !empty($requestData['long'])) {
             $vendor = new Vendor();
             return $vendor->searchVendors($requestData['lat'], $requestData['long'], $requestData['area_id'], $requestData['category']);
-        //}
+        }
 
         return array();
     }
