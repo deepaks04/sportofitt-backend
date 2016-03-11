@@ -33,9 +33,11 @@ class IndexService extends BaseService
         try {
             $lat =  (!empty($requestData['lat']))?$requestData['lat']:null;
             $long =  (!empty($requestData['long']))?$requestData['long']:null;
+            $areaId =  (!empty($requestData['area_id']))?$requestData['area_id']:null;
+            $category =  (!empty($requestData['category']))?$requestData['category']:null;
 
             $vendor = new Vendor();
-            return $vendor->searchVendors($lat, $long, $requestData['area_id'], $requestData['category']);
+            return $vendor->searchVendors($lat, $long, $areaId, $category);
             
         } catch (Exception $ex) {
             throw new Exception($ex);
