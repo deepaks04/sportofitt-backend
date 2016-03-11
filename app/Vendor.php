@@ -105,7 +105,7 @@ class Vendor extends Model
         $query = self::select(\DB::raw($sql))
                 ->join('users AS u', 'vendors.user_id', '=', 'u.id')
                 ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
-                ->where('vendors.is_processed', '=', \DB::raw(1))
+               // ->where('vendors.is_processed', '=', \DB::raw(1))
                 ->where('af.is_active', '=', \DB::raw(1));
         if (null != $areaId) {
             $query->where('vendors.area_id', '=', $areaId);
