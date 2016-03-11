@@ -30,11 +30,16 @@ class IndexService extends BaseService
      */
     public function getVendors(array $requestData)
     {
-        $lat =  (!empty($requestData['lat']))?$requestData['lat']:null;
-        $long =  (!empty($requestData['long']))?$requestData['long']:null;
-        
-        $vendor = new Vendor();
-        return $vendor->searchVendors($lat, $long, $requestData['area_id'], $requestData['category']);
+        try {
+            $lat =  (!empty($requestData['lat']))?$requestData['lat']:null;
+            $long =  (!empty($requestData['long']))?$requestData['long']:null;
+
+            $vendor = new Vendor();
+            return $vendor->searchVendors($lat, $long, $requestData['area_id'], $requestData['category']);
+            
+        } catch (Exception $ex) {
+            throw new Exception($ex);
+        }
     }
     
     /**
