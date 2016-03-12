@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\User;
 use App\Status;
+use App\Customer;
 use App\Role;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -108,7 +109,10 @@ use AuthenticatesAndRegistersUsers,
             $user->remember_token = $remember_token;
             $user->save();
 
-
+            $customer = new Customer;
+            $customer->user_id = $user->id;
+            $customer->save();
+            
             // Adding job to queue for processing to the mail will be send via the queue
             $job = (new SendWelcomeEmail($user))->delay(60);
             $this->dispatch($job);
