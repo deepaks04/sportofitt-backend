@@ -89,6 +89,8 @@ class DashboardController extends Controller
             $data = $request->all();
             if (Hash::check($data['current_password'], $this->service->getUser()->password)) {
                 APIResponse::$message['error'] = 'New Password must not be same as the old password';
+                APIResponse::$isError = true;
+                APIResponse::$status = 417;
             } else if ($this->service->changePassword($data)) {
                 APIResponse::$message['success'] = 'Password has been changed successfully';
             }
