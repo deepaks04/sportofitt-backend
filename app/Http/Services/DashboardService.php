@@ -156,5 +156,22 @@ class DashboardService extends BaseService
 
         $customer->save();
     }
+    
+    /**
+     * 
+     * @param array $data
+     * @return boolean
+     * @throws Exception
+     */
+    public function changePassword($data)
+    {
+        try {
+            $password = bcrypt($data['password']);
+            $this->user->password = $password;
+            return $this->user->save();
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
 
 }
