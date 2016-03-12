@@ -161,10 +161,10 @@ class DashboardService extends BaseService
         $customer->phone_no = !empty($data['phone_no']) ? $data['phone_no'] : NULL;
         $customer->gender = !empty($data['gender']) ? $data['gender'] : NULL;
         $customer->birthdate = !empty($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : NULL;
-        $customer->birthdate = !empty($data['country_id']) ? $data['country_id'] : 1;
-        $customer->birthdate = !empty($data['state_id']) ? $data['state_id'] : 1;
-        $customer->birthdate = !empty($data['city_id']) ? $data['city_id'] : 1;
-        $customer->birthdate = !empty($data['address']) ? $data['address'] : NULL;
+        $customer->country_id = !empty($data['country_id']) ? $data['country_id'] : 1;
+        $customer->state_id = !empty($data['state_id']) ? $data['state_id'] : 1;
+        $customer->city_id = !empty($data['city_id']) ? $data['city_id'] : 1;
+        $customer->address = !empty($data['address']) ? $data['address'] : NULL;
         $customer->user_id = $this->user->id;
 
         $customer->save();
