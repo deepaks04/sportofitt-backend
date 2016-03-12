@@ -462,11 +462,11 @@ class VendorsController extends Controller
             $facility = $this->unsetKeys(array(
                 'duration'
             ), $facility);
-            $facilityExists = AvailableFacility::where('vendor_id', '=', $this->vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
-            if ($facilityExists) { // If Facility already exists
-                $status = 406; // Not Acceptable
-                $message = "Facility already exists";
-            } else { // If not then create
+//            $facilityExists = AvailableFacility::where('vendor_id', '=', $this->vendor->id)->where('sub_category_id', '=', $facility['sub_category_id'])->count();
+//            if ($facilityExists) { // If Facility already exists
+//                $status = 406; // Not Acceptable
+//                $message = "Facility already exists";
+//            } else { // If not then create
                 $status = 200;
                 if(isset($facility['sub_category_id']) && $facility['sub_category_id'] > 0) {
                     $subCategory = SubCategory::find($facility['sub_category_id']);
@@ -482,7 +482,7 @@ class VendorsController extends Controller
                 $newFacility = AvailableFacility::create($facility);
                 $sessionUpdateData['duration'] = $request->duration;
                 $durationStatus = $this->updateDuration($newFacility->id, $sessionUpdateData);
-            }
+//            }
         } catch (\Exception $e) {
             $status = 500;
             $message = "Something went wrong : " . $e->getMessage();
