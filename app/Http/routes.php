@@ -105,11 +105,11 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     /* Day master */
     Route::get('day-master', 'UsersController@dayMaster');
 });
-Route::group(['prefix' => 'api/v1/user/', 'middleware' => 'validsource'], function () {
+Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
 });
-Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userfromtoken']], function () {
+Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], function () {
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
@@ -120,7 +120,7 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userf
     Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));
 });
 
-Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], function() {
+Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
     Route::get('search', array('uses' => 'IndexController@index'));
