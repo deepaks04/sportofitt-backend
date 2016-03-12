@@ -156,7 +156,7 @@ class DashboardService extends BaseService
 
         $customer->pincode = !empty($data['pincode']) ? $data['pincode'] : NULL;
         $customer->area_id = !empty($data['area_id']) ? $data['area_id'] : NULL;
-        $customer->phone_no = !empty($data['phoneno']) ? $data['phoneno'] : NULL;
+        $customer->phone_no = !empty($data['phone_no']) ? $data['phone_no'] : NULL;
         $customer->gender = !empty($data['gender']) ? $data['gender'] : NULL;
         $customer->birthdate = !empty($data['birthdate']) ? date("Y-m-d", strtotime($data['birthdate'])) : NULL;
         $customer->user_id = $this->user->id;
