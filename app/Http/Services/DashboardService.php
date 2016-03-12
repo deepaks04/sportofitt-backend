@@ -23,12 +23,12 @@ class DashboardService extends BaseService
     {
         $areaDetails = $cityDetails = $customer = array();
         try {
-            $city = City::select('id', 'name')->where('name', '=', 'pune')->first();
-            if (!empty($city) && $city->id > 0) {
-                $areas = $city->areas()->select('id', 'name', 'city_id')->get();
-                $cityDetails = $city->toArray();
-                $areaDetails = $areas->toArray();
-            }
+//            $city = City::select('id', 'name')->where('name', '=', 'pune')->first();
+//            if (!empty($city) && $city->id > 0) {
+//                $areas = $city->areas()->select('id', 'name', 'city_id')->get();
+//                $cityDetails = $city->toArray();
+//                $areaDetails = $areas->toArray();
+//            }
 
             if ($this->user->profile_picture != null) {
                 $vendorUploadPath = URL::asset(env('CUSTOMER_FILE_UPLOAD'));
@@ -36,20 +36,14 @@ class DashboardService extends BaseService
                 $this->user['profile_picture'] = $vendorOwnDirecory . "thumb_267X267_" . $this->user->profile_picture;
             }
 
-            $userMeta = $this->user->customer()->select('pincode', 'area_id', 'phone_no', 'gender', 'birthdate')->get();
+            $userMeta = $this->user->customer()->select('pincode', 'area_id', 'phone_no', 'gender', 'birthdate')->first();
             if (!empty($userMeta)) {
                 $customer = $userMeta->toArray();
-                if ($customer && $customer[0]['birthdate']) {
-                    $customer[0]['birthdate'] = date("d-m-Y", strtotime($customer[0]['birthdate']));
+                if ($customer && $customer['birthdate']) {
+                    $customer['birthdate'] = date("d-m-Y", strtotime($customer['birthdate']));
                 }
             }
-
-            return [
-                'user' => $this->user->toArray(),
-                'cities' => $cityDetails,
-                'areas' => $areaDetails,
-                'customer' => $customer
-            ];
+            return array_merge($this->user->toArray(), $customer);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
