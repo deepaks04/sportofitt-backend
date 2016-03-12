@@ -36,5 +36,10 @@ abstract class BaseService
             $this->user = $user;
         }
     }
+    
+    public function getUser()
+    {
+        return $this->user;
+    }
 
 }

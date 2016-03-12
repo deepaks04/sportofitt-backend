@@ -6,6 +6,7 @@ use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\DashboardService;
 use App\Http\Requests\CustomerProfileUpdateRequest;
+use App\Http\Requests\CustomerProfilePictureRequest;
 
 class DashboardController extends Controller
 {
@@ -52,6 +53,26 @@ class DashboardController extends Controller
             APIResponse::handleException($exception);
         }
 
+        return APIResponse::sendResponse();
+    }
+
+    /**
+     *  Change profile image of user. 
+     * 
+     * @param CustomerProfilePictureRequest $request
+     * @return  Illuminate\Support\Facades\Response
+     */
+    public function changeProfilePicture(CustomerProfilePictureRequest $request)
+    {
+        try {
+            $data = $request->all();
+            $profileImage = $this->service->updateProfilePicture($data);
+            $userProfileImage = ($profileImage) ? asset(env('CUSTOMER_FILE_UPLOAD'). sha1($this->service->getUser()->id) . '/profile_image/thumb_267X267_' . $profileImage) : null;
+            APIResponse::$data = $userProfileImage;
+            APIResponse::$message['success'] = 'Profile picture changed successfully';
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
         return APIResponse::sendResponse();
     }
 

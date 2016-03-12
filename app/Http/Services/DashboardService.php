@@ -51,18 +51,9 @@ class DashboardService extends BaseService
         return null;
     }
 
-    /**
-     * updating user profile information of authenticated user based on token
-     * 
-     * @param array $data
-     * @return array
-     */
-    public function updateProfileInformation(array $data)
+    public function updateProfilePicture($data)
     {
         try {
-            $this->user->fname = !empty($data['fname']) ? $data['fname'] : $this->user->fname;
-            $this->user->lname = !empty($data['lname']) ? $data['lname'] : $this->user->lname;
-
             if (!empty($data['profile_picture'])) {
                 $vendorUploadPath = public_path() . env('CUSTOMER_FILE_UPLOAD');
                 $vendorOwnDirecory = $vendorUploadPath . sha1($this->user->id);
@@ -87,7 +78,50 @@ class DashboardService extends BaseService
                 $fileHelper->resizeImage('user', true);
 
                 $this->user->profile_picture = $fileName;
+                return $fileName;
             }
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    /**
+     * updating user profile information of authenticated user based on token
+     * 
+     * @param array $data
+     * @return array
+     */
+    public function updateProfileInformation(array $data)
+    {
+        try {
+            $this->user->fname = !empty($data['fname']) ? $data['fname'] : $this->user->fname;
+            $this->user->lname = !empty($data['lname']) ? $data['lname'] : $this->user->lname;
+
+//            if (!empty($data['profile_picture'])) {
+//                $vendorUploadPath = public_path() . env('CUSTOMER_FILE_UPLOAD');
+//                $vendorOwnDirecory = $vendorUploadPath . sha1($this->user->id);
+//                $vendorImageUploadPath = $vendorOwnDirecory . "/" . "profile_image";
+//
+//                /* Create Upload Directory If Not Exists */
+//                if (!file_exists($vendorImageUploadPath)) {
+//                    File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+//                    chmod($vendorOwnDirecory, 0777);
+//                    chmod($vendorImageUploadPath, 0777);
+//                }
+//
+//                $extension = $data['profile_picture']->getClientOriginalExtension();
+//                $fileName = sha1($this->user->id . time()) . ".{$extension}";
+//                $data['profile_picture']->move($vendorImageUploadPath, $fileName);
+//                chmod($vendorImageUploadPath, 0777);
+//
+//                $fileHelper = new FileHelper($data['profile_picture']);
+//                $fileHelper->sourceFilename = $fileName;
+//                $fileHelper->sourceFilepath = $vendorImageUploadPath . "/";
+//                $fileHelper->destinationPath = $vendorImageUploadPath . "/";
+//                $fileHelper->resizeImage('user', true);
+//
+//                $this->user->profile_picture = $fileName;
+//            }
 
             $this->user->save();
             $this->addOrUpdateCustomerInformation($this->user, $data);

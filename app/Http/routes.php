@@ -113,6 +113,7 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userf
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
+    Route::post('chage-profile-picture', array('uses' => 'Customer\DashboardController@changeProfilePicture'));
     Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
     Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
     Route::get('bodystats', array('uses' => 'Customer\BodyStatsController@index'));
