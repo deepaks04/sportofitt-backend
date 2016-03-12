@@ -23,8 +23,7 @@ class Additionalfieldsincustomertable extends Migration
             $table->integer('city_id')
                     ->unsingned()
                     ->after('state_id');
-            $table->integer('address')
-                    ->unsingned()
+            $table->string('address')
                     ->after('area_id');
         });
     }
