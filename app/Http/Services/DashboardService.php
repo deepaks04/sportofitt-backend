@@ -51,6 +51,13 @@ class DashboardService extends BaseService
         return null;
     }
 
+    /**
+     *  Update customer profile picture
+     * 
+     * @param array $data
+     * @return string
+     * @throws Exception
+     */
     public function updateProfilePicture($data)
     {
         try {
