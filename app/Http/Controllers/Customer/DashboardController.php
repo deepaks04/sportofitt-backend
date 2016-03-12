@@ -87,7 +87,11 @@ class DashboardController extends Controller
     {
         try {
             $data = $request->all();
-            if (Hash::check($data['current_password'], $this->service->getUser()->password)) {
+            if (!Hash::check($data['current_password'], $this->service->getUser()->password)) {
+                APIResponse::$message['error'] = 'current password is not valid';
+                APIResponse::$isError = true;
+                APIResponse::$status = 417;
+            }elseif (Hash::check($data['password'], $this->service->getUser()->password)) {
                 APIResponse::$message['error'] = 'New Password must not be same as the old password';
                 APIResponse::$isError = true;
                 APIResponse::$status = 417;
@@ -100,5 +104,8 @@ class DashboardController extends Controller
 
         return APIResponse::sendResponse();
     }
+    
+    //7039270447
+    
 
 }
