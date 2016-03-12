@@ -19,6 +19,12 @@ class AreaTableSeeder extends Seeder
         $this->command->info('Inserting new records in the table');
         DB::table('areas')->insert([
             [
+                'name' => 'Select Area',
+                'city_id' => 0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
                 'name' => 'Aundh',
                 'city_id' => 1,
                 'created_at' => Carbon::now(),
