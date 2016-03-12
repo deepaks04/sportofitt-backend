@@ -37,4 +37,8 @@ angular
       // Satellizer configuration that specifies which API
       // route the JWT should be retrieved from
       $authProvider.loginUrl = "/api/v1/user/sign-in";
+}).run(function ($rootScope,$auth) {
+      $rootScope.isAuthenticated = function() {
+            return $auth.isAuthenticated();
+      };
 });
