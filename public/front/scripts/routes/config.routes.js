@@ -45,6 +45,20 @@ angular.module('sportofittApp').config(function($stateProvider, $urlRouterProvid
             },
             'footer': { templateUrl: 'views/layouts/footer.html' }
         }
+    }).state('profile', {
+        url: "/profile",
+        views : {
+            '': {
+                templateUrl: "views/profile/index.html",
+                controller: 'ProfileCtrl',
+                controllerAs: 'vm'
+            },
+            'nav': { templateUrl: 'views/layouts/navbar.html',
+                controller : 'MainCtrl',
+                controllerAs : 'vm'
+            },
+            'footer': { templateUrl: 'views/layouts/footer.html' }
+        }
     }).state('logout', {
             url: "/logout",
             controller: function ($state, $auth) {

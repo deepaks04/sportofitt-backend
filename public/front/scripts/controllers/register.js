@@ -20,9 +20,8 @@
             register: function (form) {
                 vm.disableSubmit = true;
                 var auth = Auth.register(form);
-                console.log(form);
                 auth.success(function (response) {
-                    toastr.success(errors.data.message.success);
+                    toastr.success(response.data.message.success);
                     $state.go("login");
                 });
                 auth.error(function (data, status) {
