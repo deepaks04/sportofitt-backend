@@ -85,7 +85,9 @@ class DashboardService extends BaseService
                 $fileHelper->resizeImage('user', true);
 
                 $this->user->profile_picture = $fileName;
-                return $fileName;
+                $this->user->save();
+                
+                return $this->user->profile_picture;
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
