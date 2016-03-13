@@ -125,8 +125,12 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
     Route::get('search', array('uses' => 'IndexController@index'));
-    Route::get('show', array('uses' => 'IndexController@show'));
 });
+Route::group(['prefix' => 'api/v1/facility/'], function() {
+    Route::get('show', array('uses' => 'FacilityController@show'));
+    Route::get('booking-information', array('uses' => 'FacilityController@index'));
+});
+
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
 Route::get('messages', array('uses' => 'Admin\MessagesController@index'))->name('messages');
 Route::post('savemessages', array('uses' => 'Admin\MessagesController@save'));

@@ -41,7 +41,7 @@ class IndexService extends BaseService
             if($vendors) {
                 foreach($vendors as $vendor) {
                     $vendor->type = (1 == $vendor->type)?'Venue':'Coaching';
-                    $vendor->gallery = $vendor->getVendorImages();
+                    $vendor->gallery = $vendor->getVendorImages($vendor);
                     $vendor->features = $vendor->getVendorsFeatures();
                     $vendor->color = '';
                     $vendor->item_specific = new \stdClass();

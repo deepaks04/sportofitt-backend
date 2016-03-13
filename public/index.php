@@ -7,6 +7,10 @@
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
+header('Access-Control-Allow-Origin: *');  
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
+
 /*
  * |--------------------------------------------------------------------------
  * | Register The Auto Loader
@@ -48,8 +52,6 @@ $app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-header('Access-Control-Allow-Origin: *');  
-header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 $response = $kernel->handle($request = Illuminate\Http\Request::capture());
 
 $response->send();

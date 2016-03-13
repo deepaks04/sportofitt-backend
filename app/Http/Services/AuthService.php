@@ -67,15 +67,16 @@ use AuthenticatesAndRegistersUsers,
         try {
             $credentials = $this->getCredentials($request);
             $credentials['is_active'] = 1;
+            $credentials['role_id'] = 3;
             try {
                 // attempt to verify the credentials and create a token for the user
                 if (!$token = JWTAuth::attempt($credentials)) {
                     APIResponse::$status = 401;
-                    APIResponse::$message['error'] = 'invalid credentials';
+                    APIResponse::$message['error'] = 'Invalid credentials';
                 }
             } catch (JWTException $e) {
                 APIResponse::$status = 500;
-                APIResponse::$message['error'] = 'could not create token';
+                APIResponse::$message['error'] = 'Invalid credentials';
             }
 
             return compact('token');
