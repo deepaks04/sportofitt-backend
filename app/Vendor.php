@@ -92,9 +92,11 @@ class Vendor extends Model
      */
     public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $offset = 0, $limit = 10)
     {
-        $vendors = array();
-        $sql = "vendors.id AS vendor_id,vendors.business_name,vendors.description,vendors.address,vendors.postcode,
-            u.fname AS firstName,u.lname AS lastName,u.profile_picture,af.name as facilityName,af.image as facilityImage ";
+        $sql = "vendors.id AS id,rt.name as category,vendors.business_name AS title,
+            vendors.address AS location,vendors.latitude,vendors.longitude,
+            af.is_venue as type,vendors.description,vendors.postcode,
+            u.fname AS firstName,u.lname AS lastName,u.profile_picture,
+            af.name as facilityName,af.image as facilityImage,af.is_featured AS featured";
         if (null != $latitude && null != $longitude) {
             $sql .= ", ( 3959 * acos( cos( radians($latitude) ) 
         * cos( radians( latitude ) ) 
@@ -105,6 +107,7 @@ class Vendor extends Model
         $query = self::select(\DB::raw($sql))
                 ->join('users AS u', 'vendors.user_id', '=', 'u.id')
                 ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
+                ->join('root_categories AS rt', 'rt.id', '=', 'af.root_category_id')
                // ->where('vendors.is_processed', '=', \DB::raw(1))
                 ->where('af.is_active', '=', \DB::raw(1));
         if (null != $areaId) {
@@ -122,11 +125,11 @@ class Vendor extends Model
         
         $result = $query->skip($offset)->take($limit)->get();
         if (!empty($result) && $result->count() > 0) {
-            $vendors = $result->toArray();
+            return $result;
             
         }
 
-        return $vendors;
+        return array();
     }
 
     /**
