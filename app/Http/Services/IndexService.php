@@ -37,7 +37,21 @@ class IndexService extends BaseService
             $category =  (!empty($requestData['category']))?$requestData['category']:null;
 
             $vendor = new Vendor();
-            return $vendor->searchVendors($lat, $long, $areaId, $category);
+            $vendors = $vendor->searchVendors($lat, $long, $areaId, $category);
+            if($vendors) {
+                foreach($vendors as $vendor) {
+                    $vendor->type = (1 == $vendor->type)?'Venue':'Coaching';
+                    $vendor->gallery = $vendor->getVendorImages();
+                    $vendor->features = $vendor->getVendorsFeatures();
+                    $vendor->color = '';
+                    $vendor->item_specific = new \stdClass();
+                    $vendor->rating = 0;
+                    $vendor->type_icon = '';
+                    $vendor->url = '';
+                }                
+            }
+            
+            return $vendors;
             
         } catch (Exception $ex) {
             throw new Exception($ex);

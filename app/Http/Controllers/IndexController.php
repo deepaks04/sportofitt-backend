@@ -45,17 +45,6 @@ class IndexController extends Controller
             }
 
             if ($vendors) {
-                foreach($vendors as $vendor) {
-                    $vendor->type = (1 == $vendor->type)?'Venue':'Coaching';
-                    $vendor->gallery = $vendor->images()->get();
-                    $vendor->features = array();
-                    $vendor->color = '';
-                    $vendor->item_specific = new \stdClass();
-                    $vendor->rating = 0;
-                    $vendor->type_icon = '';
-                    $vendor->url = '';
-                }
-                
                 APIResponse::$data = $vendors->toArray();
                 APIResponse::$message['success'] = "";
             }

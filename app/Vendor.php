@@ -108,7 +108,7 @@ class Vendor extends Model
                 ->join('users AS u', 'vendors.user_id', '=', 'u.id')
                 ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
                 ->join('root_categories AS rt', 'rt.id', '=', 'af.root_category_id')
-               // ->where('vendors.is_processed', '=', \DB::raw(1))
+                // ->where('vendors.is_processed', '=', \DB::raw(1))
                 ->where('af.is_active', '=', \DB::raw(1));
         if (null != $areaId) {
             $query->where('vendors.area_id', '=', $areaId);
@@ -122,11 +122,10 @@ class Vendor extends Model
             $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
                     ->orderBy('distance', 'ASC');
         }
-        
+
         $result = $query->skip($offset)->take($limit)->get();
         if (!empty($result) && $result->count() > 0) {
             return $result;
-            
         }
 
         return array();
@@ -145,6 +144,24 @@ class Vendor extends Model
         }
 
         return false;
+    }
+
+    public function getVendorImages()
+    {
+        $imagesArray = array();
+        $images = $this->images;
+        if (!empty($images) && $images->count() > 0) {
+            foreach ($images as $image) {
+                $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . "/" . sha1($this->user->id) . "/" . "extra_images/" . $image->image_name);
+            }
+        }
+        
+        return $imagesArray;
+    }
+    
+    public function getVendorsFeatures()
+    {
+        return array();
     }
 
 }
