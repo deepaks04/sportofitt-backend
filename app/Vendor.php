@@ -121,6 +121,8 @@ class Vendor extends Model
         if (null != $latitude && null != $longitude) {
             $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
                     ->orderBy('distance', 'ASC');
+        } else {
+            $query->orderBy('vendors.id','DESC');
         }
 
         $result = $query->skip($offset)->take($limit)->get();
