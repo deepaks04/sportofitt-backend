@@ -146,19 +146,35 @@ class Vendor extends Model
         return false;
     }
 
-    public function getVendorImages($vendor)
+    /**
+     * Get vendor images
+     * 
+     * @return array
+     * @throws Exception
+     */
+    public function getVendorImages()
     {
-        $imagesArray = array();
-        $images = $vendor->images()->get();
-        if (!empty($images) && $images->count() > 0) {
-            foreach ($images as $image) {
-                $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . "/" . sha1($this->user->id) . "/" . "extra_images/" . $image->image_name);
+        try {
+            $imagesArray = array();
+            $images = $this->images()->get();
+            if (!empty($images) && $images->count() > 0) {
+                foreach ($images as $image) {
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . "/" . sha1($this->id) . "/" . "extra_images/" . $image->image_name);
+                }
             }
+
+            return $imagesArray;
+            
+        } catch (Exception $ex) {
+            throw new Exception($ex);
         }
-        
-        return $imagesArray;
     }
     
+    /**
+     * Get features according to vendor
+     * 
+     * @return array
+     */
     public function getVendorsFeatures()
     {
         return array();
