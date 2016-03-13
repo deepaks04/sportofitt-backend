@@ -15,9 +15,7 @@
 
         vm.login = function() {
             var loginOptions = {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' ,
-                    'api-key' : 'djxOEhxWw2QbFYkhBC7Gtrtwzsl1WVDK'
-                }
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
             };
             var credentials = $httpParamSerializerJQLike({
                 email: vm.email,

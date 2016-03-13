@@ -8,7 +8,11 @@
  * Controller of the clipTwoApp
  */
 angular.module('sportofittApp')
-  .controller('ProfileCtrl', function (userService,toastr) {
+  .controller('ProfileCtrl', function ($state,$auth,userService,toastr) {
+      if(!$auth.isAuthenticated()){
+          toastr.warning("Please sign in first!");
+          $state.go('login');
+      }
     var vm = this;
 
     vm.userInfo = {};
@@ -30,7 +34,9 @@ angular.module('sportofittApp')
 
       vm.saveUserProfile = function(userInfo){
           vm.disableSubmit = true;
+        //  delete userInfo.profile_picture;
           var saveProfile = userService.updateProfile(userInfo);
+
           saveProfile.success(function (response) {
               toastr.success(response.message.success);
               vm.disableSubmit =false;
