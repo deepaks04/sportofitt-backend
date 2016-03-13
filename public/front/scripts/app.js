@@ -21,8 +21,8 @@ angular
       'cfp.loadingBar',
       'ncy-angular-breadcrumb',
       'duScroll',
-      'pascalprecht.translate', 'satellizer', 'toastr',
-  ]).config(function(toastrConfig,$authProvider) {
+      'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config'
+  ]).config(function(toastrConfig,$authProvider,myConfig) {
       angular.extend(toastrConfig, {
             autoDismiss: false,
             containerId: 'toast-container',
@@ -30,13 +30,13 @@ angular
             newestOnTop: true,
             positionClass: 'toast-top-right',
             preventDuplicates: false,
-            preventOpenDuplicates: false,
+            preventOpenDuplicates: true,
             target: 'body'
       });
 
       // Satellizer configuration that specifies which API
       // route the JWT should be retrieved from
-      $authProvider.loginUrl = "/api/v1/user/sign-in";
+      $authProvider.loginUrl = myConfig.authorizer;
 }).run(function ($rootScope,$auth) {
       $rootScope.isAuthenticated = function() {
             return $auth.isAuthenticated();

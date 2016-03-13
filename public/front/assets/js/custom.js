@@ -17,12 +17,12 @@ $(document).ready(function($) {
 
     adaptBackgroundHeight();
 
-    $('.quick-view, .results .item').live('click',  function(){
-        var id = $(this).attr('id');
-        quickView(id);
-        return false;
-    });
-
+    //$('.quick-view, .results .item').live('click',  function(){
+    //    var id = $(this).attr('id');
+    //    quickView(id);
+    //    return false;
+    //});
+    //
     // Scrollbar on "Results" section
 
     if( $('.items-list').length > 0 ){
@@ -33,9 +33,9 @@ $(document).ready(function($) {
 
     // Bootstrap tooltip
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
+    //$(function () {
+    //    $('[data-toggle="tooltip"]').tooltip()
+    //});
     $('.off-canvas-navigation header').css( 'line-height', $('.header').height() + 'px' );
 
     // Date & Time picker
@@ -75,44 +75,44 @@ $(document).ready(function($) {
 
 //  Expand content on click --------------------------------------------------------------------------------------------
 
-    $('.expand-content').live('click',  function(e){
-        e.preventDefault();
-        var children = $(this).attr('data-expand');
-        var parentHeight = $(this).closest('.expandable-content').height();
-        var contentSize = $( children + ' .content' ).height();
-        $( children ).toggleClass('collapsed');
-        $( this ).toggleClass('active');
-        $( children ).css( 'height' , contentSize );
-        if( !$( children).hasClass('collapsed') ){
-            setTimeout(function() {
-                $( children ).css('overflow', 'visible');
-            }, 400);
-        }
-        else {
-            $( children ).css('overflow', 'hidden');
-        }
-        $('.has-child').live('click',  function(e){
-            var parent = $(this).closest('.expandable-content');
-            var childHeight = $( $(this).attr('data-expand') + ' .content').height();
-            if( $(this).hasClass('active') ){
-                $(parent).height( parent.height() + childHeight )
-            }
-            else {
-                $(parent).height(parentHeight);
-            }
-        });
-    });
+    //$('.expand-content').live('click',  function(e){
+    //    e.preventDefault();
+    //    var children = $(this).attr('data-expand');
+    //    var parentHeight = $(this).closest('.expandable-content').height();
+    //    var contentSize = $( children + ' .content' ).height();
+    //    $( children ).toggleClass('collapsed');
+    //    $( this ).toggleClass('active');
+    //    $( children ).css( 'height' , contentSize );
+    //    if( !$( children).hasClass('collapsed') ){
+    //        setTimeout(function() {
+    //            $( children ).css('overflow', 'visible');
+    //        }, 400);
+    //    }
+    //    else {
+    //        $( children ).css('overflow', 'hidden');
+    //    }
+    //    $('.has-child').live('click',  function(e){
+    //        var parent = $(this).closest('.expandable-content');
+    //        var childHeight = $( $(this).attr('data-expand') + ' .content').height();
+    //        if( $(this).hasClass('active') ){
+    //            $(parent).height( parent.height() + childHeight )
+    //        }
+    //        else {
+    //            $(parent).height(parentHeight);
+    //        }
+    //    });
+    //});
 
 // Set width for inputs in horizontal search bar -----------------------------------------------------------------------
 
     $( "#redefine-search-form" ).load( "assets/external/_search-bar.html", function() {
         setInputsWidth();
-        //autoComplete();
+        autoComplete();
     });
 
-//    if( $('#location').length ){
-//        autoComplete();
-//    }
+    if( $('#location').length ){
+        autoComplete();
+    }
 
 // Keyboard Shortcuts --------------------------------------------------------------------------------------------------
 

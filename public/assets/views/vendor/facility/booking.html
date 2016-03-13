@@ -18,23 +18,23 @@
             <div ng-controller="facilityBookingCtrl" id="demo">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="text-center margin-bottom-20 ">{{
-                                            calendarTitle}}</h2>
+                        <h2 class="text-center margin-bottom-20 ">{{calendarTitle}}</h2>
                         <h4 class="text-center">Calender for {{facility.name}}</h4>
                     </div>
                     <div class="col-xs-6">
                         <div class="btn-group">
                             <button class="btn btn-primary" mwl-date-modifier
-                                    date="calendarDay" decrement="calendarView" ng-click="getEvents(calendarDay,calendarView);">
+                                    date="viewDate" decrement="calendarView" ng-click="getEvents(viewDate,calendarView);">
                                 <i class="ti-angle-left"></i>
                             </button>
+
                             <button class="btn btn-primary" mwl-date-modifier
-                                    date="calendarDay" increment="calendarView" ng-click="getEvents(calendarDay,calendarView);">
+                                    date="viewDate" increment="calendarView" ng-click="getEvents(viewDate,calendarView);">
                                 <i class="ti-angle-right"></i>
                             </button>
                         </div>
                         <button class="btn btn-primary btn-o" mwl-date-modifier
-                                date="calendarDay" set-to-today>Today</button>
+                                date="viewDate" set-to-today>Today</button>
                         <div class="btn-group margin-bottom-20 margin-top-20" dropdown
                              is-open="status.isopen">
                             <button type="button"
@@ -61,13 +61,13 @@
 
                                 <label
                                         class="btn btn-primary" ng-model="calendarView"
-                                        btn-radio="'month'" ng-click="getEvents(calendarDay,'month');"> Month </label>
+                                        btn-radio="'month'" ng-click="getEvents(viewDate,'month');"> Month </label>
                                 <label
                                         class="btn btn-primary" ng-model="calendarView"
-                                        btn-radio="'week'" ng-click="getEvents(calendarDay,'week');"> Week </label>
+                                        btn-radio="'week'" ng-click="getEvents(viewDate,'week');"> Week </label>
                                 <label
                                         class="btn btn-primary" ng-model="calendarView"
-                                        btn-radio="'day'" ng-click="getEvents(calendarDay,'day');"> Day </label>
+                                        btn-radio="'day'" ng-click="getEvents(viewDate,'day');"> Day </label>
                             </div>
                         </div>
                         <div class="visible-xs visible-sm hidden-md hidden-lg">
@@ -81,13 +81,13 @@
                                         ng-click="addEvent()">
                                     <i class="ti-plus"></i> Add event</a></li>
                                     <li><a ng-model="calendarView" btn-radio="'month'" href=""
-                                           ng-click="getEvents(calendarDay,'month');">
+                                           ng-click="getEvents(viewDate,'month');">
                                             Month </a></li>
                                     <li><a ng-model="calendarView" btn-radio="'week'" href=""
-                                           ng-click="getEvents(calendarDay,'week');">
+                                           ng-click="getEvents(viewDate,'week');">
                                             Week </a></li>
                                     <li><a ng-model="calendarView" btn-radio="'day'" href=""
-                                           ng-click="getEvents(calendarDay,'day');">
+                                           ng-click="getEvents(viewDate,'day');">
                                             Day </a></li>
                                 </ul>
                             </div>
@@ -95,11 +95,19 @@
                     </div>
                 </div>
                 <br>
-                <mwl-calendar events="events" view="calendarView"
-                              view-title="calendarTitle" current-day="calendarDay"
-                              on-timespan-click="eventClicked(calendarEvent)"
-                              on-event-click="eventEdited(calendarEvent)"
-                             auto-open="false"></mwl-calendar>
+                <mwl-calendar
+                    events="events"
+                    view="calendarView"
+                    view-title="calendarTitle"
+                    view-date="viewDate"
+                    on-event-click="eventClicked(calendarEvent)"
+                    edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
+                    delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
+                    on-edit-event-click="eventEdited(calendarEvent)"
+                    on-delete-event-click="eventDeleted(calendarEvent)"
+                    cell-is-open="isCellOpen">
+            </mwl-calendar>
+
                 <br> <br> <br>
                 <!-- start: EDIT EVENT TEMPLATE -->
                 <script type="text/ng-template" id="calendarEvent.html">
