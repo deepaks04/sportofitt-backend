@@ -159,7 +159,7 @@ class Vendor extends Model
             $images = $this->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . "/" . sha1($this->id) . "/" . "extra_images/" . $image->image_name);
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->id) . "/" . "extra_images/" . $image->image_name);
                 }
             }
 
