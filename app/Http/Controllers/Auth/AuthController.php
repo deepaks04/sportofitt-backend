@@ -189,7 +189,7 @@ use AuthenticatesAndRegistersUsers,
         if (!APIResponse::$message['error']) {
             $token = $this->service->login($request);
             if (empty($token['token'])) {
-                APIResponse::$message['error'] = 'Could not able to create access token provide valid credentials';
+                APIResponse::$message['error'] = 'Provide valid credentials';
                 APIResponse::$status = 401;
             } else {
                 APIResponse::$data = [
