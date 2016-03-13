@@ -56,26 +56,6 @@ class IndexController extends Controller
     }
     
     /**
-     * Get details of respective search record. That is showing the all the 
-     * details of the vendor including its all facilities in all categories.
-     * 
-     * @param Request $request
-     * @return Illuminate\Support\Facades\Response
-     */
-    public function show(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $response = $this->service->getSearchRecordDetails($data);
-            APIResponse::$data = $response;
-        } catch (Exception $exception) {
-            APIResponse::handleException($exception);
-        }
-
-        return APIResponse::sendResponse();
-    }
-
-    /**
      * Get featured facilities.
      * 
      * @return App\AvailableFacilities
@@ -106,5 +86,5 @@ class IndexController extends Controller
 
         return APIResponse::sendResponse();
     }
-
+  
 }
