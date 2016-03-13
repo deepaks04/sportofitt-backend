@@ -161,7 +161,9 @@ class Vendor extends Model
             $images = $this->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $fileLocation = app_path('../public'.env('VENDOR_FILE_UPLOAD') . sha1($this->id) . "/" . "extra_images/".$image->image_name);
+                    $vendorFIlePath = env('VENDOR_FILE_UPLOAD');
+                    $vendorFIlePath[0] = "";
+                    $fileLocation = public_path($vendorFIlePath . sha1($this->id) . "/" . "extra_images/".$image->image_name);
                     if(file_exists($fileLocation)) {
                         $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->id) . "/" . "extra_images/" . $image->image_name);
                     }
