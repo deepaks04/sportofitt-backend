@@ -92,7 +92,7 @@ class Vendor extends Model
      */
     public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $offset = 0, $limit = 10)
     {
-        $sql = "vendors.id AS id,rt.name as category,vendors.business_name AS title,
+        $sql = "vendors.id AS id,vendors.user_id AS id,rt.name as category,vendors.business_name AS title,
             vendors.address AS location,vendors.latitude,vendors.longitude,
             af.is_venue as type,vendors.description,vendors.postcode,
             u.fname AS firstName,u.lname AS lastName,u.profile_picture,
@@ -161,7 +161,7 @@ class Vendor extends Model
             $images = $vendor->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($vendor->user->id) . "/" . "extra_images/" . $image->image_name);
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($vendor->user_id) . "/" . "extra_images/" . $image->image_name);
                 }
             }
 
