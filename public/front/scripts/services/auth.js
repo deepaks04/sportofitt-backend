@@ -16,4 +16,7 @@ angular.module('sportofittApp')
     this.register = function(newUser){
       return $http.post(this.url+'sign-up',newUser);
     }
+      this.confirmUser = function(token){
+
+      }
   });
