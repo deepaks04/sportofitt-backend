@@ -92,7 +92,7 @@ class Vendor extends Model
      */
     public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $offset = 0, $limit = 10)
     {
-        $sql = "vendors.id AS id,vendors.user_id AS id,rt.name as category,vendors.business_name AS title,
+        $sql = "vendors.id AS id,vendors.user_id,rt.name as category,vendors.business_name AS title,
             vendors.address AS location,vendors.latitude,vendors.longitude,
             af.is_venue as type,vendors.description,vendors.postcode,
             u.fname AS firstName,u.lname AS lastName,u.profile_picture,
@@ -125,7 +125,7 @@ class Vendor extends Model
             $query->orderBy('vendors.id','DESC');
         }
 
-        $result = $query->skip($offset)->take($limit)->get();
+        $result = $query->get();
         if (!empty($result) && $result->count() > 0) {
             return $result;
         }

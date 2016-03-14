@@ -9,11 +9,11 @@
  * | and give it the controller to call when that URI is requested.
  * |
  */
-Route::get('/', function () {
-    return view('views/home', ['cell' => '9457912886',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
+//Route::get('/', function () {
+//    return view('views/home', ['cell' => '9457912886',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
 
 Route::get('/sportofittpartneragreement', function () {
     return view('views/agreement', ['cell' => '9457912886',
@@ -108,6 +108,7 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
 Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
+    Route::get('confirmation/{token}', array('uses' => 'Auth\AuthController@confirm'));
 });
 Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], function () {
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
