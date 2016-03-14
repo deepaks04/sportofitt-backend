@@ -216,7 +216,7 @@ use AuthenticatesAndRegistersUsers,
             if ($user == null) {
                 APIResponse::$isError = true;
                 APIResponse::$status = 404;
-                APIResponse::$message['error'] = "Sorry!! No User found";
+                APIResponse::$message['error'] = "Something went wrong.";
             } else {
                 if ($user->is_active) { // already confirmed
                     APIResponse::$message['success'] = "Your account already confirmed";
