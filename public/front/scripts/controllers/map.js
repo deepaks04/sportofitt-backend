@@ -240,7 +240,7 @@ angular.module('sportofittApp')
 
                   // Call Rating function ----------------------------------------------------------------------------------------
 
-                  //rating('.results .item');
+                  rating('.results .item');
 
                   var $singleItem = $('.results .item');
                   $singleItem.hover(
