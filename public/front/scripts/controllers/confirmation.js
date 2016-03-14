@@ -11,10 +11,10 @@ angular.module('sportofittApp')
   .controller('ConfirmationCtrl', function ($state,$stateParams,toastr,Auth) {
    //   toastr.info($stateParams)
       Auth.confirmUser($stateParams.token).then(function(response){
-          toastr.success(response.message.success);
+          toastr.success(response.data.message.success);
           $state.go('login',{});
       }).catch(function(response){
-          toastr.error(response.message.error);
+          toastr.error(response.data.message.error);
           $state.go('login',{});
       })
   });
