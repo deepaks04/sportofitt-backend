@@ -48,7 +48,7 @@ class SendWelcomeEmail extends Job implements SelfHandling, ShouldQueue
             $log = new Logger('queue_log');
             $log->pushHandler(new StreamHandler(storage_path('logs/laravel.log'), Logger::ERROR));
 
-            Mail::queue('emails.activation', $params, function($message) use($user, $log) {
+            Mail::queue('emails.useractivation', $params, function($message) use($user, $log) {
                 $message->to($user->email, $user->fname)->subject('Welcome!');
                 $log->addError(PHP_EOL . ' Email Sent' . PHP_EOL);
             });
