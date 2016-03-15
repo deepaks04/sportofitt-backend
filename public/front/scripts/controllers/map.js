@@ -9,8 +9,8 @@
  */
 angular.module('sportofittApp')
   .controller('MapCtrl', function (searchService,toastr) {
-      var _latitude = 51.541216;
-      var _longitude = -0.095678;
+      var _latitude = 18.520430;
+      var _longitude = 73.856743;
 //    var jsonPath = 'assets/json/items.json.txt';
 
 
