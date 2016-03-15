@@ -126,9 +126,9 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
     Route::get('search', array('uses' => 'IndexController@index'));
+    Route::get('vendor/show/{vendor_id}', array('uses' => 'IndexController@show'));
 });
 Route::group(['prefix' => 'api/v1/facility/'], function() {
-    Route::get('show', array('uses' => 'FacilityController@show'));
     Route::get('booking-information', array('uses' => 'FacilityController@index'));
 });
 

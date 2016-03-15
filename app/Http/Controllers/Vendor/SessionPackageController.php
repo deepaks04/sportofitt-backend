@@ -231,6 +231,7 @@ class SessionPackageController extends Controller
                     ))->first()->toArray();
                     $childData = Input::only('is_peak', 'start', 'end', 'day');
                     $childData['session_package_id'] = $session['id'];
+                    $childData['available_facility_id'] = $request->available_facility_id;
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE
 ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND day=" . $childData['day'] . "
  AND session_package_id=" . $session['id'] . " AND is_active = 1"));
@@ -290,6 +291,7 @@ class SessionPackageController extends Controller
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if ($timeDifference >= $checkFacilityInformation['duration']) { // If time Difference Matched
                     $childData = Input::only('is_peak', 'start', 'end', 'day');
+                    $childData['available_facility_id'] = $request->available_facility_id;
                     $packageType = PackageType::where('slug', '=', 'session')->first();
                     $sessionParentData = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->where('package_type_id', '=', $packageType->id)->first()->toArray();
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND (id!=" . $id . " AND session_package_id=" . $sessionParentData['id'] . ") AND day=" . $childData['day']));

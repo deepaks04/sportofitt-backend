@@ -107,7 +107,7 @@ class Vendor extends Model
         $query = self::select(\DB::raw($sql))
                 ->join('users AS u', 'vendors.user_id', '=', 'u.id')
                 ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
-                ->join('root_categories AS rt', 'rt.id', '=', 'af.root_category_id')
+                ->join('sub_categories AS rt', 'rt.id', '=', 'af.sub_category_id')
                 // ->where('vendors.is_processed', '=', \DB::raw(1))
                 ->where('af.is_active', '=', \DB::raw(1));
         if (null != $areaId) {
@@ -154,14 +154,14 @@ class Vendor extends Model
      * @return array
      * @throws Exception
      */
-    public function getVendorImages($vendor)
+    public function getVendorImages()
     {
         try {
             $imagesArray = array();
-            $images = $vendor->images()->get();
+            $images = $this->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($vendor->user_id) . "/" . "extra_images/" . $image->image_name);
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->user_id) . "/" . "extra_images/" . $image->image_name);
                 }
             }
 

@@ -41,7 +41,7 @@ class IndexService extends BaseService
             if($vendors) {
                 foreach($vendors as $vendor) {
                     $vendor->type = (1 == $vendor->type)?'Venue':'Coaching';
-                    $vendor->gallery = $vendor->getVendorImages($vendor);
+                    $vendor->gallery = $vendor->getVendorImages();
                     $vendor->features = $vendor->getVendorsFeatures();
                     $vendor->color = '';
                     $vendor->item_specific = new \stdClass();
@@ -58,27 +58,26 @@ class IndexService extends BaseService
         }
     }
     
-    /**
+/**
      * Getting details of the search result
      * 
-     * @param array $data
+     * @param integer $vendor_id
      * @return array
      */
-    public function getSearchRecordDetails(array $data)
+    public function getVendorDetails($vendor_id)
     {
         $result = array();
         $vendorObject = new Vendor();
-        $vendor = $vendorObject->getVendorDetailsById($data['vendor_id']);
+        $vendor = $vendorObject->getVendorDetailsById($vendor_id);
         if ($vendor) {
             $result['vendor'] = $vendor;
-            $result['user'] = $vendor->user()->select('fname','lname','username','profile_picture')->get();
-            $result['facilities'] = $vendor->facility()
-                                            ->select('available_facilities.*','sub_categories.name AS subCategoryName','sub_categories.slug AS subCategorySlug','root_categories.name AS rootCategoryName','root_categories.slug AS rootCategorySlug')
-                                            ->join('sub_categories','available_facilities.sub_category_id','=','sub_categories.id')
-                                            ->join('root_categories','available_facilities.root_category_id','=','root_categories.id')
-                                            ->get();
-            $vendor->images;
-            
+            $result['vendor']['user'] = $vendor->user()->select('fname', 'lname', 'username', 'profile_picture')->first();
+            $result['vendor']['facilities'] = $vendor->facility()
+                    ->select('available_facilities.id', 'available_facilities.name')
+                    ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')
+                    ->join('root_categories', 'available_facilities.root_category_id', '=', 'root_categories.id')
+                    ->get();
+            $vendor->images = $vendor->getVendorImages();
         }
 
         return $result;
