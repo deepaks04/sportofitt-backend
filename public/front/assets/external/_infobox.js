@@ -8,7 +8,7 @@ function drawInfobox(category, infoboxContent, json, i){
         else                        { id = '' }
     if(json.data[i].url)            { var url = json.data[i].url }
         else                        { url = '' }
-    if(json.data[i].type)           { var type = json.data[i].type }
+    if(json.data[i].category)           { var type = json.data[i].category }
         else                        { type = '' }
     if(json.data[i].title)          { var title = json.data[i].title }
         else                        { title = '' }

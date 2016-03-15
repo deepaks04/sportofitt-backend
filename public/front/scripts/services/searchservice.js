@@ -17,4 +17,7 @@ angular.module('sportofittApp')
       return $http.get(this.url + "search");
     };
 
+      this.getVendorById = function(vendorId){
+          return $http.get(this.url + "vendor/show/" + vendorId);
+      }
   });
