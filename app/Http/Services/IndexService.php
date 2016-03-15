@@ -71,7 +71,7 @@ class IndexService extends BaseService
         $vendor = $vendorObject->getVendorDetailsById($vendor_id);
         if ($vendor) {
             $result['vendor'] = $vendor;
-            $result['vendor']['user'] = $vendor->user()->select('fname', 'lname', 'username', 'profile_picture')->get();
+            $result['vendor']['user'] = $vendor->user()->select('fname', 'lname', 'username', 'profile_picture')->first();
             $result['vendor']['facilities'] = $vendor->facility()
                     ->select('available_facilities.*', 'sub_categories.name AS subCategoryName', 'sub_categories.slug AS subCategorySlug', 'root_categories.name AS rootCategoryName', 'root_categories.slug AS rootCategorySlug')
                     ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')

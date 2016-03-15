@@ -10,25 +10,18 @@ use App\Http\Services\BaseService;
 class FacilityService extends BaseService
 {
 
-    
-    
     public function getSessionsAndPackages($facilityId)
     {
         try {
             $facility = AvailableFacility::find($facilityId);
-            $openingHours = $this->getOpenigHoursOfFacility($facilityId);
-            $packages = $facility->getFacilityPackages($facilityId);
-            $sessions = $facility->getFacilitySessions($facilityId);
+            $facility->openingHours = $facility->getOpenigHoursOfFacility($facilityId);
+            $facility->packages = $facility->getFacilityPackages($facilityId);
+            $facility->sessions = $facility->getFacilitySessions($facilityId);
+            
+            return $facility;
         } catch (Exception $ex) {
             throw new Exception($ex);
         }
     }
-    
-    public function getOpenigHoursOfFacility($facilityId)
-    {
-        $openingHours = new OpeningHour();
-        
-    }
-}
 
- //deepaks04@outlook.com, aquanta15@gmail.com, deepak04@gmail.com
+}
