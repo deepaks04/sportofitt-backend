@@ -41,7 +41,22 @@ class AvailableFacility extends Model {
     {
         return $this->hasMany('App\SessionPackage');
     }
+    
+    public function sessions()
+    {
+        return $this->hasMany('App\MultipleSession');
+    }
 
+    /**
+     * Package Types
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function openingHours()
+    {
+        return $this->hasMany('App\OpeningHour');
+    }    
+    
     /**
      * Getting sub category
      * 
@@ -83,7 +98,11 @@ class AvailableFacility extends Model {
         return $facilities->take($limit)->skip($offset)->get();
     }
     
-    
+    /**
+     * Get different packages according to the facility
+     * 
+     * @return App\SessionPackages
+     */
     public function getFacilityPackages()
     {
         $packages = $this->packageType()
@@ -91,27 +110,37 @@ class AvailableFacility extends Model {
                          ->join('package_child','session_package.id','=','package_child.session_package_id')
                          ->where('package_type_id','=',\DB::raw(1))
                          ->get();
+        
         return $packages;
     }
     
+    /**
+     * Get multiple sessions according to the facility
+     * 
+     * @return @return App\MultipleSessions
+     */
     public function getFacilitySessions()
     {
-        $sessions = $this->packageType()
-                         ->select('id','package_type_id','name','description','duration')
-                         ->where('package_type_id','=',\DB::raw(2))
-                         ->where('package_type_id','=',\DB::raw(2))
+        $sessions = $this->sessions()
+                         ->select('id','peak','price','off_peak','discount')
+                         ->where('is_active','=',\DB::raw(1))
                          ->get();
+        
         return $sessions;
     }
     
+    /**
+     * Get opening hours according to the facility
+     * 
+     * @return App\OpeningHours
+     */
     public function getOpenigHoursOfFacility()
     {
-        $packages = $this->packageType()
-                         ->select('session_package.id','package_type_id','name','description','month','actual_price','discount','is_peak')
-                         ->join('opening_hours','session_package.id','=','package_child.session_package_id')
-                         ->where('package_type_id','=',\DB::raw(1))
+        $openingHours = $this->openingHours()
+                         ->select('id','is_peak','day','start','end')
                          ->where('opening_hours.is_active','=',\DB::raw(1))
                          ->get();
-        return $packages;
+        
+        return $openingHours;
     }
 }
