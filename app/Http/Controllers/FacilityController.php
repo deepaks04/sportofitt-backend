@@ -33,7 +33,7 @@ class FacilityController extends Controller
         try {
             $data = $request->all();
             if (!empty($data['facility_id'])) {
-                $bookingInformation = $this->service->getBookingInformation($data['facility_id']);
+                $bookingInformation = $this->service->getSessionsAndPackages($data['facility_id']);
                 APIResponse::$data = $bookingInformation;
             } else {
                 APIResponse::$isError = true;
@@ -66,26 +66,6 @@ class FacilityController extends Controller
     public function store(Request $request)
     {
         //
-    }
-
-    /**
-     * Get details of respective search record. That is showing the all the 
-     * details of the vendor including its all facilities in all categories.
-     * 
-     * @param Request $request
-     * @return Illuminate\Support\Facades\Response
-     */
-    public function show(Request $request)
-    {
-        try {
-            $data = $request->all();
-            $response = $this->service->getVendorDetails($data);
-            APIResponse::$data = $response;
-        } catch (Exception $exception) {
-            APIResponse::handleException($exception);
-        }
-
-        return APIResponse::sendResponse();
     }
 
     /**

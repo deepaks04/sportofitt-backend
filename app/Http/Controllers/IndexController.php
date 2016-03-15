@@ -54,7 +54,26 @@ class IndexController extends Controller
 
         return APIResponse::sendResponse();
     }
-    
+
+    /**
+     * Get details of respective search record. That is showing the all the 
+     * details of the vendor including its all facilities in all categories.
+     * 
+     * @param integer $vendor_id
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function show($vendor_id)
+    {
+        try {
+            $response = $this->service->getVendorDetails($vendor_id);
+            APIResponse::$data = $response;
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
+
     /**
      * Get featured facilities.
      * 
@@ -86,5 +105,5 @@ class IndexController extends Controller
 
         return APIResponse::sendResponse();
     }
-  
+
 }
