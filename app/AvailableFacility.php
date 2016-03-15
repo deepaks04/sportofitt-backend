@@ -82,5 +82,36 @@ class AvailableFacility extends Model {
 
         return $facilities->take($limit)->skip($offset)->get();
     }
-
+    
+    
+    public function getFacilityPackages()
+    {
+        $packages = $this->packageType()
+                         ->select('session_package.id','package_type_id','name','description','month','actual_price','discount','is_peak')
+                         ->join('package_child','session_package.id','=','package_child.session_package_id')
+                         ->where('package_type_id','=',\DB::raw(1))
+                         ->get();
+        return $packages;
+    }
+    
+    public function getFacilitySessions()
+    {
+        $sessions = $this->packageType()
+                         ->select('id','package_type_id','name','description','duration')
+                         ->where('package_type_id','=',\DB::raw(2))
+                         ->where('package_type_id','=',\DB::raw(2))
+                         ->get();
+        return $sessions;
+    }
+    
+    public function getOpenigHoursOfFacility()
+    {
+        $packages = $this->packageType()
+                         ->select('session_package.id','package_type_id','name','description','month','actual_price','discount','is_peak')
+                         ->join('opening_hours','session_package.id','=','package_child.session_package_id')
+                         ->where('package_type_id','=',\DB::raw(1))
+                         ->where('opening_hours.is_active','=',\DB::raw(1))
+                         ->get();
+        return $packages;
+    }
 }
