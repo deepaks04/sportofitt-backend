@@ -167,13 +167,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.facility = selectedFacility;
 
-        facilityService.getFacilityById(selectedFacility.id)
-                .then(getFacilitySuccess);
-
-        function getFacilitySuccess(facilityData) {
-            $scope.facility = facilityData.facility;
-        }
-        
         $scope.tab = tab;
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit'];
         facilityService.getDuration()
@@ -715,11 +708,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         function parseEvents(events) {
             $scope.events = [];
             angular.forEach(events, function (event, keys) {
-                var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
-                event.startsAt = new Date(thisStartT);
-//console.log(event.startsAt);
-                var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
-                event.endsAt = new Date(thisEndT);
+               // var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
+               event.startsAt = new Date(event.startsAt);
+
+              //  var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
+                event.endsAt = new Date(event.endsAt);
                 this.push(event);
             }, $scope.events);
         }

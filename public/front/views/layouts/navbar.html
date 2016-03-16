@@ -2,18 +2,18 @@
 <div class="header">
     <div class="wrapper">
         <div class="brand">
-            <a ui-sref="home"><img src="../assets/images/logo.png" alt="logo" style="max-width: 72%;margin-bottom: 0"></a>
+            <a ui-sref="app.home"><img src="../assets/images/logo.png" alt="logo" style="max-width: 72%;margin-bottom: 0"></a>
         </div>
         <nav class="navigation-items">
             <div class="wrapper">
                 <ul class="main-navigation navigation-top-header"></ul>
                 <ul ng-if="!isAuthenticated()" class="user-area">
-                    <li><a ui-sref="login">Sign In</a></li>
-                    <li><a ui-sref="register"><strong>Register</strong></a></li>
+                    <li><a ui-sref="applogin">Sign In</a></li>
+                    <li><a ui-sref="app.register"><strong>Register</strong></a></li>
                       </ul>
                 <ul ng-if="isAuthenticated()" class="user-area">
-                    <li><a ui-sref="logout">Sign Out</a></li>
-                   <li><a ui-sref="profile"><strong>Profile</strong></a></li>
+                    <li><a ui-sref="app.logout">Sign Out</a></li>
+                   <li><a ui-sref="app.profile"><strong>Profile</strong></a></li>
 
                 </ul>
 

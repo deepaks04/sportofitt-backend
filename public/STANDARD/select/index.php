@@ -91,6 +91,7 @@
 	<script src="assets/js/main.js"></script>
 	<script src="assets/js/config.constant.js"></script>
 	<script src="assets/js/config.router.js"></script>
+	<script src="assets/js/services/authInterceptor.js"></script>
 	<!-- Clip-Two Directives -->
 	<script src="assets/js/directives/toggle.js"></script>
 	<script src="assets/js/directives/perfect-scrollbar.js"></script>
