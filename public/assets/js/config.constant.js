@@ -20,7 +20,7 @@ app.constant('JS_REQUIRES', {
         //*** jQuery Plugins
         'perfect-scrollbar-plugin': ['bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js', 'bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css'],
         'ladda': ['bower_components/ladda/dist/ladda.min.js', 'bower_components/ladda/dist/ladda-themeless.min.css'],
-        'sweet-alert': ['bower_components/sweetalert/dist/sweetalert.min.js', 'bower_components/sweetalert/dist/sweetalert.css'],
+        'sweet-alert': ['bower_components/sweetalert/lib/sweet-alert.min.js', 'bower_components/sweetalert/lib/sweet-alert.css'],
         'chartjs': 'bower_components/chartjs/Chart.min.js',
         'jquery-sparkline': 'bower_components/jquery.sparkline.build/dist/jquery.sparkline.min.js',
         'ckeditor-plugin': 'bower_components/ckeditor/ckeditor.js',

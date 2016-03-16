@@ -8,14 +8,14 @@ function drawInfobox(category, infoboxContent, json, i){
         else                        { id = '' }
     if(json.data[i].url)            { var url = json.data[i].url }
         else                        { url = '' }
-    if(json.data[i].type)           { var type = json.data[i].type }
+    if(json.data[i].category)           { var type = json.data[i].category }
         else                        { type = '' }
     if(json.data[i].title)          { var title = json.data[i].title }
         else                        { title = '' }
     if(json.data[i].location)       { var location = json.data[i].location }
         else                        { location = '' }
-    if(json.data[i].gallery[0])     { var gallery = json.data[i].gallery[0] }
-        else                        { gallery[0] = '../img/default-item.jpg' }
+    if(json.data[i].gallery.length)     { var gallery = json.data[i].gallery[0] }
+        else                        { gallery = '/assets/img/default-item.jpg' }
 
     var ibContent = '';
     ibContent =

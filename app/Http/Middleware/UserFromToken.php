@@ -18,8 +18,8 @@ class UserFromToken extends GetUserFromToken
      * @return mixed
      */
     public function handle($request, \Closure $next)
-    {           
-        
+    {
+        $user = null;
         if (!$token = $this->auth->setRequest($request)->getToken()) {
             APIResponse::$message['error'] = 'token not provided';
             APIResponse::$status = 400;

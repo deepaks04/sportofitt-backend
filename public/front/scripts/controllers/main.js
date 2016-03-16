@@ -10,4 +10,4 @@
 angular.module('sportofittApp')
   .controller('MainCtrl', function () {
 
-  });
+});

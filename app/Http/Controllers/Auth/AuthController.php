@@ -1,7 +1,6 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use App\Area;
-use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -10,6 +9,7 @@ use Auth;
 use App\Http\Requests\LoginUserRequest;
 use App\Role;
 use App\Status;
+use App\User;
 use Illuminate\Support\Facades\URL;
 use App\Http\Helpers\APIResponse;
 use App\Http\Requests\AuthenticationRequest;
@@ -189,7 +189,7 @@ use AuthenticatesAndRegistersUsers,
         if (!APIResponse::$message['error']) {
             $token = $this->service->login($request);
             if (empty($token['token'])) {
-                APIResponse::$message['error'] = 'Could not able to create access token provide valid credentials';
+                APIResponse::$message['error'] = 'Provide valid credentials';
                 APIResponse::$status = 401;
             } else {
                 APIResponse::$data = [
@@ -202,5 +202,37 @@ use AuthenticatesAndRegistersUsers,
         APIResponse::$isError = true;
         return APIResponse::sendResponse();
     }
+    
+/**
+     * Confirm User email & activate his account.
+     *
+     * @param string $confirmation            
+     * @return Response
+     */
+    public function confirm($confirmation)
+    {
+        try {
+            $user = User::where('remember_token', $confirmation)->first();
+            if ($user == null) {
+                APIResponse::$isError = true;
+                APIResponse::$status = 404;
+                APIResponse::$message['error'] = "Something went wrong.";
+            } else {
+                if ($user->is_active) { // already confirmed
+                    APIResponse::$message['success'] = "Your account already confirmed";
+                } else {
+                    User::where('remember_token', $confirmation)->update(array(
+                        'is_active' => 1
+                    ));
+                    $status = 200;
+                    APIResponse::$message['success'] = "Your account is confirmed, you can now login to your account";
+                }
+            }
+        } catch (Exception $ex) {
+            APIResponse::handleException($ex);
+        }
+
+        return APIResponse::sendResponse();
+    }    
 
 }

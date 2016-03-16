@@ -20,7 +20,11 @@ class StatsService extends BaseService {
             throw new Exception($exception->getMessage(), $exception->getStatusCode(), $exception);
         }
     }
-
+    
+    /**
+     * 
+     * @return App\BodyStats
+     */
     public function getUserBodyStats()
     {
         return $this->model->getUserBodyStats($this->user->id);

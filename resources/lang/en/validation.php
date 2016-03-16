@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
@@ -90,7 +91,7 @@ return array(
         array(
             'required' => 'Email must not be blank',
             'email' => 'Enter valid email address',
-            'unique' => 'Email address has been already taken1',
+            'unique' => 'Email address has been already taken',
         ),
         'password' =>
         array(
@@ -99,14 +100,42 @@ return array(
             'confirmation_password' => 'Password does not match',
             'regex' => 'Password does not match',
         ),
-        'weight' => array('required' => 'Select weight'),
-        'height' => array('required' => 'Select height'),
-        'waist' => array('required' => 'Select waist'),
-        'chest' => array('required' => 'Select chest'),
-        'forarm' => array('required' => 'Select forarm'),
-        'wrist' => array('required' => 'Select wrist'),
-        'hip' => array('required' => 'Select hip size'),
-        'activity_level' => array('required' => 'Select activity level'),
+        'profile_picture' => array(
+            'required' => 'Select Profile image',
+            'mimes' => 'Images with type jpeg,jpg,png are allowed',
+        ),
+        'weight' =>
+        array(
+            'required' => 'Select weight',
+        ),
+        'height' =>
+        array(
+            'required' => 'Select height',
+        ),
+        'waist' =>
+        array(
+            'required' => 'Select waist',
+        ),
+        'chest' =>
+        array(
+            'required' => 'Select chest',
+        ),
+        'forarm' =>
+        array(
+            'required' => 'Select forarm',
+        ),
+        'wrist' =>
+        array(
+            'required' => 'Select wrist',
+        ),
+        'hip' =>
+        array(
+            'required' => 'Select hip size',
+        ),
+        'activity_level' =>
+        array(
+            'required' => 'Select activity level',
+        ),
     ),
     'attributes' =>
     array(

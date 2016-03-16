@@ -9,11 +9,11 @@
  * | and give it the controller to call when that URI is requested.
  * |
  */
-Route::get('/', function () {
-    return view('views/home', ['cell' => '9457912886',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
+//Route::get('/', function () {
+//    return view('views/home', ['cell' => '9457912886',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
 
 Route::get('/sportofittpartneragreement', function () {
     return view('views/agreement', ['cell' => '9457912886',
@@ -105,24 +105,33 @@ Route::group(['prefix' => 'api/v1/user/'], function () {
     /* Day master */
     Route::get('day-master', 'UsersController@dayMaster');
 });
-Route::group(['prefix' => 'api/v1/user/', 'middleware' => 'validsource'], function () {
+Route::group(['prefix' => 'api/v1/user/'], function () {
     Route::post('sign-up', array('uses' => 'Auth\AuthController@postRegisterUser'));
     Route::post('sign-in', array('uses' => 'Auth\AuthController@postLoginUser'));
+    Route::get('confirmation/{token}', array('uses' => 'Auth\AuthController@confirm'));
 });
-Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['validsource', 'userfromtoken']], function () {
+Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], function () {
     Route::post('authenticated-user', array('uses' => 'Auth\AuthController@getAuthenticatedUser'));
     Route::get('dashboard', array('uses' => 'Customer\DashboardController@index'));
     Route::post('update-profile', array('uses' => 'Customer\DashboardController@updateProfile'));
+    Route::post('change-profile-picture', array('uses' => 'Customer\DashboardController@changeProfilePicture'));
+    Route::post('change-password', array('uses' => 'Customer\DashboardController@changePassword'));
     Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
     Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
     Route::get('bodystats', array('uses' => 'Customer\BodyStatsController@index'));
     Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));
 });
 
-Route::group(['prefix' => 'api/v1/index/', 'middleware' => ['validsource']], function() {
+Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
+    Route::get('search', array('uses' => 'IndexController@index'));
+    Route::get('vendor/show/{vendor_id}', array('uses' => 'IndexController@show'));
 });
+Route::group(['prefix' => 'api/v1/facility/'], function() {
+    Route::get('booking-information', array('uses' => 'FacilityController@index'));
+});
+
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
 Route::get('messages', array('uses' => 'Admin\MessagesController@index'))->name('messages');
 Route::post('savemessages', array('uses' => 'Admin\MessagesController@save'));

@@ -7,7 +7,7 @@
     <!--Page Content-->
 <div id="page-content">
     <section class="container">
-        <div class="block">
+        <div class="">
             <div class="row">
                 <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
                     <header>
@@ -18,32 +18,32 @@
                         <div class="form-group" ng-class="{'has-error':vm.errors.first_name,'has-success':!vm.errors.first_name}">
                             <label for="first_name">First Name:</label>
                             <input type="text" class="form-control" name="first_name" data-ng-model="vm.user.first_name" required>
-                            <span class="error text-small block" ng-if="vm.errors.first_name">{{vm.errors.first_name}}</span>
+                            <span class="error text-small " ng-if="vm.errors.first_name">{{vm.errors.first_name}}</span>
                         </div><!-- /.form-group -->
                         <div class="form-group" ng-class="{'has-error':vm.errors.last_name,'has-success':!vm.errors.last_name}">
                             <label for="last_name">Last Name:</label>
                             <input type="text" class="form-control" name="last_name" data-ng-model="vm.user.last_name" required>
-                            <span class="error text-small block" ng-if="vm.errors.last_name">{{vm.errors.last_name}}</span>
+                            <span class="error text-small " ng-if="vm.errors.last_name">{{vm.errors.last_name}}</span>
                         </div><!-- /.form-group -->
                         <div class="form-group" ng-class="{'has-error':vm.errors.email,'has-success':!vm.errors.email}">
                             <label for="email">Email:</label>
                             <input type="email" class="form-control"  name="email" data-ng-model="vm.user.email" required>
-                            <span class="error text-small block" ng-if="vm.errors.email">{{vm.errors.email}}</span>
+                            <span class="error text-small" ng-if="vm.errors.email">{{vm.errors.email}}</span>
                         </div><!-- /.form-group -->
                         <div class="form-group" ng-class="{'has-error':vm.errors.password,'has-success':!vm.errors.password}">
                             <label for="password">Password:</label>
                             <input type="password" class="form-control" name="password" data-ng-model="vm.user.password" required>
-                            <span class="error text-small block" ng-if="vm.errors.password">{{vm.errors.password}}</span>
+                            <span class="error text-small " ng-if="vm.errors.password">{{vm.errors.password}}</span>
                         </div><!-- /.form-group -->
                         <div class="form-group" ng-class="{'has-error':vm.errors.password_confirmation,'has-success':!vm.errors.password_confirmation}">
                             <label for="form-register-confirm-password">Confirm Password:</label>
                             <input type="password" class="form-control" id="form-register-confirm-password" data-ng-model="vm.user.password_confirmation"
                                    name="password_confirmation" required>
-                            <span class="error text-small block" ng-if="vm.errors.password_confirmation">{{vm.errors.password_confirmation}}</span>
+                            <span class="error text-small " ng-if="vm.errors.password_confirmation">{{vm.errors.password_confirmation}}</span>
                         </div><!-- /.form-group -->
 
                         <div class="form-group clearfix">
-                            <button type="submit" class="btn pull-right btn-default" id="account-submit">Create an Account</button>
+                            <button type="submit" class="btn pull-right btn-default" ng-disabled="vm.disableSubmit" id="account-submit">Create an Account</button>
                         </div><!-- /.form-group -->
                     </form>
                     <hr>
@@ -54,7 +54,7 @@
             </div>
         </div>
     </section>
-    <!-- /.block-->
+    <!-- /.-->
 </div>
 <!-- end Page Content-->
 </div>

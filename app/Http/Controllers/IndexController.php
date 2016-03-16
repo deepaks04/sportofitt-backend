@@ -1,10 +1,16 @@
-<?php namespace App\Http\Controllers;
+<?php
 
+namespace App\Http\Controllers;
+
+use App\Area;
+use App\SubCategory;
+use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Services\IndexService;
 
-class IndexController extends Controller {
-    
+class IndexController extends Controller
+{
+
     /**
      *
      * @var mixed null | App\Http\Services\IndexService
@@ -14,6 +20,58 @@ class IndexController extends Controller {
     public function __construct()
     {
         $this->service = new IndexService();
+    }
+
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function index(Request $request)
+    {
+        $reponse = array();
+        try {
+            $data = $request->all();
+            $vendors = $this->service->getVendors($data);
+            APIResponse::$message['success'] = 'No result found.';
+            if (!empty($data['category']) && $subCategory = SubCategory::getSubCategoryById($data['category'])) {
+                $subCategory->rootCategory;
+                $reponse['category'] = $subCategory;
+            }
+
+            if (!empty($data['area_id']) && $area = Area::getAreaById($data['area_id'])) {
+                $area->cities;
+                $reponse['area'] = $area;
+            }
+
+            if ($vendors) {
+                APIResponse::$data = $vendors->toArray();
+                APIResponse::$message['success'] = "";
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
+
+    /**
+     * Get details of respective search record. That is showing the all the 
+     * details of the vendor including its all facilities in all categories.
+     * 
+     * @param integer $vendor_id
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function show($vendor_id)
+    {
+        try {
+            $response = $this->service->getVendorDetails($vendor_id);
+            APIResponse::$data = $response;
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
     }
 
     /**
@@ -31,7 +89,7 @@ class IndexController extends Controller {
 
         return APIResponse::sendResponse();
     }
-    
+
     /**
      * Get all lates available facilities those are added recently.
      * 

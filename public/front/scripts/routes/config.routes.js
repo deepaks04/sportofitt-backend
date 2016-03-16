@@ -10,7 +10,9 @@ angular.module('sportofittApp').config(function($stateProvider, $urlRouterProvid
         .state('home', {
             url: "/",
             views : {
-                '' : {templateUrl: 'views/home/index.html'},
+                '' : {templateUrl: 'views/home/index.html',
+                    controller: 'MapCtrl',
+                    controllerAs: 'vm'},
                 'nav': { templateUrl: 'views/layouts/navbar.html',
                     controller : 'MainCtrl',
                     controllerAs : 'vm'
@@ -31,12 +33,54 @@ angular.module('sportofittApp').config(function($stateProvider, $urlRouterProvid
                 },
                 'footer': { templateUrl: 'views/layouts/footer.html' }
             }
-        }).state('register', {
+        }).state('confirmation', {
+        url: "/confirmation/:token",
+        views : {
+            '': {
+                templateUrl: "views/confirmation/index.html",
+                controller: 'ConfirmationCtrl',
+                controllerAs: 'vm'
+            },
+            'nav': { templateUrl: 'views/layouts/navbar.html',
+                controller : 'MainCtrl',
+                controllerAs : 'vm'
+            },
+            'footer': { templateUrl: 'views/layouts/footer.html' }
+        }
+    }).state('register', {
         url: "/register",
         views : {
             '': {
                 templateUrl: "views/register/index.html",
                 controller: 'RegisterCtrl',
+                controllerAs: 'vm'
+            },
+            'nav': { templateUrl: 'views/layouts/navbar.html',
+                controller : 'MainCtrl',
+                controllerAs : 'vm'
+            },
+            'footer': { templateUrl: 'views/layouts/footer.html' }
+        }
+    }).state('profile', {
+        url: "/profile",
+        views : {
+            '': {
+                templateUrl: "views/profile/index.html",
+                controller: 'ProfileCtrl',
+                controllerAs: 'vm'
+            },
+            'nav': { templateUrl: 'views/layouts/navbar.html',
+                controller : 'MainCtrl',
+                controllerAs : 'vm'
+            },
+            'footer': { templateUrl: 'views/layouts/footer.html' }
+        }
+    }).state('vendor', {
+        url: "/vendor/{vendorId}",
+        views : {
+            '': {
+                templateUrl: "views/vendor/index.html",
+                controller: 'VendorInfoCtrl',
                 controllerAs: 'vm'
             },
             'nav': { templateUrl: 'views/layouts/navbar.html',

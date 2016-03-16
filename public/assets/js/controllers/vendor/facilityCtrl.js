@@ -78,24 +78,29 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
                 .then(getFacilitySuccess);
 
         function getFacilitySuccess(facilityData) {
-            $scope.facilityData = facilityData.facility;
+          //  $scope.facilityData = facilityData.facility;
+            if(facilityData.facility) {
+                $scope.facilityData = Object.keys(facilityData.facility).map(function (key) {
+                    return facilityData.facility[key];
+                });
+                $scope.tableParams = new ngTableParams({
+                    page: 1, // show first page
+                    count: 5, // count per page
+                    sorting: {
+                        name: 'desc' // initial sorting
+                    }
+                }, {
+                    total: $scope.facilityData.length, // length of data
+                    getData: function ($defer, params) {
+                        // use build-in angular filter
+                        var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
+
+                        $defer.resolve(orderedData);
+                    }
+                });
+
+            }
         }
-
-        $scope.tableParams = new ngTableParams({
-            page: 1, // show first page
-            count: 5, // count per page
-            sorting: {
-                name: 'desc' // initial sorting
-            }
-        }, {
-            total: $scope.facilityData.length, // length of data
-            getData: function ($defer, params) {
-                // use build-in angular filter
-                var orderedData = params.sorting() ? $filter('orderBy')($scope.facilityData, params.orderBy()) : $scope.facilityData;
-
-                $defer.resolve(orderedData);
-            }
-        });
 
         $scope.blockUnblockFacility = function (facility) {
             SweetAlert.swal({
@@ -714,13 +719,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
 
         $scope.calendarView = 'week';
         $scope.calendarTitle = 'Name';
-        $scope.calendarDay = new Date();
+        $scope.viewDate = new Date();
 
-        $scope.getEvents = function (calendarDay, calendarView) {
-            //console.log(calendarDay);
-            //console.log(calendarView);
+        $scope.getEvents = function (viewDate, calendarView) {
             if (calendarView === "month") {
-                var startDate = calendarDay.getFullYear() + "-" + (calendarDay.getMonth() + 1);
+                var startDate = viewDate.getFullYear() + "-" + (viewDate.getMonth() + 1);
                 if ($scope.facilityId) {
 
                     getBlockedSessionByFacilityId(startDate);
