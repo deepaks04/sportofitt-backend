@@ -9,13 +9,10 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
     $stateProvider
             .state('app', {
                 url: "/",
-                abstract: true,
+                abstract:true,
                 views: {
                     '': {templateUrl: 'views/main.html'},
-                    'nav@app': {templateUrl: 'views/layouts/navbar.html',
-                        controller: 'MainCtrl',
-                        controllerAs: 'vm'
-                    },
+                    'nav@app': {templateUrl: 'views/layouts/navbar.html'},
                     'footer@app': {templateUrl: 'views/layouts/footer.html'}
                 }
             }).state('app.home', {
@@ -36,7 +33,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
 
         }
     }).state('app.confirmation', {
-        url: "/confirmation/:token",
+        url: "confirmation/:token",
         views: {
             'body@app': {
                 templateUrl: "views/confirmation/index.html",
@@ -54,7 +51,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
             }
         }
     }).state('app.profile', {
-        url: "/profile",
+        url: "profile",
         views: {
             'body@app': {
                 templateUrl: "views/profile/index.html",
@@ -63,7 +60,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
             }
         }
     }).state('app.vendor', {
-        url: "/vendor/{vendorId}",
+        url: "vendor/{vendorId}",
         views: {
             'body@app': {
                 templateUrl: "views/vendor/index.html",
@@ -72,7 +69,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
             }
         }
     }).state('app.logout', {
-        url: "/logout",
+        url: "logout",
         controller: function ($state, $auth) {
             $auth.logout();
             $state.go('login');
