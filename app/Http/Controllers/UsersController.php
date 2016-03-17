@@ -156,13 +156,11 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getSubCategory($id)
+    public function getSubCategory()
     {
-        $category = RootCategory::find($id); //
+        $category = SubCategory::all(); //
         if ($category != null) {
-            $category = $category->subCategory()
-                ->get()
-                ->toArray();
+            $category = $category->toArray();
             $message = "success";
             $status = 200;
         } else {
