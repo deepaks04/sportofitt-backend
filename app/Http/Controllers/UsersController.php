@@ -15,6 +15,7 @@ use Auth;
 use App\Role;
 use App\Status;
 use App\RootCategory;
+use App\SubCategory;
 use App\Area;
 
 class UsersController extends Controller
