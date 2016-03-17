@@ -20,4 +20,12 @@ angular.module('sportofittApp')
       this.getVendorById = function(vendorId){
           return $http.get(this.url + "vendor/show/" + vendorId);
       }
+
+      this.getCategories = function(){
+          return $http.get(myConfig.backend + "user/get-sub-category");
+      }
+
+      this.getArea = function(){
+          return $http.get(myConfig.backend + "user/areas");
+      }
   });

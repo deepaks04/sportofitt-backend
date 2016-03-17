@@ -11,7 +11,7 @@ angular.module('sportofittApp')
   .controller('ProfileCtrl', function ($state,$auth,userService,toastr) {
       if(!$auth.isAuthenticated()){
           toastr.warning("Please sign in first!");
-          $state.go('login');
+          $state.go('app.login');
       }
     var vm = this;
 

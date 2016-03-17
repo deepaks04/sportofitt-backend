@@ -12,9 +12,9 @@ angular.module('sportofittApp')
    //   toastr.info($stateParams)
       Auth.confirmUser($stateParams.token).then(function(response){
           toastr.success(response.data.message.success);
-          $state.go('login',{});
+          $state.go('app.login',{});
       }).catch(function(response){
           toastr.error(response.data.message.error);
-          $state.go('login',{});
+          $state.go('app.login',{});
       })
   });

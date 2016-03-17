@@ -29,14 +29,14 @@
                 // If login is successful, redirect to the users state
                 //toastr.success(errors.data.message.success);
 
-                $state.go('home', {});
+                $state.go('app.home', {});
             }).catch(function(errors){
                 toastr.error(errors.data.message.error);
             });
         }
 
         if($auth.isAuthenticated()){
-            $state.go('home', {});
+            $state.go('app.home', {});
         }
 
     }

@@ -8,20 +8,41 @@
  * Controller of the sportofittApp
  */
 angular.module('sportofittApp')
-  .controller('MapCtrl', function (searchService,toastr) {
+  .controller('MapCtrl', function (searchService,toastr,$filter) {
       var _latitude = 18.520430;
       var _longitude = 73.856743;
       var mapStyles = [ {"featureType":"road","elementType":"labels","stylers":[{"visibility":"simplified"},{"lightness":20}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"transit","elementType":"all","stylers":[{"saturation":-100},{"visibility":"on"},{"lightness":10}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":50}]},{"featureType":"water","elementType":"all","stylers":[{"hue":"#a1cdfc"},{"saturation":30},{"lightness":49}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"hue":"#f49935"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"hue":"#fad959"}]}, {featureType:'road.highway',elementType:'all',stylers:[{hue:'#dddbd7'},{saturation:-92},{lightness:60},{visibility:'on'}]}, {featureType:'landscape.natural',elementType:'all',stylers:[{hue:'#c8c6c3'},{saturation:-71},{lightness:-18},{visibility:'on'}]},  {featureType:'poi',elementType:'all',stylers:[{hue:'#d9d5cd'},{saturation:-70},{lightness:20},{visibility:'on'}]} ];
-
-
+    var vm =this;
+vm.filter = {};
       // Load JSON data and create Google Maps
 
-      searchService.search().then(function(response){
-          createHomepageGoogleMap(_latitude,_longitude,response.data);
+      searchService.getCategories().then(function(response){
+          vm.subCategories = response.data.category;
       }).catch(function(errors){
           toastr.error(errors);
       })
 
+
+      searchService.getArea().then(function(response){
+          vm.areas = response.data.area;
+      }).catch(function(errors){
+          toastr.error(errors);
+      })
+      searchService.search().then(function(response){
+          vm.masterData = response.data;
+          vm.mapData =angular.copy(vm.masterData);
+          createHomepageGoogleMap(_latitude,_longitude, vm.mapData);
+      }).catch(function(errors){
+          toastr.error(errors);
+      })
+
+      vm.setFilters = function(filter){
+          console.log(filter);
+          console.log(vm.masterData.data);
+        vm.mapData['data'] = $filter('filter')(vm.masterData.data,{category:filter.subcategory,type:filter.type},true);
+
+          createHomepageGoogleMap(_latitude,_longitude, vm.mapData);
+      }
 
       function createHomepageGoogleMap(_latitude,_longitude,json) {
               gMap();
@@ -307,36 +328,36 @@ angular.module('sportofittApp')
 
               // Autocomplete address ----------------------------------------------------------------------------------------
 
-              var input = $('#location');
-              var autocomplete = new google.maps.places.Autocomplete(input, {
-                  types: ["geocode"]
-              });
-              autocomplete.bindTo('bounds', map);
-              google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                  var place = autocomplete.getPlace();
-                  if (!place.geometry) {
-                      return;
-                  }
-                  if (place.geometry.viewport) {
-                      map.fitBounds(place.geometry.viewport);
-                      map.setZoom(14);
-                  } else {
-                      map.setCenter(place.geometry.location);
-                      map.setZoom(14);
-                  }
-
-                  //marker.setPosition(place.geometry.location);
-                  //marker.setVisible(true);
-
-                  var address = '';
-                  if (place.address_components) {
-                      address = [
-                          (place.address_components[0] && place.address_components[0].short_name || ''),
-                          (place.address_components[1] && place.address_components[1].short_name || ''),
-                          (place.address_components[2] && place.address_components[2].short_name || '')
-                      ].join(' ');
-                  }
-              });
+              //var input = $('#location');
+              //var autocomplete = new google.maps.places.Autocomplete(input, {
+              //    types: ["geocode"]
+              //});
+              //autocomplete.bindTo('bounds', map);
+              //google.maps.event.addListener(autocomplete, 'place_changed', function () {
+              //    var place = autocomplete.getPlace();
+              //    if (!place.geometry) {
+              //        return;
+              //    }
+              //    if (place.geometry.viewport) {
+              //        map.fitBounds(place.geometry.viewport);
+              //        map.setZoom(14);
+              //    } else {
+              //        map.setCenter(place.geometry.location);
+              //        map.setZoom(14);
+              //    }
+              //
+              //    //marker.setPosition(place.geometry.location);
+              //    //marker.setVisible(true);
+              //
+              //    var address = '';
+              //    if (place.address_components) {
+              //        address = [
+              //            (place.address_components[0] && place.address_components[0].short_name || ''),
+              //            (place.address_components[1] && place.address_components[1].short_name || ''),
+              //            (place.address_components[2] && place.address_components[2].short_name || '')
+              //        ].join(' ');
+              //    }
+              //});
           }
       }
       
@@ -358,7 +379,7 @@ function pushItemsToArray(json, a, category, visibleItemsArray){
                 '<div class="wrapper">' +
                     '<a href="#" id="' + json.data[a].id + '"><h3>' + json.data[a].title + '</h3></a>' +
                     '<figure>' + json.data[a].location + '</figure>' +
-                    drawPrice(json.data[a].price) +
+                    drawPrice(json.data[a].peak_hour_price) +
                     '<div class="info">' +
                         '<div class="type">' +
                             '<i><img src="' + json.data[a].type_icon + '" alt=""></i>' +
@@ -514,10 +535,11 @@ function drawInfobox(category, infoboxContent, json, i){
         else                        { color = '' }
     if( json.data[i].price )        { var price = '<div class="price">' + json.data[i].price +  '</div>' }
         else                        { price = '' }
-    if(json.data[i].id)             { var id = json.data[i].id }
-        else                        { id = '' }
-    if(json.data[i].url)            { var url = json.data[i].url }
-        else                        { url = '' }
+    if(json.data[i].id)             { var id = json.data[i].id;
+                                        var url = "#/vendor/"+json.data[i].id}
+        else                        { id = ''; url= "" }
+    //if(json.data[i].url)            { var url = json.data[i].id }
+    //    else                        { url = '' }
     if(json.data[i].category)           { var type = json.data[i].category }
         else                        { type = '' }
     if(json.data[i].title)          { var title = json.data[i].title }

@@ -22,7 +22,7 @@
                 var auth = Auth.register(form);
                 auth.success(function (response) {
                     toastr.success(response.message.success);
-                    $state.go("login");
+                    $state.go("app.login");
                 });
                 auth.error(function (data, status) {
                     vm.disableSubmit = false;
