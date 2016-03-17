@@ -96,7 +96,7 @@ class Vendor extends Model
             vendors.address AS location,vendors.latitude,vendors.longitude,
             af.is_venue as type,vendors.description,vendors.postcode,
             u.fname AS firstName,u.lname AS lastName,u.profile_picture,
-            af.id as facilityId,af.name as facilityName,af.image as facilityImage,af.is_featured AS featured";
+            af.id as facilityId,af.name as facilityName,af.peak_hour_price,af.image as facilityImage,af.is_featured AS featured";
         if (null != $latitude && null != $longitude) {
             $sql .= ", ( 3959 * acos( cos( radians($latitude) ) 
         * cos( radians( latitude ) ) 
