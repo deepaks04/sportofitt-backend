@@ -65,4 +65,13 @@ class BookingService extends BaseService
         }
     }
 
+    public function bookPacakge(array $bookingData)
+    {
+        try {
+            $booked = $this->sessionBooking->bookPackageForUser($packageId, $facilityId, $userId);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
 }

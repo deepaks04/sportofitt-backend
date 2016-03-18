@@ -2,8 +2,6 @@
 
 namespace App\Http\Services;
 
-use JWTAuth;
-use App\Http\Traits\AuthenticatedUserTrait;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 abstract class BaseService
@@ -22,7 +20,7 @@ abstract class BaseService
      * @var integer
      */
     protected $offset = 0;
-    
+
     /**
      *
      * @var mixed NULL|\App\User
@@ -36,7 +34,12 @@ abstract class BaseService
             $this->user = $user;
         }
     }
-    
+
+    /**
+     * Get current user.
+     * 
+     * @return App\User
+     */
     public function getUser()
     {
         return $this->user;

@@ -1,8 +1,11 @@
-<?php namespace App;
+<?php
+
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SessionBooking extends Model {
+class SessionBooking extends Model
+{
 
     protected $table = 'session_bookings';
     protected $guarded = ['id'];
@@ -50,6 +53,23 @@ class SessionBooking extends Model {
         return self::select($fields)
                         ->where('session_bookings.id', '=', $id)
                         ->first();
+    }
+
+    /**
+     * Book a package for the user according to the package id and facility id 
+     * 
+     * @param integer $packageId
+     * @param integer $facilityId
+     * @param integer $userId
+     * @throws Exception
+     */
+    public function bookPackageForUser($packageId, $facilityId, $userId)
+    {
+        try {
+            
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
 }

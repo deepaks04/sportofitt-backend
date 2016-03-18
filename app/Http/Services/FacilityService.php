@@ -29,5 +29,10 @@ class FacilityService extends BaseService
             throw new Exception($ex);
         }
     }
+    
+    public function getAvailableHoursForFacility($facilityId)
+    {
+        $facilityId = AvailableFacility::find($facilityId);
+    }
 
 }
