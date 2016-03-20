@@ -39,7 +39,13 @@ class FacilityService extends BaseService
     public function getFacilityDetailsById($facilityId)
     {
         try {
-            $facility = AvailableFacility::find($facilityId);
+            $facility = AvailableFacility::select('available_facilities.*',
+                        'sub_categories.name As subcategoryName','root_categories.name as rootCategoryName')
+                ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')
+                ->join('root_categories', 'available_facilities.root_category_id', '=', 'root_categories.id')
+                ->where('available_facilities.is_active', '=', \DB::raw(1))                    
+                ->where('available_facilities.id', '=', $facilityId)                    
+                ->first();    
             $facility->openingHours = $facility->getOpenigHoursOfFacility();
             $facility->packages = $facility->getFacilityPackages();
             $facility->sessions = $facility->getFacilitySessions();
