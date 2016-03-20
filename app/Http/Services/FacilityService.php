@@ -39,16 +39,21 @@ class FacilityService extends BaseService
     public function getFacilityDetailsById($facilityId)
     {
         try {
-            $facility = AvailableFacility::select('available_facilities.*','vendors.latitude',
-                        'vendors.longitude','vendors.address','areas.name as areaName',
+            $facility = AvailableFacility::select('available_facilities.*',
                         'sub_categories.name As subcategoryName','root_categories.name as rootCategoryName')
                 ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')
                 ->join('root_categories', 'available_facilities.root_category_id', '=', 'root_categories.id')
                 ->join('vendors', 'available_facilities.vendor_id', '=', 'vendors.id')
-                ->join('areas', 'areas.id', '=', 'vendors.area_id')
+                
                 ->where('available_facilities.is_active', '=', \DB::raw(1))                    
                 ->where('available_facilities.id', '=', $facilityId)                    
                 ->first();    
+            $facility->vendor = $facility->vendor()
+                                        ->select('vendors.latitude','vendors.longitude','vendors.address',
+                                                'areas.name as areaName')
+                                        ->join('areas', 'areas.id', '=', 'vendors.area_id')
+                                        ->first();
+            $facility->vendor->images = $facility->vendor->getVendorImages();
             $facility->openingHours = $facility->getOpenigHoursOfFacility();
             $facility->packages = $facility->getFacilityPackages();
             $facility->sessions = $facility->getFacilitySessions();
