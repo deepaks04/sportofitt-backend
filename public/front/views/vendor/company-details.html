@@ -1,0 +1,136 @@
+<!-- Page Canvas-->
+<div id="page-canvas">
+    <!--Page Content-->
+    <div id="page-content">
+        <section class="container">
+            <div class="row">
+                <!--Company Detail Content-->
+                <div class="col-md-9">
+                    <header>
+                        <h1 class="page-title">{{vm.vendor.business_name}}</h1>
+                    </header>
+                    <!--Logo and Map-->
+                    <section>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4">
+                                <div >
+                                    <div class="image"><img ng-src="{{vm.vendor.user.profile_picture}}" alt=""></div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8">
+                                <div id="map-simple"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--end Logo and Map-->
+                    <!--Contact info-->
+                    <section>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4">
+                                <section>
+                                    <h3><i class="fa fa-map-marker"></i>Address</h3>
+                                    <address>
+                                        <div>{{vm.vendor.address}}</div>
+                                        <div>{{vm.vendor.postcode}}</div>
+                                    </address>
+                                </section>
+                            </div>
+                            <div class="col-md-8 col-sm-8">
+                                <h3><i class="fa fa-file-text"></i>About Us</h3>
+                                <p>
+                                    {{(vm.vendor.description!='null')?vm.vendor.description:""}}
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <!--end Contact info-->
+                    <hr>
+                    <!--Company Items-->
+                    <section>
+                        <header><h2>Venue / Coaching</h2></header>
+                        <div class="" id="company-items">
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4" ng-repeat="venue in vm.vendor.facility">
+                                        <div class="item equal-height">
+                                            <div class="image">
+                                                <div class="quick-view" ui-sref="app.venue({ facilityId:venue.id })"><i class="fa fa-eye"></i><span>Detail View</span></div>
+                                                <a ui-sref="app.venue({facilityId:venue.id})">
+                                                    <div class="overlay">
+                                                        <div class="inner">
+                                                            <div class="content">
+                                                                <h4>Description</h4>
+                                                                <p>{{venue.description}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--<div class="item-specific">-->
+                                                        <!--<span title="Bedrooms"><img src="assets/img/bedrooms.png" alt="">2</span>-->
+                                                        <!--<span title="Bathrooms"><img src="assets/img/bathrooms.png" alt="">2</span>-->
+                                                        <!--<span title="Area"><img src="assets/img/area.png" alt="">240m<sup>2</sup></span>-->
+                                                        <!--<span title="Garages"><img src="assets/img/garages.png" alt="">1</span>-->
+                                                    <!--</div>-->
+                                                    <div class="icon">
+                                                        <i class="fa fa-thumbs-up"></i>
+                                                    </div>
+                                                    <img ng-src="{{vm.vendor.images[0]}}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="wrapper">
+                                                <a ui-sref="app.venue({facilityId:venue.id})"><h3>{{venue.name}}</h3></a>
+                                                <figure>{{venue.subcategoryName}}</figure>
+
+                                                <figure>{{vm.vendor.address}}</figure>
+                                                 <div class="info">
+                                                    <div class="type">
+                                                        <i class="fa fa-certificate" ng-if="!venue.is_venue"></i>
+                                                        <i class="fa fa-map-marker" ng-if="venue.is_venue"></i>
+                                                        <!--<i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>-->
+                                                        <span>{{venue.is_venue?"Venue":"Coaching"}}</span>
+                                                    </div>
+                                                    <!--<div class="rating" data-rating="4"></div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.item-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    </section>
+                    <!--end Company Items-->
+                   </div>
+                <!-- /.col-md-8-->
+                <!--Sidebar-->
+                <div class="col-md-3">
+                    <aside id="sidebar">
+                        <section>
+                            <a href="#"><img src="assets/img/ad-banner-sidebar.png" alt=""></a>
+                        </section>
+                        <section>
+                            <header><h2>Features</h2></header>
+                            <ul class="bullets">
+                                <li><a>AC</a></li>
+                                <li><a>Changing Room</a></li>
+                                <li><a>Showers</a></li>
+                                <li><a>Steam</a></li>
+                                <li><a>Parking</a></li>
+                                <li><a>Wifi</a></li>
+                                <li><a>Cafe</a></li>
+                                <li><a>Stretch Area</a></li>
+                                <li><a>Cardio</a></li>
+                                <li><a>Free Weights</a></li>
+                                <li><a>Machine Weights</a></li>
+                            </ul>
+                        </section>
+                    </aside>
+                    <!-- /#sidebar-->
+                </div>
+                <!-- /.col-md-3-->
+                <!--end Sidebar-->
+            </div><!-- /.row-->
+        </section>
+        <!-- /.container-->
+    </div>
+    <!-- end Page Content-->
+</div>
+<!-- end Page Canvas-->

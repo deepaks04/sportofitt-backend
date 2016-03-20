@@ -1,5 +1,5 @@
 <!-- Page Canvas-->
-<div id="page-canvas">
+<div id="page-canvas" xmlns="http://www.w3.org/1999/html">
     <!--Off Canvas Navigation-->
     <nav class="off-canvas-navigation">
         <header>Navigation</header>
@@ -18,7 +18,7 @@
                     <section class="block" id="main-content">
                         <header class="page-title">
                             <div class="title">
-                                <h1>{{vm.vendor.business_name}}</h1>
+                                <h1>{{vm.facility.name}}</h1>
                                 <!--<figure>63 Birch Street</figure>-->
                             </div>
                             <!--<div class="info">-->
@@ -33,18 +33,14 @@
                             <aside class="col-md-4 col-sm-4" id="detail-sidebar">
                                 <!--Contact-->
                                 <section>
-                                    <header><h3>Contact</h3></header>
+                                    <header><h3>Address</h3></header>
                                     <address>
-                                        <div>{{vm.vendor.user.fname}} {{vm.vendor.user.lname}}</div>
-                                        <div>{{vm.vendor.address}}</div>
-                                        <figure>
-                                            <div class="info">
-                                                <i class="fa fa-mobile"></i>
-                                                <span>{{vm.vendor.contact}}</span>
-                                            </div>
-                                        </figure>
+                                        <div>{{vm.facility.address}}</div>
+                                        <div>{{vm.facility.areaName}}</div>
+                                        <div>{{vm.facility.pincode}}</div>
                                     </address>
                                 </section>
+                                <!-- /.block -->
                                 <!--end Contact-->
                                 <!--Rating-->
                                 <!--<section class="clearfix">-->
@@ -52,143 +48,140 @@
                                     <!--<figure class="rating big pull-right" data-rating="4"></figure>-->
                                 <!--</section>-->
                                 <!--end Rating-->
-
+                                <aside id="sidebar">
+                                     <section>
+                                        <header><h2>Features</h2></header>
+                                        <ul class="bullets">
+                                            <li><a>AC</a></li>
+                                            <li><a>Changing Room</a></li>
+                                            <li><a>Showers</a></li>
+                                            <li><a>Steam</a></li>
+                                            <li><a>Parking</a></li>
+                                            <li><a>Wifi</a></li>
+                                            <li><a>Cafe</a></li>
+                                            <li><a>Stretch Area</a></li>
+                                            <li><a>Cardio</a></li>
+                                            <li><a>Free Weights</a></li>
+                                            <li><a>Machine Weights</a></li>
+                                        </ul>
+                                    </section>
+                                </aside>
                             </aside>
                             <!--end Detail Sidebar-->
                             <!--Content-->
                             <div class="col-md-8 col-sm-8">
                                 <section>
-                                    <article class="item-gallery" ng-if="vm.vendor.images">
-                                        <div class="owl-carousel item-slider">
-                                            <div class="slide" ng-repeat="image in vm.vendor.images"><img ng-src="{{image}}" data-hash="{{$index+1}}" alt=""></div>
-                                        </div>
+                                    <article class="item-gallery" ng-if="vm.facility.vendor.images">
+
+                                            <div slick id="mainSlider" as-nav-for="#thumbSlider"  center-mode="true"
+                                                  fade="true" init-onload=true data="vm.facility.vendor.images">
+                                                <div class="slide"
+                                                     ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" alt=""></div>
+                                            </div>
                                         <!-- /.item-slider -->
                                         <div class="thumbnails">
-                                            <span class="expand-content btn framed icon" data-expand="#gallery-thumbnails" >More<i class="fa fa-plus"></i></span>
-                                            <div class="expandable-content height collapsed show-70" id="gallery-thumbnails">
-                                                <div class="content">
-                                                    <a ng-repeat="image in vm.vendor.images" href="#{{$index+1}}" id="thumbnail-{{$index+1}}" ng-class="{'active':$index==0}"><img ng-src="{{image}}" alt=""></a>
-                                                </div>
+                                            <div slick as-nav-for="#mainSlider" focus-on-select="true"
+                                                 id="thumbSlider" center-mode="true"  slides-to-show="3" slides-to-scroll="1"
+                                                 init-onload=true data="vm.facility.vendor.images">
+                                                <div class="slide"
+                                                     ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" ></div>
                                             </div>
+                                            <!--<span class="expand-content btn framed icon" data-expand="#gallery-thumbnails" >More<i class="fa fa-plus"></i></span>-->
+                                            <!--<div class="expandable-content height collapsed show-70" id="gallery-thumbnails">-->
+                                                <!--<div class="content">-->
+                                                    <!--<a ng-repeat="image in vm.facility.images" href="#{{$index+1}}" id="thumbnail-{{$index+1}}" ng-class="{'active':$index==0}"><img ng-src="{{image}}" alt=""></a>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
                                         </div>
                                     </article>
                                     <!-- /.item-gallery -->
                                     <article class="block">
                                         <header><h2>Description</h2></header>
                                         <p>
-                                          {{vm.vendor.description}}
+                                          {{vm.facility.description}}
                                         </p>
                                     </article>
                                     <!-- /.block -->
                                     <article class="block">
-                                        <uib-accordion close-others="true">
-                                            
-                                            </uib-accordion>
-                                        <header><h2>Daily Menu</h2></header>
-                                        <div class="list-slider owl-carousel">
-                                            <div class="slide">
-                                                <header>
-                                                    <h3><i class="fa fa-calendar"></i>Monday (today)</h3>
-                                                </header>
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Chicken wings</h4>
-                                                        <figure>Curabitur odio nibh, luctus non pulvinar</figure>
-                                                    </div>
-                                                    <div class="right">$4.50</div>
-                                                </div>
-                                                <!-- /.list-item -->
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Mushroom ragout</h4>
-                                                        <figure>Donec a odio rutrum, hendrerit sapien</figure>
-                                                    </div>
-                                                    <div class="right">$3.60</div>
-                                                </div>
-                                                <!-- /.list-item -->
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Nice salad with tuna, beans and hard-boiled egg</h4>
-                                                        <figure>Urabitur suscipit, justo eu dignissim lacinia </figure>
-                                                    </div>
-                                                    <div class="right">$1.20</div>
-                                                </div>
-                                                <!-- /.list-item -->
+                                        <div class="panel panel-transparent">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">Sessions/Packages</h4>
                                             </div>
-                                            <!-- /.slide -->
-                                            <div class="slide">
-                                                <header>
-                                                    <h3><i class="fa fa-calendar"></i>Tuesday</h3>
-                                                </header>
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Chicken wings</h4>
-                                                        <figure>Curabitur odio nibh, luctus non pulvinar</figure>
-                                                    </div>
-                                                    <div class="right">$4.50</div>
-                                                </div>
-                                                <!-- /.list-item -->
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Mushroom ragout</h4>
-                                                        <figure>Donec a odio rutrum, hendrerit sapien</figure>
-                                                    </div>
-                                                    <div class="right">$3.60</div>
-                                                </div>
-                                                <!-- /.list-item -->
-                                                <div class="list-item">
-                                                    <div class="left">
-                                                        <h4>Nice salad with tuna, beans and hard-boiled egg</h4>
-                                                        <figure>Urabitur suscipit, justo eu dignissim lacinia </figure>
-                                                    </div>
-                                                    <div class="right">$1.20</div>
-                                                </div>
-                                                <!-- /.list-item -->
-                                            </div>
-                                            <!-- /.slide -->
-                                        </div>
-                                        <!-- /.list-slider -->
-                                    </article>
-                                    <article class="block">
-                                        <header><h2>Opening Hours</h2></header>
-                                        <dl class="lines">
-                                            <dt>Monday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                            <dt>Tuesday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                            <dt>Wednesday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                            <dt>Thursday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                            <dt>Friday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                            <dt>Saturday</dt>
-                                            <dd>08:00 am - 11:00 pm</dd>
-                                        </dl>
-                                    </article>
-                                    <!-- /.block -->
+                                            <div class="panel-body">
+                                                <!--<v-accordion class="vAccordion&#45;&#45;default" control="secondAccordionControl">-->
+                                                    <!--<v-pane  expanded="$first">-->
+                                                        <!--<v-pane-header>-->
+                                                            <!--<h5>Single Session</h5>-->
+                                                        <!--</v-pane-header>-->
+                                                        <!--<v-pane-content>-->
+                                                           <!--<p>-->
+                                                               <!---->
+                                                           <!--</p>-->
+                                                        <!--</v-pane-content>-->
+                                                    <!--</v-pane>-->
+                                                <!--</v-accordion>-->
 
-                                    <!-- /.block -->
-                                    <article class="block">
-                                        <header><h2>Features</h2></header>
-                                        <ul class="bullets">
-                                            <li>Free Parking</li>
-                                            <li>Cards Accepted</li>
-                                            <li>Wi-Fi</li>
-                                            <li>Air Condition</li>
-                                            <li>Reservations</li>
-                                            <li>Teambuildings</li>
-                                            <li>Places to seat</li>
-                                            <li>Winery</li>
-                                            <li>Draft Beer</li>
-                                            <li>LCD</li>
-                                            <li>Saloon</li>
-                                            <li>Free Access</li>
-                                            <li>Terrace</li>
-                                            <li>Minigolf</li>
-                                        </ul>
+                                                <v-accordion class="vAccordion--default" ng-if="vm.facility.sessions.length" control="secondAccordionControl">
+                                                    <v-pane  expanded="$first">
+                                                        <v-pane-header>
+                                                            <h5>Session Combos</h5>
+                                                        </v-pane-header>
+                                                        <v-pane-content>
+                                                        <table class="table table-responsive table-bordered">
+                                                            <thead>
+                                                            <th>No. of Peak Sessions</th>
+                                                            <th>No. of Off Peak Sessions</th>
+                                                            <th>Actual Price</th>
+                                                            <th>Discounted Price</th>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr ng-repeat="session in vm.facility.sessions">
+                                                                <td>{{session.peak}}</td>
+                                                                <td>{{session.off_peak}}</td>
+                                                                <td>₹{{session.price}}</td>
+                                                                <td>₹{{session.price - (session.price*session.discount/100)}}</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        </v-pane-content>
+                                                    </v-pane>
+                                                </v-accordion>
+
+                                                <v-accordion ng-if="vm.facility.packages.length">
+                                                    <v-pane>
+                                                        <v-pane-header>
+                                                            <h4>Packages</h4>
+                                                        </v-pane-header>
+                                                        <v-pane-content>
+                                                            <div class="row">
+                                                                <!-- /.col-md-3-->
+                                                                <div class="col-md-4 col-sm-4" ng-repeat="package in vm.facility.packages">
+                                                                    <div class="price-box white featured">
+                                                                        <header><h2>{{package.name}}</h2></header>
+                                                                        <figure>
+                                                                                        <span class="price">
+                                                                                        <i class="fa fa-inr"></i> {{package.actual_price}}</span>
+                                                                        </figure>
+                                                                        <figure>{{package.month}} month(s)</figure>
+                                                                        <figure>Discount {{package.discount}} %</figure>
+                                                                        <p>{{package.description}}</p>
+                                                                        <!--<a ui-sref="app.login" ng-if="!isAuthenticated()" class="btn framed btn-color-default">Sign In</a>-->
+                                                                        <a href data-ng-click="vm.addLocalBooking(package)" class="btn framed btn-color-default">Book now</a>
+
+                                                                    </div>
+                                                                    <!-- /.price-box-->
+                                                                </div>
+                                                            </div>
+                                                        </v-pane-content>
+                                                    </v-pane>
+                                                </v-accordion>
+
+                                            </div>
+                                        </div>
                                     </article>
-                                    <!-- /.block -->
+
+
+
                                 </section>
                                 <!--Review Form-->
                                 <section id="write-review">
@@ -241,9 +234,30 @@
                     <!-- /#main-content-->
                 </div>
                 <!-- /.col-md-8-->
+                <!--Sidebar-->
+                <div class="col-md-3">
+                    <aside id="sidebar">
+                          <header><h2>Opening Hours</h2></header>
+                        <h3>Regular Hour's</h3>
+                            <dl class="lines">
+                                <div ng-repeat="(key,peakTimes) in vm.facility.openingHours.peak">
+                                    <dt>{{vm.days[key]}}</dt>
+                                    <dd ng-repeat="time in peakTimes">{{time.start}} - {{time.end}}</dd>
+                                </div>
+                            </dl>
+                        <h3>Happy Hour's</h3>
+                        <dl class="lines">
+                            <div ng-repeat="(key,peakTimes) in vm.facility.openingHours.offpeak">
+                                <dt>{{vm.days[key]}}</dt>
+                                <dd ng-repeat="time in peakTimes">{{time.start}} - {{time.end}}</dd>
+                            </div>
+                        </dl>
+                    </aside>
+                    <!-- /#sidebar-->
                 </div>
                 <!-- /.col-md-3-->
                 <!--end Sidebar-->
+            </div>
             </section>
         <!-- /.container-->
     </div>
