@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use URL;
 use App\Vendor;
 use App\AvailableFacility;
 use App\Http\Services\BaseService;
@@ -73,6 +74,14 @@ class IndexService extends BaseService
         if ($vendor) {
             $result['vendor'] = $vendor;
             $result['vendor']['user'] = $vendor->user()->select('fname', 'lname', 'username', 'profile_picture')->first();
+            $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
+            if ($result['vendor']['user']->profile_picture) {
+                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($result['vendor']['user']->id) . "/" . "profile_image/";
+                $result['vendor']['user']->profile_picture = $vendorOwnDirecory . $result['vendor']['user']->profile_picture;
+                ;
+            } else {
+                $result['vendor']['user']->profile_picture = $vendorUploadPath . "/" . "noProfilePic.png";
+            }
             $result['vendor']['facility'] = $this->getVendorsFacilities($vendor);
             $result['vendor']['images'] = $vendor->getVendorImages();
         }

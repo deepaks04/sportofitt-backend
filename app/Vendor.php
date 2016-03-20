@@ -117,8 +117,8 @@ class Vendor extends Model
         if (null != $category) {
             $query->where('af.sub_category_id', '=', $category);
         }
-        
-        if(null != $isVenue) {
+
+        if (null != $isVenue) {
             $query->where('af.is_venue', '=', $isVenue);
         }
 
@@ -126,10 +126,11 @@ class Vendor extends Model
             $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
                     ->orderBy('distance', 'ASC');
         } else {
-            $query->orderBy('vendors.id','DESC');
+            $query->orderBy('vendors.id', 'DESC');
         }
-        
-        $query->toSql();die;
+
+        $query->toSql();
+        die;
         $result = $query->get();
         if (!empty($result) && $result->count() > 0) {
             return $result;
@@ -147,7 +148,10 @@ class Vendor extends Model
     public function getVendorDetailsById($vendorId)
     {
         if ($vendorId) {
-            return self::find($vendorId);
+            return self::select('vendors.*', 'areas.name')
+                            ->where('vendors.id', '=', $vendorId)
+                            ->join('areas', 'areas.id', '=', 'vendors.id')
+                            ->first();
         }
 
         return false;
@@ -171,12 +175,11 @@ class Vendor extends Model
             }
 
             return $imagesArray;
-            
         } catch (Exception $ex) {
             throw new Exception($ex);
         }
     }
-    
+
     /**
      * Get features according to vendor
      * 
