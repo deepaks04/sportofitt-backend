@@ -28,10 +28,26 @@ class FacilityService extends BaseService
             throw new Exception($ex);
         }
     }
-    
-    public function getAvailableHoursForFacility($facilityId)
+
+    /**
+     * Get facility details according to the facility id
+     * 
+     * @param integer $facilityId
+     * @return App\AvailableFacility
+     * @throws \Exception
+     */
+    public function getFacilityDetailsById($facilityId)
     {
-        $facilityId = AvailableFacility::find($facilityId);
+        try {
+            $facility = AvailableFacility::find($facilityId);
+            $facility->openingHours = $facility->getOpenigHoursOfFacility();
+            $facility->packages = $facility->getFacilityPackages();
+            $facility->sessions = $facility->getFacilitySessions();
+
+            return $facility;
+        } catch (\Exception $ex) {
+            throw new \Exception($ex);
+        }
     }
 
 }

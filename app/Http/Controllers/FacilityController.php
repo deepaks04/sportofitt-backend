@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Helpers\APIResponse;
 use App\Http\Services\FacilityService;
@@ -11,7 +10,7 @@ use App\Http\Controllers\Controller;
 
 class FacilityController extends Controller
 {
-    
+
     /**
      *
      * @var mixed null | App\Http\Services\IndexService
@@ -22,7 +21,7 @@ class FacilityController extends Controller
     {
         $this->service = new FacilityService();
     }
-    
+
     /**
      * Showing booking information of the respective facility.
      *
@@ -39,11 +38,10 @@ class FacilityController extends Controller
                 APIResponse::$isError = true;
                 APIResponse::$message['error'] = 'Select facility';
             }
-            
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }
-        
+
         return APIResponse::sendResponse();
     }
 
@@ -90,6 +88,23 @@ class FacilityController extends Controller
     {
         //
     }
+    
+    /**
+     * Get facility details by id
+     * 
+     * @param integer $facilityId
+     * @return \Illuminate\Http\Response
+     */
+    public function show($facilityId)
+    {
+        try {
+            APIResponse::$data = $this->service->getFacilityDetailsById($facilityId);
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -101,4 +116,5 @@ class FacilityController extends Controller
     {
         //
     }
+
 }
