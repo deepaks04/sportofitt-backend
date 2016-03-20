@@ -139,6 +139,7 @@ class AvailableFacility extends Model {
         $openingHours = $this->openingHours()
                          ->select('id','is_peak','day','start','end')
                          ->where('opening_hours.is_active','=',\DB::raw(1))
+                         ->orderBy('opening_hours.day','ASC')
                          ->get();
         
         return $openingHours;
