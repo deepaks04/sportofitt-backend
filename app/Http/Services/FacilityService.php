@@ -39,7 +39,8 @@ class FacilityService extends BaseService
     public function getFacilityDetailsById($facilityId)
     {
         try {
-            $facility = AvailableFacility::select('available_facilities.*','vendors.latitude','vendors.longitude',
+            $facility = AvailableFacility::select('available_facilities.*','vendors.latitude',
+                        'vendors.longitude','vendors.address',
                         'sub_categories.name As subcategoryName','root_categories.name as rootCategoryName')
                 ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')
                 ->join('root_categories', 'available_facilities.root_category_id', '=', 'root_categories.id')
