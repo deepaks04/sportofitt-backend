@@ -49,7 +49,7 @@ class FacilityService extends BaseService
                 ->where('available_facilities.id', '=', $facilityId)                    
                 ->first();    
             $facility->vendor = $facility->vendor()
-                                        ->select('areas.name as areaName')
+                                        ->select('vendors.*','areas.name as areaName')
                                         ->join('areas', 'areas.id', '=', 'vendors.area_id')
                                         ->first();
             $facility->vendor->images = $facility->vendor->getVendorImages();
