@@ -150,7 +150,7 @@ class Vendor extends Model
         if ($vendorId) {
             return self::select('vendors.*', 'areas.name')
                             ->where('vendors.id', '=', $vendorId)
-                            ->join('areas', 'areas.id', '=', 'vendors.id')
+                            ->join('areas', 'areas.id', '=', 'vendors.area_id')
                             ->first();
         }
 
