@@ -51,7 +51,8 @@ class FacilityService extends BaseService
                     ->join('areas', 'areas.id', '=', 'vendors.area_id')
                     ->first();
             $facility->vendor->images = $facility->vendor->getVendorImages();
-            $facility->openingHours = $this->getOpeningHoursInGroup($facility->getOpenigHoursOfFacility());
+            $openingHours = $facility->getOpenigHoursOfFacility();
+            $facility->openingHours = $this->getOpeningHoursInGroup($openingHours);
             $facility->packages = $facility->getFacilityPackages();
             $facility->sessions = $facility->getFacilitySessions();
 
