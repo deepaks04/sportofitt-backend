@@ -93,7 +93,7 @@ class FacilityService extends BaseService
     {
         $response = array('peak' => array(), 'offpeak' => array());
         foreach ($openingHours as $openingHour) {
-            $timingArray = array('start' => $openingHour->start, 'end' => $openingHour->end);
+            $timingArray = array('start' => date('h:i A', strtotime('1/1/1970 '.$openingHour->start)), 'end' => date('h:i A', strtotime('1/1/1970 '.$openingHour->end)));
             if (1 == $openingHour->is_peak) {
                 $response['peak'][$openingHour->day][] = $timingArray ;
             }
