@@ -98,7 +98,10 @@ class IndexService extends BaseService
     private function getVendorsFacilities($vendor, $withSessionDetails = false)
     {
         $facilities = $vendor->facility()
-                ->select('available_facilities.id', 'available_facilities.name', 'available_facilities.description', 'available_facilities.image', 'available_facilities.root_category_id', 'available_facilities.sub_category_id','available_facilities.pincode')
+                ->select('available_facilities.id', 'available_facilities.name', 'available_facilities.description', 
+                        'available_facilities.image', 'available_facilities.root_category_id', 'available_facilities.sub_category_id',
+                        'available_facilities.pincode','available_facilities.is_venue',
+                        'sub_categories.name As subcategoryName','root_categories.name as rootCategoryName')
                 ->join('sub_categories', 'available_facilities.sub_category_id', '=', 'sub_categories.id')
                 ->join('root_categories', 'available_facilities.root_category_id', '=', 'root_categories.id')
                 ->where('available_facilities.is_active', '=', \DB::raw(1))
