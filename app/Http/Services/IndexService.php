@@ -76,7 +76,7 @@ class IndexService extends BaseService
             $result['vendor']['user'] = $vendor->user()->select('fname', 'lname', 'username', 'profile_picture')->first();
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
             if ($result['vendor']['user']->profile_picture) {
-                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($result['vendor']['user']->id) . "/" . "profile_image/";
+                $vendorOwnDirecory = $vendorUploadPath . "/" . sha1($result['vendor']->user_id) . "/" . "profile_image/";
                 $result['vendor']['user']->profile_picture = $vendorOwnDirecory . $result['vendor']['user']->profile_picture;
                 ;
             } else {
