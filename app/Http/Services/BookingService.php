@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\SessionBooking;
+use App\SessionPackage;
 use App\Http\Services\BaseService;
 
 class BookingService extends BaseService
@@ -65,13 +66,26 @@ class BookingService extends BaseService
         }
     }
 
-    public function bookPacakge(array $bookingData)
+    /**
+     * Book a package for user with the user id
+     * 
+     * @param App\SessionPackage $packageId
+     * @return mixed boolean | App\BookedPackage
+     * @throws Exception
+     */
+    public function bookPacakge($packageId)
     {
         try {
-            $booked = $this->sessionBooking->bookPackageForUser($packageId, $facilityId, $userId);
+            $sessionPackage = new SessionPackage();
+            $package = $sessionPackage->getPackageDetails($packageId);
+            if (!empty($package)) {
+                return $package->bookPackageForUser($this->user->id);
+            }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
+
+        return false;
     }
 
 }

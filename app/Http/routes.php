@@ -9,11 +9,11 @@
  * | and give it the controller to call when that URI is requested.
  * |
  */
-//Route::get('/', function () {
-//    return view('views/home', ['cell' => '9457912886',
-//        'email' => 'select@sportofitt.com',
-//    ]);
-//});
+Route::get('/', function () {
+    return view('views/home', ['cell' => '9457912886',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
 
 Route::get('/sportofittpartneragreement', function () {
     return view('views/agreement', ['cell' => '9457912886',
@@ -128,8 +128,9 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('search', array('uses' => 'IndexController@index'));
     Route::get('vendor/show/{vendor_id}', array('uses' => 'IndexController@show'));
 });
-Route::group(['prefix' => 'api/v1/facility/'], function() {
+Route::group(['prefix' => 'api/v1/facility/', 'middleware' => ['userfromtoken']], function() {
     Route::get('booking-information', array('uses' => 'FacilityController@index'));
+    Route::post('book/package', array('uses' => 'BookingController@bookAPackage'));
 });
 
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));

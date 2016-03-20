@@ -90,7 +90,7 @@ class Vendor extends Model
      * @param integer $limit
      * @return array
      */
-    public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $offset = 0, $limit = 10)
+    public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $isVenue = null, $offset = 0, $limit = 10)
     {
         $sql = "vendors.id AS id,vendors.user_id,rt.name as category,vendors.business_name AS title,
             vendors.address AS location,vendors.latitude,vendors.longitude,
@@ -117,6 +117,10 @@ class Vendor extends Model
         if (null != $category) {
             $query->where('af.sub_category_id', '=', $category);
         }
+        
+        if(null != $isVenue) {
+            $query->where('af.is_venue', '=', $isVenue);
+        }
 
         if (null != $latitude && null != $longitude) {
             $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
@@ -124,7 +128,8 @@ class Vendor extends Model
         } else {
             $query->orderBy('vendors.id','DESC');
         }
-
+        
+        $query->toSql();die;
         $result = $query->get();
         if (!empty($result) && $result->count() > 0) {
             return $result;

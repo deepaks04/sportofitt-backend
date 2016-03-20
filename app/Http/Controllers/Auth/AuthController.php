@@ -203,7 +203,7 @@ use AuthenticatesAndRegistersUsers,
         return APIResponse::sendResponse();
     }
     
-/**
+    /**
      * Confirm User email & activate his account.
      *
      * @param string $confirmation            

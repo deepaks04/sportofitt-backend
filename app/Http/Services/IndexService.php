@@ -36,9 +36,10 @@ class IndexService extends BaseService
             $long = (!empty($requestData['long'])) ? $requestData['long'] : null;
             $areaId = (!empty($requestData['area_id'])) ? $requestData['area_id'] : null;
             $category = (!empty($requestData['category'])) ? $requestData['category'] : null;
+            $isVeneue = (isset($requestData['is_venue']) && $requestData['is_venue'] >= 0) ? $requestData['is_venue'] : null;
 
             $vendor = new Vendor();
-            $vendors = $vendor->searchVendors($lat, $long, $areaId, $category);
+            $vendors = $vendor->searchVendors($lat, $long, $areaId, $category, $isVeneue);
             if ($vendors) {
                 foreach ($vendors as $vendor) {
                     $vendor->type = (1 == $vendor->type) ? 'Venue' : 'Coaching';

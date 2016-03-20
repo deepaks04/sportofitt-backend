@@ -136,6 +136,9 @@ return array(
         array(
             'required' => 'Select activity level',
         ),
+        'package_id' => array(
+            'required' => 'Are you forgot to select the package?'
+        )
     ),
     'attributes' =>
     array(
