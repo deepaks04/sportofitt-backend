@@ -95,7 +95,7 @@ class IndexService extends BaseService
      * @param Collection AvailableFacility $vendorFaciilityArray
      * @return array Facility information
      */
-    private function getVendorsFacilities($vendor)
+    private function getVendorsFacilities($vendor, $withSessionDetails = false)
     {
         $facilities = $vendor->facility()
                 ->select('available_facilities.id', 'available_facilities.name')
@@ -104,13 +104,15 @@ class IndexService extends BaseService
                 ->where('available_facilities.is_active', '=', \DB::raw(1))
                 ->get();
 
-        if (!empty($facilities) && count($facilities) > 0) {
-            foreach ($facilities as $key => $facility) {
-                try {
-                    $facilityService = new FacilityService();
-                    $facilities[$key] = $facilityService->getSessionsAndPackages($facility->id);
-                } catch (Exception $ex) {
-                    continue;
+        if ($withSessionDetails) {
+            if (!empty($facilities) && count($facilities) > 0) {
+                foreach ($facilities as $key => $facility) {
+                    try {
+                        $facilityService = new FacilityService();
+                        $facilities[$key] = $facilityService->getSessionsAndPackages($facility->id);
+                    } catch (Exception $ex) {
+                        continue;
+                    }
                 }
             }
         }
