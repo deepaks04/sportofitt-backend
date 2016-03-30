@@ -26,20 +26,19 @@
                     <form class="main-search border-less-inputs" data-ng-submit="vm.setFilters(vm.filter)" role="form" method="post">
                         <div class="input-row">
                             <div class="form-group">
-                                <select data-ng-model="vm.filter.subcategory" ng-options="category.name as category.name for category in vm.subCategories">
-
+                                <select data-ng-model="vm.filter.category" ng-options="category.name as category.name for category in vm.subCategories">
+<option value="">Select Category</option>
                                 </select>                            </div>
                             <!-- /.form-group -->
                             <div class="form-group">
-                                    <div class="btn-group">
-                                        <input type="radio" ng-model="vm.filter.type" value="Venue">Venue</input>
-                                        <input type="radio" class="btn btn-primary" ng-model="vm.filter.type" value="Other">Other</input>
-                                     </div>
+                                <select data-ng-model="vm.filter.type" ng-options="category for category in vm.types">
+                                    <option value="">Select Type</option>
+                                </select>
                             </div>
                             <!-- /.form-group -->
                             <div class="form-group">
-                  <select data-ng-model="vm.filter.areas" ng-options="area.id as area.name for area in vm.areas">
-
+                  <select data-ng-model="vm.filter.area_id" ng-options="area.id as area.name for area in vm.areas">
+                      <option value="">Select Area</option>
                   </select>
                             </div>
                             <!-- /.form-group -->

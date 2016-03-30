@@ -63,8 +63,26 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         url: "vendor/{vendorId}",
         views: {
             'body@app': {
-                templateUrl: "views/vendor/index.html",
+                templateUrl: "views/vendor/company-details.html",
                 controller: 'VendorInfoCtrl',
+                controllerAs: 'vm'
+            }
+        }
+    }).state('app.venue', {
+        url: "venue/{facilityId}",
+        views: {
+            'body@app': {
+                templateUrl: "views/vendor/index.html",
+                controller: 'FacilityViewCtrl',
+                controllerAs: 'vm'
+            }
+        }
+    }).state('app.orderconformation', {
+        url: "confirm-bookings",
+        views: {
+            'body@app': {
+                templateUrl: "views/orderconfirmation/index.html",
+                controller: 'OrderConfirmationCtrl',
                 controllerAs: 'vm'
             }
         }

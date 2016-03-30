@@ -14,6 +14,7 @@ angular.module('sportofittApp')
       var mapStyles = [ {"featureType":"road","elementType":"labels","stylers":[{"visibility":"simplified"},{"lightness":20}]},{"featureType":"administrative.land_parcel","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"transit","elementType":"all","stylers":[{"saturation":-100},{"visibility":"on"},{"lightness":10}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"road.local","elementType":"all","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":50}]},{"featureType":"water","elementType":"all","stylers":[{"hue":"#a1cdfc"},{"saturation":30},{"lightness":49}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"hue":"#f49935"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"hue":"#fad959"}]}, {featureType:'road.highway',elementType:'all',stylers:[{hue:'#dddbd7'},{saturation:-92},{lightness:60},{visibility:'on'}]}, {featureType:'landscape.natural',elementType:'all',stylers:[{hue:'#c8c6c3'},{saturation:-71},{lightness:-18},{visibility:'on'}]},  {featureType:'poi',elementType:'all',stylers:[{hue:'#d9d5cd'},{saturation:-70},{lightness:20},{visibility:'on'}]} ];
     var vm =this;
 vm.filter = {};
+      vm.types = ['Venue','Coaching'];
       // Load JSON data and create Google Maps
 
       searchService.getCategories().then(function(response){
@@ -38,9 +39,13 @@ vm.filter = {};
 
       vm.setFilters = function(filter){
           console.log(filter);
-          console.log(vm.masterData.data);
-        vm.mapData['data'] = $filter('filter')(vm.masterData.data,{category:filter.subcategory,type:filter.type},true);
-
+    angular.forEach(filter,function(value,key){
+       if(!value){
+           delete filter[key];
+       }
+    });
+        vm.mapData['data'] = $filter('filter')(vm.masterData.data,filter,true);
+          console.log(vm.mapData.data);
           createHomepageGoogleMap(_latitude,_longitude, vm.mapData);
       }
 
@@ -394,7 +399,7 @@ function pushItemsToArray(json, a, category, visibleItemsArray){
 
     function drawPrice(price){
         if( price ){
-            itemPrice = '<div class="price">' + price +  '</div>';
+            itemPrice = '<div class="price"><i class="fa fa-inr"></i> ' + price +  '</div>';
             return itemPrice;
         }
         else {
@@ -557,8 +562,8 @@ function drawInfobox(category, infoboxContent, json, i){
                 '<div class="item-specific">' + drawItemSpecific(category, json, i) + '</div>' +
                 '<div class="overlay">' +
                     '<div class="wrapper">' +
-                        '<a href="#" class="quick-view" data-toggle="modal" data-target="#modal" id="' + id + '">Quick View</a>' +
-                        '<hr>' +
+                        //'<a href="#" class="quick-view" data-toggle="modal" data-target="#modal" id="' + id + '">Quick View</a>' +
+                        //'<hr>' +
                         '<a href="' + url +  '" class="detail">Go to Detail</a>' +
                     '</div>' +
                 '</div>' +
