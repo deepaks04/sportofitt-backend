@@ -129,8 +129,6 @@ class Vendor extends Model
             $query->orderBy('vendors.id', 'DESC');
         }
 
-        $query->toSql();
-        die;
         $result = $query->get();
         if (!empty($result) && $result->count() > 0) {
             return $result;
