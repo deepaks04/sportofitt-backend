@@ -152,8 +152,37 @@ class BookingService extends BaseService
      * @param integer $duration
      * @return array
      */
+    private function getTimings($start, $end, $duration)
+    {
+        $minutes = array();
+        $endMinutes = explode(":", $end);
+        $carbonEndDate = Carbon::create(date('Y'), date('m'), date('d'), $endMinutes[0], $endMinutes[1], 0);
 
+        $startMinutes = explode(":", $start);
+        $carbonStartDate = Carbon::create(date('Y'), date('m'), date('d'), $startMinutes[0], $startMinutes[1], 0);
+        while ($carbonStartDate->lt($carbonEndDate)) {
+            $startMinutes = date("H:s", strtotime($carbonStartDate->__toString()));
+            $newInstance = $carbonStartDate->addMinutes($duration);
+            $minutes[] = $startMinutes . "-" . date("H:s", strtotime($newInstance->__toString()));
+            $carbonStartDate = $newInstance;
+        }
+ 
+        return $minutes;
+    }
     
+    public function makeOrder()
+    {
+        $user = \Request::getUser();
+        $order = new Order();
+        $array = array('user_id' => $user->id, 
+            'order_id' => $user->id.$this->getOrderId(), 
+            'created_at' => date("Y-m-d H:i:s"),
+            'order_status' => 2,
+        );
+        
+        $orderObj = $order->createOrder($array);
+        dd($orderObj);
+    }
     
     private function getOrderId()
     {

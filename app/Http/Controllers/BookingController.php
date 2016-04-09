@@ -64,14 +64,14 @@ class BookingController extends Controller
     /**
      * Get opening hours for the facility
      * 
-     * @param Request $request
+     * @param integer $facilityId
      * @return Response
      */
-    public function getOpeningHours(Request $request)
+    public function getOpeningHours($facilityId)
     {
         try {
-            if(!empty($request->get('facility_id'))) {
-                $openigHours = $this->service->getOpeningHoursOfFacility($request->get('facility_id'));
+            if(!empty($facilityId)) {
+                $openigHours = $this->service->getOpeningHoursOfFacility($facilityId);
                 APIResponse::$data = $openigHours;
             } else {
                 APIResponse::$message['success'] = 'Facility missing. Select Facility first';
