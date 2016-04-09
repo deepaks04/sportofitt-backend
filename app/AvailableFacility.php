@@ -32,6 +32,16 @@ class AvailableFacility extends Model {
     {
         return $this->belongsTo('App\Vendor', 'vendor_id');
     }
+    
+     /**
+     * Facility has multiple images
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images()
+    {
+        return $this->hasMany('App\FacilityImages', 'available_facility_id');
+    }
 
     /**
      * Package Types
@@ -165,5 +175,28 @@ class AvailableFacility extends Model {
         } catch (\Exception $ex) {
             throw new \Exception($ex);
         }        
+    }
+    
+    /**
+     * Get vendor images
+     * 
+     * @return array
+     * @throws Exception
+     */
+    public function getFacilityImages()
+    {
+        try {
+            $imagesArray = array();
+            $images = $this->images()->get();
+            if (!empty($images) && $images->count() > 0) {
+                foreach ($images as $image) {
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->vendor_id) . "/" . "facility_images/" . $image->image_name);
+                }
+            }
+
+            return $imagesArray;
+        } catch (Exception $ex) {
+            throw new Exception($ex);
+        }
     }
 }
