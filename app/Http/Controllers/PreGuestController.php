@@ -78,7 +78,7 @@ class PreGuestController extends Controller
 
                 $fileNewName = explode(".",$file);
                 $extension = end($fileNewName);
-                $fileNamesArray[] = sha1($vendorId . time()) . ".{$extension}";
+                $fileNamesArray[] = $file;
                 $fileHelper = new FileHelper();
                 $fileHelper->sourceFilename = $file;
                 $fileHelper->sourceFilepath = 'uploads/temp/';
