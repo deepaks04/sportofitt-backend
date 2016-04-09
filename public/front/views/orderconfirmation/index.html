@@ -14,8 +14,27 @@
         <section class="container">
             <div class="row">
                 <!--Item Detail Content-->
-                <div class="col-md-10">
-                    {{vm.LocalBookings}}
+                <div class="col-md-12">
+                    <aside class="col-sm-4 col-md-4">
+                        <form role="form" id="form-sign-in-account" method="post" data-ng-submit="vm.login()">
+                            <div class="form-group">
+                                <label for="form-sign-in-email">Email:</label>
+                                <input type="email" class="form-control" id="form-sign-in-email" data-ng-model="vm.email" name="form-sign-in-email" required>
+                            </div><!-- /.form-group -->
+                            <div class="form-group">
+                                <label for="form-sign-in-password">Password:</label>
+                                <input type="password" class="form-control" id="form-sign-in-password" data-ng-model="vm.password" name="form-sign-in-password" required>
+                            </div><!-- /.form-group -->
+                            <div class="form-group clearfix">
+
+                                <a class=" pull-right">Register</a>
+                                <button type="submit" class="btn pull-right btn-default" id="account-submit">Sign In</button>
+
+                            </div><!-- /.form-group -->
+                        </form>
+                    </aside>
+                    <section class="col-sm-8 col-md-8">
+                        {{vm.LocalBookings}}</section>
                     </div>
                 </div>
             </section>

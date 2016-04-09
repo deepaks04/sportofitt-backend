@@ -108,44 +108,64 @@
                                                 <h4 class="panel-title">Sessions/Packages</h4>
                                             </div>
                                             <div class="panel-body">
-                                                <!--<v-accordion class="vAccordion&#45;&#45;default" control="secondAccordionControl">-->
-                                                    <!--<v-pane  expanded="$first">-->
-                                                        <!--<v-pane-header>-->
-                                                            <!--<h5>Single Session</h5>-->
-                                                        <!--</v-pane-header>-->
-                                                        <!--<v-pane-content>-->
-                                                           <!--<p>-->
-                                                               <!---->
-                                                           <!--</p>-->
-                                                        <!--</v-pane-content>-->
-                                                    <!--</v-pane>-->
-                                                <!--</v-accordion>-->
-
-                                                <v-accordion class="vAccordion--default" ng-if="vm.facility.sessions.length" control="secondAccordionControl">
+                                                <v-accordion class="vAccordion--default" control="secondAccordionControl">
                                                     <v-pane  expanded="$first">
                                                         <v-pane-header>
-                                                            <h5>Session Combos</h5>
+                                                            <h5>Single Session</h5>
                                                         </v-pane-header>
                                                         <v-pane-content>
-                                                        <table class="table table-responsive table-bordered">
-                                                            <thead>
-                                                            <th>No. of Peak Sessions</th>
-                                                            <th>No. of Off Peak Sessions</th>
-                                                            <th>Actual Price</th>
-                                                            <th>Discounted Price</th>
-                                                            </thead>
-                                                            <tbody>
-                                                            <tr ng-repeat="session in vm.facility.sessions">
-                                                                <td>{{session.peak}}</td>
-                                                                <td>{{session.off_peak}}</td>
-                                                                <td>₹{{session.price}}</td>
-                                                                <td>₹{{session.price - (session.price*session.discount/100)}}</td>
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
+                                                            <figure class="filter clearfix">
+                                                                <div class="buttons pull-left">
+                                                                    <a  class="btn icon" ng-class="{'active':vm.filter.slot == 'peak'}" data-ng-click="vm.setSlotFilter('peak')"><i class="fa fa-th"></i>Regular</a>
+                                                                    <a class="btn icon" ng-class="{'active':vm.filter.slot == 'offpeak'}" data-ng-click="vm.setSlotFilter('offpeak')"><i class="fa fa-th-list"></i>Happy Hours</a>
+                                                                </div>
+                                                            </figure>
+                                                            <div>
+                                                                <h4>Select Date</h4>
+                                                                <div style="display:inline-block; min-height:290px;">
+                                                                    <datepicker ng-model="vm.filter.selectedDate" ng-change="vm.filterAvailableSlot()" class="well well-sm" datepicker-options="vm.inlineOptions"></datepicker>
+                                                                </div>
+                                                                <header><h2>Choose Session ({{vm.days[vm.selectedDay]}})</h2></header>
+                                                                <div ng-if="vm.filteredSlots">
+                                                                    <div class="form-inline">
+                                                                        <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.filteredSlots"></select>
+                                                                       <label class="form-control">₹ {{(vm.filter.slot == 'peak')?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
+                                                                        <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter,true)" >CheckOut</button>
+                                                                     </div>
+                                                                </div>
+                                                                <p ng-if="!vm.filteredSlots">
+                                                                    No Session available for selected criteria.
+                                                                </p>
+                                                            </div>
                                                         </v-pane-content>
                                                     </v-pane>
                                                 </v-accordion>
+
+                                                <!--<v-accordion class="vAccordion&#45;&#45;default" ng-if="vm.facility.sessions.length" >-->
+                                                    <!--<v-pane  expanded="$first">-->
+                                                        <!--<v-pane-header>-->
+                                                            <!--<h5>Session Combos</h5>-->
+                                                        <!--</v-pane-header>-->
+                                                        <!--<v-pane-content>-->
+                                                        <!--<table class="table table-responsive table-bordered">-->
+                                                            <!--<thead>-->
+                                                            <!--<th>No. of Peak Sessions</th>-->
+                                                            <!--<th>No. of Off Peak Sessions</th>-->
+                                                            <!--<th>Actual Price</th>-->
+                                                            <!--<th>Discounted Price</th>-->
+                                                            <!--</thead>-->
+                                                            <!--<tbody>-->
+                                                            <!--<tr ng-repeat="session in vm.facility.sessions">-->
+                                                                <!--<td>{{session.peak}}</td>-->
+                                                                <!--<td>{{session.off_peak}}</td>-->
+                                                                <!--<td>₹{{session.price}}</td>-->
+                                                                <!--<td>₹{{session.price - (session.price*session.discount/100)}}</td>-->
+                                                            <!--</tr>-->
+                                                            <!--</tbody>-->
+                                                        <!--</table>-->
+                                                        <!--</v-pane-content>-->
+                                                    <!--</v-pane>-->
+                                                <!--</v-accordion>-->
 
                                                 <v-accordion ng-if="vm.facility.packages.length">
                                                     <v-pane>
@@ -166,7 +186,7 @@
                                                                         <figure>Discount {{package.discount}} %</figure>
                                                                         <p>{{package.description}}</p>
                                                                         <!--<a ui-sref="app.login" ng-if="!isAuthenticated()" class="btn framed btn-color-default">Sign In</a>-->
-                                                                        <a href data-ng-click="vm.addLocalBooking(package)" class="btn framed btn-color-default">Book now</a>
+                                                                        <a href data-ng-click="vm.addLocalBooking(package,false)" class="btn framed btn-color-default">Book now</a>
 
                                                                     </div>
                                                                     <!-- /.price-box-->
@@ -179,9 +199,6 @@
                                             </div>
                                         </div>
                                     </article>
-
-
-
                                 </section>
                                 <!--Review Form-->
                                 <section id="write-review">

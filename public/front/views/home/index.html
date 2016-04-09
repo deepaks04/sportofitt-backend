@@ -37,7 +37,7 @@
                             </div>
                             <!-- /.form-group -->
                             <div class="form-group">
-                  <select data-ng-model="vm.filter.area_id" ng-options="area.id as area.name for area in vm.areas">
+                  <select data-ng-model="vm.filter.area" ng-change="vm.setLangLat(vm.filter.area)" ng-options="area as area.name for area in vm.areas">
                       <option value="">Select Area</option>
                   </select>
                             </div>

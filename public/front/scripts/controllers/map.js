@@ -9,10 +9,11 @@
  */
 angular.module('sportofittApp')
         .controller('MapCtrl', function (searchService, toastr, $filter) {
-            var _latitude = 18.520430;
-            var _longitude = 73.856743;
             var mapStyles = [{"featureType": "road", "elementType": "labels", "stylers": [{"visibility": "simplified"}, {"lightness": 20}]}, {"featureType": "administrative.land_parcel", "elementType": "all", "stylers": [{"visibility": "off"}]}, {"featureType": "landscape.man_made", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "transit", "elementType": "all", "stylers": [{"saturation": -100}, {"visibility": "on"}, {"lightness": 10}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.highway", "elementType": "labels", "stylers": [{"visibility": "simplified"}]}, {"featureType": "poi", "elementType": "labels", "stylers": [{"visibility": "off"}]}, {"featureType": "road.arterial", "elementType": "labels", "stylers": [{"visibility": "on"}, {"lightness": 50}]}, {"featureType": "water", "elementType": "all", "stylers": [{"hue": "#a1cdfc"}, {"saturation": 30}, {"lightness": 49}]}, {"featureType": "road.highway", "elementType": "geometry", "stylers": [{"hue": "#f49935"}]}, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"hue": "#fad959"}]}, {featureType: 'road.highway', elementType: 'all', stylers: [{hue: '#dddbd7'}, {saturation: -92}, {lightness: 60}, {visibility: 'on'}]}, {featureType: 'landscape.natural', elementType: 'all', stylers: [{hue: '#c8c6c3'}, {saturation: -71}, {lightness: -18}, {visibility: 'on'}]}, {featureType: 'poi', elementType: 'all', stylers: [{hue: '#d9d5cd'}, {saturation: -70}, {lightness: 20}, {visibility: 'on'}]}];
             var vm = this;
+            vm.latitude = 18.520430;
+            vm.longitude = 73.856743;
+
             vm.filter = {};
             vm.types = ['Venue', 'Coaching'];
             // Load JSON data and create Google Maps
@@ -32,20 +33,30 @@ angular.module('sportofittApp')
             searchService.search().then(function (response) {
                 vm.masterData = response.data;
                 vm.mapData = angular.copy(vm.masterData);
-                createHomepageGoogleMap(_latitude, _longitude, vm.mapData);
+                createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
             }).catch(function (errors) {
                 toastr.error(errors);
             })
 
-            vm.setFilters = function (filter) {
+
+            vm.setLangLat = function(area){
+              vm.latitude = area.latitude;
+
+                vm.longitude = area.longitude;
+                vm.filter.area_id =  area.id;
+
+            };
+
+            vm.setFilters = function (newfilter) {
+                var filter = angular.copy(newfilter);
                 angular.forEach(filter, function (value, key) {
-                    if (!value) {
+                    if (!value || key == 'area') {
                         delete filter[key];
                     }
                 });
                 vm.mapData['data'] = $filter('filter')(vm.masterData.data, filter, true);
-       
-                createHomepageGoogleMap(_latitude, _longitude, vm.mapData);
+console.log( vm.mapData['data']);
+                createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
             }
 
             function createHomepageGoogleMap(_latitude, _longitude, json) {
@@ -56,7 +67,8 @@ angular.module('sportofittApp')
                     } else {
                         console.log('Geo Location is not supported');
                     }
-                    var mapCenter = new google.maps.LatLng(_latitude, _longitude);
+                    console.log(vm.latitude,vm.longitude);
+                    var mapCenter = new google.maps.LatLng(vm.latitude, vm.longitude);
                     var mapOptions = {
                         zoom: 14,
                         center: mapCenter,
@@ -310,6 +322,9 @@ angular.module('sportofittApp')
 
                     function success(position) {
                         var locationCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        if(vm.latitude && vm.longitude){
+                            locationCenter = new google.maps.LatLng(vm.latitude,vm.longitude);
+                        }
                         map.setCenter(locationCenter);
                         map.setZoom(14);
 
