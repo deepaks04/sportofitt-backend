@@ -35,7 +35,7 @@ app.run(['$rootScope', '$state', '$stateParams',
         };
 
         if (!$rootScope.user) {
-            event.preventDefault();
+//            event.preventDefault();
             $state.go('login.signin');
         }
         $rootScope.$on('$stateChangeStart',
