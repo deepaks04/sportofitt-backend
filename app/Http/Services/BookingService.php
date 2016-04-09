@@ -144,7 +144,7 @@ class BookingService extends BaseService
                 if(isset($array[$openingHour->day]['offpeak']) && count($array[$openingHour->day]['offpeak']) > 0 ) {
                     $array[$openingHour->day]['offpeak'] = array_merge($array[$openingHour->day]['offpeak'], $this->getTimings($openingHour->start, $openingHour->end, $duration));
                 } else {
-                    $array[$openingHour->day]['offpeaks'] = $this->getTimings($openingHour->start, $openingHour->end, $duration);
+                    $array[$openingHour->day]['offpeak'] = $this->getTimings($openingHour->start, $openingHour->end, $duration);
                 }
             }
         }
