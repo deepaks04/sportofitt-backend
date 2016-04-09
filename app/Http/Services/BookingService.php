@@ -3,7 +3,10 @@
 namespace App\Http\Services;
 
 use App\SessionBooking;
+use App\AvailableFacility;
+use Carbon\Carbon;
 use App\SessionPackage;
+use App\Order;
 use App\Http\Services\BaseService;
 
 class BookingService extends BaseService
@@ -69,17 +72,19 @@ class BookingService extends BaseService
     /**
      * Book a package for user with the user id
      * 
-     * @param App\SessionPackage $packageId
+     * @param string $bookingData
      * @return mixed boolean | App\BookedPackage
      * @throws Exception
      */
-    public function bookPacakge($packageId)
+    public function makeBooking($bookingData)
     {
         try {
-            $sessionPackage = new SessionPackage();
-            $package = $sessionPackage->getPackageDetails($packageId);
-            if (!empty($package)) {
-                return $package->bookPackageForUser($this->user->id);
+            $bookingInfo = json_decode($bookingData);
+            if(!empty($bookingInfo)) {
+                $this->makeOrder();
+                foreach($bookingInfo as $bookingInformation) {
+                    $this->processBooking();
+                }
             }
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
@@ -87,5 +92,100 @@ class BookingService extends BaseService
 
         return false;
     }
+    
+    /**
+     * Get opening hours acording to the facility id 
+     * 
+     * @param integer $facilityId
+     * @return arary
+     * @throws \Exception
+     */
+    public function getOpeningHoursOfFacility($facilityId)
+    {
+        try {
+            $facility = new AvailableFacility();
+            $facilityDetails = $facility->getFacilityDetails($facilityId);
+            if (!empty($facilityDetails->id)) {
+                $openingHours = $facilityDetails->getOpenigHoursOfFacility();
+                $sessionDetails = $facilityDetails->getSession($facilityId);
+                
+                return $this->getFormattedOpeningHours($openingHours, $sessionDetails->duration);
+            }
+        } catch (\Exception $ex) {
+            throw new \Exception($ex);
+        }
+    }
+    
+    /**
+     * Get formatted opening hours that is the opening hour according to the days
+     * peaks and offpeaks timings. Like for monday we can have entry as below:
+     * 1 => array(
+     *  'peaks' => array(
+     *  ),
+     *  'offpeaks' => array(
+     *  ),
+     * )
+     * 
+     * @param OpeningHour $openingHours
+     * @param integer $duration
+     * @return array
+     */
+    private function getFormattedOpeningHours($openingHours, $duration)
+    {
+        $array = array();
+        foreach ($openingHours as $openingHour) {
+            if ($openingHour->is_peak) {
+                $array[$openingHour->day]['peaks'][] = $this->getTimings($openingHour->start, $openingHour->end, $duration);
+            } else {
+                $array[$openingHour->day]['offpeak'][] = $this->getTimings($openingHour->start, $openingHour->end, $duration);
+            }
+        }
+        
+        return $array;
+    }
 
+    /**
+     * Get timings according to the start and end time selected by the user
+     * 
+     * @param string $start
+     * @param string $end
+     * @param integer $duration
+     * @return array
+     */
+    private function getTimings($start, $end, $duration)
+    {
+        $minutes = array();
+        $endMinutes = explode(":", $end);
+        $carbonEndDate = Carbon::create(date('Y'), date('m'), date('d'), $endMinutes[0], $endMinutes[1], 0);
+
+        $startMinutes = explode(":", $start);
+        $carbonStartDate = Carbon::create(date('Y'), date('m'), date('d'), $startMinutes[0], $startMinutes[1], 0);
+        while ($carbonStartDate->lt($carbonEndDate)) {
+            $startMinutes = date("H:s", strtotime($carbonStartDate->__toString()));
+            $newInstance = $carbonStartDate->addMinutes($duration);
+            $minutes[] = $startMinutes . "-" . date("H:s", strtotime($newInstance->__toString()));
+            $carbonStartDate = $newInstance;
+        }
+ 
+        return $minutes;
+    }
+    
+    public function makeOrder()
+    {
+        $user = \Request::getUser();
+        $order = new Order();
+        $array = array('user_id' => $user->id, 
+            'order_id' => $user->id.$this->getOrderId(), 
+            'created_at' => date("Y-m-d H:i:s"),
+            'order_status' => 2,
+        );
+        
+        $orderObj = $order->createOrder($array);
+        dd($orderObj);
+    }
+    
+    private function getOrderId()
+    {
+        return time();
+    }
 }

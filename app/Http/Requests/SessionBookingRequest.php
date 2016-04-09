@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class PackageBookingRequest extends Request
+class SessionBookingRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class PackageBookingRequest extends Request
     public function rules()
     {
         return [
-            'package_info' => 'required'
+            'booking_data' => 'required',
         ];
     }
 }

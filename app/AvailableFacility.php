@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\SessionPackage;
 use Illuminate\Database\Eloquent\Model;
 
 class AvailableFacility extends Model {
@@ -46,7 +47,7 @@ class AvailableFacility extends Model {
     {
         return $this->hasMany('App\MultipleSession');
     }
-
+    
     /**
      * Package Types
      * 
@@ -143,5 +144,26 @@ class AvailableFacility extends Model {
                          ->get();
         
         return $openingHours;
+    }
+    
+    public function getFacilityDetails($facilityId)
+    {
+        try {
+            return self::find($facilityId);
+        } catch (\Exception $ex) {
+            throw new \Exception($ex);
+        }
+    }
+    
+    public function getSession($facilityId)
+    {
+        try {
+           return SessionPackage::where('available_facility_id','=',$facilityId)
+                                ->where('package_type_id','=',\DB::raw(2))
+                                ->where('is_active','=',\DB::raw(1))
+                                ->first();
+        } catch (\Exception $ex) {
+            throw new \Exception($ex);
+        }        
     }
 }

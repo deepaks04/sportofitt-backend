@@ -122,6 +122,9 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], fu
     Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));
 });
 
+Route::get('api/v1/facility/openinghours/{facilityId}', array('uses' => 'BookingController@getOpeningHours'));
+Route::post('api/v1/facility/book/package', array('uses' => 'BookingController@makeBooking'));
+
 Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('featured', array('uses' => 'IndexController@featuredListing'));
     Route::get('latest', array('uses' => 'IndexController@latestFacilities'));
@@ -131,7 +134,8 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
 });
 Route::group(['prefix' => 'api/v1/facility/', 'middleware' => ['userfromtoken']], function() {
     Route::get('booking-information', array('uses' => 'FacilityController@index'));
-    Route::post('book/package', array('uses' => 'BookingController@bookAPackage'));
+    #Route::post('book/package', array('uses' => 'BookingController@bookAPackage'));
+    Route::post('checkavailability', array('uses' => 'BookingController@checkAvailability'));
 });
 
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));

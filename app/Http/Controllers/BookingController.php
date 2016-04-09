@@ -7,6 +7,7 @@ use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\BookingService;
 use App\Http\Requests\PackageBookingRequest;
+use App\Http\Requests\SessionBookingRequest;
 
 class BookingController extends Controller
 {
@@ -42,6 +43,44 @@ class BookingController extends Controller
         }
 
         return APIResponse::sendResponse();
+    }
+
+    public function makeBooking(SessionBookingRequest $request)
+    {
+        try {
+            $bookedPackage = $this->service->makeBooking($request->get('booking_data'));
+            if ($bookedPackage instanceof \App\BookedPackage) {
+                $bookedPackageDetails = $bookedPackage->getBookedPackageDetails($bookedPackage->id);
+                APIResponse::$message['success'] = 'Package has been booked successfully';
+                APIResponse::$data = $bookedPackageDetails->toArray();
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
+
+    /**
+     * Get opening hours for the facility
+     * 
+     * @param integer $facilityId
+     * @return Response
+     */
+    public function getOpeningHours($facilityId)
+    {
+        try {
+            if(!empty($facilityId)) {
+                $openigHours = $this->service->getOpeningHoursOfFacility($facilityId);
+                APIResponse::$data = $openigHours;
+            } else {
+                APIResponse::$message['success'] = 'Facility missing. Select Facility first';
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+        
+         return APIResponse::sendResponse();
     }
 
 }
