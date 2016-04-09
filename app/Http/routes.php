@@ -15,6 +15,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('facility/upload/',array('as'=>'facility.uploadmedia','uses'=>'PreGuestController@uploadMedia'));
+Route::get('add/facility/images','PreGuestController@addImages');
+Route::post('add/images','PreGuestController@upload');
+
 Route::get('/sportofittpartneragreement', function () {
     return view('views/agreement', ['cell' => '9457912886',
         'email' => 'select@sportofitt.com',
