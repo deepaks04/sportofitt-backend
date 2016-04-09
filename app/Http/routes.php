@@ -122,7 +122,7 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], fu
     Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));
 });
 
-Route::get('api/v1/facility/openinghours/{facilityId}', array('uses' => 'BookingController@getOpeningHours'));
+Route::get('api/v1/facility/availableslots/{facilityId}', array('uses' => 'BookingController@getOpeningHours'));
 Route::post('api/v1/facility/book/package', array('uses' => 'BookingController@makeBooking'));
 
 Route::group(['prefix' => 'api/v1/index/'], function() {
