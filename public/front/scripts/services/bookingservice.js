@@ -8,30 +8,29 @@
  * Service in the sportofittApp.
  */
 angular.module('sportofittApp')
-  .service('bookingService', function () {
+  .service('bookingService', function (localStorageService) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    this.localBooking = [];
 
     this.getLocalBookings = function(){
-      return this.localBooking;
+      return  localStorageService;
     }
 
     this.saveLocalBooking = function(booking){
         if(!this.checkAlreadyInCart(booking)) {
             booking.qty = 1;
-            this.localBooking.push(booking);
+            localStorageService.set(localStorageService.keys().length + 1 , booking);
         }
-
-        console.log(this.localBooking);
     }
 
       this.checkAlreadyInCart = function(booking){
           var alreadyHas = false;
-          angular.forEach(this.localBooking,function(value,key){
-             if (value.id == booking.id){
-                 value.qty++;
+          angular.forEach(localStorageService.keys(),function(value,key){
+           var getItem = localStorageService.get(value);
+              if (getItem == booking){
+                  getItem.qty++;
                  alreadyHas = true;
              }
+            //  console.log(localStorageService.get(value));
           });
 
           return alreadyHas;

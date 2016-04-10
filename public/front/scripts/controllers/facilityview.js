@@ -15,7 +15,7 @@ angular.module('sportofittApp')
 
         vm.filter = {slot: 'peak'};
 
-        vm.days = {1: 'Monday', 2: 'Thusday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday', 7: 'Sunday'};
+        vm.days = {1: 'Monday', 2: 'Thuesday', 3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday', 7: 'Sunday'};
 
         var mapStyles = [{
             "featureType": "road",

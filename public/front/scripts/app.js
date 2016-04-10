@@ -14,6 +14,7 @@ angular
       'ngCookies',
       'ngStorage',
       'ngSanitize',
+      'LocalStorageModule',
       'ngTouch',
       'ui.router',
       'ui.bootstrap',
@@ -22,7 +23,7 @@ angular
       'ncy-angular-breadcrumb',
       'duScroll',
       'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config','vAccordion','slick'
-  ]).config(function(toastrConfig,$authProvider,myConfig) {
+  ]).config(function(toastrConfig,$authProvider,myConfig,localStorageServiceProvider) {
       angular.extend(toastrConfig, {
             autoDismiss: false,
             containerId: 'toast-container',
@@ -34,6 +35,10 @@ angular
             target: 'body'
       });
 
+      localStorageServiceProvider
+          .setPrefix('sportofittApp')
+          .setStorageType('sessionStorage')
+          .setNotify(true, true)
       // Satellizer configuration that specifies which API
       // route the JWT should be retrieved from
       $authProvider.loginUrl = myConfig.authorizer;

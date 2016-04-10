@@ -41,10 +41,8 @@ angular.module('sportofittApp')
 
             vm.setLangLat = function(area){
               vm.latitude = area.latitude;
-
                 vm.longitude = area.longitude;
                 vm.filter.area_id =  area.id;
-
             };
 
             vm.setFilters = function (newfilter) {
@@ -55,7 +53,6 @@ angular.module('sportofittApp')
                     }
                 });
                 vm.mapData['data'] = $filter('filter')(vm.masterData.data, filter, true);
-console.log( vm.mapData['data']);
                 createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
             }
 
@@ -67,7 +64,6 @@ console.log( vm.mapData['data']);
                     } else {
                         console.log('Geo Location is not supported');
                     }
-                    console.log(vm.latitude,vm.longitude);
                     var mapCenter = new google.maps.LatLng(vm.latitude, vm.longitude);
                     var mapOptions = {
                         zoom: 14,
