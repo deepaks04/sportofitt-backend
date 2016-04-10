@@ -16,27 +16,46 @@
                 <!--Item Detail Content-->
                 <div class="col-md-12">
                     <aside class="col-sm-4 col-md-4">
-                        <form role="form" id="form-sign-in-account" method="post" data-ng-submit="vm.login()">
-                            <div class="form-group">
-                                <label for="form-sign-in-email">Email:</label>
-                                <input type="email" class="form-control" id="form-sign-in-email" data-ng-model="vm.email" name="form-sign-in-email" required>
-                            </div><!-- /.form-group -->
-                            <div class="form-group">
-                                <label for="form-sign-in-password">Password:</label>
-                                <input type="password" class="form-control" id="form-sign-in-password" data-ng-model="vm.password" name="form-sign-in-password" required>
-                            </div><!-- /.form-group -->
-                            <div class="form-group clearfix">
-
-                                <a class=" pull-right">Register</a>
-                                <button type="submit" class="btn pull-right btn-default" id="account-submit">Sign In</button>
-
-                            </div><!-- /.form-group -->
-                        </form>
+                        <a ui-sref="app.login" class="btn btn-default">Sign In</a>
+                        <a ui-sref="app.register" class="btn btn-primary">Register</a>
                     </aside>
-                    <section class="col-sm-8 col-md-8">
-                        {{vm.LocalBookings}}</section>
+                    <div class="col-sm-8 col-md-8">
+                        <div ng-if="!vm.LocalBookings.length">
+                            <p> No Order's</p>
+                            <a ui-sref="app.home" class="btn btn-default">Continue Shopping</a>
+                        </div>
+                        <section id="items"  ng-repeat="booking in vm.LocalBookings" >
+                            <!-- /.item-->
+                            <div class="item list admin-view">
+                                <div class="wrapper">
+                                    <a href="item-detail.html"><h3>{{booking.name}}</h3></a>
+                                    <figure>{{booking.description}}</figure>
+                                    <div class="info">
+                                        <div class="type">
+                                            Actual Price <div class="price"><i class="fa fa-inr"></i> {{booking.actual_price}}</div>
+                                        </div>
+                                        <div class="type">
+                                            Discount <div class="price"><i class="fa"></i> {{booking.discount}} %</div>
+                                        </div>
+                                        <div class="type">
+                                            Discounted Price <div class="price"><i class="fa fa-inr"></i> {{booking.discounted_price}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <ul class="list-unstyled actions">
+                                        <li><a href="#"><i class="fa fa-trash"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- /.item-->
+                        </section>
+                        <section class="col-sm-3 pull-right">
+                            Total Amount: <span class="price"><i class="fa fa-inr"></i> {{vm.LocalBookings.Total}}</span>
+                        </section>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </div>
+</div>
