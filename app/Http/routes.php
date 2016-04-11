@@ -15,6 +15,18 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('about-us', function () {
+    return view('views/about', ['cell' => '9457912886',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
+Route::get('terms', function () {
+    return view('views/terms', ['cell' => '9457912886',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
 Route::post('facility/upload/',array('as'=>'facility.uploadmedia','uses'=>'PreGuestController@uploadMedia'));
 Route::get('add/facility/images','PreGuestController@addImages');
 Route::post('add/images','PreGuestController@upload');

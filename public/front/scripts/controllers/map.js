@@ -24,12 +24,12 @@ angular.module('sportofittApp')
                 toastr.error(errors);
             })
 
-
             searchService.getArea().then(function (response) {
                 vm.areas = response.data.area;
             }).catch(function (errors) {
                 toastr.error(errors);
             })
+
             searchService.search().then(function (response) {
                 vm.masterData = response.data;
                 vm.mapData = angular.copy(vm.masterData);
@@ -37,7 +37,6 @@ angular.module('sportofittApp')
             }).catch(function (errors) {
                 toastr.error(errors);
             })
-
 
             vm.setLangLat = function(area){
               vm.latitude = area.latitude;
