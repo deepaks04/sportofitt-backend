@@ -290,13 +290,14 @@ class BookingService extends BaseService
      * @param integer $facilityId
      * @param string $timeSlot
      * @param string $date
+     * @param integer $isPeak
      * @return boolean
      */
-    public function checkAvailability($facilityId, $timeSlot, $date)
+    public function checkAvailability($facilityId, $timeSlot, $date,$isPeak)
     {
         $result = false;
         try {
-            if (!empty($facilityId) && !empty($timeSlot) && !empty($date)) {
+            if (!empty($facilityId) && !empty($timeSlot) && !empty($date) && isset($isPeak)) {
                 $slot = explode("-", $timeSlot);
                 $day = date('N', strtotime($date));
                 $isBooked = BookedTiming::select('booked_timings.id')
@@ -308,7 +309,7 @@ class BookingService extends BaseService
                         ->where('booked_timings.end_time', '=', $slot[1])
                         ->where('booked_timings.booking_day', '=', $day)
                         ->where('booked_timings.facility_id', '=', $facilityId)
-                        ->where('booked_timings.is_peak', '=', 1)
+                        ->where('booked_timings.is_peak', '=', $isPeak)
                         ->get();
                 return ($isBooked->count()) ? false : true;
             }

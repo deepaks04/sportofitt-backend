@@ -153,8 +153,9 @@ class BookingController extends Controller
         try {
             $facilityId = $request->get('facility_id');
             $timeSlots = $request->get('time_slot');
-            $booking_date = $request->get('booking_date');
-            $isAvailable = $this->service->checkAvailability($facilityId, $timeSlots,$booking_date);
+            $bookingDate = $request->get('booking_date');
+            $isPeak = $request->get('is_peak');
+            $isAvailable = $this->service->checkAvailability($facilityId, $timeSlots,$bookingDate, $isPeak);
             if(!$isAvailable) {
                 APIResponse::$message['error'] = 'Session Not Available';
             } else {
