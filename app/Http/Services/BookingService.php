@@ -156,7 +156,6 @@ class BookingService extends BaseService
                     $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
                     $bookingObj->booking_status = 1;
                     $bookingObj->created_at = date('Y-m-d H:i:s');
-                    dd($bookingObj);
                     if ($bookingObj->save()) {
                         $this->addBookingTimings($bookingObj, $bookingData);
                     }
