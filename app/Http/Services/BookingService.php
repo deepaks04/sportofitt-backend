@@ -87,6 +87,7 @@ class BookingService extends BaseService
             if (!empty($this->bookingData)) {
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
+                    dd($this->orderObj,$this->bookingData);
                     return $this->processBooking();
                 }
             }
@@ -141,7 +142,7 @@ class BookingService extends BaseService
     public function processBooking()
     {
         try {
-            dd($this->orderObj,$this->bookingData);
+            
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
