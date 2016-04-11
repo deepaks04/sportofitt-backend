@@ -87,7 +87,6 @@ class BookingService extends BaseService
             if (!empty($this->bookingData)) {
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
-                    dd($this->orderObj,$this->bookingData);
                     return $this->processBooking();
                 }
             }
