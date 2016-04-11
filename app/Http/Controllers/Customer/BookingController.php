@@ -114,7 +114,7 @@ class BookingController extends Controller
             } else {
                 APIResponse::$message['success'] = 'Something went wrong';
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             APIResponse::handleException($exception);
         }
 

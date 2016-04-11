@@ -124,7 +124,7 @@ class BookingService extends BaseService
             $array = array('user_id' => $user->id,
                 'order_id' => $this->getOrderId(),
                 'created_at' => date("Y-m-d H:i:s"),
-                'order_status' => 2,
+                'order_status' => 1,
             );
             return $order->createOrder($array);
         } catch (\Exception $exception) {
@@ -156,6 +156,7 @@ class BookingService extends BaseService
                     $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
                     $bookingObj->booking_status = 1;
                     $bookingObj->created_at = date('Y-m-d H:i:s');
+                    dd($bookingObj);
                     if ($bookingObj->save()) {
                         $this->addBookingTimings($bookingObj, $bookingData);
                     }
