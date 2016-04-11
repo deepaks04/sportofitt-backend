@@ -81,7 +81,7 @@ class BookingService extends BaseService
      * @throws Exception
      */
     public function makeBooking($bookingData)
-    {
+        {
         try {
             $this->bookingData = json_decode($bookingData);
             if (!empty($this->bookingData)) {
@@ -141,6 +141,7 @@ class BookingService extends BaseService
     public function processBooking()
     {
         try {
+            dd($this->orderObj,$this->bookingData);
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
@@ -159,7 +160,7 @@ class BookingService extends BaseService
                         $this->addBookingTimings($bookingObj, $bookingData);
                     }
                 }
-
+ 
                 return 1;
             }
         } catch (\Exception $exception) {
