@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BookedPackage extends Model
+class BookedTiming extends Model
 {
 
     /**
@@ -12,11 +12,5 @@ class BookedPackage extends Model
      *
      * @var string
      */
-    protected $table = 'booked_packages';
-
-
-    public function getBookedPackageDetails($bookedId)
-    {
-        return self::find($bookedId);
-    }
+    protected $table = 'booked_timings';
 }

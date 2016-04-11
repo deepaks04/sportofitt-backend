@@ -1,11 +1,17 @@
-<?php namespace App\Http\Controllers\Customer;
+<?php
+
+namespace App\Http\Controllers\Customer;
 
 use Illuminate\Http\Request;
 use App\Http\Helpers\APIResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\BookingService;
+use App\Http\Requests\PackageBookingRequest;
+use App\Http\Requests\SessionBookingRequest;
+use App\Http\Requests\CheckAvailabilityRequest;
 
-class BookingController extends Controller {
+class BookingController extends Controller
+{
 
     public function __construct()
     {
@@ -72,37 +78,95 @@ class BookingController extends Controller {
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
+     * Booking a package for user
+     * 
+     * @param PackageBookingRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function bookAPackage(PackageBookingRequest $request)
     {
-        //
+        try {
+            $bookedPackage = $this->service->bookPacakge($request->get('package_id'));
+            if ($bookedPackage instanceof \App\BookedPackage) {
+                $bookedPackageDetails = $bookedPackage->getBookedPackageDetails($bookedPackage->id);
+                APIResponse::$message['success'] = 'Package has been booked successfully';
+                APIResponse::$data = $bookedPackageDetails->toArray();
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * Make booking for user 
+     * 
+     * @param SessionBookingRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function makeBooking(SessionBookingRequest $request)
     {
-        //
+        try {
+            $isBooked = $this->service->makeBooking($request->get('booking_data'));
+            if ($isBooked) {
+                APIResponse::$message['success'] = 'Booking has been done succesfully';
+            } else {
+                APIResponse::$message['success'] = 'Something went wrong';
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
+     * Get opening hours for the facility
+     * 
+     * @param integer $facilityId
+     * @return Response
+     */
+    public function getOpeningHours($facilityId)
+    {
+        try {
+            if (!empty($facilityId)) {
+                $openigHours = $this->service->getOpeningHoursOfFacility($facilityId);
+                APIResponse::$data = $openigHours;
+            } else {
+                APIResponse::$message['success'] = 'Facility missing. Select Facility first';
+            }
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
+    
+    /**
+     * 
+     * @param CheckAvailabilityRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function checkAvailability(CheckAvailabilityRequest $request)
     {
-        //
+        try {
+            $facilityId = $request->get('facility_id');
+            $timeSlots = $request->get('time_slot');
+            $booking_date = $request->get('booking_date');
+            $isAvailable = $this->service->checkAvailability($facilityId, $timeSlots,$booking_date);
+            if(!$isAvailable) {
+                APIResponse::$message['error'] = 'Session Not Available';
+            } else {
+                APIResponse::$message['success'] = 'Session Available';
+            }
+            
+            APIResponse::$data = $isAvailable;
+        } catch (Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
     }
 
 }

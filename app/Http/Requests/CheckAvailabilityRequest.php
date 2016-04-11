@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class SessionBookingRequest extends Request
+class CheckAvailabilityRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class SessionBookingRequest extends Request
     public function rules()
     {
         return [
-            'booking_data' => 'required',
+            'facility_id' => 'required',
+            'time_slot' => 'required',
+            'booking_date' => 'required',
         ];
     }
 }
