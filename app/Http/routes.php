@@ -145,14 +145,14 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('search', array('uses' => 'IndexController@index'));
     Route::get('vendor/show/{vendor_id}', array('uses' => 'IndexController@show'));
     Route::get('facility/show/{facility_id}', array('uses' => 'FacilityController@show'));
-    Route::get('facility/availableslots/{facilityId}', array('uses' => 'BookingController@getOpeningHours'));
-    Route::post('facility/book/package', array('uses' => 'BookingController@makeBooking'));
-    
+    Route::get('facility/availableslots/{facilityId}', array('uses' => 'Customer\BookingController@getOpeningHours'));
+    Route::post('facility/checkavailability', array('uses' => 'Customer\BookingController@checkAvailability'));
 });
 Route::group(['prefix' => 'api/v1/facility/', 'middleware' => ['userfromtoken']], function() {
     Route::get('booking-information', array('uses' => 'FacilityController@index'));
     #Route::post('book/package', array('uses' => 'BookingController@bookAPackage'));
-    Route::post('checkavailability', array('uses' => 'BookingController@checkAvailability'));
+    Route::post('checkavailability', array('uses' => 'Customer\BookingController@checkAvailability'));
+    Route::post('book', array('uses' => 'Customer\BookingController@makeBooking'));
 });
 
 Route::get('temp', array('uses' => 'Vendor\VendorsController@index'));
