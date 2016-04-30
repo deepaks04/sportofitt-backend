@@ -158,7 +158,7 @@ Route::group(['prefix' => 'api/v1/index/'], function() {
     Route::get('search', array('uses' => 'IndexController@index'));
     Route::get('vendor/show/{vendor_id}', array('uses' => 'IndexController@show'));
     Route::get('facility/show/{facility_id}', array('uses' => 'FacilityController@show'));
-    Route::post('facility/availableSlots', array('uses' => 'Customer\BookingController@getOpeningHours'));
+    Route::post('facility/available-slots', array('uses' => 'Customer\BookingController@getOpeningHours'));
     Route::post('facility/checkavailability', array('uses' => 'Customer\BookingController@checkAvailability'));
 });
 Route::group(['prefix' => 'api/v1/facility/', 'middleware' => ['userfromtoken']], function() {
