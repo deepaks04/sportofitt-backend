@@ -81,7 +81,7 @@ class BookingService extends BaseService
      * @throws Exception
      */
     public function makeBooking($bookingData)
-        {
+    {
         try {
             $this->bookingData = json_decode($bookingData);
             if (!empty($this->bookingData)) {
@@ -206,22 +206,53 @@ class BookingService extends BaseService
      * @return arary
      * @throws \Exception
      */
-    public function getOpeningHoursOfFacility($facilityId)
+    public function getOpeningHoursOfFacility($facilityId, $date, $isPeak)
     {
+        $bookingHours = array();
         try {
             $facility = new AvailableFacility();
             $facilityDetails = $facility->getFacilityDetails($facilityId);
             if (!empty($facilityDetails->id)) {
-                $openingHours = $facilityDetails->getOpenigHoursOfFacility();
-                $sessionDetails = $facilityDetails->getSession($facilityId);
-
-                return $this->getFormattedOpeningHours($openingHours, $sessionDetails->duration);
+                $day = date('N', $date);
+                $openingHours = $facilityDetails->getOpenigHoursOfFacility($day,$isPeak);
+                $bookingHours = $this->getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak);
+                
             }
         } catch (\Exception $ex) {
             throw new \Exception($ex);
         }
+        
+        return $bookingHours;
     }
-
+    
+    public function getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak) 
+    {
+        $sessionDetails = $facilityDetails->getSession($facilityDetails->id);
+        $bookingTiming = array();
+        foreach ($openingHours as $openingHour) {
+            if (isset($bookingTiming) && count($bookingTiming) > 0) {
+                $bookingTiming = array_merge($bookingTiming, $this->getTimings($openingHour->start, $openingHour->end, $sessionDetails->duration));
+            } else {
+                $bookingTiming = $this->getTimings($openingHour->start, $openingHour->end, $sessionDetails->duration);
+            }
+        }
+        
+        // if not empty then check is booking made against the same date and time
+        if(!empty($bookingTiming)) {
+            $bookingDate = date('Y-m-d',$date);
+            foreach($bookingTiming as $key => $timeSlot) {
+                $bookingCount = $this->checkAvailability($facilityDetails->id, $timeSlot, $bookingDate, $isPeak);
+                if($bookingCount == $facilityDetails->slots) {
+                    unset($bookingTiming[$key]);
+                }
+            }
+            
+            $bookingTiming = array_values($bookingTiming);
+        }
+        
+        return $bookingTiming;        
+    }
+    
     /**
      * Get formatted opening hours that is the opening hour according to the days
      * peaks and offpeaks timings. Like for monday we can have entry as below:
@@ -312,12 +343,12 @@ class BookingService extends BaseService
                         ->where('booked_timings.facility_id', '=', $facilityId)
                         ->where('booked_timings.is_peak', '=', $isPeak)
                         ->get();
-                return ($isBooked->count()) ? false : true;
+                return $isBooked->count();
             }
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
         return $result;
     }
-
+    
 }

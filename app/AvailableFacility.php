@@ -142,20 +142,32 @@ class AvailableFacility extends Model {
     
     /**
      * Get opening hours according to the facility
+     * @params $day number of day to get opening hours
+     * @params $isPeak is it peak or off peak hour
      * 
      * @return App\OpeningHours
      */
-    public function getOpenigHoursOfFacility()
+    public function getOpenigHoursOfFacility($day = null, $isPeak = 0)
     {
-        $openingHours = $this->openingHours()
-                         ->select('id','is_peak','day','start','end')
-                         ->where('opening_hours.is_active','=',\DB::raw(1))
-                         ->orderBy('opening_hours.day','ASC')
-                         ->get();
+        $query = $this->openingHours()
+                      ->select('id','is_peak','day','start','end')
+                      ->where('opening_hours.is_active','=',\DB::raw(1));
+        if(!empty($day)) {
+            $query->where('opening_hours.day','=',$day);
+        }
         
-        return $openingHours;
-    }
+        $query->where('opening_hours.is_peak','=',$isPeak);
+        
+        return $query->orderBy('opening_hours.day','ASC')->get();
+   }
     
+   /**
+    * Get facility details according to the facility id
+    * 
+    * @param integer $facilityId
+    * @return App\AvailableFacitlity
+    * @throws \Exception
+    */
     public function getFacilityDetails($facilityId)
     {
         try {
@@ -165,6 +177,13 @@ class AvailableFacility extends Model {
         }
     }
     
+    /**
+     * Get session according to the facilityid 
+     * 
+     * @param integer $facilityId
+     * @return App\SessionPackage
+     * @throws \Exception
+     */
     public function getSession($facilityId)
     {
         try {
