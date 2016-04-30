@@ -232,9 +232,12 @@ class SessionPackageController extends Controller
                     $childData = Input::only('is_peak', 'start', 'end', 'day');
                     $childData['session_package_id'] = $session['id'];
                     $childData['available_facility_id'] = $request->available_facility_id;
-                    $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE
-('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND day=" . $childData['day'] . "
- AND session_package_id=" . $session['id'] . " AND is_active = 1"));
+                    $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours 
+                            WHERE start = '" . $start . "' 
+                            AND end <= '" . $end . "' 
+                            AND day=" . $childData['day'] . " 
+                            AND session_package_id=" . $session['id'] . " 
+                            AND is_active = 1 "));    
                     if ($sameTimeExists[0]->cnt > 0) { //Check If Same Time Already Exists
                         $status = 406;
                         $message = "Time Already Exists";
@@ -294,7 +297,13 @@ class SessionPackageController extends Controller
                     $childData['available_facility_id'] = $request->available_facility_id;
                     $packageType = PackageType::where('slug', '=', 'session')->first();
                     $sessionParentData = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->where('package_type_id', '=', $packageType->id)->first()->toArray();
-                    $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours WHERE ('" . $start . "' BETWEEN start AND end OR '" . $end . "' BETWEEN start AND end) AND (id!=" . $id . " AND session_package_id=" . $sessionParentData['id'] . ") AND day=" . $childData['day']));
+                    $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours 
+                            WHERE start > '" . $start . "' 
+                            AND end <= '" . $end . "' 
+                            AND day=" . $childData['day'] . " 
+                            AND session_package_id=" . $sessionParentData['id'] . " 
+                            AND is_active = 1 "));    
+                    echo $sameTimeExists;die;
                     if ($sameTimeExists[0]->cnt > 0) { //Check If Same Time Already Exists
                         $message = "Time Already Exists";
                         $sessionInformation = "";

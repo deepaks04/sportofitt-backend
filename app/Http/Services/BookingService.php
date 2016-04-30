@@ -213,6 +213,7 @@ class BookingService extends BaseService
             $facility = new AvailableFacility();
             $facilityDetails = $facility->getFacilityDetails($facilityId);
             if (!empty($facilityDetails->id)) {
+                $date = $date / 100;
                 $day = date('N', $date);
                 $openingHours = $facilityDetails->getOpenigHoursOfFacility($day,$isPeak);
                 $bookingHours = $this->getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak);
