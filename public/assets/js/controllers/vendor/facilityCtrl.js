@@ -2,7 +2,8 @@
 /**
  * controllers used for the facility
  */
-app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert", function ($scope, $state, $log, facilityService, SweetAlert) {
+app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert",
+    function ($scope, $state, $log, facilityService, SweetAlert) {
 
         facilityService.getRootCategory()
                 .then(getRootCategorySuccess);
@@ -59,7 +60,55 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 
             }
         };
+        var uploaderImages = $scope.uploaderImages = new FileUploader({
+            url: 'api/v1/vendor/images',
+            alias: 'image_name',
+            removeAfterUpload: true,
+            autoUpload: true
+        });
+        uploaderImages.filters.push({
+            name: 'imageFilter',
+            fn: function (item/* {File|FileLikeObject} */, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        });
+        uploaderImages.onErrorItem = function (fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+            SweetAlert.swal("somethings going wrong", response.message, "error");
+            return;
+        };
+         uploaderImages.onCancelItem = function (fileItem, response, status,
+         headers) {
+         console.info('onCancelItem', fileItem, response, status, headers);
+         };
+        uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+            //$scope.getVendorImages();
+        };
+        uploaderImages.onCompleteAll = function () {
+            console.info('onCompleteAll');
+        };
 
+//        $scope.getVendorImages = function () {
+//            userService.getVendorImages().then(function (images) {
+//                $scope.images = images.images || {};
+////			$scope.uploaderImages.queue.length = $scope.images.length;
+//             
+//            }).catch(function (response) {
+//                console.log(response);
+//                $scope.images = {};
+//            });
+//        }
+//        $scope.removeImage = function (imageId) {
+//            userService.deleteVendorImage(imageId).then(function (images) {
+//                $scope.getVendorImages();
+//            }).catch(function (response) {
+//                console.log(response);
+//                $scope.images = {};
+//            });
+//        }
+//        $scope.getVendorImages();
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
         }
@@ -162,13 +211,13 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
     }]);
 
 
-app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert",
-    function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert) {
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert","FileUploader",
+    function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert, FileUploader) {
 
         $scope.facility = selectedFacility;
 
         $scope.tab = tab;
-        $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit'];
+        $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit', 'images'];
         facilityService.getDuration()
                 .then(getDurationSuccess);
 
@@ -617,6 +666,56 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 }
             });
         }
+        
+        var uploaderImages = $scope.uploaderImages = new FileUploader({
+            url: 'api/v1/vendor/images',
+            alias: 'image_name',
+            removeAfterUpload: true,
+            autoUpload: true
+        });
+        uploaderImages.filters.push({
+            name: 'imageFilter',
+            fn: function (item/* {File|FileLikeObject} */, options) {
+                var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+                return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            }
+        });
+        uploaderImages.onErrorItem = function (fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+            SweetAlert.swal("somethings going wrong", response.message, "error");
+            return;
+        };
+         uploaderImages.onCancelItem = function (fileItem, response, status,
+         headers) {
+         console.info('onCancelItem', fileItem, response, status, headers);
+         };
+        uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+            //$scope.getVendorImages();
+        };
+        uploaderImages.onCompleteAll = function () {
+            console.info('onCompleteAll');
+        };
+
+//        $scope.getVendorImages = function () {
+//            userService.getVendorImages().then(function (images) {
+//                $scope.images = images.images || {};
+////			$scope.uploaderImages.queue.length = $scope.images.length;
+//             
+//            }).catch(function (response) {
+//                console.log(response);
+//                $scope.images = {};
+//            });
+//        }
+//        $scope.removeImage = function (imageId) {
+//            userService.deleteVendorImage(imageId).then(function (images) {
+//                $scope.getVendorImages();
+//            }).catch(function (response) {
+//                console.log(response);
+//                $scope.images = {};
+//            });
+//        }
+//        $scope.getVendorImages();
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
