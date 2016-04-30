@@ -468,7 +468,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     text: "Your will not be able to recover this event!",
                     type: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
+                    confirmButtonColor: "btn-primary",
                     confirmButtonText: "Yes, delete it!",
                     cancelButtonText: "No, cancel it!",
                     closeOnConfirm: false,
@@ -500,7 +500,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     text: "Your will not be able to recover this event!",
                     type: "warning",
                     showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
+                    confirmButtonClass: "btn-primary",
                     confirmButtonText: "Yes, delete it!",
                     cancelButtonText: "No, cancel it!",
                     closeOnConfirm: false,
@@ -720,7 +720,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.calendarView = 'week';
         $scope.calendarTitle = 'Name';
         $scope.viewDate = new Date();
-
+        
         $scope.getEvents = function (viewDate, calendarView) {
             if (calendarView === "month") {
                 var startDate = viewDate.getFullYear() + "-" + (viewDate.getMonth() + 1);
@@ -732,7 +732,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                 }
             }
         };
-
+        
         function showModal(action, event) {
             var modalInstance = $aside.open({
                 templateUrl: 'calendarEvent.html',
@@ -753,7 +753,17 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.$modalInstance = $modalInstance;
                     $scope.action = action;
                     $scope.event = angular.copy(event);
-
+                    $scope.event.peakHourOptions = [
+                        {id: "peakHour", name:"peakHour", description:"Peak Hour"},
+                        {id: "nonPeakHour", name:"nonPeakHour", description: "Non Peak Hour"}
+                    ];
+                    $scope.event.peakHourSelected = $scope.event.peakHourOptions[0];
+                    $scope.availableSessions = [];
+                    $scope.getAvailableSessionsByFacilityId = function() {
+                        var facilityId = $scope.event.available_facility_id;
+                        $scope.availableSessions = facilityService.getAvailableSessionsByFacilityId(facilityId);
+                    };
+                    
                     $scope.toggleMin = function () {
                         $scope.minDate = $scope.minDate ? null : new Date();
                     };

@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-12">
             <!-- /// controller:  'CalendarCtrl' -  localtion: assets/js/controllers/calendarCtrl.js /// -->
-            <div ng-controller="facilityBookingCtrl" id="demo">
+            <div id="demo">
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="text-center margin-bottom-20 ">{{calendarTitle}}</h2>
@@ -126,12 +126,12 @@
                     </label>
                     <div class="row">
                     <div class="col-xs-12">
-                    <div class="radio clip-radio radio-primary" ng-repeat="facility in facilityData">
-                    <input type="radio" id="{{facility.name}}" name="optionsCategory" value="{{facility.id}}" ng-model="event.available_facility_id">
-                    <label for="{{facility.name}}">
-                    <span class="fa fa-circle text-primary"></span> {{facility.name}}
-                    </label>
-                    </div>
+                    
+                        <select class="form-control" ng-model="event.available_facility_id" 
+                                ng-options="facility.id as facility.name for facility in facilityData"
+                                ng-change="getAvailableSessionsByFacilityId()">
+                            <option value="" ng-disabled="true">Select Venue</option>
+                        </select>
                     </div>
                     </div>
                     </div>
@@ -144,18 +144,26 @@
                            ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt"
                            is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
                     <i class="ti-calendar"></i> </span>
-                    <timepicker ng-model="event.startsAt" show-meridian="true" readonly-input="false" minute-step="1" ng-show="!event.allDay"></timepicker>
                     </div>
-                    <div class="form-group" ng-if="false">
-                    <label>
-                    End
-                    </label>
-                    <span class="input-icon">
-                    <input type="text" class="form-control underline" ng-click="endOpen = !endOpen" datepicker-popup="fullDate" ng-model="event.endsAt" is-open="endOpen" ng-init="endOpen = false" min-date="event.startsAt" max-date="event.startsAt" close-text="Close" />
-                    <i class="ti-calendar"></i> </span>
-                    <timepicker ng-model="event.endsAt" show-meridian="true" ng-show="!event.allDay"></timepicker>
+                    <div class="form-group">
+                        <div class="radio-inline clip-radio radio-primary" ng-repeat="peakHourOption in event.peakHourOptions">
+                            <input type="radio" id="{{peakHourOption.id}}" name="peakHour" ng-value="peakHourOption" ng-model="$parent.event.peakHourSelected">
+                            <label for="{{peakHourOption.id}}">
+                            {{peakHourOption.description}}
+                            </label>
+                        </div>
                     </div>
-
+                     <div class="form-group">
+                     <label>Available time slots:
+                        <div class="radio clip-radio radio-primary" ng-repeat="session in availableSessions">
+                            <input type="radio" id="{{session.name}}" name="sessionSlot" ng-value="{{session.name}}" ng-model="$parent.event.selectedSession">
+                            <label for="{{session.name}}">
+                            {{session.timing}}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    
                     </div>
                     </div>
                     <div class="modal-footer">
