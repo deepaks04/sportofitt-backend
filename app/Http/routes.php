@@ -10,7 +10,32 @@
  * |
  */
 Route::get('/', function () {
-    return view('views/home', ['cell' => '9457912886',
+    return view('views/home', ['cell' => '7757088700',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
+Route::get('about-us', function () {
+    return view('views/about', ['cell' => '7757088700',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
+Route::get('terms-condition', function () {
+    return view('views/terms', ['cell' => '7757088700',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
+
+Route::get('privacy-policy', function () {
+    return view('views/privacy', ['cell' => '7757088700',
+        'email' => 'select@sportofitt.com',
+    ]);
+});
+
+Route::get('contact-us', function () {
+    return view('views/contact', ['cell' => '7757088700',
         'email' => 'select@sportofitt.com',
     ]);
 });
