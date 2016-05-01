@@ -28,7 +28,6 @@ angular.module('sportofittApp')
 
       vm.days = {1:'Monday',2:'Thusday',3:'Wednesday',4:'Thursday',5:'Friday',6:'Saturday',7:'Sunday'};
 
-
       function simpleMap(_latitude, _longitude, draggableMarker){
           var mapCenter = new google.maps.LatLng(_latitude, _longitude);
           var mapOptions = {

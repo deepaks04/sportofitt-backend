@@ -151,7 +151,6 @@ angular.module('sportofittApp')
                             closeBoxURL: "assets/img/close.png",
                             infoBoxClearance: new google.maps.Size(1, 1)
                         };
-
                         // Infobox HTML element ----------------------------------------------------------------------------------------
 
                         var category = json.data[i].category;

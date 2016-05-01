@@ -103,43 +103,6 @@ angular.module('sportofittApp')
             return '';
         }
 
-        function simpleMap(_latitude, _longitude, draggableMarker) {
-            var mapCenter = new google.maps.LatLng(_latitude, _longitude);
-            var mapOptions = {
-                zoom: 14,
-                center: mapCenter,
-                disableDefaultUI: false,
-                scrollwheel: false,
-                styles: mapStyles,
-                panControl: false,
-                zoomControl: false,
-                draggable: false
-            };
-            var mapElement = document.getElementById('map-simple');
-            var map = new google.maps.Map(mapElement, mapOptions);
-
-            // Google map marker content -----------------------------------------------------------------------------------
-
-            var markerContent = document.createElement('DIV');
-            markerContent.innerHTML =
-                '<div class="map-marker">' +
-                '<div class="icon"></div>' +
-                '</div>';
-
-            // Create marker on the map ------------------------------------------------------------------------------------
-
-            var marker = new RichMarker({
-                //position: mapCenter,
-                position: new google.maps.LatLng(_latitude, _longitude),
-                map: map,
-                draggable: draggableMarker,
-                content: markerContent,
-                flat: true
-            });
-
-            marker.content.className = 'marker-loaded';
-        }
-
         function itemDetailMap(_latitude, _longitude){
             var mapCenter = new google.maps.LatLng(_latitude, _longitude);
             var mapOptions = {
