@@ -235,7 +235,7 @@ class SessionPackageController extends Controller
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours 
                             WHERE start = '" . $start . "' 
                             AND end <= '" . $end . "' 
-                            AND day=" . $childData['day'] . " 
+                            AND day=" . $childData['day'] . "  
                             AND session_package_id=" . $session['id'] . " 
                             AND is_active = 1 "));    
                     if ($sameTimeExists[0]->cnt > 0) { //Check If Same Time Already Exists
@@ -303,7 +303,6 @@ class SessionPackageController extends Controller
                             AND day=" . $childData['day'] . " 
                             AND session_package_id=" . $sessionParentData['id'] . " 
                             AND is_active = 1 "));    
-                    echo $sameTimeExists;die;
                     if ($sameTimeExists[0]->cnt > 0) { //Check If Same Time Already Exists
                         $message = "Time Already Exists";
                         $sessionInformation = "";
