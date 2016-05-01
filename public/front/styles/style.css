@@ -4543,6 +4543,7 @@ body.map-fullscreen #map {
   width: 35%;
   padding: 20px 0px 20px 20px;
   height: 100%;
+  max-height: 720px;
   overflow: hidden;
 }
 .items-list header {
@@ -4711,7 +4712,7 @@ body.map-fullscreen #map {
   -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
-  background-color: #f4f4f2;
+  background-color: #ffffff;
   border: none;
   color: #474747;
   font-size: 14px;
@@ -4721,13 +4722,13 @@ body.map-fullscreen #map {
   width: auto;
 }
 .btn:hover, select:hover {
-  background-color: #ededea;
+  background-color: #ffffff;
 }
 .btn:active, .btn:focus, select:active, select:focus {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background-color: #ededea;
+  background-color: #ffffff;
 }
 .btn.btn-default, select.btn-default {
   -moz-box-shadow: none;

@@ -10,7 +10,7 @@
     <!--Page Content-->
     <div id="page-content">
 
-        <div id="map-detail"></div>
+        <div id="map-simple"></div>
         <section class="container">
             <div class="row">
                 <!--Item Detail Content-->
@@ -116,24 +116,38 @@
                                                         <v-pane-content>
                                                             <figure class="filter clearfix">
                                                                 <div class="buttons pull-left">
-                                                                    <a  class="btn icon" ng-class="{'active':vm.filter.slot == 'peak'}" data-ng-click="vm.setSlotFilter('peak')"><i class="fa fa-th"></i>Regular</a>
-                                                                    <a class="btn icon" ng-class="{'active':vm.filter.slot == 'offpeak'}" data-ng-click="vm.setSlotFilter('offpeak')"><i class="fa fa-th-list"></i>Happy Hours</a>
+                                                                    <a  class="btn icon" ng-class="{'active':vm.filter.is_peak == true}" data-ng-click="vm.setSlotFilter(true)"><i class="fa fa-th"></i>Regular</a>
+                                                                    <a class="btn icon" ng-class="{'active':vm.filter.is_peak == false}" data-ng-click="vm.setSlotFilter(false)"><i class="fa fa-th-list"></i>Happy Hours</a>
                                                                 </div>
                                                             </figure>
                                                             <div>
                                                                 <h4>Select Date</h4>
-                                                                <div style="display:inline-block; min-height:290px;">
-                                                                    <datepicker ng-model="vm.filter.selectedDate" ng-change="vm.filterAvailableSlot()" class="well well-sm" datepicker-options="vm.inlineOptions"></datepicker>
+                                                                <div style="display:inline-block; min-height:200px;">
+                                                                    <div class="col-md-6">
+                                                                        <p class="input-group"  ng-click="vm.openDatePicker()">
+                                                    <input type="text" class="form-control underline" min-date="vm.minDate" readonly
+                                                          datepicker-popup="fullDate" ng-model="vm.filter.date"
+                                                           is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
+
+          <span class="input-group-btn" ng-click="vm.openDatePicker()">
+            <button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar" ng-click="vm.openDatePicker()"></i></button>
+          </span>
+                                                                        </p>
+
+
+                                                                    </div>
+                                                                    <div class="col-md-6"> <button ng-click="vm.getAvailableSlots()" class="btn btn-default">Get Available Slots</button></div>
+
                                                                 </div>
                                                                 <header><h2>Choose Session ({{vm.days[vm.selectedDay]}})</h2></header>
-                                                                <div ng-if="vm.filteredSlots">
+                                                                <div ng-if="vm.facilitySlots.length">
                                                                     <div class="form-inline">
-                                                                        <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.filteredSlots"></select>
-                                                                       <label class="form-control">₹ {{(vm.filter.slot == 'peak')?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
+                                                                        <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.facilitySlots"></select>
+                                                                       <label class="form-control">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
                                                                         <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter,true)" >CheckOut</button>
                                                                      </div>
                                                                 </div>
-                                                                <p ng-if="!vm.filteredSlots">
+                                                                <p ng-if="!vm.facilitySlots.length">
                                                                     No Session available for selected criteria.
                                                                 </p>
                                                             </div>

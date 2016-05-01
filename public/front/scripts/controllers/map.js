@@ -11,11 +11,13 @@ angular.module('sportofittApp')
         .controller('MapCtrl', function (searchService, toastr, $filter) {
             var mapStyles = [{"featureType": "road", "elementType": "labels", "stylers": [{"visibility": "simplified"}, {"lightness": 20}]}, {"featureType": "administrative.land_parcel", "elementType": "all", "stylers": [{"visibility": "off"}]}, {"featureType": "landscape.man_made", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "transit", "elementType": "all", "stylers": [{"saturation": -100}, {"visibility": "on"}, {"lightness": 10}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.highway", "elementType": "labels", "stylers": [{"visibility": "simplified"}]}, {"featureType": "poi", "elementType": "labels", "stylers": [{"visibility": "off"}]}, {"featureType": "road.arterial", "elementType": "labels", "stylers": [{"visibility": "on"}, {"lightness": 50}]}, {"featureType": "water", "elementType": "all", "stylers": [{"hue": "#a1cdfc"}, {"saturation": 30}, {"lightness": 49}]}, {"featureType": "road.highway", "elementType": "geometry", "stylers": [{"hue": "#f49935"}]}, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"hue": "#fad959"}]}, {featureType: 'road.highway', elementType: 'all', stylers: [{hue: '#dddbd7'}, {saturation: -92}, {lightness: 60}, {visibility: 'on'}]}, {featureType: 'landscape.natural', elementType: 'all', stylers: [{hue: '#c8c6c3'}, {saturation: -71}, {lightness: -18}, {visibility: 'on'}]}, {featureType: 'poi', elementType: 'all', stylers: [{hue: '#d9d5cd'}, {saturation: -70}, {lightness: 20}, {visibility: 'on'}]}];
             var vm = this;
-            vm.latitude = 18.520430;
-            vm.longitude = 73.856743;
+            vm.latitude = 18.5073551;
+            vm.longitude = 73.7871018;
 
             vm.filter = {};
             vm.types = ['Venue', 'Coaching'];
+
+
             // Load JSON data and create Google Maps
 
             searchService.getCategories().then(function (response) {
@@ -26,6 +28,7 @@ angular.module('sportofittApp')
 
             searchService.getArea().then(function (response) {
                 vm.areas = response.data.area;
+                vm.filter.area = vm.areas[13];
             }).catch(function (errors) {
                 toastr.error(errors);
             })
@@ -39,9 +42,16 @@ angular.module('sportofittApp')
             })
 
             vm.setLangLat = function(area){
-              vm.latitude = area.latitude;
-                vm.longitude = area.longitude;
-                vm.filter.area_id =  area.id;
+              if(area) {
+                  vm.latitude = area.latitude;
+                  vm.longitude = area.longitude;
+                  vm.filter.area_id = area.id;
+              }else{
+
+                  vm.latitude = 18.5073551;
+                  vm.longitude = 73.7871018;
+                  vm.filter.area_id = 14;
+              }
             };
 
             vm.setFilters = function (newfilter) {
@@ -58,14 +68,14 @@ angular.module('sportofittApp')
             function createHomepageGoogleMap(_latitude, _longitude, json) {
                 gMap();
                 function gMap() {
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(success);
-                    } else {
-                        console.log('Geo Location is not supported');
-                    }
+                    //if (navigator.geolocation) {
+                    //    navigator.geolocation.getCurrentPosition(success);
+                    //} else {
+                    //    console.log('Geo Location is not supported');
+                    //}
                     var mapCenter = new google.maps.LatLng(vm.latitude, vm.longitude);
                     var mapOptions = {
-                        zoom: 14,
+                        zoom: 12,
                         center: mapCenter,
                         disableDefaultUI: false,
                         scrollwheel: false,
@@ -260,6 +270,12 @@ angular.module('sportofittApp')
 
                         $('.items-list .results').html(visibleItemsArray);
 
+                        if( $('.items-list').length > 0 ){
+                            $(".items-list").mCustomScrollbar({
+                                mouseWheel:{ scrollAmount: 350 }
+                            });
+                        }
+
                         // Check if images are cached, so will not be loaded again
 
                         $.each(json.data, function (a) {
@@ -270,17 +286,17 @@ angular.module('sportofittApp')
 
                         // Call Rating function ----------------------------------------------------------------------------------------
 
-                        rating('.results .item');
+                        //rating('.results .item');
 
-                        var $singleItem = $('.results .item');
-                        $singleItem.hover(
-                                function () {
-                                    newMarkers[$(this).attr('id') - 1].content.className = 'marker-active marker-loaded';
-                                },
-                                function () {
-                                    newMarkers[$(this).attr('id') - 1].content.className = 'marker-loaded';
-                                }
-                        );
+                        //var $singleItem = $('.results .item');
+                        //$singleItem.hover(
+                        //        function () {
+                        //            newMarkers[$(this).attr('id') - 1].content.className = 'marker-active marker-loaded';
+                        //        },
+                        //        function () {
+                        //            newMarkers[$(this).attr('id') - 1].content.className = 'marker-loaded';
+                        //        }
+                        //);
                     });
 
                     redrawMap('google', map);
@@ -358,7 +374,7 @@ angular.module('sportofittApp')
                         '</div>' +
                         '</a>' +
                         '<div class="wrapper">' +
-                        '<a href="#" id="' + json.data[a].id + '"><h3>' + json.data[a].title + '</h3></a>' +
+                        '<a href="#/venue/'+json.data[a].id +'" id="' + json.data[a].id + '"><h3>' + json.data[a].title + '</h3></a>' +
                         '<figure>' + json.data[a].location + '</figure>' +
                         drawPrice(json.data[a].peak_hour_price) +
                         '<div class="info">' +

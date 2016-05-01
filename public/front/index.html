@@ -13,7 +13,8 @@
     <!-- build:css(.tmp) styles/main.css -->
       <!-- Font Awesome -->
       <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css" type="text/css">
-      <link rel="stylesheet" href="assets/css/bootstrap-select.min.css" type="text/css">
+      <!--<link rel="stylesheet" href="assets/css/bootstrap-select.min.css" type="text/css">-->
+
 
 
       <link rel="stylesheet"
@@ -33,6 +34,9 @@
       <link rel="stylesheet"
             href="../bower_components/angular-toastr/dist/angular-toastr.css">
 <link rel="stylesheet" href="../bower_components/v-accordion/dist/v-accordion.min.css">
+      <!--<link rel="stylesheet" href="../bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css" type="text/css"/>-->
+<link rel="stylesheet" href="assets/css/jquery.mCustomScrollbar.css">
+      <link rel="stylesheet" href="assets/css/jquery.nouislider.min.css" type="text/css">
 
       <link rel="stylesheet" href="../bower_components/slick-carousel/slick/slick.css">
       <link rel="stylesheet" href="../bower_components/slick-carousel/slick/slick-theme.css">
@@ -43,17 +47,9 @@
 
     <!-- endbuild -->
 
-      <style>
-          .center { text-align: center; }
-          .logo { padding: 80px 0; }
-          img { max-width: 100%; margin-bottom: 20px; }
-          .map { padding: 70px 20px; background: url("version-selector/map.png"); margin-bottom: 60px; border-radius: 20px; -webkit-border-radius: 20px; }
-          .item { transition: .4s ease; -webkit-transition: .4s ease; position: relative; top: 0; margin-bottom: 20px; }
-          .item:hover { top: -5px; }
-      </style>
 
   </head>
-  <body onunload="" class="page-subpage page-register navigation-top-header" id="page-top">
+  <body onunload="" class=" page-homepage  navigation-off-canvas" id="page-top">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -61,9 +57,8 @@
     <!-- Outer Wrapper-->
     <div id="outer-wrapper">
         <!-- Inner Wrapper -->
-        <div id="inner-wrapper">
-              <ui-view ></ui-view>
-          </div>
+        <ui-view  id="inner-wrapper">
+          </ui-view >
     </div>
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -128,7 +123,8 @@
     <script type="text/javascript" src="assets/js/dropzone.min.js"></script>
 
 
-    <script type="text/javascript" src="assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="../bower_components/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!--<script src="../bower_components/ng-scrollbars/dist/scrollbars.min.js"></script>-->
 
     <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>

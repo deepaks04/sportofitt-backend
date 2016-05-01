@@ -39,7 +39,7 @@ angular.module('sportofittApp')
               styles: mapStyles,
               panControl: false,
               zoomControl: false,
-              draggable: true
+              draggable: false
           };
           var mapElement = document.getElementById('map-simple');
           var map = new google.maps.Map(mapElement, mapOptions);
