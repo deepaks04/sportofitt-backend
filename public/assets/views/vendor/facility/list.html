@@ -406,7 +406,7 @@
 
                 </form>
                 </tab>
-                <tab heading="Add Images" ng-click="setTab('images')" active="tab === 'images'">
+                <tab heading="Add Images" ng-click="getVendorImages()" active="tab === 'images'">
                       <form name="Form" id="form1" novalidate
                       ng-submit="update(Form)" enctype="multipart/form-data">
                     <div class="row">
@@ -442,7 +442,8 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr ng-repeat="image in images">
+                                                                            
+										<tr ng-if="images.length" ng-repeat="image in images">
 											<td><strong></strong> <!-- Image preview --> <!--auto height-->
 												<!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
 												<!--auto width--> <img ng-src="{{image.image_name}}"
@@ -455,6 +456,7 @@
 												</button>
 											</td>
 										</tr>
+                                                                                <p ng-if="!images.length">{{imagesReponse}}</p>
 									</tbody>
 								</table>
 							</div>

@@ -30,7 +30,9 @@
             getBlockedSessions: getBlockedSessions,
             getBlockedSessionsByFacilityId: getBlockedSessionsByFacilityId,
             getDays: getDays,
-            getAvailableSessionsByFacilityId: getAvailableSessionsByFacilityId
+            getAvailableSessionsByFacilityId: getAvailableSessionsByFacilityId,
+            getFacilityImages: getFacilityImages,
+            deleteFacilityImage: deleteFacilityImage,
         };
 
         function getAvailableSessionsByFacilityId(facilityId) {
@@ -171,6 +173,37 @@
                 .catch(sendGetFaclityError);
 
         }
+
+
+        function getFacilityImages(facilityId) {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/getimages/' + facilityId,
+            })
+                    .then(sendResponseData)
+                    .catch(sendGetImagesError)
+        }
+        
+        function sendGetImagesError(response) {
+
+            return $q.reject('Error retrieving Image(s). (HTTP status: ' + response.status + ')');
+
+        }      
+        
+function deleteFacilityImage(imageId){
+return $http({
+                method: 'GET',
+                url: 'api/v1/vendor/images/'+imageId
+            })
+            .then(sendResponseData)
+            .catch(sendDeleteImagesError)
+}
+
+function sendDeleteImagesError(response) {
+
+            return $q.reject('Error deleting Image(s). (HTTP status: ' + response.status + ')');
+
+        }        
 
         function getFacilityDetailsById(facilityId) {
             return $http.get('api/v1/vendor/facility-detail/' + facilityId).then(sendResponseData)
@@ -342,7 +375,6 @@
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
-        f;
 //		function deleteBook(bookID) {
 
 //		deleteSummaryFromCache();

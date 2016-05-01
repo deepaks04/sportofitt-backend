@@ -40,10 +40,11 @@ function getVendorProfile(){
             return $q.reject('Error retrieving User(s). (HTTP status: ' + response.status + ')');
 
         }
-function getVendorImages(){
+function getVendorImages(facilityId){
   return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/images'
+                url: 'api/v1/vendor/images',
+                data:{'facility':facilityId}
             })
             .then(sendResponseData)
             .catch(sendGetImagesError)

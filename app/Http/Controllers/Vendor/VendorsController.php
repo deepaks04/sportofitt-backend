@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\AvailableFacility;
 use App\Billing;
-use App\BillingInfo;
+use App\FacilityImages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\MultipleSession;
@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Mockery\Exception;
 use URL;
+use App\Http\Helpers\FileHelper;
+
 
 
 class VendorsController extends Controller
@@ -386,33 +388,94 @@ class VendorsController extends Controller
         return response($response, $status);
     }
 
+    
+        /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request ,$systemUser,$imageType
+     * @return $filname
+     */
+    public function uploadFacilityImage($request, $systemUser)
+    {
+        $vendorId = $systemUser;
+        $vendorUploadPath =  env('VENDOR_FILE_UPLOAD');
+        $vendorOwnDirecory = $vendorUploadPath . sha1($vendorId);
+        $vendorImageUploadPath = public_path().$vendorOwnDirecory . "/" . "facility_images";
+        
+        /* Create Upload Directory If Not Exists */
+        if (!file_exists($vendorImageUploadPath)) {
+            File::makeDirectory($vendorImageUploadPath, $mode = 0777, true, true);
+        }
+        
+        $file = $request->image_name;
+        $random = mt_rand(1, 1000000);
+        $extension = $file->getClientOriginalExtension();
+        $filename = sha1($systemUser . $random) . ".{$extension}";
+        $file->move($vendorImageUploadPath, $filename);
+
+        $fileHelper = new FileHelper();
+        $fileHelper->sourceFilename = $filename;
+        $fileHelper->sourceFilepath = $vendorImageUploadPath.'/';
+        $fileHelper->destinationPath = $vendorImageUploadPath. '/';
+        $fileHelper->resizeImage('ticker', true);
+        
+        return $filename;
+    }
+    
+    public function addFacilityImages(Requests\ImagesRequest $request)
+    {
+        try {
+            $user = Auth::user();
+            $status = 200;
+            $message = "saved successfully";
+            $filename = $this->uploadFacilityImage($request,$user->id);
+            if(!empty($filename)) {
+                $facilityImage = new FacilityImages;
+                $facilityImage->image_name = $filename;
+                $facilityImage->available_facility_id = $request->get('facility_id');
+                $facilityImage->created_at = Carbon::now();
+                $facilityImage->updated_at = Carbon::now();
+                $facilityImage->save();
+            }
+        } catch (\Exception $e) {
+            $status = 500;
+            $message = "something went wrong" . $e->getMessage();
+        }
+        $response = [
+            "message" => $message,
+         ];
+        return response($response, $status);
+    }
+
     /**
      * Get All extra images of vendor facility
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getImages()
+    public function getImages($facilityId)
     {
-        $imageCount = $this->vendor->images()->count();
-        if ($imageCount == 0) {
+        $imageArray = array();
+        $facilityImages = new FacilityImages();
+        $images = $facilityImages->getImagesById($facilityId);
+        if (empty($images) || $images->count() == 0) {
             $status = 200;
             $message = "Images not found. Please upload some";
             $images = null;
         } else {
             $status = 200;
             $message = "success";
-            $images = $this->vendor->images()
-                ->get()
-                ->toArray();
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "extra_images/";
-            for ($i = 0; $i < $imageCount; $i ++) {
-                $images[$i]['image_name'] = $url . $images[$i]['image_name'];
+            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
+            $i = 0;
+            foreach($images as $image) {
+                $imageArray[$i]['id'] = $image->id;
+                $imageArray[$i]['image_name'] = $url . $image->image_name;
+                $i++;
             }
         }
         $response = [
             "message" => $message,
-            "images" => $images
+            "images" => $imageArray
         ];
         return response($response, $status);
     }
@@ -428,13 +491,13 @@ class VendorsController extends Controller
     public function deleteImage(Requests\DeleteImageRequest $request, $id)
     {
         try {
-            $image = VendorImages::where(array('id'=>$id,'vendor_id'=>$this->vendor->id))->first();
+            $image = FacilityImages::where(array('id'=>$id))->first();
             if ($image!=null) {
-                $image->delete();
                 $status = 200;
+                $image->delete();
                 $message = "Image deleted successfully";
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $path = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "extra_images/";
+                $path = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
                 File::delete($path . $image->image_name);
             } else {
                 $status = 500;

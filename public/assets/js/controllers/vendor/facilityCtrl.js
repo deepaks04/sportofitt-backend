@@ -668,8 +668,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         }
         
         var uploaderImages = $scope.uploaderImages = new FileUploader({
-            url: 'api/v1/vendor/images',
+            url: 'api/v1/vendor/facility/upload',
             alias: 'image_name',
+            formData: [{'facility_id':$scope.facility.id}],
             removeAfterUpload: true,
             autoUpload: true
         });
@@ -681,41 +682,39 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             }
         });
         uploaderImages.onErrorItem = function (fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
             SweetAlert.swal("somethings going wrong", response.message, "error");
             return;
         };
          uploaderImages.onCancelItem = function (fileItem, response, status,
          headers) {
-         console.info('onCancelItem', fileItem, response, status, headers);
          };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
             //$scope.getVendorImages();
         };
         uploaderImages.onCompleteAll = function () {
-            console.info('onCompleteAll');
+            $scope.getVendorImages();
         };
 
-//        $scope.getVendorImages = function () {
-//            userService.getVendorImages().then(function (images) {
-//                $scope.images = images.images || {};
-////			$scope.uploaderImages.queue.length = $scope.images.length;
-//             
-//            }).catch(function (response) {
-//                console.log(response);
-//                $scope.images = {};
-//            });
-//        }
-//        $scope.removeImage = function (imageId) {
-//            userService.deleteVendorImage(imageId).then(function (images) {
-//                $scope.getVendorImages();
-//            }).catch(function (response) {
-//                console.log(response);
-//                $scope.images = {};
-//            });
-//        }
-//        $scope.getVendorImages();
+        $scope.getVendorImages = function () {
+            facilityService.getFacilityImages($scope.facility.id).then(function (images) {
+                $scope.images = images.images || {};
+                $scope.tab = 'images';
+//			$scope.uploaderImages.queue.length = $scope.images.length;
+             
+            }).catch(function (response) {
+                $scope.images = {};
+                $scope.imagesReponse = response;
+            });
+        }
+
+        $scope.removeImage = function (imageId) {
+            facilityService.deleteFacilityImage(imageId).then(function (images) {
+                $scope.getVendorImages();
+            }).catch(function (response) {
+                $scope.images = {};
+            });
+        }
+        $scope.getVendorImages();
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
@@ -727,6 +726,8 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             $scope.getSessions();
         } else if ($scope.tab === 'packages') {
             $scope.getPackages();
+        } else if ($scope.tab === 'images') {
+            $scope.getVendorImages();
         }
     }]);
 app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($scope, $modalInstance) {
