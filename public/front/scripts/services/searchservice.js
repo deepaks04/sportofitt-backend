@@ -24,8 +24,9 @@ angular.module('sportofittApp')
           return $http.get(this.url + "facility/show/" + facilityId);
       }
 
-      this.getFacilityAvailableSlotsById = function(facilityId){
-          return $http.get(this.url + "facility/availableslots/" + facilityId);
+      this.getFacilityAvailableSlotsById = function(filter){
+          filter.date = new Date(filter.date).getTime();
+          return $http.post(this.url + "facility/available-slots" , filter);
       }
       this.getCategories = function(){
           return $http.get(myConfig.backend + "user/get-sub-category");

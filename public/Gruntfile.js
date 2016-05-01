@@ -1,4 +1,4 @@
-// Generated on 2016-03-06 using generator-angular 0.15.1
+// Generated on 2016-04-16 using generator-angular 0.15.1
 'use strict';
 
 // # Globbing
@@ -201,7 +201,7 @@ module.exports = function (grunt) {
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
-        src: ['<%= yeoman.app %>/index.php'],
+        src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
       },
       test: {
@@ -238,7 +238,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.php',
+      html: '<%= yeoman.app %>/index.html',
       options: {
         dest: '<%= yeoman.dist %>',
         flow: {
@@ -271,7 +271,7 @@ module.exports = function (grunt) {
     },
 
     // The following *-min tasks will produce minified files in the dist folder
-    // By default, your `index.php`'s <!-- Usemin block --> will take care of
+    // By default, your `index.html`'s <!-- Usemin block --> will take care of
     // minification. These next options are pre-configured if you do not wish
     // to use the Usemin blocks.
     // cssmin: {
@@ -338,7 +338,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'sportofittApp',
+          module: 'publicApp',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
