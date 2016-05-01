@@ -63,7 +63,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
             title: 'Venue List',
             ncyBreadcrumb: {
                 label: 'Venue List'
-            }
+            },
+            resolve: loadSequence('angularFileUpload')
         }).state('vendor.facility.add', {
             url: '/add',
             templateUrl: "assets/views/vendor/facility/add.html",

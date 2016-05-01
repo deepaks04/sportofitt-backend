@@ -468,7 +468,7 @@ img-crop {
 }
 
 .sweet-alert {
-	z-index: 9999 !important;
+	z-index: 10000 !important;
 }
 
 .sweet-alert h2 {
