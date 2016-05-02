@@ -9,53 +9,49 @@
 
     <!--Page Content-->
     <div id="page-content">
-
-        <div id="map-detail"></div>
-        <section class="container">
+        <section id="page-title">
             <div class="row">
-                <!--Item Detail Content-->
-                <div class="col-md-12">
-                    <aside class="col-sm-4 col-md-4">
-                        <a ui-sref="app.login" class="btn btn-default">Sign In</a>
-                        <a ui-sref="app.register" class="btn btn-primary">Register</a>
-                    </aside>
-                    <div class="col-sm-8 col-md-8">
-                        <div ng-if="!vm.LocalBookings.length">
-                            <p> No Order's</p>
-                            <a ui-sref="app.home" class="btn btn-default">Continue Shopping</a>
-                        </div>
-                        <section id="items"  ng-repeat="booking in vm.LocalBookings" >
-                            <!-- /.item-->
-                            <div class="item list admin-view">
-                                <div class="wrapper">
-                                    <a href="item-detail.html"><h3>{{booking.name}}</h3></a>
-                                    <figure>{{booking.description}}</figure>
-                                    <div class="info">
-                                        <div class="type">
-                                            Actual Price <div class="price"><i class="fa fa-inr"></i> {{booking.actual_price}}</div>
-                                        </div>
-                                        <div class="type">
-                                            Discount <div class="price"><i class="fa"></i> {{booking.discount}} %</div>
-                                        </div>
-                                        <div class="type">
-                                            Discounted Price <div class="price"><i class="fa fa-inr"></i> {{booking.discounted_price}}</div>
-                                        </div>
-                                    </div>
+                <div class="col-sm-12">
+                    <!--<h1 class="mainTitle">Starter Page</h1>-->
+
+                            <span class="mainDescription margin-bottom-20">
+                                    <i class="ti-unlock"></i>
+                                <strong>Book faster by signing in.</strong>
+                                Make life easier and let us fill this in for you.</span>
+                    <form role="form" class="form-inline">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    @
                                 </div>
-                                <div class="description">
-                                    <ul class="list-unstyled actions">
-                                        <li><a href="#"><i class="fa fa-trash"></i></a></li>
-                                    </ul>
-                                </div>
+                                <input type="email" placeholder="Enter email" class="form-control">
                             </div>
-                            <!-- /.item-->
-                        </section>
-                        <section class="col-sm-3 pull-right">
-                            Total Amount: <span class="price"><i class="fa fa-inr"></i> {{vm.LocalBookings.Total}}</span>
-                        </section>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword2" class="sr-only">
+                                Password
+                            </label>
+                            <input type="password" placeholder="Password" id="exampleInputPassword2" class="form-control">
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">
+                            Sign in
+                        </button>
+                        OR
+                        <a class="btn btn-azure" href="#"><i class="fa fa-facebook-official"></i> login</a>
+                    </form>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="margin-top-10 links cl-effect-17">
+                        <a href="#" >Forgot Password?</a>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- end: PAGE TITLE -->
+
     </div>
 </div>

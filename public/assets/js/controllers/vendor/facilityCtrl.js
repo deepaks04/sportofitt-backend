@@ -2,8 +2,8 @@
 /**
  * controllers used for the facility
  */
-app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert",
-    function ($scope, $state, $log, facilityService, SweetAlert) {
+app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert","FileUploader",
+    function ($scope, $state, $log, facilityService, SweetAlert,FileUploader) {
 
         facilityService.getRootCategory()
                 .then(getRootCategorySuccess);
@@ -111,6 +111,8 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 //        $scope.getVendorImages();
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
+
+            console.log($scope.categoryData);
         }
 
         function getDurationSuccess(durations) {
