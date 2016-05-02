@@ -4748,6 +4748,7 @@ body.map-fullscreen #map {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
 .btn.btn-default i, select.btn-default i {
   color: #fff;
 }

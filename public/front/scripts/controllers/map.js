@@ -75,7 +75,7 @@ angular.module('sportofittApp')
                     //}
                     var mapCenter = new google.maps.LatLng(vm.latitude, vm.longitude);
                     var mapOptions = {
-                        zoom: 12,
+                        zoom: 14,
                         center: mapCenter,
                         disableDefaultUI: false,
                         scrollwheel: false,
@@ -88,7 +88,7 @@ angular.module('sportofittApp')
                         zoomControl: true,
                         zoomControlOptions: {
                             style: google.maps.ZoomControlStyle.LARGE,
-                            position: google.maps.ControlPosition.RIGHT_TOP
+                            position: google.maps.ControlPosition.RIGHT_CENTER
                         }
                     };
                     var mapElement = document.getElementById('map');
