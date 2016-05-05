@@ -286,6 +286,17 @@
                                     {{Form.name.$error[0]}}
                                 </span>
                             </div>
+
+                            <div class="form-group"
+                                 ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
+                                <label class="control-label"> Type </label>
+                                <div class="clip-radio radio-primary">
+                                    <input type="radio" id="venue" name="type" value="Venue" checked="checked">
+                                    <label for="venue"> Venue </label>
+                                    <input type="radio"  id="coaching" name="type" value="Coaching" >
+                                    <label for="coaching"> Coaching </label>
+                                </div>
+                            </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
                                 <label class="control-label"> Root Category <span
@@ -325,6 +336,8 @@
                                 <span class="error text-small block"
                                       ng-if="Form.duration.$dirty && Form.duration.$invalid">{{Form.duration.$error[0]}}</span>
                             </div>
+
+
                             <div class="form-group"
                                  ng-class="{'has-error':Form.slots.$dirty && Form.slots.$invalid, 'has-success':Form.slots.$valid}">
                                 <label class="control-label"> Slots <span
@@ -338,6 +351,7 @@
                         </div>
 
                         <div class="col-md-6">
+
                             <div class="form-group"
                                  ng-class="{'has-error':Form.peak_hour_price.$dirty && Form.peak_hour_price.$invalid,
                                                                         'has-success':Form.peak_hour_price.$valid}">
