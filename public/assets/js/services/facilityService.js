@@ -35,19 +35,13 @@
             deleteFacilityImage: deleteFacilityImage,
         };
 
-        function getAvailableSessionsByFacilityId(facilityId) {
-//            return $http({
-//                method: 'GET',
-//                url: 'api/v1/vendor/availableSessions'
-//            })
-//                .then(sendResponseData)
-//                .catch(sendGetError);
-
-               var demoAvailableSessions = [
-                   {id:"1", timing:"12:00 - 13:00", name:"slot1"},
-                   {id:"2", timing:"7:00 - 8:00", name:"slot2"}
-                ];
-                return demoAvailableSessions;
+        function getAvailableSessionsByFacilityId(facilityId,eventStartsAt, peakHourSelectedValue) {
+            var data = {
+                facility_id: facilityId,
+                date: eventStartsAt,
+                is_peak: peakHourSelectedValue
+            };
+            return $http.post('api/v1/index/facility/available-slots',data);
         }
         
         function getDuration() {

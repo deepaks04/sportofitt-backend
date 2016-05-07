@@ -160,9 +160,9 @@
                      <div class="form-group">
                      <label>Available time slots:
                         <div class="radio clip-radio radio-primary" ng-repeat="session in availableSessions">
-                            <input type="radio" id="{{session.name}}" name="sessionSlot" ng-value="{{session.name}}" ng-model="$parent.event.selectedSession">
-                            <label for="{{session.name}}">
-                            {{session.timing}}
+                            <input type="radio" id="{{session}}" name="sessionSlot" value={{session}} ng-model="$parent.event.selectedSession">
+                            <label for="{{session}}">
+                            {{session}}
                             </label>
                         </div>
                     </div>
