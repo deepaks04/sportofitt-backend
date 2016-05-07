@@ -69,15 +69,14 @@
                             </aside>
                             <!--end Detail Sidebar-->
                             <!--Content-->
-                            <div class="col-md-8 col-sm-8">
-                                <section>
-                                    <article class="item-gallery" ng-if="vm.facility.vendor.images">
+                            <div class="col-md-7 col-sm-7">
+                                <article class="item-gallery" ng-if="vm.facility.vendor.images">
 
-                                        <div slick id="mainSlider" as-nav-for="#thumbSlider"  center-mode="true"
+                                        <slick id="mainSlider" as-nav-for="#thumbSlider"  center-mode="true"
                                              fade="true" init-onload=true data="vm.facility.vendor.images">
                                             <div class="slide"
                                                  ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" alt=""></div>
-                                        </div>
+                                        </slick>
                                         <!-- /.item-slider -->
                                         <div class="thumbnails">
                                             <div slick as-nav-for="#mainSlider" focus-on-select="true"
@@ -96,6 +95,9 @@
                                             <!--</div>-->
                                         </div>
                                     </article>
+                                
+                                <section>
+                                    
                                     <!-- /.item-gallery -->
                                     <article class="block">
                                         <header><h2>Description</h2></header>
@@ -261,6 +263,7 @@
                                 <!--end Review Form-->
                             </div>
                             <!-- /.col-md-8-->
+                            
                         </div>
                         <!-- /.row -->
                     </section>
@@ -269,6 +272,7 @@
                 <!-- /.col-md-8-->
                 <!--Sidebar-->
                 <div class="col-md-3">
+                    
                     <aside id="sidebar">
                         <header><h2>Opening Hours</h2></header>
                         <h3>Regular Hour's</h3>
