@@ -27,7 +27,8 @@
         "App\\Providers\\AuthServiceProvider",
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
-        "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider"
+        "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider",
+        "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider"
     ],
     "eager": [
         "Illuminate\\Auth\\AuthServiceProvider",
@@ -44,7 +45,8 @@
         "App\\Providers\\AppServiceProvider",
         "App\\Providers\\AuthServiceProvider",
         "App\\Providers\\EventServiceProvider",
-        "App\\Providers\\RouteServiceProvider"
+        "App\\Providers\\RouteServiceProvider",
+        "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",

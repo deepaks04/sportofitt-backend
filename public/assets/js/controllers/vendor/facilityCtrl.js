@@ -856,14 +856,16 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.action = action;
                     $scope.event = angular.copy(event);
                     $scope.event.peakHourOptions = [
-                        {id: "peakHour", name:"peakHour", description:"Peak Hour"},
-                        {id: "nonPeakHour", name:"nonPeakHour", description: "Non Peak Hour"}
+                        {id: "peakHour", name:"peakHour", description:"Peak Hour", value:"1"},
+                        {id: "nonPeakHour", name:"nonPeakHour", description: "Non Peak Hour", value:"0"}
                     ];
                     $scope.event.peakHourSelected = $scope.event.peakHourOptions[0];
                     $scope.availableSessions = [];
                     $scope.getAvailableSessionsByFacilityId = function() {
                         var facilityId = $scope.event.available_facility_id;
-                        $scope.availableSessions = facilityService.getAvailableSessionsByFacilityId(facilityId);
+                        var eventStartsAt = $scope.event.startsAt;
+                        var peakHourSelectedValue = $scope.event.peakHourSelected.value;
+                        $scope.availableSessions = facilityService.getAvailableSessionsByFacilityId(facilityId, eventStartsAt, peakHourSelectedValue);
                     };
                     
                     $scope.toggleMin = function () {
