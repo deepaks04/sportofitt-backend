@@ -867,7 +867,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                         var peakHourSelectedValue = $scope.event.peakHourSelected.value;
                         facilityService.getAvailableSessionsByFacilityId(facilityId, eventStartsAt, peakHourSelectedValue)
                         .then(function(response){
-                            $scope.availableSessions=response.data.data;
+                            $scope.availableSessions = response.data.data;
+                            if(angular.isArray(response.data.message.success))
+                                $scope.availableSessions.message = response.data.message.success[0];
+                            else
+                                $scope.availableSessions.message = response.data.message.success;
                         });
                         
 

@@ -112,6 +112,7 @@
                 <!-- start: EDIT EVENT TEMPLATE -->
                 <script type="text/ng-template" id="calendarEvent.html">
                     <div class="modal-body">
+                    <form name="eventForm" method="post" novalidate>
                     <div class="form-group">
                     <label>
                     Event title
@@ -120,15 +121,15 @@
 
                         <input type="text" placeholder="Enter title" class="form-control underline text-large" value="Booked {{selectedFacility.name}}" ng-model="event.title" >
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" ng-class="{'has-error':eventForm.facility.$pristine, 'has-success':eventForm.facility.$dirty}">
                     <label>
                     Category
                     </label>
                     <div class="row">
                     <div class="col-xs-12">
                     
-                        <select class="form-control" ng-model="event.available_facility_id" 
-                                ng-options="facility.id as facility.name for facility in facilityData">
+                        <select class="form-control" ng-model="event.available_facility_id" name="facility"
+                                ng-options="facility.id as facility.name for facility in facilityData" required>
                             <option value="" ng-disabled="true">Select Venue</option>
                         </select>
                     </div>
@@ -157,14 +158,13 @@
                             Check available slots
                         </button>
                     </div>
-                     <div class="form-group">
+                     <div class="form-group" ng-class="{'has-error':availableSessions.message || eventForm.blockSession.$pristine, 'has-success':eventForm.blockSession.$dirty}">
                      <label>Available time slots:
-                        <div class="radio clip-radio radio-primary" ng-repeat="session in availableSessions">
-                            <input type="radio" id="{{session}}" name="sessionSlot" value={{session}} ng-model="$parent.event.selectedSession">
-                            <label for="{{session}}">
-                            {{session}}
-                            </label>
-                        </div>
+                     <span class="error text-small block">{{availableSessions.message}}</span>
+                        <select class="form-control" ng-model="event.selectedSession" name="blockSession"
+                                ng-options="session as session for session in availableSessions" required>
+                            <option value="" ng-disabled="true">Select slot</option>
+                        </select>
                     </div>
                     
                     
@@ -188,6 +188,7 @@
             </span>
     </div>
             </div>
+            </form>
                     </div>
                 </script>
                 <!-- end: EDIT EVENT TEMPLATE -->
