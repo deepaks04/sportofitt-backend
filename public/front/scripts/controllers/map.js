@@ -364,7 +364,7 @@ angular.module('sportofittApp')
                 visibleItemsArray.push(
                         '<li>' +
                         '<div class="item" id="' + json.data[a].id + '">' +
-                        '<a href="#" class="image">' +
+                        '<a href="#/venue/'+json.data[a].facilityId +'" class="image">' +
                         '<div class="inner">' +
                         '<div class="item-specific">' +
                         drawItemSpecific(category, json, a) +
@@ -373,7 +373,7 @@ angular.module('sportofittApp')
                         '</div>' +
                         '</a>' +
                         '<div class="wrapper">' +
-                        '<a href="#/venue/'+json.data[a].id +'" id="' + json.data[a].id + '"><h3>' + json.data[a].title + '</h3></a>' +
+                        '<a href="#/venue/'+json.data[a].facilityId +'" id="' + json.data[a].facilityId + '"><h3>' + json.data[a].title + '</h3></a>' +
                         '<figure>' + json.data[a].location + '</figure>' +
                         drawPrice(json.data[a].peak_hour_price) +
                         '<div class="info">' +
