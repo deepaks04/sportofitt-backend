@@ -44,7 +44,7 @@ class IndexService extends BaseService
             if ($vendors) {
                 foreach ($vendors as $vendor) {
                     $vendor->type = (1 == $vendor->type) ? 'Venue' : 'Coaching';
-                    $vendor->gallery = $vendor->getVendorImages();
+                    $vendor->gallery = $this->getVendorImage($vendor);
                     $vendor->features = $vendor->getVendorsFeatures();
                     $vendor->color = '';
                     $vendor->item_specific = new \stdClass();
@@ -59,7 +59,28 @@ class IndexService extends BaseService
             throw new Exception($ex);
         }
     }
-
+    
+    /**
+     * Get vendor image for home page.
+     * 
+     * @param Vendor $vendor
+     * @return array
+     */
+    protected function getVendorImage(\App\Vendor $vendor)
+    {
+        $vendorImage = array(URL::asset('uploads/no_image.gif'));
+        if(!empty($vendor->profile_picture)) {
+            $vendorUploadPath = env('VENDOR_FILE_UPLOAD');
+            $vendorOwnDirecory = $vendorUploadPath . sha1($vendor->user_id) . "/" . "profile_image/";
+            $image = $vendorOwnDirecory . $vendor->profile_picture;
+            if(file_exists(public_path().$image)) {
+              $vendorImage[0] = URL::asset($image);
+            }
+        }
+        
+        return $vendorImage;
+    }
+    
     /**
      * Getting details of the search result
      * 
