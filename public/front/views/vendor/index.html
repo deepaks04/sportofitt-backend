@@ -21,10 +21,10 @@
                                 <!--<figure>63 Birch Street</figure>-->
                             </div>
                             <!--<div class="info">-->
-                                <!--<div class="type">-->
-                                    <!--<i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>-->
-                                    <!--<span>Restaurant</span>-->
-                                <!--</div>-->
+                            <!--<div class="type">-->
+                            <!--<i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>-->
+                            <!--<span>Restaurant</span>-->
+                            <!--</div>-->
                             <!--</div>-->
                         </header>
                         <div class="row">
@@ -44,12 +44,12 @@
                                 <!--end Contact-->
                                 <!--Rating-->
                                 <!--<section class="clearfix">-->
-                                    <!--<header class="pull-left"><a href="#reviews" class="roll"><h3>Rating</h3></a></header>-->
-                                    <!--<figure class="rating big pull-right" data-rating="4"></figure>-->
+                                <!--<header class="pull-left"><a href="#reviews" class="roll"><h3>Rating</h3></a></header>-->
+                                <!--<figure class="rating big pull-right" data-rating="4"></figure>-->
                                 <!--</section>-->
                                 <!--end Rating-->
                                 <aside id="sidebar">
-                                     <section>
+                                    <section>
                                         <header><h2>Features</h2></header>
                                         <ul class="bullets">
                                             <li><a>AC</a></li>
@@ -73,24 +73,26 @@
                                 <section>
                                     <article class="item-gallery" ng-if="vm.facility.vendor.images">
 
-                                            <div slick id="mainSlider" as-nav-for="#thumbSlider"  center-mode="true"
-                                                  fade="true" init-onload=true data="vm.facility.vendor.images">
-                                                <div class="slide"
-                                                     ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" alt=""></div>
-                                            </div>
+                                        <div slick id="mainSlider" as-nav-for="#thumbSlider"  center-mode="true"
+                                             fade="true" init-onload=true data="vm.facility.vendor.images">
+                                            <div class="slide"
+                                                 ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" alt=""></div>
+                                        </div>
                                         <!-- /.item-slider -->
                                         <div class="thumbnails">
                                             <div slick as-nav-for="#mainSlider" focus-on-select="true"
                                                  id="thumbSlider" center-mode="true"  slides-to-show="3" slides-to-scroll="1"
                                                  init-onload=true data="vm.facility.vendor.images">
-                                                <div class="slide"
-                                                     ng-repeat="image in vm.facility.vendor.images"><img ng-src="{{image}}" ></div>
+                                                <div class="slide" style="margin-right: 5px;"
+                                                     ng-repeat="image in vm.facility.vendor.images">
+                                                    <img ng-src="{{image}}" >
+                                                </div>
                                             </div>
                                             <!--<span class="expand-content btn framed icon" data-expand="#gallery-thumbnails" >More<i class="fa fa-plus"></i></span>-->
                                             <!--<div class="expandable-content height collapsed show-70" id="gallery-thumbnails">-->
-                                                <!--<div class="content">-->
-                                                    <!--<a ng-repeat="image in vm.facility.images" href="#{{$index+1}}" id="thumbnail-{{$index+1}}" ng-class="{'active':$index==0}"><img ng-src="{{image}}" alt=""></a>-->
-                                                <!--</div>-->
+                                            <!--<div class="content">-->
+                                            <!--<a ng-repeat="image in vm.facility.images" href="#{{$index+1}}" id="thumbnail-{{$index+1}}" ng-class="{'active':$index==0}"><img ng-src="{{image}}" alt=""></a>-->
+                                            <!--</div>-->
                                             <!--</div>-->
                                         </div>
                                     </article>
@@ -98,7 +100,7 @@
                                     <article class="block">
                                         <header><h2>Description</h2></header>
                                         <p>
-                                          {{vm.facility.description}}
+                                            {{vm.facility.description}}
                                         </p>
                                     </article>
                                     <!-- /.block -->
@@ -125,13 +127,13 @@
                                                                 <div style="display:inline-block; min-height:200px;">
                                                                     <div class="col-md-6">
                                                                         <p class="input-group"  ng-click="vm.openDatePicker()">
-                                                    <input type="text" class="form-control underline" min-date="vm.minDate" readonly
-                                                          datepicker-popup="fullDate" ng-model="vm.filter.date"
-                                                           is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
+                                                                            <input type="text" class="form-control underline" min-date="vm.minDate" readonly
+                                                                                   datepicker-popup="fullDate" ng-model="vm.filter.date"
+                                                                                   is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
 
-          <span class="input-group-btn" ng-click="vm.openDatePicker()">
-            <button type="button" class="btn btn-default" ><i class="glyphicon glyphicon-calendar" ng-click="vm.openDatePicker()"></i></button>
-          </span>
+                                                                            <span class="input-group-btn" ng-click="vm.openDatePicker()">
+                                                                                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker()"><i class="glyphicon glyphicon-calendar" ></i></button>
+                                                                            </span>
                                                                         </p>
 
 
@@ -143,9 +145,9 @@
                                                                 <div ng-if="vm.facilitySlots.length">
                                                                     <div class="form-inline">
                                                                         <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.facilitySlots"></select>
-                                                                       <label class="form-control">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
-                                                                        <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter,true)" >CheckOut</button>
-                                                                     </div>
+                                                                        <label class="form-control">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
+                                                                        <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter, true)" >CheckOut</button>
+                                                                    </div>
                                                                 </div>
                                                                 <p ng-if="!vm.facilitySlots.length">
                                                                     No Session available for selected criteria.
@@ -156,29 +158,29 @@
                                                 </v-accordion>
 
                                                 <!--<v-accordion class="vAccordion&#45;&#45;default" ng-if="vm.facility.sessions.length" >-->
-                                                    <!--<v-pane  expanded="$first">-->
-                                                        <!--<v-pane-header>-->
-                                                            <!--<h5>Session Combos</h5>-->
-                                                        <!--</v-pane-header>-->
-                                                        <!--<v-pane-content>-->
-                                                        <!--<table class="table table-responsive table-bordered">-->
-                                                            <!--<thead>-->
-                                                            <!--<th>No. of Peak Sessions</th>-->
-                                                            <!--<th>No. of Off Peak Sessions</th>-->
-                                                            <!--<th>Actual Price</th>-->
-                                                            <!--<th>Discounted Price</th>-->
-                                                            <!--</thead>-->
-                                                            <!--<tbody>-->
-                                                            <!--<tr ng-repeat="session in vm.facility.sessions">-->
-                                                                <!--<td>{{session.peak}}</td>-->
-                                                                <!--<td>{{session.off_peak}}</td>-->
-                                                                <!--<td>₹{{session.price}}</td>-->
-                                                                <!--<td>₹{{session.price - (session.price*session.discount/100)}}</td>-->
-                                                            <!--</tr>-->
-                                                            <!--</tbody>-->
-                                                        <!--</table>-->
-                                                        <!--</v-pane-content>-->
-                                                    <!--</v-pane>-->
+                                                <!--<v-pane  expanded="$first">-->
+                                                <!--<v-pane-header>-->
+                                                <!--<h5>Session Combos</h5>-->
+                                                <!--</v-pane-header>-->
+                                                <!--<v-pane-content>-->
+                                                <!--<table class="table table-responsive table-bordered">-->
+                                                <!--<thead>-->
+                                                <!--<th>No. of Peak Sessions</th>-->
+                                                <!--<th>No. of Off Peak Sessions</th>-->
+                                                <!--<th>Actual Price</th>-->
+                                                <!--<th>Discounted Price</th>-->
+                                                <!--</thead>-->
+                                                <!--<tbody>-->
+                                                <!--<tr ng-repeat="session in vm.facility.sessions">-->
+                                                <!--<td>{{session.peak}}</td>-->
+                                                <!--<td>{{session.off_peak}}</td>-->
+                                                <!--<td>₹{{session.price}}</td>-->
+                                                <!--<td>₹{{session.price - (session.price*session.discount/100)}}</td>-->
+                                                <!--</tr>-->
+                                                <!--</tbody>-->
+                                                <!--</table>-->
+                                                <!--</v-pane-content>-->
+                                                <!--</v-pane>-->
                                                 <!--</v-accordion>-->
 
                                                 <v-accordion ng-if="vm.facility.packages.length">
@@ -193,14 +195,14 @@
                                                                     <div class="price-box white featured">
                                                                         <header><h2>{{package.name}}</h2></header>
                                                                         <figure>
-                                                                                        <span class="price">
-                                                                                        <i class="fa fa-inr"></i> {{package.actual_price}}</span>
+                                                                            <span class="price">
+                                                                                <i class="fa fa-inr"></i> {{package.actual_price}}</span>
                                                                         </figure>
                                                                         <figure>{{package.month}} month(s)</figure>
                                                                         <figure>Discount {{package.discount}} %</figure>
                                                                         <p>{{package.description}}</p>
                                                                         <!--<a ui-sref="app.login" ng-if="!isAuthenticated()" class="btn framed btn-color-default">Sign In</a>-->
-                                                                        <a href data-ng-click="vm.addLocalBooking(package,false)" class="btn framed btn-color-default">Book now</a>
+                                                                        <a href data-ng-click="vm.addLocalBooking(package, false)" class="btn framed btn-color-default">Book now</a>
 
                                                                     </div>
                                                                     <!-- /.price-box-->
@@ -268,14 +270,14 @@
                 <!--Sidebar-->
                 <div class="col-md-3">
                     <aside id="sidebar">
-                          <header><h2>Opening Hours</h2></header>
+                        <header><h2>Opening Hours</h2></header>
                         <h3>Regular Hour's</h3>
-                            <dl class="lines">
-                                <div ng-repeat="(key,peakTimes) in vm.facility.openingHours.peak">
-                                    <dt>{{vm.days[key]}}</dt>
-                                    <dd ng-repeat="time in peakTimes">{{time.start}} - {{time.end}}</dd>
-                                </div>
-                            </dl>
+                        <dl class="lines">
+                            <div ng-repeat="(key,peakTimes) in vm.facility.openingHours.peak">
+                                <dt>{{vm.days[key]}}</dt>
+                                <dd ng-repeat="time in peakTimes">{{time.start}} - {{time.end}}</dd>
+                            </div>
+                        </dl>
                         <h3>Happy Hour's</h3>
                         <dl class="lines">
                             <div ng-repeat="(key,peakTimes) in vm.facility.openingHours.offpeak">
@@ -289,7 +291,7 @@
                 <!-- /.col-md-3-->
                 <!--end Sidebar-->
             </div>
-            </section>
+        </section>
         <!-- /.container-->
     </div>
     <!-- end Page Content-->
