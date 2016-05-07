@@ -157,7 +157,7 @@ class AvailableFacility extends Model {
         }
         
         if($isPeak != null) {
-           $query->where('opening_hours.is_peak','=',$isPeak);     
+           $query->where('opening_hours.is_peak','=',(int)$isPeak);     
         }
         
         
