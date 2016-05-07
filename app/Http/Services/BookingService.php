@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Input;
 use App\SessionBooking;
 use App\AvailableFacility;
 use Carbon\Carbon;
@@ -124,8 +125,15 @@ class BookingService extends BaseService
             $array = array('user_id' => $user->id,
                 'order_id' => $this->getOrderId(),
                 'created_at' => date("Y-m-d H:i:s"),
-                'order_status' => 1,
+                'order_status' => 2,
+                'payment_mode' => Input::get('payment_mode')
             );
+            
+            if('cash' == trim(Input::get('payment_mode'))) {
+                $array['order_status'] = 1;
+                $array['payment_status'] = 1;
+            }
+            
             return $order->createOrder($array);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
@@ -154,7 +162,12 @@ class BookingService extends BaseService
                     $bookingObj->order_id = $this->orderObj->id;
                     $bookingObj->no_of_peak = (isset($bookingData->no_of_peak)) ? $bookingData->no_of_peak : 0;
                     $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
-                    $bookingObj->booking_status = 1;
+                    $bookingObj->booking_status = 2;
+                    
+                    if('cash' == trim(Input::get('payment_mode'))) {
+                        $bookingObj->booking_status = 1;
+                    }
+            
                     $bookingObj->created_at = date('Y-m-d H:i:s');
                     if ($bookingObj->save()) {
                         $this->addBookingTimings($bookingObj, $bookingData);
