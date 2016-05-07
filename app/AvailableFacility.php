@@ -147,7 +147,7 @@ class AvailableFacility extends Model {
      * 
      * @return App\OpeningHours
      */
-    public function getOpenigHoursOfFacility($day = null, $isPeak = 0)
+    public function getOpenigHoursOfFacility($day = null, $isPeak = null)
     {
         $query = $this->openingHours()
                       ->select('id','is_peak','day','start','end')
@@ -156,7 +156,10 @@ class AvailableFacility extends Model {
             $query->where('opening_hours.day','=',$day);
         }
         
-        $query->where('opening_hours.is_peak','=',$isPeak);
+        if($isPeak != null) {
+           $query->where('opening_hours.is_peak','=',$isPeak);     
+        }
+        
         
         return $query->orderBy('opening_hours.day','ASC')->get();
    }
@@ -209,7 +212,7 @@ class AvailableFacility extends Model {
             $images = $this->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->vendor_id) . "/" . "facility_images/" . $image->image_name);
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->vendor->user_id) . "/" . "facility_images/" . $image->image_name);
                 }
             }
 
