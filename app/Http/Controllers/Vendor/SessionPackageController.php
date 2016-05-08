@@ -14,10 +14,13 @@ use App\SessionBooking;
 use App\SessionPackage;
 use App\SessionPackageChild;
 use Auth;
+use App\BookedPackage;
+use App\BookedTiming;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use App\Http\Requests\BookCalendarRequest;
 
 class SessionPackageController extends Controller
 {
@@ -872,6 +875,62 @@ class SessionPackageController extends Controller
             "message" => $message,
             "data" => $price
         ];
+        return response($response, $status);
+
+    }
+    
+    
+    /**
+     * Blokcing calendar by vendor 
+     *
+     * @param BookCalendarRequest $request
+     *
+     * @return response
+     */
+    public function bookCalendar(BookCalendarRequest $request)
+    {
+        $status = 200;
+        $message = "Event added successfully.";
+        $response = false;
+        try {
+            if(!empty($request->facility_id) 
+                && !empty($request->date) 
+                && !empty($request->timing_slot)) {
+                $bookingObj = new BookedPackage();
+                $bookingObj->package_type = 0;
+                $bookingObj->name = !empty($request->name)?$request->name:"";
+                $bookingObj->description = "Booked By Vendor";
+                $bookingObj->booking_status = 1;
+                $bookingObj->booked_by_vendor = Auth::user()->id;
+                $bookingObj->created_at = date('Y-m-d H:i:s');
+                if ($bookingObj->save() && !empty($booking->id)) {
+                    $bookingTimming = new BookedTiming();
+                    $bookingTimming->booking_id = $booking->id;
+                    $bookingTimming->facility_id = $request->facility_id;
+                    $bookingTimming->is_peak = ((int)$request->is_peak) ? 1 : 0;
+                    $bookingTimming->booking_date = date("Y-m-d H:i:s", ($request->selectedDate/1000));
+                    $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
+                    $slotTime = explode("-", $bookingData->timing_slot);
+                    if (!empty($slotTime)) {
+                        $bookingTimming->start_time = $slotTime[0];
+                        $bookingTimming->end_time = $slotTime[1];
+                    }
+
+                    $bookingTimming->created_at = date('Y-m-d H:i:s');
+                    $bookingTimming->save();
+                    $response = true;
+                }                                
+            }
+        } catch (Exception $ex) {
+            $status = 500;
+            $message = "Something went wrong " . $e->getMessage();
+            $price = "";            
+        }
+
+        $response = [
+            "message" => $message,
+        ];
+
         return response($response, $status);
 
     }

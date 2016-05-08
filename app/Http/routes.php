@@ -94,6 +94,7 @@ Route::group(['prefix' => 'api/v1/vendor/'], function () {
     Route::get('sessions-data/{id}', array('uses' => 'Vendor\SessionPackageController@getSessionData'));
 
     Route::post('calendar-block', array('uses' => 'Vendor\SessionPackageController@blockCalendar'));
+    Route::post('calendar-book', array('uses' => 'Vendor\SessionPackageController@bookCalendar'));
     Route::get('calendar-block/{id}', array('uses' => 'Vendor\SessionPackageController@deleteBlockedData'));
     Route::get('get-calendar-block/{yearmonth}', array('uses' => 'Vendor\SessionPackageController@getBlockData'));
     Route::get('calendar-block/{id}/{yearmonth}', array('uses' => 'Vendor\SessionPackageController@getBlockDataFacilityWise'));
