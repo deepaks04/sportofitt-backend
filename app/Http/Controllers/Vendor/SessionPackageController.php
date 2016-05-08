@@ -910,7 +910,7 @@ class SessionPackageController extends Controller
                     $bookingTimming->is_peak = ((int)$request->is_peak) ? 1 : 0;
                     $bookingTimming->booking_date = date("Y-m-d H:i:s", ($request->selectedDate/1000));
                     $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
-                    $slotTime = explode("-", $bookingData->timing_slot);
+                    $slotTime = explode("-", $request->timing_slot);
                     if (!empty($slotTime)) {
                         $bookingTimming->start_time = $slotTime[0];
                         $bookingTimming->end_time = $slotTime[1];
