@@ -752,8 +752,8 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.facilityId = $stateParams.facilityId;
 
         $scope.facilityData = {};
-        $scope.showAvailableSessions = false;
-
+        $scope.showAvailableSessions = false;    
+        
         var vm = this;
 
         $scope.events = [];
@@ -855,7 +855,6 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.selectedFacility = selectedFacility;
                     $scope.$modalInstance = $modalInstance;
                     $scope.action = action;
-                    
                     $scope.event = angular.copy(event);
                     $scope.event.peakHourOptions = [
                         {id: "peakHour", name:"peakHour", description:"Peak Hour", value:true},
@@ -889,6 +888,10 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                         });
                         
 
+                    };
+                    
+                    $scope.hideAvailableSessions = function(){
+                         $scope.showAvailableSessions = false;
                     };
                     
                     $scope.toggleMin = function () {

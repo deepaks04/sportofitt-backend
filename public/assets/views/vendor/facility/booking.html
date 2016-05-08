@@ -129,7 +129,7 @@
                     <div class="col-xs-12">
                     
                         <select class="form-control" ng-model="event.available_facility_id" name="facility"
-                                ng-options="facility.id as facility.name for facility in facilityData" required>
+                                ng-options="facility.id as facility.name for facility in facilityData" ng-change="showAvailableSessions=false" required>
                             <option value="" ng-disabled="true">Select Venue</option>
                         </select>
                     </div>
@@ -142,12 +142,12 @@
                     <span class="input-icon">
                     <input type="text" class="form-control underline" min-date="minDate" readonly
                            ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt"
-                           is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
+                           is-open="startOpen" ng-init="startOpen = false" close-text="Close"  ng-change="showAvailableSessions=false"/>
                     <i class="ti-calendar"></i> </span>
                     </div>
                     <div class="form-group">
                         <div class="radio-inline clip-radio radio-primary" ng-repeat="peakHourOption in event.peakHourOptions">
-                            <input type="radio" id="{{peakHourOption.id}}" name="peakHour" ng-value="peakHourOption" ng-model="$parent.event.peakHourSelected">
+                            <input type="radio" id="{{peakHourOption.id}}" name="peakHour" ng-value="peakHourOption" ng-model="$parent.event.peakHourSelected" ng-change="hideAvailableSessions()">
                             <label for="{{peakHourOption.id}}">
                             {{peakHourOption.description}}
                             </label>
