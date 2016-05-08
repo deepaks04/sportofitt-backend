@@ -157,8 +157,8 @@ class BookingService extends BaseService
                     $bookingObj->name = $bookingData->name;
                     $bookingObj->description = $bookingData->description;
                     $bookingObj->booking_amount = $bookingData->booking_amount;
-                    $bookingObj->discount = $bookingData->discount;
-                    $bookingObj->final_amount = $bookingObj->booking_amount;
+                    $bookingObj->discount = !empty($bookingData->discount)?$bookingData->discount:0;
+                    $bookingObj->final_amount = $bookingObj->discounted_amount;
                     $bookingObj->order_id = $this->orderObj->id;
                     $bookingObj->no_of_peak = (isset($bookingData->no_of_peak)) ? $bookingData->no_of_peak : 0;
                     $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
