@@ -897,10 +897,17 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.toggleMin();
 
                     $scope.addEvent = function () {
+                        var sessionToBlock = {
+                          facility_id: $scope.event.available_facility_id,
+                          date: new Date($scope.event.startsAt).getTime(),
+                          is_peak: $scope.event.peakHourSelected.value,
+                          slot_timing:$scope.event.selectedSession
+                        };
                         //$modalInstance.dismiss('cancel');
                         //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()
-                        facilityService.blockSession($scope.event).then(function (response) {
+                        facilityService.blockSession(sessionToBlock).then(function (response) {
                             //$modalInstance.close($scope.event, 'add');
+                            SweetAlert.swal("Good job!", "Event added successfully!", "success");
                             getBlockData();
 
                             $modalInstance.dismiss('cancel');
