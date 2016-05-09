@@ -273,7 +273,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         };
          function getSessions() {
             //$scope.setTab('sessions');
-            if (!isAdd) {
+           // if (!isAdd) {
                 if ($scope.sessions.length) {
                     return $scope.sessions;
                 }
@@ -281,7 +281,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     var sessions = (sessions.data === "") ? [] : sessions.data;
                     parseSessions(sessions);
                 });
-            }
+           // }
         };
 
         function parseSessions(sessions) {
@@ -295,7 +295,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
        function getOpeningHours() {
             //$scope.setTab('opening_hours');
 
-            if (!isAdd) {
+            //if (!isAdd) {
                 if ($scope.openingHours.length) {
                     return $scope.openingHours;
                 }
@@ -305,7 +305,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                         var openingHours = (!openingHours.data) ? [] : openingHours.data;
                         parseOpeningHours(openingHours);
                     });
-            }
+          //  }
         };
 
         function parseOpeningHours(openingHours) {
@@ -340,7 +340,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         function getPackages() {
             //$scope.setTab('packages');
-            if (!isAdd) {
+           // if (!isAdd) {
 
                 if ($scope.packages.length) {
                     return $scope.packages;
@@ -352,7 +352,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     }).catch(function (data) {
                     //console.log(data.data);
                 });
-            }
+          //  }
         };
 
         function parsePackages(packages) {
@@ -403,7 +403,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             $scope.tab = tab;
 
             if ($scope.tab === 'opening_hours') {
-                console.log($scope.tab);
                 getOpeningHours();
             } else if ($scope.tab === 'sessions') {
                 getSessions();
