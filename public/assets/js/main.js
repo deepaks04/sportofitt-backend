@@ -33,7 +33,9 @@ app.run(['$rootScope', '$state', '$stateParams',
                 logo: 'assets/images/logo.png', // relative path of the project logo
             }
         };
+        $rootScope.user = $cookies.getObject('auth', $rootScope.user);
 
+        console.log($rootScope.user);
         if (!$rootScope.user) {
 //git             event.preventDefault();
             $state.go('login.signin');

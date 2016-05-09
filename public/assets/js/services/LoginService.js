@@ -21,8 +21,8 @@ app.factory('Login', function ($http, $rootScope, $cookieStore, SessionService, 
                 function (response, status, headers, config) {
                     $rootScope.user = response.user;
 
-                    SessionService.set('auth', $rootScope.user);
-                    $cookieStore.put('auth', $rootScope.user);
+                    //SessionService.set('auth', $rootScope.user);
+                    $cookies.putObject('auth', $rootScope.user);
                     $state.go(response.user.role + '.dashboard', {'name': response.user.extra.business_name});
 
                 }
