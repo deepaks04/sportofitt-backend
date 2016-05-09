@@ -20,7 +20,7 @@
         </div>
         <div class="modal-body">
             <tabset>
-                <tab heading="Opening Hours" ng-click="getOpeningHours()" active="tab=='opening_hours'">
+                <tab heading="Opening Hours" ng-click="setTab('opening_hours')" active="tab=='opening_hours'">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr style="font-weight: bold">
                             <td style="width:20%">Day</td>
@@ -96,7 +96,7 @@
                     </table>
                     <button class="btn btn-default" ng-click="addHours()">Add Time</button>
                 </tab>
-                <tab heading="Sessions" ng-click="getSessions()" active="tab === 'sessions'">
+                <tab heading="Sessions" ng-click="setTab('sessions')" active="tab==='sessions'">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr style="font-weight: bold">
                             <!--	<td style="width:25%">Name</td> -->
@@ -182,7 +182,7 @@
                     <button class="btn btn-default" ng-click="addSession()">Add Session</button>
                 </tab>
 
-                <tab heading="Packages" ng-click="getPackages()" active="tab === 'packages'">
+                <tab heading="Packages" ng-click="setTab('packages')" active="tab === 'packages'">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr style="font-weight: bold">
                             <td style="width:25%">Name</td>
@@ -420,7 +420,7 @@
 
                 </form>
                 </tab>
-                <tab heading="Add Images" ng-click="getVendorImages()" active="tab === 'images'">
+                <tab heading="Add Images" ng-click="setTab('opening_hours')" active="tab === 'images'">
                       <form name="Form" id="form1" novalidate
                       ng-submit="update(Form)" enctype="multipart/form-data">
                     <div class="row">
