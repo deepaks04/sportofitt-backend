@@ -2,14 +2,14 @@
 /**
  * controllers used for the facility
  */
-app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert","FileUploader",
-    function ($scope, $state, $log, facilityService, SweetAlert,FileUploader) {
+app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert", "FileUploader",
+    function ($scope, $state, $log, facilityService, SweetAlert, FileUploader) {
 
         facilityService.getRootCategory()
-                .then(getRootCategorySuccess);
+            .then(getRootCategorySuccess);
 
         facilityService.getDuration()
-                .then(getDurationSuccess);
+            .then(getDurationSuccess);
 
         $scope.types = {0: "Peak Time", 1: "Off time"};
 
@@ -46,9 +46,9 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
                         });
                     } else {
                         form['name'].$dirty = true;
-                       form['name'].$error = data.data.message;
+                        form['name'].$error = data.data.message;
                     }
-                   // SweetAlert.swal(data.data.message, data.data.statusText, "error");
+                    // SweetAlert.swal(data.data.message, data.data.statusText, "error");
                     return false;
                 })
 
@@ -78,10 +78,10 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
             SweetAlert.swal("somethings going wrong", response.message, "error");
             return;
         };
-         uploaderImages.onCancelItem = function (fileItem, response, status,
-         headers) {
-         console.info('onCancelItem', fileItem, response, status, headers);
-         };
+        uploaderImages.onCancelItem = function (fileItem, response, status,
+                                                headers) {
+            console.info('onCancelItem', fileItem, response, status, headers);
+        };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
             console.info('onCompleteItem', fileItem, response, status, headers);
             //$scope.getVendorImages();
@@ -126,11 +126,11 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
 
         $scope.facilityData = {};
         facilityService.getAllFacilities()
-                .then(getFacilitySuccess);
+            .then(getFacilitySuccess);
 
         function getFacilitySuccess(facilityData) {
-          //  $scope.facilityData = facilityData.facility;
-            if(facilityData.facility) {
+            //  $scope.facilityData = facilityData.facility;
+            if (facilityData.facility) {
                 $scope.facilityData = Object.keys(facilityData.facility).map(function (key) {
                     return facilityData.facility[key];
                 });
@@ -213,27 +213,26 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
     }]);
 
 
-app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert","FileUploader",
+app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter", "selectedFacility", "isAdd", "tab", "facilityService", "SweetAlert", "FileUploader",
     function ($scope, $modalInstance, $filter, selectedFacility, isAdd, tab, facilityService, SweetAlert, FileUploader) {
 
         $scope.facility = selectedFacility;
 
-        console.log($scope.facility);
-
-        $scope.tab = tab;
+        $scope.setTab(tab);
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit', 'images'];
+
         facilityService.getDuration()
-                .then(getDurationSuccess);
+            .then(getDurationSuccess);
 
         facilityService.getRootCategory()
-                .then(getRootCategorySuccess);
+            .then(getRootCategorySuccess);
 
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
         }
 
         facilityService.getDays()
-                .then(getDaysSuccess);
+            .then(getDaysSuccess);
 
         function getDaysSuccess(days) {
             $scope.days = days.data;
@@ -304,10 +303,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 }
 
                 facilityService.getOpeningTimesByFacilityId($scope.facility.id)
-                        .then(function (openingHours) {
-                            var openingHours = (!openingHours.data) ? [] : openingHours.data;
-                            parseOpeningHours(openingHours);
-                        });
+                    .then(function (openingHours) {
+                        var openingHours = (!openingHours.data) ? [] : openingHours.data;
+                        parseOpeningHours(openingHours);
+                    });
             }
         };
 
@@ -349,10 +348,10 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                     return $scope.packages;
                 }
                 facilityService.getPackagesByFacilityId($scope.facility.id)
-                        .then(function (packages) {
-                            var packages = (packages.data === "") ? [] : packages.data;
-                            parsePackages(packages);
-                        }).catch(function (data) {
+                    .then(function (packages) {
+                        var packages = (packages.data === "") ? [] : packages.data;
+                        parsePackages(packages);
+                    }).catch(function (data) {
                     //console.log(data.data);
                 });
             }
@@ -614,8 +613,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             session['off_peak'] = rowData.off_peak;
             session['price'] = peakPricing + offPeakPricing;
 
-
-            console.log(session);
         };
 
         // add Sessions
@@ -636,17 +633,17 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         // edit facility
 
         $scope.update = function (form) {
-             var field = null, firstError = null;
+            var field = null, firstError = null;
             for (field in form) {
                 if (field[0] != '$') {
                     if (firstError === null && !form[field].$valid) {
                         firstError = form[field].$name;
                     }
 
-                        form[field].$dirty = true;
-                        form[field].$invalid = false;
+                    form[field].$dirty = true;
+                    form[field].$invalid = false;
                     form[field].$valid = true;
-                    }
+                }
             }
             var addFacility = facilityService.updateFacility($scope.facility);
             addFacility.then(function (response) {
@@ -654,8 +651,8 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             });
             addFacility.catch(function (data, status) {
                 angular.forEach(data.data, function (errors, field) {
-                 form[field].$invalid = true;
-                   form[field].$error = errors;
+                    form[field].$invalid = true;
+                    form[field].$error = errors;
                 });
 
                 return false;
@@ -671,11 +668,11 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 }
             });
         }
-        
+
         var uploaderImages = $scope.uploaderImages = new FileUploader({
             url: 'api/v1/vendor/facility/upload',
             alias: 'image_name',
-            formData: [{'facility_id':$scope.facility.id}],
+            formData: [{'facility_id': $scope.facility.id}],
             removeAfterUpload: true,
             autoUpload: true
         });
@@ -690,9 +687,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             SweetAlert.swal("somethings going wrong", response.message, "error");
             return;
         };
-         uploaderImages.onCancelItem = function (fileItem, response, status,
-         headers) {
-         };
+        uploaderImages.onCancelItem = function (fileItem, response, status,
+                                                headers) {
+        };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
             //$scope.getVendorImages();
         };
@@ -705,7 +702,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                 $scope.images = images.images || {};
                 $scope.tab = 'images';
 //			$scope.uploaderImages.queue.length = $scope.images.length;
-             
+
             }).catch(function (response) {
                 $scope.images = {};
                 $scope.imagesReponse = response;
@@ -740,7 +737,7 @@ app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($s
     $scope.selected = {
         item: $scope.items[0]
     };
-    
+
     $scope.ok = function () {
         $modalInstance.close($scope.selected.item);
     };
@@ -755,21 +752,21 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.facilityId = $stateParams.facilityId || 0;
 
         $scope.facilityData = {};
-        $scope.showAvailableSessions = false;    
-        
+        $scope.showAvailableSessions = false;
+
         var vm = this;
 
         $scope.events = [];
 //console.log($scope.facilityId);
         function init() {
-        
+
 
             facilityService.getAllFacilities()
-                    .then(getAllFacilitySuccess);
+                .then(getAllFacilitySuccess);
             //console.log($scope.facilityId);
             if ($scope.facilityId) {
                 facilityService.getFacilityById($scope.facilityId)
-                        .then(getFacilitySuccess);
+                    .then(getFacilitySuccess);
             }
             getBlockData();
         }
@@ -781,7 +778,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
 //            if ($scope.facilityId) {
 //                getBlockedSessionByFacilityId(startDate,'week')
 //            } else {
-                getBlockedSession($scope.facilityId,startDate,'week');
+            getBlockedSession($scope.facilityId, startDate, 'week');
 //            }
         }
 
@@ -793,17 +790,17 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
             $scope.facility = facilityData.facility;
         }
 
-        function getBlockedSessionByFacilityId(startDate,calendarView) {
-             facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate,calendarView)
-                    .then(function (events) {
-                        parseEvents(events.data);
-                    });
+        function getBlockedSessionByFacilityId(startDate, calendarView) {
+            facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate, calendarView)
+                .then(function (events) {
+                    parseEvents(events.data);
+                });
         }
 
-        function getBlockedSession(facilityId,startDate,calendarView) {
-            facilityService.getBlockedSessions(facilityId,startDate,calendarView).then(function (events) {
-                 //console.log(events);
-                  
+        function getBlockedSession(facilityId, startDate, calendarView) {
+            facilityService.getBlockedSessions(facilityId, startDate, calendarView).then(function (events) {
+                //console.log(events);
+
                 parseEvents(events.data);
             });
         }
@@ -811,7 +808,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         function parseEvents(events) {
             $scope.events = [];
             angular.forEach(events, function (event, keys) {
-               // var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
+                // var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
                 event.startsAt = new Date(event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530");
                 event.endsAt = new Date(event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530");
                 this.push(event);
@@ -821,20 +818,20 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.calendarView = 'week';
         $scope.calendarTitle = 'Name';
         $scope.viewDate = new Date();
-        
+
         $scope.getEvents = function (viewDate, calendarView) {
             //if (calendarView === "month") {
             console.log(calendarView);
-                var startDate = viewDate.getTime();
+            var startDate = viewDate.getTime();
 //                if ($scope.facilityId) {
 //
 //                    getBlockedSessionByFacilityId(startDate,calendarView);
 //                } else {
-                    getBlockedSession($scope.facilityId,startDate,calendarView);
-   //             }
+            getBlockedSession($scope.facilityId, startDate, calendarView);
+            //             }
             //}
         };
-        
+
         function showModal(action, event) {
             var modalInstance = $aside.open({
                 templateUrl: 'calendarEvent.html',
@@ -858,43 +855,43 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.event = angular.copy(event);
                     console.log(event);
                     $scope.event.peakHourOptions = [
-                        {id: "peakHour", name:"peakHour", description:"Peak Hour", value:true},
-                        {id: "nonPeakHour", name:"nonPeakHour", description: "Non Peak Hour", value:false}
+                        {id: "peakHour", name: "peakHour", description: "Peak Hour", value: true},
+                        {id: "nonPeakHour", name: "nonPeakHour", description: "Non Peak Hour", value: false}
                     ];
                     $scope.event.peakHourSelected = $scope.event.peakHourOptions[0];
                     $scope.availableSessions = [];
-                    $scope.getAvailableSessionsByFacilityId = function() {
+                    $scope.getAvailableSessionsByFacilityId = function () {
                         var facilityId = $scope.event.available_facility_id;
                         var eventStartsAt = new Date($scope.event.startsAt).getTime();
                         var peakHourSelectedValue = $scope.event.peakHourSelected.value;
                         facilityService.getAvailableSessionsByFacilityId(facilityId, eventStartsAt, peakHourSelectedValue)
-                        .then(function(response){
-                            
-                            if(angular.isArray(response.data.message.success)){
-                                $scope.showAvailableSessions = true;
-                                $scope.availableSessions = response.data.data;
-                                $scope.event.selectedSession = $scope.eventForm.blockSession =response.data.data[0];
-                                $scope.availableSessions.message = response.data.message.success[0];
-                            }
-                            
-                            else
-                                $scope.availableSessions.message = response.data.message.success;
-                        })
-                        .catch(function (response) {
-                            $scope.errors = {};
-                            angular.forEach(response.data, function (errors, field) {
+                            .then(function (response) {
 
-                                $scope.errors[field] = (angular.isArray(errors)) ? errors.join(', ') : errors;
+                                if (angular.isArray(response.data.message.success)) {
+                                    $scope.showAvailableSessions = true;
+                                    $scope.availableSessions = response.data.data;
+                                    $scope.event.selectedSession = $scope.eventForm.blockSession = response.data.data[0];
+                                    $scope.availableSessions.message = response.data.message.success[0];
+                                }
+
+                                else
+                                    $scope.availableSessions.message = response.data.message.success;
+                            })
+                            .catch(function (response) {
+                                $scope.errors = {};
+                                angular.forEach(response.data, function (errors, field) {
+
+                                    $scope.errors[field] = (angular.isArray(errors)) ? errors.join(', ') : errors;
+                                });
                             });
-                        });
-                        
+
 
                     };
-                    
-                    $scope.hideAvailableSessions = function(){
-                         $scope.showAvailableSessions = false;
+
+                    $scope.hideAvailableSessions = function () {
+                        $scope.showAvailableSessions = false;
                     };
-                    
+
                     $scope.toggleMin = function () {
                         $scope.minDate = $scope.minDate ? null : new Date();
                     };
@@ -902,10 +899,10 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
 
                     $scope.addEvent = function () {
                         var sessionToBlock = {
-                          facility_id: $scope.event.available_facility_id,
-                          date: new Date($scope.event.startsAt).getTime(),
-                          is_peak: $scope.event.peakHourSelected.value,
-                          slot_timing:$scope.event.selectedSession
+                            facility_id: $scope.event.available_facility_id,
+                            date: new Date($scope.event.startsAt).getTime(),
+                            is_peak: $scope.event.peakHourSelected.value,
+                            slot_timing: $scope.event.selectedSession
                         };
                         //$modalInstance.dismiss('cancel');
                         //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()
