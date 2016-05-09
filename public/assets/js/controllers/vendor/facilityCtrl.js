@@ -10,9 +10,7 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
         }
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
-
-            console.log($scope.categoryData);
-        }
+     }
 
         function getDaysSuccess(days) {
             $scope.days = days.data;
@@ -20,8 +18,7 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 
         function init(){
 
-            console.log('sdsadsad');
-            facilityService.getDuration()
+           facilityService.getDuration()
                 .then(getDurationSuccess);
 
             facilityService.getRootCategory()
@@ -160,6 +157,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
                 size: size,
                 resolve: {
                     selectedFacility: function () {
+                        selectedFacility.type = selectedFacility.is_venue;
                         return selectedFacility;
                     },
                     tab: function () {
