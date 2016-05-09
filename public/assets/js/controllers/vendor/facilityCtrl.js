@@ -749,7 +749,7 @@ app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($s
 
 app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "moment", "facilityService", "SweetAlert",
     function ($scope, $stateParams, $aside, moment, facilityService, SweetAlert) {
-        $scope.facilityId = $stateParams.facilityId;
+        $scope.facilityId = $stateParams.facilityId || 0;
 
         $scope.facilityData = {};
         $scope.showAvailableSessions = false;    
@@ -775,12 +775,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
 
         function getBlockData() {
             var startDate = new Date().getTime();
-console.log(startDate);
-            if ($scope.facilityId) {
-                getBlockedSessionByFacilityId(startDate,'week')
-            } else {
-                getBlockedSession(startDate,'week');
-            }
+//            if ($scope.facilityId) {
+//                getBlockedSessionByFacilityId(startDate,'week')
+//            } else {
+                getBlockedSession($scope.facilityId,startDate,'week');
+//            }
         }
 
         function getAllFacilitySuccess(facilityData) {
@@ -792,14 +791,16 @@ console.log(startDate);
         }
 
         function getBlockedSessionByFacilityId(startDate,calendarView) {
-            facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate,calendarView)
+             facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate,calendarView)
                     .then(function (events) {
                         parseEvents(events.data);
                     });
         }
 
-        function getBlockedSession(startDate,calendarView) {
-            facilityService.getBlockedSessions(startDate,calendarView).then(function (events) {
+        function getBlockedSession(facilityId,startDate,calendarView) {
+            facilityService.getBlockedSessions(facilityId,startDate,calendarView).then(function (events) {
+                 //console.log(events);
+                  
                 parseEvents(events.data);
             });
         }
@@ -808,10 +809,8 @@ console.log(startDate);
             $scope.events = [];
             angular.forEach(events, function (event, keys) {
                // var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
-               event.startsAt = new Date(event.startsAt);
-
-              //  var thisEndT = event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530";
-                event.endsAt = new Date(event.endsAt);
+                event.startsAt = new Date(event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "Z");
+                event.endsAt = new Date(event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "Z");
                 this.push(event);
             }, $scope.events);
         }
@@ -824,12 +823,12 @@ console.log(startDate);
             //if (calendarView === "month") {
             console.log(calendarView);
                 var startDate = viewDate.getTime();
-                if ($scope.facilityId) {
-
-                    getBlockedSessionByFacilityId(startDate,calendarView);
-                } else {
-                    getBlockedSession(startDate,calendarView);
-                }
+//                if ($scope.facilityId) {
+//
+//                    getBlockedSessionByFacilityId(startDate,calendarView);
+//                } else {
+                    getBlockedSession($scope.facilityId,startDate,calendarView);
+   //             }
             //}
         };
         

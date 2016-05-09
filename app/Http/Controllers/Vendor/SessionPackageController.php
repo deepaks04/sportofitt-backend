@@ -812,50 +812,117 @@ class SessionPackageController extends Controller
             $message = "";
             $status = 200;
             $selectedDate = date("Y-m-d",($date/1000));
-            $facilities = $user->vendor->facility()->where('is_active', 1)->get();
+            $user = Auth::user();//->with('vendor');
+            if((int)$facilityId > 0) {
+                $facilities = AvailableFacility::where('id','=',$facilityId)->get();
+            } else {
+                $facilities = $user->vendor->facility()->where('is_active', 1)->get();
+            }
+            
+            $data = null;
             $bookingData = array();
+            $sql = \App\BookedTiming::join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
+                                     ->where('booked_packages.booking_status','=',\DB::raw(1));
             switch ($sort) {
                 case 'month':
                     $month = date("m",strtotime($selectedDate));
                     foreach($facilities as $facility) {
-                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
-                                ->where(\DB::raw('MONTH(' . $selectedDate . ')'), '=', $month)
-                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
-                                ->where('booked_packages.booking_status','=',\DB::raw(1))
-                                ->where('booked_timings.facility_id','=',$facility->id)
+                        $records  = $sql->where('facility_id','=',$facility->id)
+                                ->where(\DB::raw('MONTH("' . $selectedDate . '")'), '=', $month)
                                 ->get();
-                        echo $sql->toSql();die;
+                        if(!empty($records)) {
+                            foreach ($records as $data) {
+                                if (!empty($data->count() > 0)) {
+                                    $temp = array();
+                                    $temp['title'] = $data->start_time . "-" . $data->end_time;
+                                    $temp['available_facility_id'] = $data->facility_id;
+                                    $temp['peak'] = $data->is_peak;
+                                    $temp['startsAt'] = $data->booking_date . " " . $data->start_time;
+                                    $temp['endsAt'] = $data->booking_date . " " . $data->end_time;
+                                    $temp['day'] = $data->booking_day;
+                                    $bookingData[] = $temp;
+                                }
+                            }
+                        }
                     }
                 case 'week':
                     $week = date("W",strtotime($selectedDate));
                     foreach($facilities as $facility) {
-                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
-                                ->where(\DB::raw('WEEK(' . $selectedDate . ')'), '=', $week)
-                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
-                                ->where('booked_packages.booking_status','=',\DB::raw(1))
-                                ->where('booked_timings.facility_id','=',$facility->id)
+                        $records = $sql->where('facility_id','=',$facility->id)
+                                ->where(\DB::raw('WEEK("' . $selectedDate . '")'), '=', $week)
                                 ->get();
-                        echo $sql->toSql();die;
+                        if(!empty($records)) {
+                            foreach ($records as $data) {
+                                if (!empty($data->count() > 0)) {
+                                    $temp = array();
+                                    $temp['title'] = date("H:i A",strtotime($data->booking_date . " " . $data->start_time)) ."-". date("H:i A",strtotime($data->booking_date . " " . $data->end_time));
+                                    $temp['available_facility_id'] = $data->facility_id;
+                                    $temp['peak'] = $data->is_peak;
+                                    $temp['startsAt'] = date("Y-m-d H:i:s",strtotime($data->booking_date . " " . $data->start_time));
+                                    $temp['endsAt'] = date("Y-m-d H:i:s",strtotime($data->booking_date . " " . $data->end_time));
+                                    $temp['day'] = $data->booking_day;
+                                    $bookingData[] = $temp;
+                                }
+                            }
+                        }
                     }
                 case 'day':
                     foreach($facilities as $facility) {
-                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
+                        $records  = $sql->where('facility_id','=',$facility->id)
                                 ->where('booked_timings.booking_date','=',$selectedDate)
-                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
-                                ->where('booked_packages.booking_status','=',\DB::raw(1))
-                                ->where('booked_timings.facility_id','=',$facility->id)
                                 ->get();
-                        echo $sql->toSql();die;
+                
+                        if(!empty($records)) {
+                            foreach ($records as $data) {
+                                if (!empty($data->count() > 0)) {
+                                    $temp = array();
+                                    $temp['title'] = "Blocked (" . $data->start_time . "-" . $data->end_time . ")";
+                                    $temp['available_facility_id'] = $data->facility_id;
+                                    $temp['peak'] = $data->is_peak;
+                                    $temp['startsAt'] = $data->booking_date . " " . $data->start_time;
+                                    $temp['endsAt'] = $data->booking_date . " " . $data->end_time;
+                                    $temp['day'] = $data->booking_day;
+                                    $bookingData[] = $temp;
+                                }
+                            }
+                        }
                     }
                 break;
             }
+            
+            if(!empty($bookingData)) {
+                $status = 200; 
+            }
+            
         } catch (Exception $ex) {
             $status = 500;
             $message = "Something went wrong " . $e->getMessage();
-            $blockData = "";            
         }
+        
+        $response = [
+            "message" => $message,
+            "data" => $bookingData
+        ];
+        return response($response, $status);        
     }
-
+    
+    private function parseData($records)
+    {
+        $response = array();
+        foreach($records as $data) {
+            if(!empty($data->count() > 0)) {
+                $temp['available_facility_id'] = $data->facility_id;
+                $temp['peak'] = $data->is_peak;
+                $temp['startsAt'] = $data->booking_date." ".$data->start_time;
+                $temp['endsAt'] = $data->booking_date." ".$data->end_time;
+                $temp['day'] = $data->booking_day;
+                $response[] = $data;
+            }            
+        }
+        
+        return $response;
+    }
+    
     /**
      * @param Request $request
      * @param         $id

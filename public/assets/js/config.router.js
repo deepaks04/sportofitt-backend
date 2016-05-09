@@ -17,8 +17,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // LAZY MODULES
 
         $ocLazyLoadProvider.config({
-            debug: true,
-            events: true,
+            debug: false,
+            events: false,
             modules: jsRequires.modules
         });
 
