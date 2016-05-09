@@ -5,11 +5,27 @@
 app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert", "FileUploader",
     function ($scope, $state, $log, facilityService, SweetAlert, FileUploader) {
 
+        facilityService.getDuration()
+            .then(getDurationSuccess);
+
         facilityService.getRootCategory()
             .then(getRootCategorySuccess);
 
-        facilityService.getDuration()
-            .then(getDurationSuccess);
+        function getDurationSuccess(durations) {
+            $scope.durations = durations.duration;
+        }
+        function getRootCategorySuccess(categoryData) {
+            $scope.categoryData = categoryData.category;
+
+            console.log($scope.categoryData);
+        }
+        facilityService.getDays()
+            .then(getDaysSuccess);
+
+        function getDaysSuccess(days) {
+            $scope.days = days.data;
+        }
+
 
         $scope.types = {0: "Peak Time", 1: "Off time"};
 
@@ -109,15 +125,7 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 //            });
 //        }
 //        getVendorImages();
-        function getRootCategorySuccess(categoryData) {
-            $scope.categoryData = categoryData.category;
 
-            console.log($scope.categoryData);
-        }
-
-        function getDurationSuccess(durations) {
-            $scope.durations = durations.duration;
-        }
     }]);
 
 //List of facility
