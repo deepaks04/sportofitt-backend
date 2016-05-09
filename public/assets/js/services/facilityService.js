@@ -350,14 +350,15 @@ function sendDeleteImagesError(response) {
             }
         }
 
-        function getBlockedSessionsByFacilityId(facilityId, startDate) {
-            return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" + startDate)
-                .then(sendResponseData)
-                .catch(sendGetFaclityError);
+        function getBlockedSessionsByFacilityId(facilityId, startDate,calenderView) {
+            //return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" + startDate + "/" + calenderView)
+            //    .then(sendResponseData)
+            //    .catch(sendGetFaclityError);
+            getBlockedSessions(facilityId,startDate,calenderView);
         }
 
-        function getBlockedSessions(startDate,calenderView) {
-            return $http.get('api/v1/vendor/get-calendar-block/' + startDate + '/' + calenderView)
+        function getBlockedSessions(facilityId,startDate,calenderView) {
+            return $http.get('api/v1/vendor/get-calendar-block/' + startDate + '/' + calenderView + "/" + facilityId )
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
