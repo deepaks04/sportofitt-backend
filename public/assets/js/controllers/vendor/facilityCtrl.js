@@ -84,7 +84,7 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
         };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
             console.info('onCompleteItem', fileItem, response, status, headers);
-            //$scope.getVendorImages();
+            //getVendorImages();
         };
         uploaderImages.onCompleteAll = function () {
             console.info('onCompleteAll');
@@ -102,13 +102,13 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 //        }
 //        $scope.removeImage = function (imageId) {
 //            userService.deleteVendorImage(imageId).then(function (images) {
-//                $scope.getVendorImages();
+//                getVendorImages();
 //            }).catch(function (response) {
 //                console.log(response);
 //                $scope.images = {};
 //            });
 //        }
-//        $scope.getVendorImages();
+//        getVendorImages();
         function getRootCategorySuccess(categoryData) {
             $scope.categoryData = categoryData.category;
 
@@ -271,8 +271,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-
-        $scope.getSessions = function () {
+         function getSessions() {
             //$scope.setTab('sessions');
             if (!isAdd) {
                 if ($scope.sessions.length) {
@@ -293,7 +292,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             }, $scope.sessions);
         }
 
-        $scope.getOpeningHours = function () {
+       function getOpeningHours() {
             //$scope.setTab('opening_hours');
 
             if (!isAdd) {
@@ -339,7 +338,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             return dt;
         }
 
-        $scope.getPackages = function () {
+        function getPackages() {
             //$scope.setTab('packages');
             if (!isAdd) {
 
@@ -405,13 +404,13 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
             if ($scope.tab === 'opening_hours') {
                 console.log($scope.tab);
-                $scope.getOpeningHours();
+                getOpeningHours();
             } else if ($scope.tab === 'sessions') {
-                $scope.getSessions();
+                getSessions();
             } else if ($scope.tab === 'packages') {
-                $scope.getPackages();
+                getPackages();
             } else if ($scope.tab === 'images') {
-                $scope.getVendorImages();
+                getVendorImages();
             }
 
         };
@@ -702,13 +701,13 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
                                                 headers) {
         };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
-            //$scope.getVendorImages();
+            //getVendorImages();
         };
         uploaderImages.onCompleteAll = function () {
-            $scope.getVendorImages();
+           getVendorImages();
         };
 
-        $scope.getVendorImages = function () {
+        function getVendorImages() {
             facilityService.getFacilityImages($scope.facility.id).then(function (images) {
                 $scope.images = images.images || {};
 //			$scope.uploaderImages.queue.length = $scope.images.length;
@@ -721,7 +720,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.removeImage = function (imageId) {
             facilityService.deleteFacilityImage(imageId).then(function (images) {
-                $scope.getVendorImages();
+                getVendorImages();
             }).catch(function (response) {
                 $scope.images = {};
             });
