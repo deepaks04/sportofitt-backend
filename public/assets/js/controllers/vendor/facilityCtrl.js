@@ -5,12 +5,6 @@
 app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService", "SweetAlert", "FileUploader",
     function ($scope, $state, $log, facilityService, SweetAlert, FileUploader) {
 
-        facilityService.getDuration()
-            .then(getDurationSuccess);
-
-        facilityService.getRootCategory()
-            .then(getRootCategorySuccess);
-
         function getDurationSuccess(durations) {
             $scope.durations = durations.duration;
         }
@@ -19,15 +13,26 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
 
             console.log($scope.categoryData);
         }
-        facilityService.getDays()
-            .then(getDaysSuccess);
 
         function getDaysSuccess(days) {
             $scope.days = days.data;
         }
 
+        function init(){
+            facilityService.getDuration()
+                .then(getDurationSuccess);
 
-        $scope.types = {0: "Peak Time", 1: "Off time"};
+            facilityService.getRootCategory()
+                .then(getRootCategorySuccess);
+            facilityService.getDays()
+                .then(getDaysSuccess);
+
+            $scope.types = {0: "Peak Time", 1: "Off time"};
+
+
+        }
+
+        init();
 
         $scope.master = $scope.facility = {};
         $scope.form = {
