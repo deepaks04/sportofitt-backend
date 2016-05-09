@@ -30,6 +30,8 @@ angular.module('sportofittApp')
 
           vm.user = angular.copy($rootScope.user);
 
+          console.log(vm.user);
+
           //    vm.LocalBookings = [];
           //angular.forEach(LocalBookings.keys(),function(value){
           //    var booking = LocalBookings.get(value);

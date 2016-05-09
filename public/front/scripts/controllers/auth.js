@@ -9,43 +9,60 @@
  */
 (function (module) {
 
-    var authCtrl = function AuthController(Auth, $auth, $rootScope, $state, $httpParamSerializerJQLike, toastr) {
+    var authCtrl = function AuthController(Auth, $auth, $rootScope, $state, toastr) {
 
         var vm = this;
 
         vm.isMainLogin = false;
         vm.login = function () {
-            var loginOptions = {
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            };
-            var credentials = $httpParamSerializerJQLike({
-                email: vm.email,
-                password: vm.password
-            });
-
-            // Use Satellizer's $auth service to login
-            $auth.login(credentials, loginOptions).then(function (response) {
-                //set token
-                $auth.setToken(response.data.data.access_token);
-
-                Auth.getAuthenticatedUser();
-
-                //$rootScope.user = user.data;
-
-                $rootScope.isAuthenticated = $auth.isAuthenticated();
-
+            //var loginOptions = {
+            //    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            //};
+            //var credentials = $httpParamSerializerJQLike({
+            //    email: vm.email,
+            //    password: vm.password
+            //});
+            //
+            //// Use Satellizer's $auth service to login
+            //$auth.login(credentials, loginOptions).then(function (response) {
+            //    //set token
+            //    $auth.setToken(response.data.data.access_token);
+            //
+            //    Auth.getAuthenticatedUser().then(function(user){
+            //        $rootScope.user = user.data;
+            //        // If login is successful, redirect to the users state
+            //        //toastr.success(errors.data.message.success);
+            //        if (vm.isMainLogin) {
+            //            $state.reload();
+            //        } else {
+            //            $state.go('app.home', {});
+            //        }
+            //        //
+            //        $rootScope.isAuthenticated = $auth.isAuthenticated();
+            //
+            //    });
+            //
+            //}).catch(function (errors) {
+            //    toastr.error(errors.data.message.error);
+            //});
+            Auth.login(vm.email,vm.password).then(function(){
                 // If login is successful, redirect to the users state
                 //toastr.success(errors.data.message.success);
-                if (vm.isMainLogin) {
-                    $state.reload();
-                } else {
-                    $state.go('app.home', {});
-                }
 
+                Auth.getAuthenticatedUser().then(function(user){
+                      $rootScope.user = user.data;
+                      $rootScope.isAuthenticated = $auth.isAuthenticated();
+
+                    if (vm.isMainLogin) {
+                        $state.reload();
+                    } else {
+                        $state.go('app.home', {});
+                    }
+                  });
 
             }).catch(function (errors) {
-                toastr.error(errors.data.message.error);
-            });
+                    toastr.error(errors);
+                });
         }
 
         //if($auth.isAuthenticated()){
