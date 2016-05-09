@@ -218,6 +218,8 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.facility = selectedFacility;
 
+        console.log($scope.facility);
+
         $scope.tab = tab;
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit', 'images'];
         facilityService.getDuration()
@@ -295,6 +297,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.getOpeningHours = function () {
             $scope.setTab('opening_hours');
+
             if (!isAdd) {
                 if ($scope.openingHours.length) {
                     return $scope.openingHours;
@@ -302,7 +305,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
                 facilityService.getOpeningTimesByFacilityId($scope.facility.id)
                         .then(function (openingHours) {
-                            var openingHours = (openingHours.data === "") ? [] : openingHours.data;
+                            var openingHours = (!openingHours.data) ? [] : openingHours.data;
                             parseOpeningHours(openingHours);
                         });
             }
@@ -853,6 +856,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.$modalInstance = $modalInstance;
                     $scope.action = action;
                     $scope.event = angular.copy(event);
+                    console.log(event);
                     $scope.event.peakHourOptions = [
                         {id: "peakHour", name:"peakHour", description:"Peak Hour", value:true},
                         {id: "nonPeakHour", name:"nonPeakHour", description: "Non Peak Hour", value:false}
@@ -965,11 +969,11 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         }
 
 
-        $scope.eventClicked = function (event) {
+        $scope.eventClicked = function (calenderevent) {
             var event = {
                 title: "Blocked",
                 startsAt: new Date(),
-                available_facility_id: $scope.facilityId
+                available_facility_id: $scope.facilityId || calenderevent.available_facility_id
             };
             showModal('Clicked', event);
         };
