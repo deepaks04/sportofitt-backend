@@ -1,6 +1,6 @@
 var app = angular.module('sportofitApp', ['sportofit']);
-app.run(['$rootScope', '$state', '$stateParams',
-    function ($rootScope, $state, $stateParams) {
+app.run(['$rootScope', '$state', '$stateParams', '$cookies',
+    function ($rootScope, $state, $stateParams, $cookies) {
 
         // Attach Fastclick for eliminating the 300ms delay between a physical tap and the firing of a click event on mobile browsers
         FastClick.attach(document.body);
@@ -33,18 +33,18 @@ app.run(['$rootScope', '$state', '$stateParams',
                 logo: 'assets/images/logo.png', // relative path of the project logo
             }
         };
+        $rootScope.user = $cookies.getObject('auth', $rootScope.user);
 
-        if (!$rootScope.user) {
+        if (!$rootScope.user && !$rootScope.isLoggedIn) {
 //git             event.preventDefault();
             $state.go('login.signin');
         }
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-             console.log(toState.data);
-              if (toState.data && toState.data.noLogin) {
+                 if (toState.data && toState.data.noLogin) {
                     return;
                 }
-                if (!$rootScope.user) {
+                if (!$rootScope.user && !$rootScope.isLoggedIn) {
                     event.preventDefault();
                     $state.go('login.signin');
                 }
