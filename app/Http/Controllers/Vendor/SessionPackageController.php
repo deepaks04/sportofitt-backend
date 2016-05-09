@@ -763,7 +763,7 @@ class SessionPackageController extends Controller
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getBlockData(Request $request, $yearMonth)
+   /* public function getBlockData(Request $request, $yearMonth)
     {
         try {
             $message = "success";
@@ -804,6 +804,56 @@ class SessionPackageController extends Controller
             "data" => $blockData
         ];
         return response($response, $status);
+    }*/
+    
+    public function getBlockData($date,$sort = 'month',$facilityId = null) 
+    {
+        try {
+            $message = "";
+            $status = 200;
+            $selectedDate = date("Y-m-d",($date/1000));
+            $facilities = $user->vendor->facility()->where('is_active', 1)->get();
+            $bookingData = array();
+            switch ($sort) {
+                case 'month':
+                    $month = date("m",strtotime($selectedDate));
+                    foreach($facilities as $facility) {
+                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
+                                ->where(\DB::raw('MONTH(' . $selectedDate . ')'), '=', $month)
+                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
+                                ->where('booked_packages.booking_status','=',\DB::raw(1))
+                                ->where('booked_timings.facility_id','=',$facility->id)
+                                ->get();
+                        echo $sql->toSql();die;
+                    }
+                case 'week':
+                    $week = date("W",strtotime($selectedDate));
+                    foreach($facilities as $facility) {
+                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
+                                ->where(\DB::raw('WEEK(' . $selectedDate . ')'), '=', $week)
+                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
+                                ->where('booked_packages.booking_status','=',\DB::raw(1))
+                                ->where('booked_timings.facility_id','=',$facility->id)
+                                ->get();
+                        echo $sql->toSql();die;
+                    }
+                case 'day':
+                    foreach($facilities as $facility) {
+                        $sql = \App\BookedTiming::where('facility_id','=',$facility->id)
+                                ->where('booked_timings.booking_date','=',$selectedDate)
+                                ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
+                                ->where('booked_packages.booking_status','=',\DB::raw(1))
+                                ->where('booked_timings.facility_id','=',$facility->id)
+                                ->get();
+                        echo $sql->toSql();die;
+                    }
+                break;
+            }
+        } catch (Exception $ex) {
+            $status = 500;
+            $message = "Something went wrong " . $e->getMessage();
+            $blockData = "";            
+        }
     }
 
     /**
