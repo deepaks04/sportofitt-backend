@@ -895,22 +895,22 @@ class SessionPackageController extends Controller
         try {
             if(!empty($request->facility_id) 
                 && !empty($request->date) 
-                && !empty($request->timing_slot)) {
+                && !empty($request->slot_timing)) {
                 $bookingObj = new BookedPackage();
                 $bookingObj->package_type = 0;
-                $bookingObj->name = !empty($request->name)?$request->name:"";
+                $bookingObj->name = !empty($request->title)?$request->title:"";
                 $bookingObj->description = "Booked By Vendor";
                 $bookingObj->booking_status = 1;
                 $bookingObj->booked_by_vendor = Auth::user()->id;
                 $bookingObj->created_at = date('Y-m-d H:i:s');
-                if ($bookingObj->save() && !empty($booking->id)) {
+                if ($bookingObj->save() && !empty($bookingObj->id)) {
                     $bookingTimming = new BookedTiming();
-                    $bookingTimming->booking_id = $booking->id;
+                    $bookingTimming->booking_id = $bookingObj->id;
                     $bookingTimming->facility_id = $request->facility_id;
                     $bookingTimming->is_peak = ((int)$request->is_peak) ? 1 : 0;
-                    $bookingTimming->booking_date = date("Y-m-d H:i:s", ($request->selectedDate/1000));
+                    $bookingTimming->booking_date = date("Y-m-d H:i:s", ($request->date/1000));
                     $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
-                    $slotTime = explode("-", $request->timing_slot);
+                    $slotTime = explode("-", $request->slot_timing);
                     if (!empty($slotTime)) {
                         $bookingTimming->start_time = $slotTime[0];
                         $bookingTimming->end_time = $slotTime[1];

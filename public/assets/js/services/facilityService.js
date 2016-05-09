@@ -41,7 +41,7 @@
                 date: eventStartsAt,
                 is_peak: peakHourSelectedValue
             };
-            return $http.post('http://sportofit.in/api/v1/index/facility/available-slots',data);
+            return $http.post('api/v1/index/facility/available-slots',data);
         }
         
         function getDuration() {
