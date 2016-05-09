@@ -39,9 +39,9 @@
                                  ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
                                 <label class="control-label"> Type </label>
                                 <div class="clip-radio radio-primary">
-                                    <input type="radio" id="venue" name="type" value="1" checked="checked">
+                                    <input type="radio" id="venue" name="type" data-ng-model="facility.is_venue" value="1" checked="checked">
                                     <label for="venue"> Venue </label>
-                                    <input type="radio"  id="coaching" name="type" value="0" >
+                                    <input type="radio"  id="coaching" name="type" data-ng-model="facility.is_venue" value="0" >
                                     <label for="coaching"> Coaching </label>
                                 </div>
                             </div>

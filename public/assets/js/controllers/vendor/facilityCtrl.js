@@ -157,7 +157,7 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
                 size: size,
                 resolve: {
                     selectedFacility: function () {
-                        selectedFacility.type = selectedFacility.is_venue;
+                        //selectedFacility.type = selectedFacility.is_venue;
                         return selectedFacility;
                     },
                     tab: function () {
