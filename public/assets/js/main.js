@@ -35,7 +35,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$cookies',
         };
         $rootScope.user = $cookies.getObject('auth', $rootScope.user);
 
-        if (!$rootScope.user) {
+        if (!$rootScope.user && !$rootScope.isLoggedIn) {
 //git             event.preventDefault();
             $state.go('login.signin');
         }
@@ -44,7 +44,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$cookies',
                  if (toState.data && toState.data.noLogin) {
                     return;
                 }
-                if (!$rootScope.user) {
+                if (!$rootScope.user && !$rootScope.isLoggedIn) {
                     event.preventDefault();
                     $state.go('login.signin');
                 }
