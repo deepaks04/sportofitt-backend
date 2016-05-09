@@ -356,8 +356,8 @@ function sendDeleteImagesError(response) {
                 .catch(sendGetFaclityError);
         }
 
-        function getBlockedSessions(startDate) {
-            return $http.get('api/v1/vendor/get-calendar-block/' + startDate)
+        function getBlockedSessions(startDate,calenderView) {
+            return $http.get('api/v1/vendor/get-calendar-block/' + startDate + '/' + calenderView)
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
