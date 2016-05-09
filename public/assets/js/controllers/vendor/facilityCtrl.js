@@ -809,8 +809,8 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
             $scope.events = [];
             angular.forEach(events, function (event, keys) {
                // var thisStartT = event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530";
-                event.startsAt = new Date(event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "Z");
-                event.endsAt = new Date(event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "Z");
+                event.startsAt = new Date(event.startsAt.substr(0, 10) + "T" + event.startsAt.substr(11, 8) + "+0530");
+                event.endsAt = new Date(event.endsAt.substr(0, 10) + "T" + event.endsAt.substr(11, 8) + "+0530");
                 this.push(event);
             }, $scope.events);
         }
