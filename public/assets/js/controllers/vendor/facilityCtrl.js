@@ -404,6 +404,7 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             $scope.tab = tab;
 
             if ($scope.tab === 'opening_hours') {
+                console.log($scope.tab);
                 $scope.getOpeningHours();
             } else if ($scope.tab === 'sessions') {
                 $scope.getSessions();
