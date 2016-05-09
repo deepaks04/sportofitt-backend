@@ -774,15 +774,12 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         init();
 
         function getBlockData() {
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
-            var startDate = y + "-" + (m + 1);
+            var date = new Date().getTime();
+
             if ($scope.facilityId) {
-                getBlockedSessionByFacilityId(startDate)
+                getBlockedSessionByFacilityId(startDate,'week')
             } else {
-                getBlockedSession(startDate);
+                getBlockedSession(startDate,'week');
             }
         }
 
@@ -794,15 +791,15 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
             $scope.facility = facilityData.facility;
         }
 
-        function getBlockedSessionByFacilityId(startDate) {
-            facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate)
+        function getBlockedSessionByFacilityId(startDate,calendarView) {
+            facilityService.getBlockedSessionsByFacilityId($scope.facilityId, startDate,calendarView)
                     .then(function (events) {
                         parseEvents(events.data);
                     });
         }
 
-        function getBlockedSession(startDate) {
-            facilityService.getBlockedSessions(startDate).then(function (events) {
+        function getBlockedSession(startDate,calendarView) {
+            facilityService.getBlockedSessions(startDate,calendarView).then(function (events) {
                 parseEvents(events.data);
             });
         }
@@ -824,15 +821,15 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         $scope.viewDate = new Date();
         
         $scope.getEvents = function (viewDate, calendarView) {
-            if (calendarView === "month") {
-                var startDate = viewDate.getFullYear() + "-" + (viewDate.getMonth() + 1);
+            //if (calendarView === "month") {
+                var startDate = viewDate.getTime();
                 if ($scope.facilityId) {
 
-                    getBlockedSessionByFacilityId(startDate);
+                    getBlockedSessionByFacilityId(startDate,calendarView);
                 } else {
-                    getBlockedSession(startDate);
+                    getBlockedSession(startDate,calendarView);
                 }
-            }
+            //}
         };
         
         function showModal(action, event) {
