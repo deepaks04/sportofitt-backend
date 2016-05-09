@@ -218,7 +218,6 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.facility = selectedFacility;
 
-        $scope.setTab(tab);
         $scope.tabs = ['opening_hours', 'sessions', 'packages', 'edit', 'images'];
 
         facilityService.getDuration()
@@ -403,6 +402,17 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
 
         $scope.setTab = function (tab) {
             $scope.tab = tab;
+
+            if ($scope.tab === 'opening_hours') {
+                $scope.getOpeningHours();
+            } else if ($scope.tab === 'sessions') {
+                $scope.getSessions();
+            } else if ($scope.tab === 'packages') {
+                $scope.getPackages();
+            } else if ($scope.tab === 'images') {
+                $scope.getVendorImages();
+            }
+
         };
 
         $scope.showDay = function (time) {
@@ -722,15 +732,9 @@ app.controller('SessionModalInstanceCtrl', ["$scope", "$modalInstance", "$filter
             $scope.durations = durations.duration;
         }
 
-        if ($scope.tab === 'opening_hours') {
-            $scope.getOpeningHours();
-        } else if ($scope.tab === 'sessions') {
-            $scope.getSessions();
-        } else if ($scope.tab === 'packages') {
-            $scope.getPackages();
-        } else if ($scope.tab === 'images') {
-            $scope.getVendorImages();
-        }
+
+        $scope.setTab(tab);
+
     }]);
 app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($scope, $modalInstance) {
     $scope.items = items;
