@@ -7,11 +7,11 @@
         <nav class="navigation-items">
             <div class="wrapper">
                 <ul class="main-navigation navigation-top-header"></ul>
-                <ul ng-if="!isAuthenticated()" class="user-area">
+                <ul ng-if="!isAuthenticated" class="user-area">
                     <li><a ui-sref="app.login">Sign In</a></li>
                     <li><a ui-sref="app.register"><strong>Register</strong></a></li>
                       </ul>
-                <ul ng-if="isAuthenticated()" class="user-area">
+                <ul ng-if="isAuthenticated" class="user-area">
                     <li><a ui-sref="app.logout">Sign Out</a></li>
                    <li><a ui-sref="app.profile"><strong>Profile</strong></a></li>
 

@@ -1,5 +1,5 @@
 <!-- Page Canvas-->
-<div id="page-canvas" xmlns="http://www.w3.org/1999/html">
+<div id="page-canvas">
     <!--Off Canvas Navigation-->
     <nav class="off-canvas-navigation">
         <header>Navigation</header>
@@ -9,48 +9,285 @@
 
     <!--Page Content-->
     <div id="page-content">
-        <section id="page-title">
+        <section id="page-title" ng-if="!isAuthenticated">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12" ng-controller="AuthCtrl as vm" ng-init="vm.isMainLogin = true">
                     <!--<h1 class="mainTitle">Starter Page</h1>-->
 
                             <span class="mainDescription margin-bottom-20">
                                     <i class="ti-unlock"></i>
                                 <strong>Book faster by signing in.</strong>
                                 Make life easier and let us fill this in for you.</span>
-                    <form role="form" class="form-inline">
+                    <form role="form" class="form-inline" id="form-sign-in-account" method="post" data-ng-submit="vm.login()">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     @
                                 </div>
-                                <input type="email" placeholder="Enter email" class="form-control">
+                                <input type="email" class="form-control" id="form-sign-in-email" data-ng-model="vm.email" name="email" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword2" class="sr-only">
+                            <label for="password" class="sr-only">
                                 Password
                             </label>
-                            <input type="password" placeholder="Password" id="exampleInputPassword2" class="form-control">
+                            <input type="password" class="form-control" id="form-sign-in-password" data-ng-model="vm.password" name="password" required>
                         </div>
 
                         <button class="btn btn-primary" type="submit">
                             Sign in
                         </button>
-                        OR
-                        <a class="btn btn-azure" href="#"><i class="fa fa-facebook-official"></i> login</a>
-                    </form>
+                        </form>
 
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="margin-top-10 links cl-effect-17">
-                        <a href="#" >Forgot Password?</a>
+            <!--<div class="row">-->
+                <!--<div class="col-sm-12">-->
+                    <!--<div class="margin-top-10 links cl-effect-17">-->
+                        <!--<a href="#" >Forgot Password?</a>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </section>
+
+        <section class="container-fullw bg-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+
+                        <h3><i class="ti-user"></i> Your Details</h3>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        First Name {{vm.user.first_name}}
+                                    </label>
+                                    <input type="text" name="firstName" data-ng-model="user.first_name" class="form-control" placeholder="Enter your First Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Last Name
+                                    </label>
+                                    <input type="text" name="lastName" data-ng-model="vm.user.last_name"  class="form-control" placeholder="Enter your Last Name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        Email
+                                    </label>
+                                    <input type="text" name="email" data-ng-model="vm.user.email"  class="form-control" placeholder="Enter your Email">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Phone number
+                                    </label>
+                                    <input type="text" name="mobile" data-ng-model="vm.user.contact_no"  class="form-control" placeholder="Enter your Phone number">
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col-md-12">-->
+                                <!--<div class="form-group">-->
+                                    <!--<div class="checkbox clip-check check-primary checkbox-inline">-->
+                                        <!--<input type="checkbox" id="checkbox10" value="1" checked="">-->
+                                        <!--<label for="checkbox10">-->
+                                            <!--Subscribe to beauty news from Treatwell & salons I book with-->
+                                            <!--<span data-toggle="tooltip" data-original-title="<div style='width:100px'>Please untick this box if you do not wish to-->
+                                            <!--receive promotions from Sportofitt</div>" data-html="true"-->
+                                                  <!--data-placement="right"><i class="fa fa-question-circle"></i>-->
+                                            <!--</span>-->
+                                        <!--</label>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <hr/>
+                        <!--<div class="row">-->
+                            <!--<div class="col-md-6">-->
+                                <!--<div class="form-group">-->
+                                    <!--<label class="block">-->
+                                        <!--Is this for you?-->
+                                    <!--</label>-->
+                                    <!--<div class="clip-radio radio-primary">-->
+                                        <!--<input type="radio" id="yes" name="forOwn" value="yes">-->
+                                        <!--<label for="yes">-->
+                                            <!--Yes-->
+                                        <!--</label>-->
+                                        <!--<input type="radio" id="no" name="forOwn" value="no" checked="checked">-->
+                                        <!--<label for="no">-->
+                                            <!--No-->
+                                        <!--</label>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        <!--</div>-->
+                        <h3><i class="fa fa-credit-card"></i> Payment</h3>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="clip-radio radio-primary">
+                                        <input type="radio" id="card" name="payment" value="card">
+                                        <label for="card">
+                                            Pay with Card
+                                        </label>
+                                        <input type="radio" id="paypal" name="payment" value="paypal">
+                                        <label for="paypal">
+                                            Pay with PayPal
+                                        </label>
+                                        <input type="radio" id="venue" name="payment" value="venue" checked="checked">
+                                        <label for="venue">
+                                            Pay at Venue
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="panel panel-light-grey" id="panel1">
+                                    <!--<div class="panel-heading">-->
+                                        <!--<h4 class="panel-title"><strong>Card Details</strong></h4>-->
+                                        <!--<div class="panel-tools">-->
+                                            <!--<i class="fa fa-cc-visa"></i>-->
+                                            <!--<i class="fa fa-cc-mastercard"></i>-->
+                                            <!--<i class="fa fa-cc-amex"></i>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    {{vm.LocalBookings}}
+                                </div>
+                            </div>
+                        </div>
+                        <h3><i class="fa fa-plus-square-o"></i> Promo codes / Gift Cards</h3>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Enter promo / gift card code">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default">
+                                                Add code
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-white" id="panel2">
+                            <div class="panel-heading border-light">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h2>{{vm.LocalBookings.selectedSlot}}</h2>
+                                    </div>
+                                    <div class="border-left col-md-4">
+                                        <span class="text-small">{{vm.LocalBookings.date | date}}</span><br/>
+                                        <span class="text-small">{{vm.LocalBookings.date | date  : "EEEE"}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4><strong>{{vm.LocalBookings.vendor.business_name}}</strong></h4>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5><strong>{{vm.LocalBookings.description}}</strong></h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span class="text-grey text-large"><strong>comig soon hr</strong></span>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="text-large">{{vm.LocalBookings.name}}</span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.booking_amount}}</span>
+                                    </div>
+                                </div>
+
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="text-large"><strong>Discount</strong></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-large"><strong><i class="fa fa-inr"></i> {{vm.LocalBookings.discounted_amount}} ({{vm.LocalBookings.discount}})</strong></span>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <span class="text-large"><strong>Order Subtotal</strong></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span class="text-large"><strong><i class="fa fa-inr"></i> {{vm.LocalBookings.booking_amount}}</strong></span>
+                                    </div>
+                                </div>
+
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span class="text-large"><strong>Cancellation Policy</strong></span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span>{{vm.LocalBookings.cancellation_before_24hrs}} % cancellation/re-scheduling charges before 24 hours of booking.</span>
+                                        <span>{{vm.LocalBookings.cancellation_after_24hrs}} % cancellation/re-scheduling charges between 24 hours of booking.</span>
+                                    </div>
+                                    <!--<div class="col-md-12">-->
+                                        <!--<a href="#" class="text-red">Show more</a>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+        <div class="container-fluid">
+            <div class="wrap-content container wrapper padding-bottom-30">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="row">
+                            <div class="col-sm-3 col-sm-offset-7">
+                                <span class="text-bold">Order Total</span>
+                            </div>
+                            <div class="col-sm-2">
+                                <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.booking_amount}}</span>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <span class="text-bold">By clicking the button you agree
+                                to the <a href="">Booking Terms</a>, <a href="">Treatwell's Website Terms</a> and <a href="">Privacy Policy</a>
+                                </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <button class="btn btn-wide btn-azure">PLACE ORDER</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
         <!-- end: PAGE TITLE -->
 
     </div>

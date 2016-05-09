@@ -8,7 +8,7 @@ app.factory('authInterceptor', [
             responseError: function(response) {
                 if (response.status === 401) {
                     $rootScope.$broadcast('auth.request.error');
-                    //$state.go('login');
+                    $state.go('app.login');
                     return $q.reject(response);
                 } else {
                     return $q.reject(response);

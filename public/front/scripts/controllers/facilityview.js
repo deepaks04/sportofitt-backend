@@ -22,12 +22,14 @@ angular.module('sportofittApp')
         vm.init = function () {
             searchService.getFacilityById(vm.facilityId).then(function (response) {
                 vm.facility = response.data.data;
-                itemDetailMap(vm.facility.vendor.longitude, vm.facility.vendor.latitude, draggableMarker);
-                vm.filter = {
-                    facility_id: vm.facility.id,
-                    is_peak: true,
-                    date: new Date()
-                };
+                if(vm.facility) {
+                    itemDetailMap(vm.facility.vendor.longitude, vm.facility.vendor.latitude);
+                }
+
+                vm.filter = angular.copy(vm.facility);
+                vm.filter.is_peak = true,
+                    vm.filter.date= new Date()
+
                 vm.getAvailableSlots();
             }).catch(function (response) {
                 toastr.error(response);
@@ -49,7 +51,12 @@ angular.module('sportofittApp')
 
 
         vm.getAvailableSlots = function () {
-            searchService.getFacilityAvailableSlotsById(vm.filter).then(function (response) {
+            var options = {
+                facility_id : vm.filter.id,
+                is_peak : vm.filter.is_peak,
+                date : vm.filter.date
+            }
+            searchService.getFacilityAvailableSlotsById(options).then(function (response) {
                 vm.facilitySlots = response.data.data;
 
                 vm.filterAvailableSlot();
@@ -133,7 +140,7 @@ angular.module('sportofittApp')
             // Create marker on the map ------------------------------------------------------------------------------------
 
             var marker = new RichMarker({
-                position: new google.maps.LatLng( _latitude, _longitude),
+                position: mapCenter,
                 map: map,
                 draggable: false,
                 content: markerContent,
@@ -144,8 +151,7 @@ angular.module('sportofittApp')
         }
 
         vm.addLocalBooking = function (booking, singleSession) {
-            booking.facilityId = vm.facility.id;
-            booking.package_type_id = (singleSession) ? 0 : booking.package_type_id;
+             booking.package_type_id = (singleSession) ? 0 : booking.package_type_id;
             bookingService.saveLocalBooking(booking);
             $state.go('app.orderconformation', {});
         }

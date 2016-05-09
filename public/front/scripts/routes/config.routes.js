@@ -86,11 +86,40 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
                 controllerAs: 'vm'
             }
         }
+    }).state('app.about', {
+        url: "about-us",
+        views: {
+            'body@app': {
+                templateUrl: "views/layouts/about-us.html",
+                controller: 'OrderConfirmationCtrl',
+                controllerAs: 'vm'
+            }
+        }
+    }).state('app.terms', {
+        url: "terms-conditions",
+        views: {
+            'body@app': {
+                templateUrl: "views/layouts/terms-conditions.html",
+                controller: 'OrderConfirmationCtrl',
+                controllerAs: 'vm'
+            }
+        }
     }).state('app.logout', {
         url: "logout",
-        controller: function ($state, $auth) {
-            $auth.logout();
-            $state.go('login');
+        views: {
+            'body@app': {
+                templateUrl: "views/login/index.html",
+                controller: function ($rootScope,$state, $auth) {
+                $auth.logout();
+                    $cookies.remove("loggedUser");
+
+                    $rootScope.isAuthenticated = $auth.isAuthenticated();
+
+                $state.go('app.login');
+            },
+                controllerAs: 'vm'
+            }
+
         }
     });
 

@@ -7,15 +7,16 @@
  * # AuthCtrl
  * Controller of the sportofittApp
  */
-(function(module) {
+(function (module) {
 
-    var authCtrl = function AuthController($auth, $state,$httpParamSerializerJQLike,toastr) {
+    var authCtrl = function AuthController(Auth, $auth, $rootScope, $state, $httpParamSerializerJQLike, toastr) {
 
         var vm = this;
 
-        vm.login = function() {
+        vm.isMainLogin = false;
+        vm.login = function () {
             var loginOptions = {
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded'}
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             };
             var credentials = $httpParamSerializerJQLike({
                 email: vm.email,
@@ -23,21 +24,33 @@
             });
 
             // Use Satellizer's $auth service to login
-            $auth.login(credentials,loginOptions).then(function(response) {
+            $auth.login(credentials, loginOptions).then(function (response) {
                 //set token
                 $auth.setToken(response.data.data.access_token);
+
+                Auth.getAuthenticatedUser();
+
+                //$rootScope.user = user.data;
+
+                $rootScope.isAuthenticated = $auth.isAuthenticated();
+
                 // If login is successful, redirect to the users state
                 //toastr.success(errors.data.message.success);
+                if (vm.isMainLogin) {
+                    $state.reload();
+                } else {
+                    $state.go('app.home', {});
+                }
 
-                $state.go('app.home', {});
-            }).catch(function(errors){
+
+            }).catch(function (errors) {
                 toastr.error(errors.data.message.error);
             });
         }
 
-        if($auth.isAuthenticated()){
-            $state.go('app.home', {});
-        }
+        //if($auth.isAuthenticated()){
+        //    $state.go('app.home', {});
+        //}
 
     }
 

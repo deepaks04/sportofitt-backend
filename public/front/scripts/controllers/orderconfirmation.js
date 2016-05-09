@@ -8,20 +8,37 @@
  * Controller of the sportofittApp
  */
 angular.module('sportofittApp')
-  .controller('OrderConfirmationCtrl', function (bookingService,$scope) {
+  .controller('OrderConfirmationCtrl', function (bookingService,$scope,$rootScope) {
     var vm =this;
     var LocalBookings;
+      vm.LocalBookings = {};
       vm.init = function(){
-          LocalBookings = bookingService.getLocalBookings();
-            vm.LocalBookings = [];
-          angular.forEach(LocalBookings.keys(),function(value){
-              var booking = LocalBookings.get(value);
-             booking.discount_amt = (booking.actual_price*booking.discount/100);
-              booking.discounted_price = booking.actual_price-booking.discount_amt;
-              vm.LocalBookings.push(booking);
-          });
 
-          calculateTotal();
+          vm.LocalBookings = LocalBookings = bookingService.getLocalBookings();
+         if(vm.LocalBookings)
+         {
+             if(vm.LocalBookings.package_type_id == 0) {
+                 vm.LocalBookings.booking_amount = (vm.LocalBookings.is_peak)?vm.LocalBookings.peak_hour_price:vm.LocalBookings.off_peak_hour_price
+                 vm.LocalBookings.discount = 0;
+                 vm.LocalBookings.discounted_amount = 0;
+             }else {
+                 vm.LocalBookings.booking_amount = vm.LocalBookings.actual_price;
+                 vm.LocalBookings.discount = vm.LocalBookings.discount;
+                 vm.LocalBookings.discounted_amount = (vm.LocalBookings.actual_price*vm.LocalBookings.discount/100);
+             }
+         }
+
+          vm.user = angular.copy($rootScope.user);
+
+          //    vm.LocalBookings = [];
+          //angular.forEach(LocalBookings.keys(),function(value){
+          //    var booking = LocalBookings.get(value);
+          //   booking.discount_amount = (booking.actual_price*booking.discount/100);
+          //    booking.discounted_amount = booking.actual_price-booking.discount_amount;
+          //    vm.LocalBookings.push(booking);
+          //});
+
+          //calculateTotal();
 
       }
 function calculateTotal(){
