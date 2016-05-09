@@ -845,6 +845,9 @@ class SessionPackageController extends Controller
                             }
                         }
                     }
+                
+                break;
+                
                 case 'week':
                     $week = date("W",strtotime($selectedDate));
                     foreach($facilities as $facility) {
@@ -866,6 +869,9 @@ class SessionPackageController extends Controller
                             }
                         }
                     }
+                
+                break;
+                
                 case 'day':
                     foreach($facilities as $facility) {
                         $records  = $sql->where('facility_id','=',$facility->id)
