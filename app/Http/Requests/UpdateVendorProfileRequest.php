@@ -24,13 +24,13 @@ class UpdateVendorProfileRequest extends Request
     public function rules()
     {
         $rules =  [
-            'fname' => 'required|alpha|min:3|max:25',
-            'lname' => 'required||alpha|min:3|max:25',
-            'business_name' => 'required|alpha_specialchars|min:3|max:160',
+            'fname' => 'required|alpha|max:25',
+            'lname' => 'required||alpha|max:25',
+            'business_name' => 'required|alpha_specialchars|max:160',
             'address' => 'required|min:10|max:255',
             'longitude' => 'required|min:3|max:20',
             'latitude' => 'required|min:3|max:20',
-            'description' => 'required|min:3|max:500',
+            'description' => 'required',
             'area_id' => 'required|integer',
             'profile_picture' => 'mimes:jpeg,png,jpg',
             'postcode' => 'required|numeric|zip',
