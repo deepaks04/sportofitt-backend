@@ -19,6 +19,8 @@ app.controller('facilityAddCtrl', ["$scope", "$state", "$log", "facilityService"
         }
 
         function init(){
+
+            console.log('sdsadsad');
             facilityService.getDuration()
                 .then(getDurationSuccess);
 
