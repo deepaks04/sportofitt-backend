@@ -774,7 +774,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
         init();
 
         function getBlockData() {
-            var date = new Date().getTime();
+            var startDate = new Date().getTime();
 
             if ($scope.facilityId) {
                 getBlockedSessionByFacilityId(startDate,'week')
