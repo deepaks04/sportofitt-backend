@@ -737,7 +737,7 @@ app.controller('facilitySessionCtrl', ["$scope", "$modalInstance"], function ($s
     $scope.selected = {
         item: $scope.items[0]
     };
-
+    
     $scope.ok = function () {
         $modalInstance.close($scope.selected.item);
     };
@@ -751,15 +751,15 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
     function ($scope, $stateParams, $aside, moment, facilityService, SweetAlert) {
         $scope.facilityId = $stateParams.facilityId;
 
-
         $scope.facilityData = {};
-
-
+        $scope.showAvailableSessions = false;    
+        
         var vm = this;
 
         $scope.events = [];
 //console.log($scope.facilityId);
         function init() {
+        
 
             facilityService.getAllFacilities()
                     .then(getAllFacilitySuccess);
@@ -851,6 +851,7 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                 },
                 controller: function ($scope, $modalInstance, selectedFacility, facilityData, facilityService) {
                     $scope.facilityData = facilityData;
+                    $scope.showAvailableSessions = false;
                     $scope.selectedFacility = selectedFacility;
                     $scope.$modalInstance = $modalInstance;
                     $scope.action = action;
@@ -867,14 +868,30 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                         var peakHourSelectedValue = $scope.event.peakHourSelected.value;
                         facilityService.getAvailableSessionsByFacilityId(facilityId, eventStartsAt, peakHourSelectedValue)
                         .then(function(response){
-                            $scope.availableSessions = response.data.data;
-                            if(angular.isArray(response.data.message.success))
+                            
+                            if(angular.isArray(response.data.message.success)){
+                                $scope.showAvailableSessions = true;
+                                $scope.availableSessions = response.data.data;
+                                $scope.event.selectedSession = $scope.eventForm.blockSession =response.data.data[0];
                                 $scope.availableSessions.message = response.data.message.success[0];
+                            }
+                            
                             else
                                 $scope.availableSessions.message = response.data.message.success;
+                        })
+                        .catch(function (response) {
+                            $scope.errors = {};
+                            angular.forEach(response.data, function (errors, field) {
+
+                                $scope.errors[field] = (angular.isArray(errors)) ? errors.join(', ') : errors;
+                            });
                         });
                         
 
+                    };
+                    
+                    $scope.hideAvailableSessions = function(){
+                         $scope.showAvailableSessions = false;
                     };
                     
                     $scope.toggleMin = function () {
@@ -883,10 +900,17 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                     $scope.toggleMin();
 
                     $scope.addEvent = function () {
+                        var sessionToBlock = {
+                          facility_id: $scope.event.available_facility_id,
+                          date: new Date($scope.event.startsAt).getTime(),
+                          is_peak: $scope.event.peakHourSelected.value,
+                          slot_timing:$scope.event.selectedSession
+                        };
                         //$modalInstance.dismiss('cancel');
                         //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()
-                        facilityService.blockSession($scope.event).then(function (response) {
+                        facilityService.blockSession(sessionToBlock).then(function (response) {
                             //$modalInstance.close($scope.event, 'add');
+                            SweetAlert.swal("Good job!", "Event added successfully!", "success");
                             getBlockData();
 
                             $modalInstance.dismiss('cancel');

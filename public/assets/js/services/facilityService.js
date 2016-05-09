@@ -41,7 +41,7 @@
                 date: eventStartsAt,
                 is_peak: peakHourSelectedValue
             };
-            return $http.post('api/v1/index/facility/available-slots',data);
+            return $http.post('http://sportofit.in/api/v1/index/facility/available-slots',data);
         }
         
         function getDuration() {
@@ -337,19 +337,16 @@ function sendDeleteImagesError(response) {
 
         function blockSession(data) {
 
-            var localData = angular.copy(data);
-            localData.startsAt = localData.startsAt.getTime();
+            
             var fd = new FormData();
-            for (var key in localData)
-                fd.append(key, localData[key]);
+            for (var key in data)
+                fd.append(key, data[key]);
+            console.log('blocking session with :' + JSON.stringify(data));
 
-            if (localData.id) {
-                return $http.put('api/v1/vendor/calendar-block/' + localData.id, localData);
+            if (data.id) {
+                return $http.put('api/v1/vendor/calendar-book/' + data.id, data);
             } else {
-                return $http.post('api/v1/vendor/calendar-block', fd, {
-                    transformRequest: angular.indentity,
-                    headers: {'Content-Type': undefined}
-                });
+                return $http.post('api/v1/vendor/calendar-book', data);
             }
         }
 

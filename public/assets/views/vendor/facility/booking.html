@@ -121,7 +121,7 @@
 
                         <input type="text" placeholder="Enter title" class="form-control underline text-large" value="Booked {{selectedFacility.name}}" ng-model="event.title" >
                     </div>
-                    <div class="form-group" ng-class="{'has-error':eventForm.facility.$pristine, 'has-success':eventForm.facility.$dirty}">
+                    <div class="form-group" ng-class="{'has-error':eventForm.facility.$touched && eventForm.facility.$pristine, 'has-success':eventForm.facility.$dirty}">
                     <label>
                     Category
                     </label>
@@ -129,7 +129,7 @@
                     <div class="col-xs-12">
                     
                         <select class="form-control" ng-model="event.available_facility_id" name="facility"
-                                ng-options="facility.id as facility.name for facility in facilityData" required>
+                                ng-options="facility.id as facility.name for facility in facilityData" ng-change="showAvailableSessions=false" required>
                             <option value="" ng-disabled="true">Select Venue</option>
                         </select>
                     </div>
@@ -142,28 +142,31 @@
                     <span class="input-icon">
                     <input type="text" class="form-control underline" min-date="minDate" readonly
                            ng-click="startOpen = !startOpen" datepicker-popup="fullDate" ng-model="event.startsAt"
-                           is-open="startOpen" ng-init="startOpen = false" close-text="Close"  />
+                           is-open="startOpen" ng-init="startOpen = false" close-text="Close"  ng-change="showAvailableSessions=false"/>
                     <i class="ti-calendar"></i> </span>
                     </div>
                     <div class="form-group">
                         <div class="radio-inline clip-radio radio-primary" ng-repeat="peakHourOption in event.peakHourOptions">
-                            <input type="radio" id="{{peakHourOption.id}}" name="peakHour" ng-value="peakHourOption" ng-model="$parent.event.peakHourSelected">
+                            <input type="radio" id="{{peakHourOption.id}}" name="peakHour" ng-value="peakHourOption" ng-model="$parent.event.peakHourSelected" ng-change="hideAvailableSessions()">
                             <label for="{{peakHourOption.id}}">
                             {{peakHourOption.description}}
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary" ng-click="getAvailableSessionsByFacilityId()">
+                        <button ng-disabled="eventForm.facility.$pristine" class="btn btn-primary" ng-click="getAvailableSessionsByFacilityId()">
                             Check available slots
                         </button>
                     </div>
-                     <div class="form-group" ng-class="{'has-error':availableSessions.message || eventForm.blockSession.$pristine, 'has-success':eventForm.blockSession.$dirty}">
+                    <div class="form-group has-error">
+                        <label class="text-small block">{{availableSessions.message}}</label>
+                    </div>
+                     <div ng-show="showAvailableSessions" class="form-group" ng-class="{'has-error':availableSessions.message || (eventForm.blockSession.$touched && eventForm.blockSession.$pristine), 'has-success':eventForm.blockSession.$dirty}">
                      <label>Available time slots:
-                     <span class="error text-small block">{{availableSessions.message}}</span>
+                     
                         <select class="form-control" ng-model="event.selectedSession" name="blockSession"
-                                ng-options="session as session for session in availableSessions" required>
-                            <option value="" ng-disabled="true">Select slot</option>
+                                ng-selected="$first" ng-options="session as session for session in availableSessions" required>
+                                 
                         </select>
                     </div>
                     
@@ -172,7 +175,7 @@
                     </div>
                     <div class="modal-footer">
 
-                    <button class="btn btn-primary btn-o" ng-click="addEvent()">
+                    <button class="btn btn-primary btn-o" ng-disabled="eventForm.blockSession.$pristine" ng-click="addEvent()">
                     Ok
                     </button>
             <button class="btn btn-warning btn-o" ng-click="cancel()">
