@@ -867,7 +867,8 @@ app.controller('facilityBookingCtrl', ["$scope", "$stateParams", "$aside", "mome
                             facility_id: $scope.event.available_facility_id,
                             date: new Date($scope.event.startsAt).getTime(),
                             is_peak: $scope.event.peakHourSelected.value,
-                            slot_timing: $scope.event.selectedSession
+                            slot_timing: $scope.event.selectedSession,
+                            title: $scope.event.title
                         };
                         //$modalInstance.dismiss('cancel');
                         //$scope.event.startsAt =$scope.event.startsAt.toLocaleString()

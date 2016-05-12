@@ -122,8 +122,8 @@
                                 </label>
                                 <input type="hidden" class="form-control underline text-large" ng-model="event.id">
 
-                                <input type="text" placeholder="Enter title" class="form-control underline text-large"
-                                       value="Booked {{selectedFacility.name}}" ng-model="event.title">
+                                <input type="text" placeholder="Enter title" class="form-control underline text-large" name="title"
+                                       value="Booked {{selectedFacility.name}}" ng-model="event.title" />
                             </div>
                             <div class="form-group"
                                  ng-class="{'has-error':eventForm.facility.$touched && eventForm.facility.$pristine, 'has-success':eventForm.facility.$dirty}">

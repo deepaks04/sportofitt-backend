@@ -834,7 +834,8 @@ class SessionPackageController extends Controller
                             foreach ($records as $data) {
                                 if (!empty($data->count() > 0)) {
                                     $temp = array();
-                                    $temp['title'] = $data->start_time . "-" . $data->end_time;
+                                    $time = $data->start_time . "-" . $data->end_time;
+                                    $temp['title'] = !empty($data->name) ? $data->name : $time;
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = $data->booking_date . " " . $data->start_time;
@@ -857,8 +858,9 @@ class SessionPackageController extends Controller
                         if(!empty($records)) {
                             foreach ($records as $data) {
                                 if (!empty($data->count() > 0)) {
+                                    $time = date("H:i A",strtotime($data->booking_date . " " . $data->start_time)) ."-". date("H:i A",strtotime($data->booking_date . " " . $data->end_time));
                                     $temp = array();
-                                    $temp['title'] = date("H:i A",strtotime($data->booking_date . " " . $data->start_time)) ."-". date("H:i A",strtotime($data->booking_date . " " . $data->end_time));
+                                    $temp['title'] = !empty($data->name) ? $data->name . $time : $time ;
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = date("Y-m-d H:i:s",strtotime($data->booking_date . " " . $data->start_time));
@@ -882,7 +884,7 @@ class SessionPackageController extends Controller
                             foreach ($records as $data) {
                                 if (!empty($data->count() > 0)) {
                                     $temp = array();
-                                    $temp['title'] = "Blocked (" . $data->start_time . "-" . $data->end_time . ")";
+                                    $temp['title'] = !empty($data->name) ? $data->name ."(" . $data->start_time . "-" . $data->end_time . ")" : "Blocked (" . $data->start_time . "-" . $data->end_time . ")";
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = $data->booking_date . " " . $data->start_time;
