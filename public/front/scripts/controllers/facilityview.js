@@ -8,7 +8,7 @@
  * Controller of the sportofittApp
  */
 angular.module('sportofittApp')
-    .controller('FacilityViewCtrl', function ($stateParams, $state, searchService, toastr, $scope, bookingService) {
+    .controller('FacilityViewCtrl', function ($stateParams, $state, searchService, toastr, $scope, bookingService, $filter) {
         var vm = this;
         vm.facilityId = $stateParams.facilityId;
 
@@ -28,7 +28,7 @@ angular.module('sportofittApp')
 
                 vm.filter = angular.copy(vm.facility);
                 vm.filter.is_peak = true,
-                    vm.filter.date= new Date()
+                    vm.filter.date= $filter('date')(new Date(), 'EEEE, MMMM d, yyyy');
 
                 vm.getAvailableSlots();
             }).catch(function (response) {
@@ -89,7 +89,7 @@ angular.module('sportofittApp')
         }
 
         vm.today = function () {
-            vm.filter.date = new Date();
+            vm.filter.date = $filter('date')(new Date(), 'EEEE, MMMM d, yyyy');
         };
 
         function getDayClass(data) {
