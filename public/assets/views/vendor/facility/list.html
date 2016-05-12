@@ -96,101 +96,17 @@
                     </table>
                     <button class="btn btn-default" ng-click="addHours()">Add Time</button>
                 </tab>
-                <tab heading="Sessions" ng-click="setTab('sessions')" active="tab==='sessions'">
-                    <table class="table table-bordered table-hover table-condensed">
-                        <tr style="font-weight: bold">
-                            <!--	<td style="width:25%">Name</td> -->
-                            <td style="width:15%">No of Peak Time</td>
-                            <td style="width:15%">No of Off peak Time</td>
-                            <td style="width:15%">Actual Price</td>
-                            <td style="width:25%">Discount</td>
-                            <td style="width:10%">Discounted Price</td>
-                    <td style="width:28%">Actions</td>
-                        </tr>
-                        <tr ng-repeat="session in sessions">
-                            <!--<td>
-                            <span e-name="name" e-form="rowform" editable-text="session.name">
-                            {{ session.name  }}
-                            </span>
-                            </td>-->
-                            <td>
-        <span e-name="peak" e-form="rowform" editable-number="session.peak" e-min="0" e-max="10" e-ng-click="calculateSessionPricing(rowform.$data,session)" e-ng-change="calculateSessionPricing(rowform.$data,session)">
-        {{ session.peak  }}
-        </span>
-                                <span class="has-error" ng-if="rowform.$dirty && errors.peak"><label
-                                        class="help-block">{{errors.peak}}</label></span>
-                            </td>
-                            <td>
-        <span e-name="off_peak" e-form="rowform" editable-number="session.off_peak" e-min="0" e-max="10" e-ng-click="calculateSessionPricing(rowform.$data,session)" e-ng-change="calculateSessionPricing(rowform.$data,session)">
-        {{ session.off_peak  }}
-        </span>
-                                <span class="has-error" ng-if="rowform.$dirty && errors.off_peak"><label
-                                        class="help-block">{{errors.off_peak}}</label></span>
-                            </td>
-                            <td>
-        <span e-name="price" e-form="rowform" editable-text="session.price" e-readonly>
-        {{ session.price  }}
-        </span>
-                                <span class="has-error" ng-if="rowform.$dirty && errors.price"><label
-                                        class="help-block">{{errors.price}}</label></span>
-                            </td>
-                            <td>
-        <span e-name="discount" e-form="rowform" editable-range="session.discount" e-min="0" e-max="100" e-step="1"
-              e-style="width:90%">
-        {{ session.discount  }}
-        </span>
-                                <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
-                                        class="help-block">{{errors.discount}}</label></span>
-                            </td>
-                            <td>
-        <span  e-form="rowform" e-style="width:90%">
-        {{ session.price - ((session.price*session.discount)/100)  }}
-        </span>
-                                <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
-                                        class="help-block">{{errors.discount}}</label></span>
-</td>
-                            <td>
-                                <!-- form -->
-                                <form editable-form name="rowform" onbeforesave="saveSession($data, session.id,rowform)"
-                                      ng-show="rowform.$visible || rowform.$waiting" class="form-buttons form-inline "
-                                      shown="showSessionEdit" novalidate>
-                     <div class="buttons pull-right">
-            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
-                                        save
-                                    </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="!session.id"
-                                            ng-click="removeSession($index,session.id)"
-                                            class="btn btn-default">
-                                        cancel
-                                    </button>
-                                    <button type="button" ng-disabled="rowform.$waiting" ng-if="session.id"
-                                            ng-click="rowform.$hide()"
-                                            class="btn btn-default">
-                                        cancel
-                                    </button>
-                            </div>
-                                </form>
-                                <div class="buttons pull-right" ng-show="!rowform.$visible">
-                                    <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
-                                    <button class="btn btn-danger" ng-click="removeSession($index,session.id)">del
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </table>
-                    <button class="btn btn-default" ng-click="addSession()">Add Session</button>
-                </tab>
+                
 
                 <tab heading="Packages" ng-click="setTab('packages')" active="tab === 'packages'">
                     <table class="table table-bordered table-hover table-condensed">
                         <tr style="font-weight: bold">
-                            <td style="width:25%">Name</td>
+                            <td style="width:15%">Name</td>
                             <td style="width:15%">Months</td>
-                            <td style="width:20%">Actual Price</td>
+                            <td style="width:15%">Actual Price</td>
                             <td style="width:15%">Pick Package</td>
-                            <td style="width:25%">Discount</td>
-                            <td style="width:25%">Description</td>
+                            <td style="width:15%">Discount</td>
+                            <td style="width:50%">Description</td>
 
                             <td style="width:25%">Action</td>
 
@@ -227,7 +143,7 @@
                             </td>
                             <td>
         <span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5"
-              e-style="width:88%">
+              e-style="width:75%">
         {{ package.discount }}
         </span>
                                  <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
