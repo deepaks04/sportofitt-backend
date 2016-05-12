@@ -101,11 +101,11 @@
                 .then(sendResponseData)
                 .catch(sendGetError);
         }
-        function blockUnblockFacility(facilityId, data) {
+        function blockUnblockFacility(facilityId, options) {
             return $http({
                 method: 'PUT',
                 url: 'api/v1/vendor/facility/update-status/' + facilityId,
-
+                data : options
             });
         }
 

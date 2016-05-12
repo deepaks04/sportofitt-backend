@@ -109,11 +109,12 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         views: {
             'body@app': {
                 templateUrl: "views/login/index.html",
-                controller: function ($rootScope,$state, $auth) {
+                controller: function ($rootScope,$state, $auth,$cookies) {
                 $auth.logout();
                     $cookies.remove("loggedUser");
 
                     $rootScope.isAuthenticated = $auth.isAuthenticated();
+                    $rootScope.user = {};
 
                 $state.go('app.login');
             },

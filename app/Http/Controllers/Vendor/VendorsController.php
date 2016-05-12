@@ -547,6 +547,7 @@ class VendorsController extends Controller
                 
                 $message = "New facility added successfully";
                 $facility['vendor_id'] = $this->vendor->id;
+//                $facility['is_venue'] = $facility['type'];
                 $facility['area_id'] = $this->vendor->area_id;
                 $facility['pincode'] = $this->vendor->postcode;
                 $facility['created_at'] = Carbon::now();
@@ -703,6 +704,7 @@ class VendorsController extends Controller
                 $facility['image'] = $filename;
             }*/
             $facility['vendor_id'] = $this->vendor->id;
+//            $facility['is_venue'] = $facility['type'];
             $DbFacility = $this->vendor->facility()->find($id);
             if(isset($facility['sub_category_id']) && $facility['sub_category_id'] > 0) {
                 $subCategory = SubCategory::find($facility['sub_category_id']);

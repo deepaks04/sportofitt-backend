@@ -30,6 +30,12 @@
                             <input type="email" class="form-control"  name="email" data-ng-model="vm.user.email" required>
                             <span class="error text-small" ng-if="vm.errors.email">{{vm.errors.email}}</span>
                         </div><!-- /.form-group -->
+
+                        <div class="form-group" ng-class="{'has-error':vm.errors.phone_no,'has-success':!vm.errors.phone_no}">
+                            <label for="phone_no">Mobile Number:</label>
+                            <input type="text" class="form-control"  name="phone_no" data-ng-model="vm.user.phone_no" required>
+                            <span class="error text-small" ng-if="vm.errors.phone_no">{{vm.errors.phone_no}}</span>
+                        </div><!-- /.form-group -->
                         <div class="form-group" ng-class="{'has-error':vm.errors.password,'has-success':!vm.errors.password}">
                             <label for="password">Password:</label>
                             <input type="password" class="form-control" name="password" data-ng-model="vm.user.password" required>
@@ -41,7 +47,6 @@
                                    name="password_confirmation" required>
                             <span class="error text-small " ng-if="vm.errors.password_confirmation">{{vm.errors.password_confirmation}}</span>
                         </div><!-- /.form-group -->
-
                         <div class="form-group clearfix">
                             <button type="submit" class="btn pull-right btn-default" ng-disabled="vm.disableSubmit" id="account-submit">Create an Account</button>
                         </div><!-- /.form-group -->
