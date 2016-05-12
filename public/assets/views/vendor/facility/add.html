@@ -13,15 +13,26 @@
 <div class="container-fluid container-fullw bg-white">
     <div class="row">
         <div class="col-md-12">
-            <h5 class="over-title margin-bottom-15">
-                <span class="text-bold">New Venue</span>
-            </h5>
-
-            <p></p>
+            
             <!-- /// controller:  'facilityAddCtrl' -  localtion: assets/js/controllers/vendor/facilityAddCtrl.js /// -->
             <div ng-controller="facilityAddCtrl">
                 <form name="Form" id="form1" novalidate
                       ng-submit="form.submit(Form)" enctype="multipart/form-data">
+                    <h5 class="over-title margin-bottom-15">
+                        <span class="text-bold">New Venue</span>
+                        <div class="form-group margin-left-30" style="display:inline"
+                                 ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
+                                <label class="control-label"> Type </label>
+                                <div class="clip-radio radio-primary margin-left-10" style="display: inline">
+                                    <input type="radio" id="venue" name="type" data-ng-model="facility.is_venue" value="1" checked="checked">
+                                    <label for="venue"> Venue </label>
+                                    <input type="radio"  id="coaching" name="type" data-ng-model="facility.is_venue" value="0" >
+                                    <label for="coaching"> Coaching </label>
+                                </div>
+                            </div>
+                    </h5>
+
+            <p></p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group"
@@ -35,16 +46,7 @@
                                     {{Form.name.$error[0]}}
                                 </span>
                             </div>
-                            <div class="form-group"
-                                 ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
-                                <label class="control-label"> Type </label>
-                                <div class="clip-radio radio-primary">
-                                    <input type="radio" id="venue" name="type" data-ng-model="facility.is_venue" value="1" checked="checked">
-                                    <label for="venue"> Venue </label>
-                                    <input type="radio"  id="coaching" name="type" data-ng-model="facility.is_venue" value="0" >
-                                    <label for="coaching"> Coaching </label>
-                                </div>
-                            </div>
+                            
                             <div class="form-group"
                                  ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
                                 <label class="control-label"> Root Category <span
