@@ -116,11 +116,14 @@ class VendorsController extends Controller
             $message = "Settings updated successfully";
             $user = Input::only('fname', 'lname', 'profile_picture');
             $vendor = Input::only('business_name','address','longitude','latitude','area_id','description','contact','postcode','commission');
-            if(!empty(Input::get('area_id'))) {
-                $selectedArea = \App\Area::find(Input::get('area_id'));
-                $vendor['longitude'] = $selectedArea->longitude;
-                $vendor['latitude'] = $selectedArea->latitude;
+            if(empty(Input::get('longitude')) && empty(Input::get('latitude'))) {
+                if(!empty(Input::get('area_id'))) {
+                    $selectedArea = \App\Area::find(Input::get('area_id'));
+                    $vendor['longitude'] = $selectedArea->longitude;
+                    $vendor['latitude'] = $selectedArea->latitude;
+                }
             }
+            
             $systemUser = User::find(Auth::user()->id);
             if ($request->file('profile_picture')!=null && isset($request->profile_picture)) {
                 $user['profile_picture'] = $this->imageUpload($request,$systemUser->id,'profile_image');
