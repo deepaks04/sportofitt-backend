@@ -147,7 +147,7 @@
                                                                 <div ng-if="vm.facilitySlots.length">
                                                                     <div class="form-inline">
                                                                         <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.facilitySlots"></select>
-                                                                        <label class="form-control">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
+                                                                        <label class="form-control margin-top-5">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
                                                                         <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter, true)" >CheckOut</button>
                                                                     </div>
                                                                 </div>
