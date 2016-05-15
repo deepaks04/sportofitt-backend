@@ -198,7 +198,14 @@
                                                                         <header><h2>{{package.name}}</h2></header>
                                                                         <figure>
                                                                             <span class="price">
+                                                                                <i class="fa fa-inr"></i> {{package.discounted_price}}
+                                                                            </span>
+                                                                        </figure>
+                                                                        <figure>
+                                                                            
+                                                                            <strike>  <span class="price">
                                                                                 <i class="fa fa-inr"></i> {{package.actual_price}}</span>
+                                                                            </strike>
                                                                         </figure>
                                                                         <figure>{{package.month}} month(s)</figure>
                                                                         <figure>Discount {{package.discount}} %</figure>

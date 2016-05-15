@@ -22,6 +22,11 @@ angular.module('sportofittApp')
         vm.init = function () {
             searchService.getFacilityById(vm.facilityId).then(function (response) {
                 vm.facility = response.data.data;
+                angular.forEach(vm.facility.packages, function(value, key){
+                    console.log(JSON.stringify(value)+" "+key);
+                    value.discounted_price = value.actual_price - (value.actual_price*value.discount/100);
+                    console.log(JSON.stringify(value)+" "+key);
+                });
                 if(vm.facility) {
                     itemDetailMap(vm.facility.vendor.longitude, vm.facility.vendor.latitude);
                 }
