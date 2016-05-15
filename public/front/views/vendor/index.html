@@ -129,12 +129,12 @@
                                                                 <div style="display:inline-block; min-height:200px;">
                                                                     <div class="col-md-6">
                                                                         <p class="input-group"  ng-click="vm.openDatePicker()">
-                                                                            <input type="text" class="form-control underline" min-date="vm.minDate" readonly
+                                                                            <input type="text" class="form-control bg-white" min-date="vm.minDate" readonly
                                                                                    datepicker-popup="fullDate" ng-model="vm.filter.date"
                                                                                    is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
 
-                                                                            <span class="input-group-btn" ng-click="vm.openDatePicker()">
-                                                                                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker()"><i class="glyphicon glyphicon-calendar" ></i></button>
+                                                                            <span class="input-group-btn">
+                                                                                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-calendar" ></i></button>
                                                                             </span>
                                                                         </p>
 
