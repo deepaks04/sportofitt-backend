@@ -335,7 +335,7 @@ class SubCategorySeeder extends Seeder
             [
                 'name' => 'Archery',
                 'slug' => 'archery',
-                'root_category_id' => 4,
+                'root_category_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
