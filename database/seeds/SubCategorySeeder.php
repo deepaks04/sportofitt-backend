@@ -317,6 +317,27 @@ class SubCategorySeeder extends Seeder
                 'root_category_id' => 4,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
+            ],
+            [
+                'name' => 'Athletics',
+                'slug' => 'athletics',
+                'root_category_id' => 1,    
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'name' => 'Fencing',
+                'slug' => 'fencing',
+                'root_category_id' => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
+            [
+                'name' => 'Archery',
+                'slug' => 'archery',
+                'root_category_id' => 4,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]
         ]);
         $this->command->info('Inserting of records completed...');
