@@ -84,7 +84,7 @@ class BookingService extends BaseService
     public function makeBooking($bookingData)
     {
         try {
-            $this->bookingData = json_decode($bookingData);
+            $this->bookingData = $bookingData;
             if (!empty($this->bookingData)) {
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
