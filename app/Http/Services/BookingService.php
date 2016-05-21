@@ -152,15 +152,15 @@ class BookingService extends BaseService
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
-                    $bookingObj->package_type = $bookingData->package_type_id;
-                    $bookingObj->name = $bookingData->name;
-                    $bookingObj->description = $bookingData->description;
-                    $bookingObj->booking_amount = $bookingData->booking_amount;
-                    $bookingObj->discount = !empty($bookingData->discount) ? $bookingData->discount : 0;
-                    $bookingObj->final_amount = $bookingObj->discounted_amount;
+                    $bookingObj->package_type = $bookingData['package_type_id'];
+                    $bookingObj->name = $bookingData['name'];
+                    $bookingObj->description = $bookingData['description'];
+                    $bookingObj->booking_amount = $bookingData['booking_amount'];
+                    $bookingObj->discount = !empty($bookingData['discount']) ? $bookingData['discount'] : 0;
+                    $bookingObj->final_amount = $bookingData['discounted_amount'];
                     $bookingObj->order_id = $this->orderObj->id;
-                    $bookingObj->no_of_peak = (isset($bookingData->no_of_peak)) ? $bookingData->no_of_peak : 0;
-                    $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
+                    $bookingObj->no_of_peak = (isset($bookingData['no_of_peak'])) ? $bookingData['no_of_peak'] : 0;
+                    $bookingObj->no_of_offpeak = (isset($bookingData['no_of_offpeak'])) ? $bookingData['no_of_offpeak'] : 0;
                     $bookingObj->booking_status = 2;
 
                     if ('cash' == trim(Input::get('payment_mode'))) {
@@ -193,11 +193,11 @@ class BookingService extends BaseService
             if (!empty($booking->id)) {
                 $bookingTimming = new BookedTiming();
                 $bookingTimming->booking_id = $booking->id;
-                $bookingTimming->facility_id = $bookingData->facilityId;
+                $bookingTimming->facility_id = $bookingData['facilityId'];
                 $bookingTimming->is_peak = ($bookingData->is_peak) ? 1 : 0;
-                $bookingTimming->booking_date = date("Y-m-d H:i:s", strtotime($bookingData->selectedDate));
+                $bookingTimming->booking_date = date("Y-m-d H:i:s", strtotime($bookingData['selectedDate']));
                 $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
-                $slotTime = explode("-", $bookingData->selectedSlot);
+                $slotTime = explode("-", $bookingData['selectedSlot']);
                 if (!empty($slotTime)) {
                     $bookingTimming->start_time = $slotTime[0];
                     $bookingTimming->end_time = $slotTime[1];
