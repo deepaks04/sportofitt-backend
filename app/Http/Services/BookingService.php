@@ -6,7 +6,6 @@ use Input;
 use App\SessionBooking;
 use App\AvailableFacility;
 use Carbon\Carbon;
-use App\SessionPackage;
 use App\Order;
 use App\BookedPackage;
 use App\BookedTiming;
@@ -84,7 +83,7 @@ class BookingService extends BaseService
     public function makeBooking($bookingData)
     {
         try {
-            $this->bookingData = json_decode($bookingData);
+            $this->bookingData = $bookingData;
             if (!empty($this->bookingData)) {
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
@@ -126,14 +125,14 @@ class BookingService extends BaseService
                 'order_id' => $this->getOrderId(),
                 'created_at' => date("Y-m-d H:i:s"),
                 'order_status' => 2,
-                'payment_mode' => Input::get('payment_mode')
+                'payment_mode' => $this->bookingData['payment_mode']
             );
-            
-            if('cash' == trim(Input::get('payment_mode'))) {
+
+            if ('cash' == trim($this->bookingData['payment_mode'])) {
                 $array['order_status'] = 1;
                 $array['payment_status'] = 1;
             }
-            
+
             return $order->createOrder($array);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
@@ -149,7 +148,7 @@ class BookingService extends BaseService
     public function processBooking()
     {
         try {
-            
+
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
@@ -157,23 +156,23 @@ class BookingService extends BaseService
                     $bookingObj->name = $bookingData->name;
                     $bookingObj->description = $bookingData->description;
                     $bookingObj->booking_amount = $bookingData->booking_amount;
-                    $bookingObj->discount = !empty($bookingData->discount)?$bookingData->discount:0;
+                    $bookingObj->discount = !empty($bookingData->discount) ? $bookingData->discount : 0;
                     $bookingObj->final_amount = $bookingObj->discounted_amount;
                     $bookingObj->order_id = $this->orderObj->id;
                     $bookingObj->no_of_peak = (isset($bookingData->no_of_peak)) ? $bookingData->no_of_peak : 0;
                     $bookingObj->no_of_offpeak = (isset($bookingData->no_of_offpeak)) ? $bookingData->no_of_offpeak : 0;
                     $bookingObj->booking_status = 2;
-                    
-                    if('cash' == trim(Input::get('payment_mode'))) {
+
+                    if ('cash' == trim(Input::get('payment_mode'))) {
                         $bookingObj->booking_status = 1;
                     }
-            
+
                     $bookingObj->created_at = date('Y-m-d H:i:s');
                     if ($bookingObj->save()) {
                         $this->addBookingTimings($bookingObj, $bookingData);
                     }
                 }
- 
+
                 return 1;
             }
         } catch (\Exception $exception) {
@@ -228,18 +227,26 @@ class BookingService extends BaseService
             if (!empty($facilityDetails->id)) {
                 $date = $date / 1000;
                 $day = date('N', $date);
-                $openingHours = $facilityDetails->getOpenigHoursOfFacility($day,$isPeak);
-                $bookingHours = $this->getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak);
-                
+                $openingHours = $facilityDetails->getOpenigHoursOfFacility($day, $isPeak);
+                $bookingHours = $this->getBookingAvailableTimings($facilityDetails, $openingHours, $date, $isPeak);
             }
         } catch (\Exception $ex) {
             throw new \Exception($ex);
         }
-        
+
         return $bookingHours;
     }
     
-    public function getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak) 
+    /**
+     * Get booking available timings 
+     * 
+     * @param App\AvailabeFacility $facilityDetails
+     * @param array $openingHours
+     * @param string $date
+     * @param integer $isPeak
+     * @return array
+     */
+    public function getBookingAvailableTimings($facilityDetails, $openingHours, $date, $isPeak)
     {
         $sessionDetails = $facilityDetails->getSession($facilityDetails->id);
         $bookingTiming = array();
@@ -250,23 +257,23 @@ class BookingService extends BaseService
                 $bookingTiming = $this->getTimings($openingHour->start, $openingHour->end, $sessionDetails->duration);
             }
         }
-        
+
         // if not empty then check is booking made against the same date and time
-        if(!empty($bookingTiming)) {
-            $bookingDate = date('Y-m-d',$date);
-            foreach($bookingTiming as $key => $timeSlot) {
+        if (!empty($bookingTiming)) {
+            $bookingDate = date('Y-m-d', $date);
+            foreach ($bookingTiming as $key => $timeSlot) {
                 $bookingCount = $this->checkAvailability($facilityDetails->id, $timeSlot, $bookingDate, $isPeak);
-                if($bookingCount == $facilityDetails->slots) {
+                if ($bookingCount == $facilityDetails->slots) {
                     unset($bookingTiming[$key]);
                 }
             }
-            
+
             $bookingTiming = array_values($bookingTiming);
         }
-        
-        return $bookingTiming;        
+
+        return $bookingTiming;
     }
-    
+
     /**
      * Get formatted opening hours that is the opening hour according to the days
      * peaks and offpeaks timings. Like for monday we can have entry as below:
@@ -339,7 +346,7 @@ class BookingService extends BaseService
      * @param integer $isPeak
      * @return boolean
      */
-    public function checkAvailability($facilityId, $timeSlot, $date,$isPeak)
+    public function checkAvailability($facilityId, $timeSlot, $date, $isPeak)
     {
         $result = false;
         try {
@@ -350,7 +357,7 @@ class BookingService extends BaseService
                         ->join('booked_packages', function($join) {
                             $join->on('booked_packages.id', '=', 'booked_timings.booking_id');
                             $join->on('booked_packages.booking_status', '=', \DB::raw(1));
-                        }) 
+                        })
                         ->where('booked_timings.start_time', '=', $slot[0])
                         ->where('booked_timings.end_time', '=', $slot[1])
                         ->where('booked_timings.booking_day', '=', $day)
@@ -364,5 +371,5 @@ class BookingService extends BaseService
         }
         return $result;
     }
-    
+
 }
