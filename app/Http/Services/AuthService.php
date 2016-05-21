@@ -113,6 +113,7 @@ use AuthenticatesAndRegistersUsers,
             $customer = new Customer;
             $customer->user_id = $user->id;
             $customer->area_id = 1;
+            $customer->phone_no = $data['phone_no'];
             $customer->save();
             
             // Adding job to queue for processing to the mail will be send via the queue

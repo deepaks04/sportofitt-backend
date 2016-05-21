@@ -11,7 +11,8 @@ class AuthenticationRequest extends Request
         'first_name' => 'required|alpha|max:255',
         'last_name' => 'required|alpha|max:255',
         'email' => 'required|email|max:255|unique:users',
-        'password' => 'required|confirmed|min:6|regex:[^\S*(?=\S{6,})(?=\S*[a-zA-Z\d\W])\S*$]'
+        'phone_no' => 'required|min:10|max:12|unique:customers',
+        'password' => 'required|confirmed|min:6|regex:[^\S*(?=\S{6,})(?=\S*[a-zA-Z\d\W])\S*$]',
     ];
 
     /**
