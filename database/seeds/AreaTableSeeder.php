@@ -195,6 +195,13 @@ class AreaTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
+            [
+                'name' => 'Parvati',
+                'city_id' => 1, 'latitude' => 18.4591045,
+                'longitude' => 73.8351287,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ],
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
