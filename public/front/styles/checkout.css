@@ -3677,6 +3677,13 @@ a.text-light:hover {
     position: relative;
     color: #8e8e93;
 }
+
+.panel-light-beige, .partition-light-beige {
+    background-color: #F5F5EC;
+    position: relative;
+    
+}
+
 .panel-light-grey .panel-tools .btn, .panel-light-grey .panel-tools > a, .partition-light-grey .panel-tools .btn, .partition-light-grey .panel-tools > a {
     color: rgba(142, 142, 147, 0.7) !important;
 }
