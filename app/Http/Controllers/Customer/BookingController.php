@@ -30,7 +30,7 @@ class BookingController extends Controller
             if (0 == $userBookings->count()) {
                 APIResponse::$message['success'] = 'Ooops ! I think you have not made your first booking yet!';
             }
-            APIResponse::$data = $userBookings;
+            APIResponse::$data = $userBookings->toArray();
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
         }

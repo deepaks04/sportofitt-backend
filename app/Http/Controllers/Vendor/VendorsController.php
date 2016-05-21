@@ -401,14 +401,13 @@ class VendorsController extends Controller
         /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request ,$systemUser,$imageType
+     * @param integer $facility_id
      * @return $filname
      */
-    public function uploadFacilityImage($request, $systemUser)
+    public function uploadFacilityImage($request, $facility_id)
     {
-        $vendorId = $systemUser;
         $vendorUploadPath =  env('VENDOR_FILE_UPLOAD');
-        $vendorOwnDirecory = $vendorUploadPath . sha1($vendorId);
+        $vendorOwnDirecory = $vendorUploadPath . sha1($facility_id);
         $vendorImageUploadPath = public_path().$vendorOwnDirecory . "/" . "facility_images";
         
         /* Create Upload Directory If Not Exists */
@@ -437,7 +436,7 @@ class VendorsController extends Controller
             $user = Auth::user();
             $status = 200;
             $message = "saved successfully";
-            $filename = $this->uploadFacilityImage($request,$user->id);
+            $filename = $this->uploadFacilityImage($request,$request->get('facility_id'));
             if(!empty($filename)) {
                 $facilityImage = new FacilityImages;
                 $facilityImage->image_name = $filename;
@@ -474,7 +473,7 @@ class VendorsController extends Controller
             $status = 200;
             $message = "success";
             $vendorUploadPath = URL::asset(env('VENDOR_FILE_UPLOAD'));
-            $url = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
+            $url = $vendorUploadPath . "/" . sha1($facilityId) . "/" . "facility_images/";
             $i = 0;
             foreach($images as $image) {
                 $imageArray[$i]['id'] = $image->id;

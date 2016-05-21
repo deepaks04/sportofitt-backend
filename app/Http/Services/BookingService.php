@@ -10,6 +10,8 @@ use App\SessionPackage;
 use App\Order;
 use App\BookedPackage;
 use App\BookedTiming;
+use App\FacilityImages;
+use URL;
 use App\Http\Services\BaseService;
 
 class BookingService extends BaseService
@@ -42,18 +44,53 @@ class BookingService extends BaseService
     public function getUsersBooking()
     {
         try {
-            $fields = array('orders.id as oid','order_id','order_total','payment_status','payment_mode','orders.create_at',
+            $fields = array('orders.id as oid','orders.order_id','order_total','payment_status','payment_mode','orders.created_at',
                 'booked_packages.id as bookingId','booked_packages.package_type','booked_packages.name','booked_packages.description',
                 'booked_packages.no_of_month','booked_packages.booking_amount','booked_packages.discount','booked_packages.final_amount',
                 'booked_packages.no_of_peak','booked_packages.no_of_offpeak','booked_packages.booking_status');
-            $sqlQuery = Order::select($fields)
+            
+            $orders = Order::select($fields)
                               ->join('booked_packages','orders.id','=','booked_packages.order_id')
                               ->where('user_id','=',$this->user->id)
-                              ->where('order_status','=',\DB::raw(1));
-            echo $sqlQuery->toSql();die;
-                              //->get();
-            return $this->sessionBooking->getUsersBooking($this->user->id,$this->offset, $this->limit);
-        } catch (Exception $exception) {
+                              ->where('order_status','=',\DB::raw(1))
+                              ->get();
+            if(isset($orders) && $orders->count() > 0 ) {
+                $vendorUploadPath = env('VENDOR_FILE_UPLOAD');                            
+                foreach($orders as $order) {
+                    $bookingTimings = BookedTiming::select('is_peak','booking_date','booking_day','start_time','end_time','facility_id')
+                                                   ->where('booked_timings.booking_id','=',$order->bookingId)
+                                                   ->get();
+                    if(isset($bookingTimings) && $bookingTimings->count() > 0 ) {
+                        foreach($bookingTimings as  $bookedTiming) {
+                            $facilityImage = FacilityImages::select('image_name','sub_categories.name as SubCategory','root_categories.name as RootCategory')
+                                                            ->join('available_facilities','available_facilities.id','=','facility_images.available_facility_id')
+                                                            ->join('sub_categories','sub_categories.id','=','available_facilities.sub_category_id')
+                                                            ->join('root_categories','root_categories.id','=','available_facilities.root_category_id')
+                                                           ->where('facility_images.available_facility_id','=',$bookedTiming['facility_id'])
+                                                           ->orderBy(\DB::raw('RAND()'))
+                                                           ->take(1)
+                                                           ->first();
+                            $bookedTiming['image'] = URL::asset($vendorUploadPath. "noProfilePic.png");
+                            $bookedTiming['start_time'] = date('h:i A',strtotime($bookedTiming['booking_date']." ".$bookedTiming['start_time']));
+                            $bookedTiming['end_time'] = date('h:i A',strtotime($bookedTiming['booking_date']." ".$bookedTiming['end_time']));
+                            if(isset($facilityImage) && $facilityImage->count() > 0) {
+                                $imagePath = $vendorUploadPath . sha1($bookedTiming['facility_id']) . "/" . "facility_images/".$facilityImage->image_name;
+                                if(file_exists(public_path().$imagePath)) {
+                                    $bookedTiming['image'] = URL::asset($imagePath);
+                                }
+                                $bookedTiming['subcategory'] = $facilityImage->SubCategory;
+                                $bookedTiming['category'] = $facilityImage->RootCategory;
+                            }
+                            
+                            $order->bookingDetails = $bookingTimings->toArray();
+                        }
+                    }
+                }
+            }
+            
+            return $orders;
+        } catch (\Exception $exception) {
+            dd($exception->getMessage());
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
