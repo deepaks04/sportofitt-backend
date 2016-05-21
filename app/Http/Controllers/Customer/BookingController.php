@@ -108,7 +108,7 @@ class BookingController extends Controller
     public function makeBooking(SessionBookingRequest $request)
     {
         try {
-            $isBooked = $this->service->makeBooking($request->get('booking_data'));
+            $isBooked = $this->service->makeBooking($request->get());
             if ($isBooked) {
                 APIResponse::$message['success'] = 'Booking has been done succesfully';
             } else {

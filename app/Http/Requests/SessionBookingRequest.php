@@ -24,7 +24,6 @@ class SessionBookingRequest extends Request
     public function rules()
     {
         return [
-            'booking_data' => 'required',
         ];
     }
 }
