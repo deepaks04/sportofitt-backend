@@ -8,7 +8,7 @@
  * Service in the sportofittApp.
  */
 angular.module('sportofittApp')
-  .service('bookingService', function (localStorageService) {
+  .service('bookingService', function (localStorageService,$http,myConfig) {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     this.getLocalBookings = function(){
@@ -20,7 +20,7 @@ angular.module('sportofittApp')
             booking.qty = 1;
             localStorageService.set("booking" , booking);
         }
-    }
+    };
 
       this.checkAlreadyInCart = function(booking){
           var alreadyHas = false;
@@ -34,5 +34,13 @@ angular.module('sportofittApp')
           });
 
           return alreadyHas;
-      }
+      };
+
+      this.checkout = function(facilityDetails){
+          return $http.post(myConfig.backend+'facility/book',facilityDetails);
+      };
+
+      this.getUserBookings = function(){
+          return $http.get(myConfig.backend + 'user/mybookings');
+      };
   });

@@ -30,9 +30,7 @@ angular.module('sportofittApp')
 
           vm.user = angular.copy($rootScope.user);
 
-          console.log(vm.user);
-
-          //    vm.LocalBookings = [];
+             //    vm.LocalBookings = [];
           //angular.forEach(LocalBookings.keys(),function(value){
           //    var booking = LocalBookings.get(value);
           //   booking.discount_amount = (booking.actual_price*booking.discount/100);
@@ -52,4 +50,28 @@ function calculateTotal(){
               });
       }
       vm.init();
+
+      vm.checkout = function(){
+          var booking = {booking_data:[{
+              "is_peak":vm.LocalBookings.is_peak,
+              "selectedDate":vm.LocalBookings.date ,
+              "name":vm.LocalBookings.name,
+              "description":vm.LocalBookings.description,
+              "booking_amount":vm.LocalBookings.booking_amount,
+              "discount":vm.LocalBookings.discount,
+              "discounted_amount":vm.LocalBookings.discounted_amount,
+              "selectedSlot":vm.LocalBookings.selectedSlot,
+              "facilityId":vm.LocalBookings.id,
+              "package_type_id":vm.LocalBookings.package_type_id,
+              "qty":vm.LocalBookings.qty,
+
+          }],
+              "payment_mode":vm.LocalBookings.payment_mode,
+              "order_total":vm.LocalBookings.booking_amount,
+
+          };
+bookingService.checkout(booking).then(function(response){
+
+})
+      }
   });

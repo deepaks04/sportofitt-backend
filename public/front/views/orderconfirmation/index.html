@@ -83,7 +83,7 @@
                                     <label class="control-label">
                                         Phone number
                                     </label>
-                                    <input type="text" name="mobile" data-ng-model="vm.user.contact_no"  class="form-control" placeholder="Enter your Phone number">
+                                    <input type="text" name="mobile" data-ng-model="vm.user.phone_no"  class="form-control" placeholder="Enter your Phone number">
                                 </div>
                             </div>
                         </div>
@@ -130,74 +130,74 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="clip-radio radio-primary">
-                                        <input type="radio" id="card" name="payment" value="card">
-                                        <label for="card">
-                                            Pay with Card
+                                        <!--<input type="radio" id="card" name="payment" value="card" data-ng-model="vm.LocalBookings.payment_mode">-->
+                                        <!--<label for="card">-->
+                                            <!--Pay with Card-->
+                                        <!--</label>-->
+                                        <input type="radio" id="paytm" name="payment" value="paytm" data-ng-model="vm.LocalBookings.payment_mode">
+                                        <label for="paytm">
+                                            Pay with PayTm
                                         </label>
-                                        <input type="radio" id="paypal" name="payment" value="paypal">
-                                        <label for="paypal">
-                                            Pay with PayPal
-                                        </label>
-                                        <input type="radio" id="venue" name="payment" value="venue" checked="checked">
+                                        <input type="radio" id="venue" name="payment" value="cash" data-ng-model="vm.LocalBookings.payment_mode">
                                         <label for="venue">
                                             Pay at Venue
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="panel panel-light-beige" id="panel1">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title"><strong>Card Details</strong></h4>
-                                        <div class="panel-tools">
-                                            <i class="fa fa-cc-visa"></i>
-                                            <i class="fa fa-cc-mastercard"></i>
-                                            <i class="fa fa-cc-amex"></i>
-                                        </div>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <div class="form-group">
-                                                    <label>
-                                                        Card number
-                                                    </label>
-                                                    <input type="text" name="cardNumber" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="securityCode">
-                                                        Security code
-                                                        <span data-toggle="tooltip" data-original-title="<div style='width:100px'>The last three digits
-                                                        on the back of your card</div>" data-html="true"
-                                                              data-placement="right"><i class="fa fa-question-circle"></i>
-                                                    </label>
-                                                    <input type="text" name="securityCode" id="securityCode" class="form-control" >
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <div class="form-group">
-                                                    <label>
-                                                        Cardholder's name
-                                                    </label>
-                                                    <input type="text" name="cardholdersName" class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label class="control-label" for="expiresOn">
-                                                        Expires on
-                                                    </label>
-                                                    <input type="text" id="expiresOn" name="expiresOn" class="form-control input-mask-date">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--<div class="col-md-12">-->
+                                <!--<div class="panel panel-light-beige" id="panel1">-->
+                                    <!--<div class="panel-heading">-->
+                                        <!--<h4 class="panel-title"><strong>Card Details</strong></h4>-->
+                                        <!--<div class="panel-tools">-->
+                                            <!--<i class="fa fa-cc-visa"></i>-->
+                                            <!--<i class="fa fa-cc-mastercard"></i>-->
+                                            <!--<i class="fa fa-cc-amex"></i>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="panel-body">-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-md-9">-->
+                                                <!--<div class="form-group">-->
+                                                    <!--<label>-->
+                                                        <!--Card number-->
+                                                    <!--</label>-->
+                                                    <!--<input type="text" name="cardNumber" class="form-control">-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-md-3">-->
+                                                <!--<div class="form-group">-->
+                                                    <!--<label class="control-label" for="securityCode">-->
+                                                        <!--Security code-->
+                                                        <!--<span data-toggle="tooltip" data-original-title="<div style='width:100px'>The last three digits-->
+                                                        <!--on the back of your card</div>" data-html="true"-->
+                                                              <!--data-placement="right"><i class="fa fa-question-circle"></i>-->
+                                                    <!--</label>-->
+                                                    <!--<input type="text" name="securityCode" id="securityCode" class="form-control" >-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-md-9">-->
+                                                <!--<div class="form-group">-->
+                                                    <!--<label>-->
+                                                        <!--Cardholder's name-->
+                                                    <!--</label>-->
+                                                    <!--<input type="text" name="cardholdersName" class="form-control">-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-md-3">-->
+                                                <!--<div class="form-group">-->
+                                                    <!--<label class="control-label" for="expiresOn">-->
+                                                        <!--Expires on-->
+                                                    <!--</label>-->
+                                                    <!--<input type="text" id="expiresOn" name="expiresOn" class="form-control input-mask-date">-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </div>
                         <h3><i class="fa fa-plus-square-o"></i> Promo codes / Gift Cards</h3>
                         <hr/>
@@ -313,7 +313,7 @@
                                 </span>
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-wide btn-azure">PLACE ORDER</button>
+                                <button class="btn btn-wide btn-azure" data-ng-click="vm.checkout();">PLACE ORDER</button>
                             </div>
                         </div>
                     </div>

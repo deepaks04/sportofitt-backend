@@ -42,9 +42,6 @@ angular.module('sportofittApp')
               $auth.setToken(response.data.data.access_token);
 
 
-          }).catch(function (errors) {
-              console.log(errors);
-                  return errors.data.message.error;
-              });;
+          });
       }
   });

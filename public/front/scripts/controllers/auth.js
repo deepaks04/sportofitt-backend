@@ -61,7 +61,7 @@
                   });
 
             }).catch(function (errors) {
-                    toastr.error(errors);
+                    toastr.error(errors.data.message.error);
                 });
         }
 

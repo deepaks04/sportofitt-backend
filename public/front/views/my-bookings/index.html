@@ -1,0 +1,105 @@
+<!-- Page Canvas-->
+<div id="page-canvas">
+    <!--Off Canvas Navigation-->
+    <nav class="off-canvas-navigation">
+        <header>Navigation</header>
+        <div class="main-navigation navigation-off-canvas"></div>
+    </nav>
+    <!--end Off Canvas Navigation-->
+
+    <!--Page Content-->
+    <div id="page-content">
+        <section class="container">
+            <header>
+                <ul class="nav nav-pills">
+                    <li><a ui-sref="app.profile"><h1 class="page-title">Profile</h1></a></li>
+                    <li  class="active"><a ui-sref="app.mybookings"><h1 class="page-title">My Bookings</h1></a></li>
+                </ul>
+            </header>
+            <div class="row">
+                <div class="col-md-3 col-sm-3">
+                    <!--<aside id="sidebar">-->
+                        <!--<ul class="navigation-sidebar list-unstyled">-->
+                            <!--<li class="active">-->
+                                <!--<a href="#">-->
+                                    <!--<i class="fa fa-folder"></i>-->
+                                    <!--<span>All Items</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<a href="#">-->
+                                    <!--<i class="fa fa-check"></i>-->
+                                    <!--<span>Approved</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<a href="#">-->
+                                    <!--<i class="fa fa-clock-o"></i>-->
+                                    <!--<span>In Queue</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<a href="#">-->
+                                    <!--<i class="fa fa-eye-slash"></i>-->
+                                    <!--<span>Hidden</span>-->
+                                <!--</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                    <!--</aside>-->
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <section id="items">
+                        <div class="item list admin-view">
+                            <div class="image">
+                                <!--<div class="quick-view" data-toggle="modal" data-target="#modal-bar"><i class="fa fa-eye"></i><span>Quick View</span></div>-->
+                                <a href="item-detail.html">
+                                    <div class="overlay">
+                                        <div class="inner">
+                                            <div class="content">
+                                                <h4>Description</h4>
+                                                <p>Curabitur odio nibh, luctus non pulvinar a, ultricies ac diam. Donec neque massa</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item-specific">
+                                        <span title="Bedrooms"><img src="assets/img/bedrooms.png" alt="">2</span>
+                                        <span title="Bathrooms"><img src="assets/img/bathrooms.png" alt="">2</span>
+                                        <span title="Area"><img src="assets/img/area.png" alt="">240m<sup>2</sup></span>
+                                        <span title="Garages"><img src="assets/img/garages.png" alt="">1</span>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-thumbs-up"></i>
+                                    </div>
+                                    <img src="assets/img/items/1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="wrapper">
+                                <a href="item-detail.html"><h3>Cash Cow Restaurante</h3></a>
+                                <figure>63 Birch Street</figure>
+                                <div class="info">
+                                    <div class="type">
+                                        <i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>
+                                        <span>Restaurant</span>
+                                    </div>
+                                    <!--<div class="rating" data-rating="4"></div>-->
+                                </div>
+                            </div>
+                            <div class="description">
+                                <ul class="list-unstyled actions">
+                                    <li><a href="#"><i class="fa fa-pencil"></i></a></li>
+                                    <li><a href="#" class="hide-item"><i class="fa fa-eye"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-trash"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="ribbon approved">
+                                <i class="fa fa-check"></i>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- end Page Content-->
+</div>
+<!-- end Page Canvas-->

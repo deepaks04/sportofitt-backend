@@ -59,6 +59,15 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
                 controllerAs: 'vm'
             }
         }
+    }).state('app.mybookings', {
+        url: "my-bookings",
+        views: {
+            'body@app': {
+                templateUrl: "views/my-bookings/index.html",
+                controller: 'UserbookingsCtrl',
+                controllerAs: 'vm'
+            }
+        }
     }).state('app.vendor', {
         url: "vendor/{vendorId}",
         views: {
