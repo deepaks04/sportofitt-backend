@@ -42,7 +42,17 @@ class BookingService extends BaseService
     public function getUsersBooking()
     {
         try {
-            return $this->sessionBooking->getUsersBooking($this->user->id, $this->offset, $this->limit);
+            $fields = array('orders.id as oid','order_id','order_total','payment_status','payment_mode','orders.create_at',
+                'booked_packages.id as bookingId','booked_packages.package_type','booked_packages.name','booked_packages.description',
+                'booked_packages.no_of_month','booked_packages.booking_amount','booked_packages.discount','booked_packages.final_amount',
+                'booked_packages.no_of_peak','booked_packages.no_of_offpeak','booked_packages.booking_status');
+            $sqlQuery = Order::select($fields)
+                              ->join('booked_packages','orders.id','=','booked_packages.order_id')
+                              ->where('user_id','=',$this->user->id)
+                              ->where('order_status','=',\DB::raw(1));
+            echo $sqlQuery->toSql();die;
+                              //->get();
+            return $this->sessionBooking->getUsersBooking($this->user->id,$this->offset, $this->limit);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -161,10 +171,13 @@ class BookingService extends BaseService
                     $bookingObj->discount = !empty($bookingData['discount'])?$bookingData['discount']:0;
                     $bookingObj->final_amount = !empty($bookingObj['discounted_amount'])?$bookingObj['discounted_amount']:$bookingObj->booking_amount;
                     $bookingObj->order_id = $this->orderObj->id;
-                    $bookingObj->no_of_peak = (isset($bookingData['no_of_peak'])) ? $bookingData['no_of_peak'] : 0;
-                    $bookingObj->no_of_offpeak = (isset($bookingData['no_of_offpeak'])) ? $bookingData['no_of_offpeak'] : 0;
-                    $bookingObj->booking_status = 2;
+                    if($bookingData['is_peak']) {
+                        $bookingObj->no_of_peak = (isset($bookingData['qty'])) ? $bookingData['qty'] : 0;
+                    } else {
+                        $bookingObj->no_of_offpeak = (isset($bookingData['qty'])) ? $bookingData['qty'] : 0;
+                    }
                     
+                    $bookingObj->booking_status = 2;
                     if('cash' == trim(Input::get('payment_mode'))) {
                         $bookingObj->booking_status = 1;
                     }
