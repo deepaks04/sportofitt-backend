@@ -32,6 +32,7 @@ trait AuthenticatedUserTrait {
                     'first_name' => $this->user->fname,
                     'last_name' => $this->user->lname,
                     'email' => $this->user->email,
+                    'phone_no' => $this->user->customer->phone_no,
                     'access_token' => $token->__toString()
                 ];
             }
