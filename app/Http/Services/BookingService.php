@@ -126,6 +126,7 @@ class BookingService extends BaseService
                 'order_id' => $this->getOrderId(),
                 'created_at' => date("Y-m-d H:i:s"),
                 'order_status' => 2,
+                'order_total' => Input::get('order_total'),
                 'payment_mode' => Input::get('payment_mode')
             );
             
