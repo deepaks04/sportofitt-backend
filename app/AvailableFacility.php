@@ -212,7 +212,7 @@ class AvailableFacility extends Model {
             $images = $this->images()->get();
             if (!empty($images) && $images->count() > 0) {
                 foreach ($images as $image) {
-                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->vendor->user_id) . "/" . "facility_images/thumb_555X415_" . $image->image_name);
+                    $imagesArray[] = \URL::asset(env('VENDOR_FILE_UPLOAD') . sha1($this->id) . "/" . "facility_images/thumb_555X415_" . $image->image_name);
                 }
             }
 

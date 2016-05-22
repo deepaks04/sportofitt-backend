@@ -418,7 +418,7 @@ class VendorsController extends Controller
         $file = $request->image_name;
         $random = mt_rand(1, 1000000);
         $extension = $file->getClientOriginalExtension();
-        $filename = sha1($systemUser . $random) . ".{$extension}";
+        $filename = sha1($facility_id . $random) . ".{$extension}";
         $file->move($vendorImageUploadPath, $filename);
 
         $fileHelper = new FileHelper();
@@ -505,7 +505,7 @@ class VendorsController extends Controller
                 $image->delete();
                 $message = "Image deleted successfully";
                 $vendorUploadPath = public_path() . env('VENDOR_FILE_UPLOAD');
-                $path = $vendorUploadPath . "/" . sha1($this->user->id) . "/" . "facility_images/";
+                $path = $vendorUploadPath . "/" . sha1($image->available_facility_id) . "/" . "facility_images/";
                 File::delete($path . $image->image_name);
             } else {
                 $status = 500;
