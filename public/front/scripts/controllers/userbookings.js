@@ -13,7 +13,7 @@ angular.module('sportofittApp')
 
         vm.init = function(){
         bookingService.getUserBookings().then(function(response){
-            vm.myBookings = response.data;
+            vm.myBookings = response.data.data;
         });
 
         };

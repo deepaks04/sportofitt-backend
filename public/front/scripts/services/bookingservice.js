@@ -8,39 +8,40 @@
  * Service in the sportofittApp.
  */
 angular.module('sportofittApp')
-  .service('bookingService', function (localStorageService,$http,myConfig) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
+    .service('bookingService', function (localStorageService, $http, myConfig) {
+        // AngularJS will instantiate a singleton by calling "new" on this function
 
-    this.getLocalBookings = function(){
-      return  localStorageService.get("booking");
-    }
-
-    this.saveLocalBooking = function(booking){
-        if(!this.checkAlreadyInCart(booking)) {
-            booking.qty = 1;
-            localStorageService.set("booking" , booking);
+        this.getLocalBookings = function () {
+            return localStorageService.get("booking");
         }
-    };
 
-      this.checkAlreadyInCart = function(booking){
-          var alreadyHas = false;
-          angular.forEach(localStorageService.keys(),function(value,key){
-           var getItem = localStorageService.get(value);
-              if (getItem == booking){
-                  getItem.qty++;
-                 alreadyHas = true;
-             }
-              console.log(localStorageService.get(value));
-          });
+        this.saveLocalBooking = function (booking) {
+            if (!this.checkAlreadyInCart(booking)) {
+                booking.qty = 1;
+                localStorageService.set("booking", booking);
+            }
+        };
 
-          return alreadyHas;
-      };
+        this.checkAlreadyInCart = function (booking) {
+            var alreadyHas = false;
+            angular.forEach(localStorageService.keys(), function (value, key) {
+                var getItem = localStorageService.get(value);
+                if (getItem == booking) {
+                    getItem.qty++;
+                    alreadyHas = true;
+                }
+            });
 
-      this.checkout = function(facilityDetails){
-          return $http.post(myConfig.backend+'facility/book',facilityDetails);
-      };
+            return alreadyHas;
+        };
 
-      this.getUserBookings = function(){
-          return $http.get(myConfig.backend + 'user/mybookings');
-      };
-  });
+        this.checkout = function (facilityDetails) {
+            return $http.post(myConfig.backend + 'facility/book', facilityDetails).then(function () {
+                localStorageService.set("booking", {});
+            });
+        };
+
+        this.getUserBookings = function () {
+            return $http.get(myConfig.backend + 'user/mybookings');
+        };
+    });
