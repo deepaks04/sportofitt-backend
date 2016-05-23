@@ -191,6 +191,16 @@
                       ng-submit="update(Form)" enctype="multipart/form-data">
                     <div class="row">
                         <div class="col-md-6">
+                        <div class="form-group"
+                                 ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
+                                <label class="control-label"> Type </label>
+                                <div class="clip-radio radio-primary">
+                                    <input type="radio" id="venue" name="type" value="1" ng-model="facility.is_venue">
+                                    <label for="venue"> Venue </label>
+                                    <input type="radio"  id="coaching" name="type" value="0" ng-model="facility.is_venue">
+                                    <label for="coaching"> Coaching </label>
+                                </div>
+                            </div>
                             <div class="form-group"
                                  ng-class="{'has-error':Form.name.$dirty && Form.name.$invalid, 'has-success':Form.name.$valid}">
                                 <label class="control-label"> Name <span
@@ -203,16 +213,7 @@
                                 </span>
                             </div>
 
-                            <div class="form-group"
-                                 ng-class="{'has-error':Form.type.$dirty && Form.type.$invalid, 'has-success':Form.type.$valid}">
-                                <label class="control-label"> Type </label>
-                                <div class="clip-radio radio-primary">
-                                    <input type="radio" id="venue" name="type" value="1" ng-model="facility.is_venue">
-                                    <label for="venue"> Venue </label>
-                                    <input type="radio"  id="coaching" name="type" value="0" ng-model="facility.is_venue">
-                                    <label for="coaching"> Coaching </label>
-                                </div>
-                            </div>
+                            
                             <div class="form-group"
                                  ng-class="{'has-error':Form.root_category_id.$dirty && Form.root_category_id.$invalid, 'has-success':Form.root_category_id.$valid}">
                                 <label class="control-label"> Root Category <span
