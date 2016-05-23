@@ -115,7 +115,7 @@ angular.module('sportofittApp')
             return '';
         }
 
-        function itemDetailMap(_latitude, _longitude){
+        function itemDetailMap( _longitude, _latitude){
             var mapCenter = new google.maps.LatLng(_latitude, _longitude);
             var mapOptions = {
                 zoom: 14,
