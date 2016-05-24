@@ -212,8 +212,9 @@ class FileHelper
                         $fileName = $this->sourceFilepath . 'thumb_' . $value . '_' . $this->sourceFilename;
                         copy($sourceImage, $fileName);
                     }
-
                     //$this->getImageOptimizerInstance()->optimize($fileName);
+                } else {
+                    copy($sourceImage, $this->destinationPath . $this->sourceFilename);
                 }
             }
         }
