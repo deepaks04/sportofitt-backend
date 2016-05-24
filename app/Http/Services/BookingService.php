@@ -62,10 +62,12 @@ class BookingService extends BaseService
                             ->get();
                     if (isset($bookingTimings) && $bookingTimings->count() > 0) {
                         foreach ($bookingTimings as $bookedTiming) {
-                            $facilityImage = FacilityImages::select('image_name', 'sub_categories.name as SubCategory', 'root_categories.name as RootCategory')
-                                    ->join('available_facilities', 'available_facilities.id', '=', 'facility_images.available_facility_id')
-                                    ->join('sub_categories', 'sub_categories.id', '=', 'available_facilities.sub_category_id')
-                                    ->join('root_categories', 'root_categories.id', '=', 'available_facilities.root_category_id')
+                            $facilityImage = FacilityImages::select('image_name', 'areas.name AS AreaName','sub_categories.name as SubCategory', 'root_categories.name as RootCategory','vendors.business_name','vendors.address','vendors.postcode')
+                                    ->leftJoin('available_facilities', 'available_facilities.id', '=', 'facility_images.available_facility_id')
+                                    ->leftJoin('areas', 'areas.id', '=', 'available_facilities.area_id')
+                                    ->leftJoin('vendors', 'vendors.id', '=', 'available_facilities.vendor_id')
+                                    ->leftJoin('sub_categories', 'sub_categories.id', '=', 'available_facilities.sub_category_id')
+                                    ->leftJoin('root_categories', 'root_categories.id', '=', 'available_facilities.root_category_id')
                                     ->where('facility_images.available_facility_id', '=', $bookedTiming['facility_id'])
                                     ->orderBy(\DB::raw('RAND()'))
                                     ->take(1)
@@ -80,6 +82,10 @@ class BookingService extends BaseService
                                 }
                                 $bookedTiming['subcategory'] = $facilityImage->SubCategory;
                                 $bookedTiming['category'] = $facilityImage->RootCategory;
+                                $bookedTiming['vendor_name'] = $facilityImage->business_name;
+                                $bookedTiming['vendor_address'] = $facilityImage->address;
+                                $bookedTiming['vendor_pincode'] = $facilityImage->postcode;
+                                $bookedTiming['area_name'] = $facilityImage->AreaName;
                             }
 
                             $order->bookingDetails = $bookingTimings->toArray();
