@@ -47,11 +47,11 @@
         <section class="container-fullw bg-white" >
             <div class="container">
 
-                <div class="row" ng-if="!vm.LocalBookings.length">
+                <div class="row" ng-if="!vm.LocalBookings">
                     <p>Empty Cart</p>
                     <a class="btn" ui-sref="app.home" >Continue Search</a>
                     </div>
-                <div class="row" ng-if="vm.LocalBookings.length">
+                <div class="row" ng-if="vm.LocalBookings">
                     <div class="col-md-8">
 
                         <h3><i class="ti-user"></i> Your Details</h3>
@@ -298,7 +298,7 @@
                 </div>
             </div>
         </section>
-        <section class="container-fluid" ng-if="vm.LocalBookings.length">
+        <section class="container-fluid" ng-if="vm.LocalBookings">
             <div class="container margin-top-50">
                 <div class="row">
                     <div class="col-sm-9">
