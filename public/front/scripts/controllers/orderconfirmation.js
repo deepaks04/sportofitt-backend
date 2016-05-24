@@ -15,7 +15,9 @@ angular.module('sportofittApp')
         vm.init = function () {
 
             vm.LocalBookings = LocalBookings = bookingService.getLocalBookings();
+
             if (vm.LocalBookings) {
+                vm.LocalBookings.payment_mode = "cash";
                 if (vm.LocalBookings.package_type_id == 0) {
                     vm.LocalBookings.booking_amount = (vm.LocalBookings.is_peak) ? vm.LocalBookings.peak_hour_price : vm.LocalBookings.off_peak_hour_price
                     vm.LocalBookings.discount = 0;
@@ -25,6 +27,7 @@ angular.module('sportofittApp')
                     vm.LocalBookings.discount = vm.LocalBookings.discount;
                     vm.LocalBookings.discounted_amount = (vm.LocalBookings.actual_price * vm.LocalBookings.discount / 100);
                 }
+                console.log(vm.LocalBookings);
             }
 
             vm.user = angular.copy($rootScope.user);
@@ -72,6 +75,7 @@ angular.module('sportofittApp')
 
             };
             bookingService.checkout(booking).then(function (response) {
+                vm.LocalBookings = {};
                 toastr.success("Order placed successfully!");
                 $state.go('app.mybookings');
 

@@ -22,7 +22,7 @@ angular
       'cfp.loadingBar',
       'ncy-angular-breadcrumb',
       'duScroll',
-      'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config','vAccordion','slick'
+      'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config','vAccordion','slick','ngMask'
   ]).config(function(toastrConfig,$authProvider,myConfig,localStorageServiceProvider) {
       angular.extend(toastrConfig, {
             autoDismiss: false,

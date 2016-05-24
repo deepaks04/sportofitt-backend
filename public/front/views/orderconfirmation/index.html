@@ -43,8 +43,8 @@
                 <!--</div>-->
             <!--</div>-->
         </section>
-
-        <section class="container-fullw bg-white" >
+<form  data-ng-submit="vm.checkout();">
+    <section class="container-fullw bg-white" >
             <div class="container">
 
                 <div class="row" ng-if="!vm.LocalBookings">
@@ -62,7 +62,7 @@
                                     <label>
                                         First Name {{vm.user.first_name}}
                                     </label>
-                                    <input type="text" name="firstName" data-ng-model="user.first_name" class="form-control" placeholder="Enter your First Name">
+                                    <input type="text" name="firstName" data-ng-model="user.first_name" class="form-control" placeholder="Enter your First Name" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -70,7 +70,7 @@
                                     <label class="control-label">
                                         Last Name
                                     </label>
-                                    <input type="text" name="lastName" data-ng-model="vm.user.last_name"  class="form-control" placeholder="Enter your Last Name">
+                                    <input type="text" name="lastName" data-ng-model="vm.user.last_name"  class="form-control" placeholder="Enter your Last Name" required>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                     <label>
                                         Email
                                     </label>
-                                    <input type="text" name="email" data-ng-model="vm.user.email"  class="form-control" placeholder="Enter your Email">
+                                    <input type="text" name="email" data-ng-model="vm.user.email"  class="form-control" placeholder="Enter your Email" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -88,7 +88,7 @@
                                     <label class="control-label">
                                         Phone number
                                     </label>
-                                    <input type="text" name="mobile" data-ng-model="vm.user.phone_no"  class="form-control" placeholder="Enter your Phone number">
+                                    <input type="text" restrict="reject" mask="(999) 999-9999" clean="true" name="mobile" data-ng-model="vm.user.phone_no"  class="form-control" placeholder="Enter your Phone number" required>
                                 </div>
                             </div>
                         </div>
@@ -139,12 +139,12 @@
                                         <!--<label for="card">-->
                                             <!--Pay with Card-->
                                         <!--</label>-->
-                                        <input type="radio" id="paytm" name="payment" value="paytm" data-ng-model="vm.LocalBookings.payment_mode">
+                                        <input type="radio" name="payment_mode" id="paytm" required value="paytm" data-ng-model="vm.LocalBookings.payment_mode" />
                                         <label for="paytm">
                                             Pay with PayTm
                                         </label>
-                                        <input type="radio" id="venue" name="payment" value="cash" data-ng-model="vm.LocalBookings.payment_mode">
-                                        <label for="venue">
+                                        <input type="radio" name="payment_mode" id="cash"  value="cash" data-ng-model="vm.LocalBookings.payment_mode" />
+                                        <label for="cash">
                                             Pay at Venue
                                         </label>
                                     </div>
@@ -318,7 +318,7 @@
                                 </span>
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-wide btn-azure" data-ng-click="vm.checkout();">PLACE ORDER</button>
+                                <button class="btn btn-wide btn-azure">PLACE ORDER</button>
                             </div>
                         </div>
                     </div>
@@ -326,6 +326,8 @@
 
             </div>
         </section>
+</form>
+
     </div>
         <!-- end: PAGE TITLE -->
 </div>

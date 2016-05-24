@@ -8,7 +8,7 @@
  * Controller of the clipTwoApp
  */
 angular.module('sportofittApp')
-  .controller('ProfileCtrl', function ($state,$auth,userService,toastr) {
+  .controller('ProfileCtrl', function ($state,$auth,userService,toastr,$rootScope) {
       if(!$auth.isAuthenticated()){
           toastr.warning("Please sign in first!");
           $state.go('app.login');
@@ -38,6 +38,13 @@ angular.module('sportofittApp')
           var saveProfile = userService.updateProfile(userInfo);
 
           saveProfile.success(function (response) {
+              $rootScope.user = {
+                  first_name :userInfo.fname,
+                  last_name : userInfo.lname,
+                  email : userInfo.email,
+                  phone_no : userInfo.phone_no
+              };
+
               toastr.success(response.message.success);
               vm.disableSubmit =false;
 

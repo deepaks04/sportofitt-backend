@@ -13,6 +13,8 @@
 
         var vm = this;
 
+        $rootScope.user = {};
+
         vm.isMainLogin = false;
         vm.login = function () {
             //var loginOptions = {

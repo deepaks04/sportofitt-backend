@@ -37,7 +37,7 @@ angular.module('sportofittApp')
 
         this.checkout = function (facilityDetails) {
             return $http.post(myConfig.backend + 'facility/book', facilityDetails).then(function () {
-                localStorageService.set("booking", {});
+                localStorageService.set("booking", null);
             });
         };
 
