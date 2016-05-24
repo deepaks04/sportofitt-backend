@@ -44,50 +44,50 @@ class BookingService extends BaseService
     public function getUsersBooking()
     {
         try {
-            $fields = array('orders.id as oid','orders.order_id','order_total','payment_status','payment_mode','orders.created_at',
-                'booked_packages.id as bookingId','booked_packages.package_type','booked_packages.name','booked_packages.description',
-                'booked_packages.no_of_month','booked_packages.booking_amount','booked_packages.discount','booked_packages.final_amount',
-                'booked_packages.no_of_peak','booked_packages.no_of_offpeak','booked_packages.booking_status');
-            
+            $fields = array('orders.id as oid', 'orders.order_id', 'order_total', 'payment_status', 'payment_mode', 'orders.created_at',
+                'booked_packages.id as bookingId', 'booked_packages.package_type', 'booked_packages.name', 'booked_packages.description',
+                'booked_packages.no_of_month', 'booked_packages.booking_amount', 'booked_packages.discount', 'booked_packages.final_amount',
+                'booked_packages.no_of_peak', 'booked_packages.no_of_offpeak', 'booked_packages.booking_status');
+
             $orders = Order::select($fields)
-                              ->join('booked_packages','orders.id','=','booked_packages.order_id')
-                              ->where('user_id','=',$this->user->id)
-                              ->where('order_status','=',\DB::raw(1))
-                              ->get();
-            if(isset($orders) && $orders->count() > 0 ) {
-                $vendorUploadPath = env('VENDOR_FILE_UPLOAD');                            
-                foreach($orders as $order) {
-                    $bookingTimings = BookedTiming::select('is_peak','booking_date','booking_day','start_time','end_time','facility_id')
-                                                   ->where('booked_timings.booking_id','=',$order->bookingId)
-                                                   ->get();
-                    if(isset($bookingTimings) && $bookingTimings->count() > 0 ) {
-                        foreach($bookingTimings as  $bookedTiming) {
-                            $facilityImage = FacilityImages::select('image_name','sub_categories.name as SubCategory','root_categories.name as RootCategory')
-                                                            ->join('available_facilities','available_facilities.id','=','facility_images.available_facility_id')
-                                                            ->join('sub_categories','sub_categories.id','=','available_facilities.sub_category_id')
-                                                            ->join('root_categories','root_categories.id','=','available_facilities.root_category_id')
-                                                           ->where('facility_images.available_facility_id','=',$bookedTiming['facility_id'])
-                                                           ->orderBy(\DB::raw('RAND()'))
-                                                           ->take(1)
-                                                           ->first();
-                            $bookedTiming['image'] = URL::asset($vendorUploadPath. "noProfilePic.png");
-                            $bookedTiming['start_time'] = date('h:i A',strtotime($bookedTiming['booking_date']." ".$bookedTiming['start_time']));
-                            $bookedTiming['end_time'] = date('h:i A',strtotime($bookedTiming['booking_date']." ".$bookedTiming['end_time']));
-                            if(isset($facilityImage) && $facilityImage->count() > 0) {
-                                $imagePath = $vendorUploadPath . sha1($bookedTiming['facility_id']) . "/" . "facility_images/".$facilityImage->image_name;
-                                if(file_exists(public_path().$imagePath)) {
+                    ->join('booked_packages', 'orders.id', '=', 'booked_packages.order_id')
+                    ->where('user_id', '=', $this->user->id)
+                    ->where('order_status', '=', \DB::raw(1))
+                    ->get();
+            if (isset($orders) && $orders->count() > 0) {
+                $vendorUploadPath = env('VENDOR_FILE_UPLOAD');
+                foreach ($orders as $order) {
+                    $bookingTimings = BookedTiming::select('is_peak', 'booking_date', 'booking_day', 'start_time', 'end_time', 'facility_id')
+                            ->where('booked_timings.booking_id', '=', $order->bookingId)
+                            ->get();
+                    if (isset($bookingTimings) && $bookingTimings->count() > 0) {
+                        foreach ($bookingTimings as $bookedTiming) {
+                            $facilityImage = FacilityImages::select('image_name', 'sub_categories.name as SubCategory', 'root_categories.name as RootCategory')
+                                    ->join('available_facilities', 'available_facilities.id', '=', 'facility_images.available_facility_id')
+                                    ->join('sub_categories', 'sub_categories.id', '=', 'available_facilities.sub_category_id')
+                                    ->join('root_categories', 'root_categories.id', '=', 'available_facilities.root_category_id')
+                                    ->where('facility_images.available_facility_id', '=', $bookedTiming['facility_id'])
+                                    ->orderBy(\DB::raw('RAND()'))
+                                    ->take(1)
+                                    ->first();
+                            $bookedTiming['image'] = URL::asset($vendorUploadPath . "noProfilePic.png");
+                            $bookedTiming['start_time'] = date('h:i A', strtotime($bookedTiming['booking_date'] . " " . $bookedTiming['start_time']));
+                            $bookedTiming['end_time'] = date('h:i A', strtotime($bookedTiming['booking_date'] . " " . $bookedTiming['end_time']));
+                            if (isset($facilityImage) && $facilityImage->count() > 0) {
+                                $imagePath = $vendorUploadPath . sha1($bookedTiming['facility_id']) . "/" . "facility_images/" . $facilityImage->image_name;
+                                if (file_exists(public_path() . $imagePath)) {
                                     $bookedTiming['image'] = URL::asset($imagePath);
                                 }
                                 $bookedTiming['subcategory'] = $facilityImage->SubCategory;
                                 $bookedTiming['category'] = $facilityImage->RootCategory;
                             }
-                            
+
                             $order->bookingDetails = $bookingTimings->toArray();
                         }
                     }
                 }
             }
-            
+
             return $orders;
         } catch (\Exception $exception) {
             dd($exception->getMessage());
@@ -176,12 +176,12 @@ class BookingService extends BaseService
                 'order_total' => Input::get('order_total'),
                 'payment_mode' => Input::get('payment_mode')
             );
-            
-            if('cash' == trim(Input::get('payment_mode'))) {
+
+            if ('cash' == trim(Input::get('payment_mode'))) {
                 $array['order_status'] = 1;
                 $array['payment_status'] = 1;
             }
-            
+
             return $order->createOrder($array);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
@@ -197,7 +197,7 @@ class BookingService extends BaseService
     public function processBooking()
     {
         try {
-            
+
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
@@ -205,26 +205,26 @@ class BookingService extends BaseService
                     $bookingObj->name = $bookingData['name'];
                     $bookingObj->description = $bookingData['description'];
                     $bookingObj->booking_amount = $bookingData['booking_amount'];
-                    $bookingObj->discount = !empty($bookingData['discount'])?$bookingData['discount']:0;
-                    $bookingObj->final_amount = !empty($bookingObj['discounted_amount'])?$bookingObj['discounted_amount']:$bookingObj->booking_amount;
+                    $bookingObj->discount = !empty($bookingData['discount']) ? $bookingData['discount'] : 0;
+                    $bookingObj->final_amount = !empty($bookingObj['discounted_amount']) ? $bookingObj['discounted_amount'] : $bookingObj->booking_amount;
                     $bookingObj->order_id = $this->orderObj->id;
-                    if($bookingData['is_peak']) {
+                    if ($bookingData['is_peak']) {
                         $bookingObj->no_of_peak = (isset($bookingData['qty'])) ? $bookingData['qty'] : 0;
                     } else {
                         $bookingObj->no_of_offpeak = (isset($bookingData['qty'])) ? $bookingData['qty'] : 0;
                     }
-                    
+
                     $bookingObj->booking_status = 2;
-                    if('cash' == trim(Input::get('payment_mode'))) {
+                    if ('cash' == trim(Input::get('payment_mode'))) {
                         $bookingObj->booking_status = 1;
                     }
-            
+
                     $bookingObj->created_at = date('Y-m-d H:i:s');
                     if ($bookingObj->save()) {
                         $this->addBookingTimings($bookingObj, $bookingData);
                     }
                 }
- 
+
                 return 1;
             }
         } catch (\Exception $exception) {
@@ -279,18 +279,17 @@ class BookingService extends BaseService
             if (!empty($facilityDetails->id)) {
                 $date = $date / 1000;
                 $day = date('N', $date);
-                $openingHours = $facilityDetails->getOpenigHoursOfFacility($day,$isPeak);
-                $bookingHours = $this->getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak);
-                
+                $openingHours = $facilityDetails->getOpenigHoursOfFacility($day, $isPeak);
+                $bookingHours = $this->getBookingAvailableTimings($facilityDetails, $openingHours, $date, $isPeak);
             }
         } catch (\Exception $ex) {
             throw new \Exception($ex);
         }
-        
+
         return $bookingHours;
     }
-    
-    public function getBookingAvailableTimings($facilityDetails,$openingHours,$date,$isPeak) 
+
+    public function getBookingAvailableTimings($facilityDetails, $openingHours, $date, $isPeak)
     {
         $sessionDetails = $facilityDetails->getSession($facilityDetails->id);
         $bookingTiming = array();
@@ -301,23 +300,23 @@ class BookingService extends BaseService
                 $bookingTiming = $this->getTimings($openingHour->start, $openingHour->end, $sessionDetails->duration);
             }
         }
-        
+
         // if not empty then check is booking made against the same date and time
-        if(!empty($bookingTiming)) {
-            $bookingDate = date('Y-m-d',$date);
-            foreach($bookingTiming as $key => $timeSlot) {
+        if (!empty($bookingTiming)) {
+            $bookingDate = date('Y-m-d', $date);
+            foreach ($bookingTiming as $key => $timeSlot) {
                 $bookingCount = $this->checkAvailability($facilityDetails->id, $timeSlot, $bookingDate, $isPeak);
-                if($bookingCount == $facilityDetails->slots) {
+                if ($bookingCount == $facilityDetails->slots) {
                     unset($bookingTiming[$key]);
                 }
             }
-            
+
             $bookingTiming = array_values($bookingTiming);
         }
-        
-        return $bookingTiming;        
+
+        return $bookingTiming;
     }
-    
+
     /**
      * Get formatted opening hours that is the opening hour according to the days
      * peaks and offpeaks timings. Like for monday we can have entry as below:
@@ -390,7 +389,7 @@ class BookingService extends BaseService
      * @param integer $isPeak
      * @return boolean
      */
-    public function checkAvailability($facilityId, $timeSlot, $date,$isPeak)
+    public function checkAvailability($facilityId, $timeSlot, $date, $isPeak)
     {
         $result = false;
         try {
@@ -401,7 +400,7 @@ class BookingService extends BaseService
                         ->join('booked_packages', function($join) {
                             $join->on('booked_packages.id', '=', 'booked_timings.booking_id');
                             $join->on('booked_packages.booking_status', '=', \DB::raw(1));
-                        }) 
+                        })
                         ->where('booked_timings.start_time', '=', $slot[0])
                         ->where('booked_timings.end_time', '=', $slot[1])
                         ->where('booked_timings.booking_day', '=', $day)
@@ -415,5 +414,101 @@ class BookingService extends BaseService
         }
         return $result;
     }
-    
+
+    /**
+     * Cancelling order according to the order id 
+     * 
+     * @param integer $orderId
+     * @return array
+     * @throws \Exception
+     */
+    public function cancelUserOrder($orderId)
+    {
+        $response = array('error' => null, 'refund' => null);
+        try {
+            if (!empty($orderId)) {
+                $orderDetails = BookedPackage::select('booked_packages.*', 'orders.order_id', 'orders.order_total', 'orders.payment_mode', 'orders.order_status')
+                        ->join('orders', 'orders.id', '=', 'booked_packages.order_id')
+                        ->where('booked_packages.order_id', '=', $orderId)
+                        ->first();
+                if (!empty($orderDetails)) {
+                    if (3 == $orderDetails->order_status) {
+                        $response['error'] = 'Order has been already cancelled';
+                        return $response;
+                    }
+                    
+                    if('cash' == $orderDetails->payment_mode) {
+                        $response['error'] = 'This order could not be cancel as payment made at venue';
+                        return $response;
+                    }
+
+                    $bookedTiming = $orderDetails->bookedTimings()->orderBy('booking_day', 'ASC')->first();
+                    $bookingTime = Carbon::createFromTimestamp(strtotime($bookedTiming->booking_date . " " . $bookedTiming->start_time));
+                    $currentDate = Carbon::now();
+                    if (!empty($bookedTiming)) {
+                        if ($this->checkIsItPastBooking($bookingTime, $currentDate)) {
+                            $response['refund'] = $this->calculateRefund($orderDetails, $bookedTiming->facility, $bookingTime, $currentDate);
+                            $cancellationDate = date('Y-m-d H:i:s');
+                            Order::where('id', '=', $orderId)->update(['order_status' => 3, 'cancellation_date' => $cancellationDate]);
+                            BookedPackage::where('order_id', '=', $orderId)->update(['booking_status' => 3, 'cancellation_date' => $cancellationDate]);
+                        } else {
+                            $response['error'] = 'Booking time is elapsed you can not cancel this order';
+                        }
+                    } else {
+                        $response['error'] = 'Opps! something went wrong try again later';
+                    }
+                } else {
+                    $response['error'] = 'Opps! something went wrong try again later';
+                }
+            }
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage(), $exception->getCode(), $exception);
+        }
+
+        return $response;
+    }
+
+    /**
+     * calculating the refund money when order is get cancelled
+     * 
+     * @param BookedPackage $orderDetails
+     * @param AvailableFacility $facility
+     * @param Carbon $bookingTime
+     * @param Carbon $currentDate
+     * @return integer
+     * @throws \Exception
+     */
+    protected function calculateRefund(\App\BookedPackage $orderDetails, \App\AvailableFacility $facility, $bookingTime, $currentDate)
+    {
+        $refund = 0;
+        try {
+            if (!empty($facility)) {
+                $cancellationBefore24Hrs = $facility->cancellation_before_24hrs;
+                $cancellationWithIn24Hrs = $facility->cancellation_after_24hrs;
+                $hoursBeforeCancel = $currentDate->diffInHours($bookingTime);
+                if ($hoursBeforeCancel > 24) {
+                    $refund = ($cancellationBefore24Hrs) ? ($orderDetails->order_total * ($cancellationBefore24Hrs / 100)) : $cancellationBefore24Hrs;
+                } elseif ($hoursBeforeCancel <= 24) {
+                    $refund = ($cancellationWithIn24Hrs) ? ($orderDetails->order_total * ($cancellationWithIn24Hrs / 100)) : $cancellationWithIn24Hrs;
+                }
+            }
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage(), $ex->getCode());
+        }
+
+        return $refund;
+    }
+
+    /**
+     * Checking is the cancellation is done for the past dates
+     * 
+     * @param Carbon $bookingTime
+     * @param Carbon $currentDate
+     * @return boolean
+     */
+    protected function checkIsItPastBooking($bookingTime, $currentDate)
+    {
+        return ($bookingTime->gt($currentDate));
+    }
+
 }

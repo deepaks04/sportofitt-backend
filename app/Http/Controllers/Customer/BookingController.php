@@ -175,5 +175,28 @@ class BookingController extends Controller
 
         return APIResponse::sendResponse();
     }
+    
+    public function cancelOrder(Request $request)
+    {
+        try {
+            $orderId = $request->get('order_id');
+            if (!empty($orderId)) {
+                $response = $this->service->cancelUserOrder($orderId);
+                if (!empty($response['error'])) {
+                    APIResponse::$message['error'] = $response['error'];
+                } elseif ($response['refund']) {
+                    APIResponse::$message['success'] = 'Thank you for purchase at Sportofitt. The total amount of Rs.' . (int) $response['refund'] . '/- will be refunded and credited to your account in 7-10 business days';
+                } else {
+                    APIResponse::$message['success'] = "Order has been cancelled successfuly !";
+                }
+            } else {
+                APIResponse::$message['error'] = 'Please select order to cancel';
+            }
+        } catch (\Exception $exception) {
+            APIResponse::handleException($exception);
+        }
+
+        return APIResponse::sendResponse();
+    }
 
 }

@@ -19,4 +19,9 @@ class BookedPackage extends Model
     {
         return self::find($bookedId);
     }
+    
+    public function bookedTimings()
+    {
+        return $this->hasMany('App\BookedTiming','booking_id');
+    }
 }

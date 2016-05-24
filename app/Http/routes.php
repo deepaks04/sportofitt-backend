@@ -148,6 +148,7 @@ Route::group(['prefix' => 'api/v1/user/', 'middleware' => ['userfromtoken']], fu
     Route::post('change-profile-picture', array('uses' => 'Customer\DashboardController@changeProfilePicture'));
     Route::post('change-password', array('uses' => 'Customer\DashboardController@changePassword'));
     Route::get('mybookings', array('uses' => 'Customer\BookingController@index'));
+    Route::post('cancel-order', array('uses' => 'Customer\BookingController@cancelOrder'));
     Route::get('booking/{id}', array('uses' => 'Customer\BookingController@show'));
     Route::get('bodystats', array('uses' => 'Customer\BodyStatsController@index'));
     Route::post('bodystats/save', array('uses' => 'Customer\BodyStatsController@store'));

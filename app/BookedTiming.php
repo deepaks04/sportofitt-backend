@@ -13,4 +13,9 @@ class BookedTiming extends Model
      * @var string
      */
     protected $table = 'booked_timings';
+    
+    public function facility()
+    {
+        return $this->belongsTo('App\AvailableFacility','facility_id');
+    }
 }
