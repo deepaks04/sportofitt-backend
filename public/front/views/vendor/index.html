@@ -184,7 +184,7 @@
                                                 <!--</v-pane-content>-->
                                                 <!--</v-pane>-->
                                                 <!--</v-accordion>-->
-
+                                              
                                                 <v-accordion ng-if="vm.facility.packages.length" class="vAccordion--default" control="thirdAccordionControl">
                                                     <v-pane>
                                                         <v-pane-header>
@@ -193,7 +193,7 @@
                                                         <v-pane-content>
                                                             <div class="row">
                                                                 <!-- /.col-md-3-->
-                                                                <div class="col-md-4 col-sm-4" ng-repeat="package in vm.facility.packages">
+                                                                <div class="col-md-6 col-sm-6" ng-repeat="package in vm.facility.packages">
                                                                     <div class="price-box white featured">
                                                                         <header><h2>{{package.name}}</h2></header>
                                                                         <figure>
@@ -211,7 +211,7 @@
                                                                         <figure>Discount {{package.discount}} %</figure>
                                                                         <p>{{package.description}}</p>
                                                                         <!--<a ui-sref="app.login" ng-if="!isAuthenticated()" class="btn framed btn-color-default">Sign In</a>-->
-                                                                        <a href data-ng-click="vm.addLocalBooking(package, false)" class="btn framed btn-color-default">Book now</a>
+                                                                        <a href data-ng-click="vm.addLocalBooking(package, false)" class="btn btn-default">Book now</a>
 
                                                                     </div>
                                                                     <!-- /.price-box-->
