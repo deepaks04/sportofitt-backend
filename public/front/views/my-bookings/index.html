@@ -52,7 +52,7 @@
                         <div class="item list admin-view" ng-repeat="booking in vm.myBookings">
                             <div class="image">
                                 <!--<div class="quick-view" data-toggle="modal" data-target="#modal-bar"><i class="fa fa-eye"></i><span>Quick View</span></div>-->
-                                <a href="item-detail.html">
+                                <a href>
                                     <div class="overlay">
                                         <div class="inner">
                                             <div class="content">
@@ -70,19 +70,20 @@
                                     <!--<div class="icon">-->
                                         <!--<i class="fa fa-thumbs-up"></i>-->
                                     <!--</div>-->
-                                    <img src="assets/img/items/1.jpg" alt="">
+                                    <img ng-if="booking.bookingDetails[0].image" ng-src="{{booking.bookingDetails[0].image}}" alt="">
+                                    <img  ng-if="!booking.bookingDetails[0].image" src="assets/img/items/1.jpg" alt="">
                                 </a>
                             </div>
                             <div class="wrapper">
-                                <a href="item-detail.html"><h3>{{booking.name}}</h3></a>
+                                <a href><h3>{{booking.name}}</h3></a>
                                 <!--<figure>63 Birch Street</figure>-->
                                 <div class="info">
                                     <div class="type">
-                                        <i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>
-                                        <span>{{'Category'}}</span>
+                                        <!--<i><img src="assets/icons/restaurants-bars/restaurants/restaurant.png" alt=""></i>-->
+                                        <span>{{booking.bookingDetails[0].subcategory}}</span>
                                     </div>
 
-                                    <div>Selected Timings : {{booking.booking_amount}}</div>
+                                    <div>Booking Time : {{booking.bookingDetails[0].booking_date}} {{booking.bookingDetails[0].start_time}} to {{booking.bookingDetails[0].end_time}}</div>
                                     <div>Payment Mode : {{booking.payment_mode}}</div>
                                     <div>Total Amount : {{booking.booking_amount}}</div>
                                     <!--<div class="rating" data-rating="4"></div>-->

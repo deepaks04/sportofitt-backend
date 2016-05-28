@@ -126,10 +126,11 @@
                                                             </figure>
                                                             <div>
                                                                 <h4>Select Date</h4>
+                                                                <form data-ng-submit="vm.addLocalBooking(vm.filter, true)">
                                                                 <div style="display:inline-block; min-height:200px;">
                                                                     <div class="col-md-6">
                                                                         <p class="input-group"  ng-click="vm.openDatePicker()">
-                                                                            <input type="text" class="form-control bg-white" min-date="vm.minDate" readonly
+                                                                            <input required type="text" class="form-control bg-white" min-date="vm.minDate" readonly
                                                                                    datepicker-popup="fullDate" ng-model="vm.filter.date"
                                                                                    is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
 
@@ -140,18 +141,21 @@
 
 
                                                                     </div>
-                                                                    <div class="col-md-6"> <button ng-click="vm.getAvailableSlots()" class="btn btn-default">Get Available Slots</button></div>
+                                                                    <div class="col-md-6"> <a ng-click="vm.getAvailableSlots()" class="btn btn-default">Get Available Slots</a></div>
 
                                                                 </div>
                                                                 <header><h2>Choose Session ({{vm.days[vm.selectedDay]}})</h2></header>
-                                                                <div ng-if="vm.facilitySlots.length">
+                                                                <div ng-if="vm.facilitySlots !== []">
                                                                     <div class="form-inline">
-                                                                        <select class="form-control" data-ng-model="vm.filter.selectedSlot" ng-options="slot for slot in vm.facilitySlots"></select>
+                                                                        <select required class="form-control" required data-ng-model="vm.filter.selectedSlot" ng-options="key as value for (key , value) in vm.facilitySlots">
+                                                                            <option value="">Select Time</option>
+                                                                        </select>
                                                                         <label class="form-control margin-top-5">₹ {{(vm.filter.is_peak)?vm.facility.peak_hour_price:vm.facility.off_peak_hour_price}}</label>
-                                                                        <button class="btn btn-default"  data-ng-click="vm.addLocalBooking(vm.filter, true)" >CheckOut</button>
+                                                                        <button class="btn btn-default"   >CheckOut</button>
                                                                     </div>
                                                                 </div>
-                                                                <p ng-if="!vm.facilitySlots.length">
+                                                                </form>
+                                                                <p ng-if="vm.facilitySlots === []">
                                                                     No Session available for selected criteria.
                                                                 </p>
                                                             </div>

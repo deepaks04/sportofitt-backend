@@ -44,4 +44,8 @@ angular.module('sportofittApp')
         this.getUserBookings = function () {
             return $http.get(myConfig.backend + 'user/mybookings');
         };
+
+        this.cancelBooking = function(bookingDetails){
+            return $http.post(myConfig.backend + 'user/cancel-order', bookingDetails);
+        };
     });

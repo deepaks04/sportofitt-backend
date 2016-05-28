@@ -63,7 +63,6 @@ angular.module('sportofittApp')
             }
             searchService.getFacilityAvailableSlotsById(options).then(function (response) {
                 vm.facilitySlots = response.data.data;
-
                 vm.filterAvailableSlot();
             }).catch(function (response) {
                 toastr.error(response);

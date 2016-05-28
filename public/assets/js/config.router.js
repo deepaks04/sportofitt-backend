@@ -28,7 +28,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         //$urlRouterProvider.otherwise("/");
         //
         $stateProvider
-
                 //vendor routes
                 .state('vendor', {
                     url: "/:name",

@@ -184,7 +184,9 @@
                                 </span>
                             </div>
                             <div class="col-sm-4">
-                                <button class="btn btn-default">PLACE ORDER</button>
+                                <button  ng-if="isAuthenticated" class="btn btn-default"  type="submit">PLACE ORDER</button>
+
+                                <a  ng-if="!isAuthenticated" class="btn btn-default" onclick="alert('Please sign in first');" >PLACE ORDER</a>
                             </div>
                         </div>
                     </div>
