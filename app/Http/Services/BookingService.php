@@ -453,11 +453,6 @@ class BookingService extends BaseService
                         $response['error'] = 'Order has been already cancelled';
                         return $response;
                     }
-                    
-                    if('cash' == $orderDetails->payment_mode) {
-                        $response['error'] = 'This order could not be cancel as payment made at venue';
-                        return $response;
-                    }
 
                     $bookedTiming = $orderDetails->bookedTimings()->orderBy('booking_day', 'ASC')->first();
                     $bookingTime = Carbon::createFromTimestamp(strtotime($bookedTiming->booking_date . " " . $bookedTiming->start_time));
