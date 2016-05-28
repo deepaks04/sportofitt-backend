@@ -9,12 +9,15 @@ use Carbon\Carbon;
 use App\Order;
 use App\BookedPackage;
 use App\BookedTiming;
-use App\FacilityImages;
+use App\Jobs\SendOrderEmail;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use URL;
 use App\Http\Services\BaseService;
 
 class BookingService extends BaseService
 {
+    
+    use DispatchesJobs;
 
     /**
      *
@@ -51,7 +54,7 @@ class BookingService extends BaseService
             $orders = Order::select($fields)
                     ->join('booked_packages', 'orders.id', '=', 'booked_packages.order_id')
                     ->where('user_id', '=', $this->user->id)
-                    ->where('order_status', '=', \DB::raw(1))
+                    ->where('order_status', '!=', \DB::raw(0))
                     ->get();
             if (isset($orders) && $orders->count() > 0) {
                 $vendorUploadPath = env('VENDOR_FILE_UPLOAD');
@@ -319,10 +322,11 @@ class BookingService extends BaseService
         // if not empty then check is booking made against the same date and time
         if (!empty($bookingTiming)) {
             $bookingDate = date('Y-m-d', $date);
+            $currentDate = date('Y-m-d');
             $currentHour = date('H');
             foreach ($bookingTiming as $key => $timeSlot) {
                 $startHour = (int)$key;
-                if($currentHour >= $startHour) {
+                if($bookingDate == $currentDate && $currentHour >= $startHour) {
                     unset($bookingTiming[$key]);
                     continue;
                 }
