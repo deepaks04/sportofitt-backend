@@ -320,7 +320,7 @@ class BookingService extends BaseService
             $currentHour = date('H');
             foreach ($bookingTiming as $key => $timeSlot) {
                 $startHour = (int)$key;
-                if($currentHour > $startHour) {
+                if($currentHour >= $startHour) {
                     unset($bookingTiming[$key]);
                     continue;
                 }
