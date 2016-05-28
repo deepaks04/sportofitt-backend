@@ -55,6 +55,7 @@ class BookingService extends BaseService
                     ->join('booked_packages', 'orders.id', '=', 'booked_packages.order_id')
                     ->where('user_id', '=', $this->user->id)
                     ->where('order_status', '!=', \DB::raw(0))
+                    ->orderBy('orders.created_at', 'ASC')
                     ->get();
             if (isset($orders) && $orders->count() > 0) {
                 $vendorUploadPath = env('VENDOR_FILE_UPLOAD');
