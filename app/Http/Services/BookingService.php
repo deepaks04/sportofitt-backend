@@ -61,30 +61,29 @@ class BookingService extends BaseService
                             ->get();
                     if (isset($bookingTimings) && $bookingTimings->count() > 0) {
                         foreach ($bookingTimings as $bookedTiming) {
-                            $facilityImage = FacilityImages::select('image_name', 'areas.name AS AreaName','sub_categories.name as SubCategory', 'root_categories.name as RootCategory','vendors.business_name','vendors.address','vendors.postcode')
-                                    ->leftJoin('available_facilities', 'available_facilities.id', '=', 'facility_images.available_facility_id')
+                            $facility = AvailableFacility::select('vendors.user_id','users.profile_picture', 'areas.name AS AreaName','sub_categories.name as SubCategory', 'root_categories.name as RootCategory','vendors.business_name','vendors.address','vendors.postcode')
                                     ->leftJoin('areas', 'areas.id', '=', 'available_facilities.area_id')
                                     ->leftJoin('vendors', 'vendors.id', '=', 'available_facilities.vendor_id')
+                                    ->leftJoin('users', 'vendors.user_id', '=', 'users.id')
                                     ->leftJoin('sub_categories', 'sub_categories.id', '=', 'available_facilities.sub_category_id')
                                     ->leftJoin('root_categories', 'root_categories.id', '=', 'available_facilities.root_category_id')
-                                    ->where('facility_images.available_facility_id', '=', $bookedTiming['facility_id'])
-                                    ->orderBy(\DB::raw('RAND()'))
+                                    ->where('available_facilities.id', '=', $bookedTiming['facility_id'])
                                     ->take(1)
                                     ->first();
                             $bookedTiming['image'] = URL::asset($vendorUploadPath . "noProfilePic.png");
                             $bookedTiming['start_time'] = date('h:i A', strtotime($bookedTiming['booking_date'] . " " . $bookedTiming['start_time']));
                             $bookedTiming['end_time'] = date('h:i A', strtotime($bookedTiming['booking_date'] . " " . $bookedTiming['end_time']));
-                            if (isset($facilityImage) && $facilityImage->count() > 0) {
-                                $imagePath = $vendorUploadPath . sha1($bookedTiming['facility_id']) . "/" . "facility_images/" . $facilityImage->image_name;
+                            if (isset($facility) && $facility->count() > 0) {
+                                $imagePath = $vendorUploadPath . sha1($facility->user_id) . "/" . "profile_image/" . $facility->profile_picture;
                                 if (file_exists(public_path() . $imagePath)) {
                                     $bookedTiming['image'] = URL::asset($imagePath);
                                 }
-                                $bookedTiming['subcategory'] = $facilityImage->SubCategory;
-                                $bookedTiming['category'] = $facilityImage->RootCategory;
-                                $bookedTiming['vendor_name'] = $facilityImage->business_name;
-                                $bookedTiming['vendor_address'] = $facilityImage->address;
-                                $bookedTiming['vendor_pincode'] = $facilityImage->postcode;
-                                $bookedTiming['area_name'] = $facilityImage->AreaName;
+                                $bookedTiming['subcategory'] = $facility->SubCategory;
+                                $bookedTiming['category'] = $facility->RootCategory;
+                                $bookedTiming['vendor_name'] = $facility->business_name;
+                                $bookedTiming['vendor_address'] = $facility->address;
+                                $bookedTiming['vendor_pincode'] = $facility->postcode;
+                                $bookedTiming['area_name'] = $facility->AreaName;
                             }
 
                             $order->bookingDetails = $bookingTimings->toArray();
@@ -465,7 +464,7 @@ class BookingService extends BaseService
                     $currentDate = Carbon::now();
                     if (!empty($bookedTiming)) {
                         if ($this->checkIsItPastBooking($bookingTime, $currentDate)) {
-                            $response['refund'] = null;
+                            $response['refund'] = 'The refund for “Pay at Venue” order will be processed by venue provider, you are requested to follow up with venue provider';
                             if('cash' != $orderDetails->payment_mode) {
                                 $response['refund'] = $this->calculateRefund($orderDetails, $bookedTiming->facility, $bookingTime, $currentDate);
                             }
