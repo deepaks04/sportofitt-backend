@@ -48,16 +48,15 @@ class SendOrderEmail extends Job implements SelfHandling, ShouldQueue
             $params = array('fname' => ucfirst($this->order->fname),
                 'lname' => ucfirst($this->order->lname),
                 'orderId' => $this->order->order_id);
-            $order = $this->order;
             $log = new Logger('queue_log');
             $log->pushHandler(new StreamHandler(storage_path('logs/laravel.log'), Logger::ERROR));
             $subject = "New Order has been placed";
             if($this->purpose == 2) {
                 $subject = "Order has been cancelled";
             }
-            
-            Mail::queue('emails.ordercancel', $params, function($message) use($order, $log, $subject) {
-                $message->to($order->email, $order->fname)->subject($subject);
+            $orderRef = $this->order; 
+            Mail::queue('emails.ordercancel', $params, function($message) use($orderRef, $log, $subject) {
+                $message->to($orderRef->email, $orderRef->fname)->subject($subject);
                 $log->addError(PHP_EOL . ' Email Sent' . PHP_EOL);
             });
 
