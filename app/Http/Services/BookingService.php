@@ -67,7 +67,7 @@ class BookingService extends BaseService
                         foreach ($bookingTimings as $bookedTiming) {
                             $bookingTime = Carbon::createFromTimestamp(strtotime($bookedTiming->booking_date . " " . $bookedTiming->start_time));
                             $currentDate = Carbon::now();
-                            $bookedTiming['is_editable'] = $this->checkIsItPastBooking($bookingTime, $currentDate);
+                            $bookedTiming['is_editable'] = (3 == $order->order_status) ? false : $this->checkIsItPastBooking($bookingTime, $currentDate);
                             $facility = AvailableFacility::select('vendors.user_id','users.profile_picture', 'areas.name AS AreaName','sub_categories.name as SubCategory', 'root_categories.name as RootCategory','vendors.business_name','vendors.address','vendors.postcode')
                                     ->leftJoin('areas', 'areas.id', '=', 'available_facilities.area_id')
                                     ->leftJoin('vendors', 'vendors.id', '=', 'available_facilities.vendor_id')
@@ -452,8 +452,9 @@ class BookingService extends BaseService
         $response = array('error' => null, 'refund' => null);
         try {
             if (!empty($orderId)) {
-                $orderDetails = BookedPackage::select('booked_packages.*', 'orders.order_id', 'orders.order_total', 'orders.payment_mode', 'orders.order_status')
+                $orderDetails = BookedPackage::select('users.fname','users.lname','users.email','booked_packages.*', 'orders.order_id', 'orders.order_total', 'orders.payment_mode', 'orders.order_status')
                         ->join('orders', 'orders.id', '=', 'booked_packages.order_id')
+                        ->leftJoin('users', 'orders.user_id', '=', 'users.id')
                         ->where('booked_packages.order_id', '=', $orderId)
                         ->first();
                 if (!empty($orderDetails)) {
@@ -475,6 +476,10 @@ class BookingService extends BaseService
                             $cancellationDate = date('Y-m-d H:i:s');
                             Order::where('id', '=', $orderId)->update(['order_status' => 3, 'cancellation_date' => $cancellationDate]);
                             BookedPackage::where('order_id', '=', $orderId)->update(['booking_status' => 3, 'cancellation_date' => $cancellationDate]);
+                            // Adding job to queue for processing to the mail will be send via the queue
+                            $job = (new SendOrderEmail($orderDetails,  SendOrderEmail::CANCEL_ORDER))->delay(60);
+                            $this->dispatch($job);                            
+                            
                         } else {
                             $response['error'] = 'Booking time has been delapsed you can not cancel this order';
                         }

@@ -13,22 +13,27 @@ use Monolog\Handler\StreamHandler;
 use Mail;
 use Config;
 
-class SendWelcomeEmail extends Job implements SelfHandling, ShouldQueue
+class SendOrderEmail extends Job implements SelfHandling, ShouldQueue
 {
 
     use InteractsWithQueue,
         SerializesModels;
 
-    protected $user;
+    CONST NEW_ORDER = 1;
+    CONST CANCEL_ORDER = 2;
+    
+    protected $order;
+    protected $purpose = NEW_ORDER;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct($order,$purpose)
     {
-        $this->user = $user;
+        $this->order = $order;
+        $this->purpose = $purpose;
     }
 
 
@@ -40,22 +45,25 @@ class SendWelcomeEmail extends Job implements SelfHandling, ShouldQueue
     public function handle()
     {
         try {
-            $params = array('fname' => ucfirst($this->user->fname),
-                'lname' => ucfirst($this->user->lname),
-                'email' => $this->user->email,
-                'remember_token' => $this->user->remember_token);
-            $user = $this->user;
+            $params = array('fname' => ucfirst($this->order->fname),
+                'lname' => ucfirst($this->order->lname),
+                'orderId' => $this->order->order_id);
+            $order = $this->order;
             $log = new Logger('queue_log');
             $log->pushHandler(new StreamHandler(storage_path('logs/laravel.log'), Logger::ERROR));
-
-            Mail::queue('emails.useractivation', $params, function($message) use($user, $log) {
-                $message->to($user->email, $user->fname)->subject('Welcome!');
+            $subject = "New Order has been placed";
+            if($this->purpose == 2) {
+                $subject = "Order has been cancelled";
+            }
+            
+            Mail::queue('emails.ordercancel', $params, function($message) use($order, $log, $subject) {
+                $message->to($order->email, $order->fname)->subject($subject);
                 $log->addError(PHP_EOL . ' Email Sent' . PHP_EOL);
             });
 
             $adminEmailDetails = Config::get('mail.from');
-            Mail::queue('emails.admin.newnotification', $params, function($message) use($log, $adminEmailDetails) {
-                $message->to($adminEmailDetails['address'], $adminEmailDetails['name'])->subject('New User Registration!');
+            Mail::queue('emails.admin.ordercancelnotification', $params, function($message) use($log, $adminEmailDetails,$subject) {
+                $message->to($adminEmailDetails['address'], $adminEmailDetails['name'])->subject($subject);
                 $log->addError(PHP_EOL . ' Email Sent To ADMIN' . PHP_EOL);
             });
         } catch (Exception $exc) {
