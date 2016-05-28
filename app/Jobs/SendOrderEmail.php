@@ -23,7 +23,7 @@ class SendOrderEmail extends Job implements SelfHandling, ShouldQueue
     CONST CANCEL_ORDER = 2;
     
     protected $order;
-    protected $purpose = NEW_ORDER;
+    protected $purpose = self::NEW_ORDER;
 
     /**
      * Create a new job instance.
