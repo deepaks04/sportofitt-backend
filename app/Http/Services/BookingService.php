@@ -88,9 +88,9 @@ class BookingService extends BaseService
                                 $bookedTiming['vendor_pincode'] = $facility->postcode;
                                 $bookedTiming['area_name'] = $facility->AreaName;
                             }
-
-                            $order->bookingDetails = $bookingTimings->toArray();
                         }
+                        
+                        $order->bookingDetails = $bookingTimings->toArray();
                     }
                 }
             }
