@@ -100,8 +100,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         views: {
             'body@app': {
                 templateUrl: "views/layouts/about-us.html",
-                controller: 'OrderConfirmationCtrl',
-                controllerAs: 'vm'
+
             }
         }
     }).state('app.terms', {
@@ -109,8 +108,30 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         views: {
             'body@app': {
                 templateUrl: "views/layouts/terms-conditions.html",
-                controller: 'OrderConfirmationCtrl',
-                controllerAs: 'vm'
+
+            }
+        }
+    }).state('app.privacy', {
+        url: "privacy-policy",
+        views: {
+            'body@app': {
+                templateUrl: "views/layouts/privacy-policy.html",
+
+            }
+        }
+    }).state('app.faq', {
+        url: "faq",
+        views: {
+            'body@app': {
+                templateUrl: "views/layouts/faq.html",
+
+            }
+        }
+    }).state('app.contact', {
+        url: "contact-us",
+        views: {
+            'body@app': {
+                templateUrl: "views/layouts/contact-us.html",
             }
         }
     }).state('app.logout', {

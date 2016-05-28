@@ -93,11 +93,12 @@
                                 <ul class="list-unstyled actions">
                                     <li><a href><i class="fa fa-pencil"></i></a></li>
                                     <!--<li><a href class="hide-item"><i class="fa fa-eye"></i></a></li>-->
-                                    <li><a href ng-click="vm.cancelBooking(booking)"><i class="fa fa-trash"></i></a></li>
+                                    <li ng-if="booking.bookingDetails[0].is_editable"><a href ng-click="vm.cancelBooking(booking)"><i class="fa fa-trash"></i></a></li>
+                                    <li ng-if="!booking.bookingDetails[0].is_editable"><a href ng-click="vm.cancelBooking(booking)" title="Can not delete order passed date!"><i class="fa fa-info"></i></a></li>
                                 </ul>
                             </div>
                             <div class="ribbon" ng-class="{'approved':booking.booking_status == 1}">
-                                <i class="fa fa-check"></i>
+                                <i class="fa" ng-class="{'fa-check':booking.booking_status == 1,'fa-close':booking.booking_status == 3}"></i>
                             </div>
                         </div>
                     </section>

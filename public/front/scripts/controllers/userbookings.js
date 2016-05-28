@@ -21,6 +21,11 @@ angular.module('sportofittApp')
       vm.init();
       
       vm.cancelBooking = function(booking){
+          if(!booking.bookingDetails[0].is_editable){
+              SweetAlert.swal("Can not cancel!", "Order passed date!", "error");
+              return
+          }
+
           SweetAlert.swal({
                 title: "Are you sure?",
                 text: "Are you sure to cancel your booking?",
@@ -33,12 +38,14 @@ angular.module('sportofittApp')
                 closeOnCancel: false
             }, function (isConfirm) {
                 if (isConfirm) {
-                    var options = {order_id:booking.id};
-                    bookingService.cancelBooking.then(function(response){
+                    var options = {order_id:booking.oid};
+                    bookingService.cancelBooking(options).then(function(response){
+                        booking.bookingDetails[0].is_editable = false;
+                        booking.booking_status = 3;
+                        SweetAlert.swal("Order cancelled", response.data.message.success,'success');
 
-                        SweetAlert.swal("Order cancelled", "Thank you for purchase at Sportofitt.\n\
-     The total amount of Rs."+booking.booking_amount+" will be refunded and credited to your account in 7-10 business days");
-
+                    }).catch(function(response){
+                        SweetAlert.swal("Order not cancelled", response.data.message.error,'error');
                     });
                 } else {
                     SweetAlert.swal("Not cancelled", "Order is safe :)", "error");
