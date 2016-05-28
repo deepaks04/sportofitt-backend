@@ -61,6 +61,9 @@ class BookingService extends BaseService
                             ->get();
                     if (isset($bookingTimings) && $bookingTimings->count() > 0) {
                         foreach ($bookingTimings as $bookedTiming) {
+                            $bookingTime = Carbon::createFromTimestamp(strtotime($bookedTiming->booking_date . " " . $bookedTiming->start_time));
+                            $currentDate = Carbon::now();
+                            $bookedTiming['is_editable'] = $this->checkIsItPastBooking($bookingTime, $currentDate);
                             $facility = AvailableFacility::select('vendors.user_id','users.profile_picture', 'areas.name AS AreaName','sub_categories.name as SubCategory', 'root_categories.name as RootCategory','vendors.business_name','vendors.address','vendors.postcode')
                                     ->leftJoin('areas', 'areas.id', '=', 'available_facilities.area_id')
                                     ->leftJoin('vendors', 'vendors.id', '=', 'available_facilities.vendor_id')
