@@ -465,12 +465,16 @@ class BookingService extends BaseService
                     $currentDate = Carbon::now();
                     if (!empty($bookedTiming)) {
                         if ($this->checkIsItPastBooking($bookingTime, $currentDate)) {
-                            $response['refund'] = $this->calculateRefund($orderDetails, $bookedTiming->facility, $bookingTime, $currentDate);
+                            $response['refund'] = null;
+                            if('cash' != $orderDetails->payment_mode) {
+                                $response['refund'] = $this->calculateRefund($orderDetails, $bookedTiming->facility, $bookingTime, $currentDate);
+                            }
+                            
                             $cancellationDate = date('Y-m-d H:i:s');
                             Order::where('id', '=', $orderId)->update(['order_status' => 3, 'cancellation_date' => $cancellationDate]);
                             BookedPackage::where('order_id', '=', $orderId)->update(['booking_status' => 3, 'cancellation_date' => $cancellationDate]);
                         } else {
-                            $response['error'] = 'Booking time is elapsed you can not cancel this order';
+                            $response['error'] = 'Booking time has been delapsed you can not cancel this order';
                         }
                     } else {
                         $response['error'] = 'Opps! something went wrong try again later';
