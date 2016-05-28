@@ -6,7 +6,6 @@ use Input;
 use App\SessionBooking;
 use App\AvailableFacility;
 use Carbon\Carbon;
-use App\SessionPackage;
 use App\Order;
 use App\BookedPackage;
 use App\BookedTiming;
@@ -96,7 +95,6 @@ class BookingService extends BaseService
 
             return $orders;
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
             throw new Exception($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
@@ -295,6 +293,15 @@ class BookingService extends BaseService
         return $bookingHours;
     }
 
+    /**
+     * Get booking available timings.
+     * 
+     * @param App\AvailableFacilityDetails $facilityDetails
+     * @param array $openingHours
+     * @param string $date
+     * @param integer $isPeak
+     * @return array
+     */
     public function getBookingAvailableTimings($facilityDetails, $openingHours, $date, $isPeak)
     {
         $sessionDetails = $facilityDetails->getSession($facilityDetails->id);
@@ -310,14 +317,19 @@ class BookingService extends BaseService
         // if not empty then check is booking made against the same date and time
         if (!empty($bookingTiming)) {
             $bookingDate = date('Y-m-d', $date);
+            $currentHour = date('H');
             foreach ($bookingTiming as $key => $timeSlot) {
+                $startHour = (int)$key;
+                if($currentHour > $startHour) {
+                    unset($bookingTiming[$key]);
+                    continue;
+                }
+                
                 $bookingCount = $this->checkAvailability($facilityDetails->id, $timeSlot, $bookingDate, $isPeak);
                 if ($bookingCount == $facilityDetails->slots) {
                     unset($bookingTiming[$key]);
                 }
             }
-
-            $bookingTiming = array_values($bookingTiming);
         }
 
         return $bookingTiming;
@@ -377,9 +389,9 @@ class BookingService extends BaseService
         $carbonStartDate = Carbon::create(date('Y'), date('m'), date('d'), $startMinutes[0], $startMinutes[1], 0);
         while ($carbonStartDate->lt($carbonEndDate)) {
             $startMinutes = date("H:s", strtotime($carbonStartDate->__toString()));
-            $newInstance = $carbonStartDate->
-                    addMinutes($duration);
-            $minutes[] = $startMinutes . "-" . date("H:s", strtotime($newInstance->__toString()));
+            $newInstance = $carbonStartDate->addMinutes($duration);
+            $openingTime = $startMinutes . "-" . date("H:s", strtotime($newInstance->__toString()));
+            $minutes[$openingTime] = date("h:s A", strtotime("1970-01-01 ".$startMinutes.":00"))."-".date("h:s A", strtotime($newInstance->__toString()));
             $carbonStartDate = $newInstance;
         }
 
