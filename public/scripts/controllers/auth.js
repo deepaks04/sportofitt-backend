@@ -107,7 +107,7 @@
         }
 
         vm.resetNewPassword = function (form) {
-            $scope.disableSubmit = true;
+            vm.disableSubmit = true;
             vm.errors = {};
             var passwordResponse = Auth.resetPassword(form);
             //console.log(form);
@@ -117,7 +117,7 @@
             });
             passwordResponse.catch(function (response, status) {
                 //console.log(data);
-                $scope.disableSubmit = false;
+                vm.disableSubmit = false;
                 vm.errors = {};
                 if (response.status === 422) {
                     angular.forEach(response.data, function (errors, field) {
