@@ -10,7 +10,7 @@
 @if($user->role_id == 3)
 <p><a href="{{ url('/#/reset-password', array($token)) }}">{{ url('/#/reset-password', array($token)) }}</a></p><br/>
 @else
-    <p><a href="{{ url('/select/#/reset-password', array($token)) }}">{{ url('/select/#/reset-password', array($token)) }}</a></p><br/>
+    <p><a href="{{ url('/select#/reset-password', array($token)) }}">{{ url('/select#/reset-password', array($token)) }}</a></p><br/>
 @endif
 <p>If clicking the link above doesn't work, please copy and paste the URL in a new browser window instead.
     Please ignore this email if it was not you who requested help with your password. Your current password will remain unchanged.
