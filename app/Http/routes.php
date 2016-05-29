@@ -9,48 +9,52 @@
  * | and give it the controller to call when that URI is requested.
  * |
  */
-Route::get('/', function () {
-    return view('views/home', ['cell' => '7757088700',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
+//Route::get('/', function () {
+//    return view('views/home', ['cell' => '7757088700',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//Route::get('about-us', function () {
+//    return view('views/about', ['cell' => '7757088700',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//Route::get('terms-condition', function () {
+//    return view('views/terms', ['cell' => '7757088700',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//
+//Route::get('privacy-policy', function () {
+//    return view('views/privacy', ['cell' => '7757088700',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//Route::get('contact-us', function () {
+//    return view('views/contact', ['cell' => '7757088700',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//Route::post('facility/upload/',array('as'=>'facility.uploadmedia','uses'=>'PreGuestController@uploadMedia'));
+//Route::get('add/facility/images','PreGuestController@addImages');
+//Route::post('add/images','PreGuestController@upload');
+//
+//Route::get('/sportofittpartneragreement', function () {
+//    return view('views/agreement', ['cell' => '9457912886',
+//        'email' => 'select@sportofitt.com',
+//    ]);
+//});
+//
+//Route::post('/contact', 'PreGuestController@saveGuestUser');
 
-Route::get('about-us', function () {
-    return view('views/about', ['cell' => '7757088700',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
-
-Route::get('terms-condition', function () {
-    return view('views/terms', ['cell' => '7757088700',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
-
-
-Route::get('privacy-policy', function () {
-    return view('views/privacy', ['cell' => '7757088700',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
-
-Route::get('contact-us', function () {
-    return view('views/contact', ['cell' => '7757088700',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
-
-Route::post('facility/upload/',array('as'=>'facility.uploadmedia','uses'=>'PreGuestController@uploadMedia'));
-Route::get('add/facility/images','PreGuestController@addImages');
-Route::post('add/images','PreGuestController@upload');
-
-Route::get('/sportofittpartneragreement', function () {
-    return view('views/agreement', ['cell' => '9457912886',
-        'email' => 'select@sportofitt.com',
-    ]);
-});
-
-Route::post('/contact', 'PreGuestController@saveGuestUser');
+//Route::get('/', function () {
+//    return view('front/index');
+//});
 Route::get('/select', function () {
     return view('STANDARD/select/index');
 });
