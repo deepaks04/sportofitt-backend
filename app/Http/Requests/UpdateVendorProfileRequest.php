@@ -26,7 +26,7 @@ class UpdateVendorProfileRequest extends Request
         $rules =  [
             'fname' => 'required|alpha|max:25',
             'lname' => 'required||alpha|max:25',
-            'business_name' => 'required|alpha_specialchars|max:160',
+            'business_name' => 'required|max:160',
             'address' => 'required|min:10|max:255',
             'longitude' => 'required|min:3|max:20',
             'latitude' => 'required|min:3|max:20',

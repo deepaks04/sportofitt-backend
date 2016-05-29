@@ -116,8 +116,8 @@ use AuthenticatesAndRegistersUsers,
             $customer->area_id = 1;
             $customer->phone_no = $data['phone_no'];
             $customer->save();
-            
-            if(!$user->is_actives) {
+
+            if(!$user->is_active) {
                 // Adding job to queue for processing to the mail will be send via the queue
                 $job = (new SendWelcomeEmail($user))->delay(60);
                 $this->dispatch($job);
@@ -125,6 +125,7 @@ use AuthenticatesAndRegistersUsers,
            
             return $user;
         } catch (Exception $exception) {
+            dd($exception->getMessage());
             APIResponse::handleException($exception);
         }
     }

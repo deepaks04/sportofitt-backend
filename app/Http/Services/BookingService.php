@@ -149,6 +149,7 @@ class BookingService extends BaseService
                     if($this->processBooking()) {
                         $job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
                         $this->dispatch($job);
+                        return true;
                     }
                 }
             }
@@ -271,7 +272,7 @@ class BookingService extends BaseService
                 $bookingTimming = new BookedTiming();
                 $bookingTimming->booking_id = $booking->id;
                 $bookingTimming->facility_id = $bookingData['facilityId'];
-                if($bookingData['package_type_id'] == 2) {
+                if($bookingData['package_type_id'] == 0) {
                     $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
                     $slotTime = explode("-", $bookingData['selectedSlot']);
                     if (!empty($slotTime)) {
@@ -407,6 +408,7 @@ class BookingService extends BaseService
     {
         $minutes = array();
         $endMinutes = explode(":", $end);
+        $endTime = (float)str_replace(":",".",$end);
         $carbonEndDate = Carbon::create(date('Y'), date('m'), date('d'), $endMinutes[0], $endMinutes[1], 0);
 
         $startMinutes = explode(":", $start);
@@ -414,6 +416,12 @@ class BookingService extends BaseService
         while ($carbonStartDate->lt($carbonEndDate)) {
             $startTime = date("H:i", strtotime($carbonStartDate->__toString()));
             $newInstance = $carbonStartDate->addMinutes($duration);
+            $newEndTime = (float)date("H.i", strtotime($newInstance->__toString()));
+            if($newEndTime > $endTime) {
+                $carbonStartDate = $newInstance;
+                continue;
+            }
+            
             $openingTime = $startTime . "-" . date("H:i", strtotime($newInstance->__toString()));
             $minutes[$openingTime] = date("h:i A", strtotime("1970-01-01 ".$startTime.":00"))."-".date("h:i A", strtotime($newInstance->__toString()));
             $carbonStartDate = $newInstance;
