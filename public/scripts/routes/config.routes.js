@@ -19,8 +19,17 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         url: "",
         views: {
             'body@app': {templateUrl: 'front/views/home/index.html',
-                controller: 'MapCtrl',
+               controller: 'HomeCtrl',
                 controllerAs: 'vm'}
+        }
+    }).state('app.listings', {
+        url: "listings",
+        views: {
+            'body@app': {
+                templateUrl: "front/views/listings/index.html",
+                controller: 'MapCtrl',
+                controllerAs: 'vm'
+            }
         }
     }).state('app.login', {
         url: "sign-in",
