@@ -149,6 +149,7 @@ class BookingService extends BaseService
                     if($this->processBooking()) {
                         $job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
                         $this->dispatch($job);
+                        return true;
                     }
                 }
             }
@@ -271,7 +272,7 @@ class BookingService extends BaseService
                 $bookingTimming = new BookedTiming();
                 $bookingTimming->booking_id = $booking->id;
                 $bookingTimming->facility_id = $bookingData['facilityId'];
-                if($bookingData['package_type_id'] == 2) {
+                if($bookingData['package_type_id'] == 0) {
                     $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
                     $slotTime = explode("-", $bookingData['selectedSlot']);
                     if (!empty($slotTime)) {
