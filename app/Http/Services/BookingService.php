@@ -13,6 +13,7 @@ use App\Jobs\SendOrderEmail;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use URL;
 use App\Http\Services\BaseService;
+use App\Jobs\SendNewOrderEmail;
 
 class BookingService extends BaseService
 {
@@ -145,7 +146,10 @@ class BookingService extends BaseService
             if (!empty($this->bookingData)) {
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
-                    return $this->processBooking();
+                    if($this->processBooking()) {
+                        $job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
+                        $this->dispatch($job);
+                    }
                 }
             }
         } catch (\Exception $exception) {
@@ -186,7 +190,7 @@ class BookingService extends BaseService
                 'order_total' => Input::get('order_total'),
                 'payment_mode' => Input::get('payment_mode')
             );
-
+            
             if ('cash' == trim(Input::get('payment_mode'))) {
                 $array['order_status'] = 1;
                 $array['payment_status'] = 1;
@@ -332,7 +336,7 @@ class BookingService extends BaseService
                     continue;
                 }
                 
-                $bookingCount = $this->checkAvailability($facilityDetails->id, $timeSlot, $bookingDate, $isPeak);
+                $bookingCount = $this->checkAvailability($facilityDetails->id, $key, $bookingDate, $isPeak);
                 if ($bookingCount == $facilityDetails->slots) {
                     unset($bookingTiming[$key]);
                 }
@@ -429,6 +433,7 @@ class BookingService extends BaseService
                         ->where('booked_timings.start_time', '=', $slot[0])
                         ->where('booked_timings.end_time', '=', $slot[1])
                         ->where('booked_timings.booking_day', '=', $day)
+                        ->where('booked_timings.booking_date', '=', date('Y-m-d',strtotime($date)))
                         ->where('booked_timings.facility_id', '=', $facilityId)
                         ->where('booked_timings.is_peak', '=', $isPeak)
                         ->get();
@@ -450,19 +455,24 @@ class BookingService extends BaseService
     public function cancelUserOrder($orderId)
     {
         $response = array('error' => null, 'refund' => null);
+        $bookingDetails = array();
         try {
             if (!empty($orderId)) {
-                $orderDetails = BookedPackage::select('users.fname','users.lname','users.email','booked_packages.*', 'orders.order_id', 'orders.order_total', 'orders.payment_mode', 'orders.order_status')
+                $orderDetails = BookedPackage::select('users.fname','users.lname','users.email','booked_packages.*', 'orders.order_id As orderNumber', 'orders.order_total', 'orders.payment_mode', 'orders.order_status')
                         ->join('orders', 'orders.id', '=', 'booked_packages.order_id')
                         ->leftJoin('users', 'orders.user_id', '=', 'users.id')
                         ->where('booked_packages.order_id', '=', $orderId)
                         ->first();
                 if (!empty($orderDetails)) {
+                    $bookingDetails['fname'] = $orderDetails->fname;
+                    $bookingDetails['lname'] = $orderDetails->lname;
+                    $bookingDetails['orderNumber'] = $orderDetails->orderNumber;
+                    $bookingDetails['email'] = $orderDetails->email;
                     if (3 == $orderDetails->order_status) {
                         $response['error'] = 'Order has been already cancelled';
                         return $response;
                     }
-
+                    
                     $bookedTiming = $orderDetails->bookedTimings()->orderBy('booking_day', 'ASC')->first();
                     $bookingTime = Carbon::createFromTimestamp(strtotime($bookedTiming->booking_date . " " . $bookedTiming->start_time));
                     $currentDate = Carbon::now();
@@ -476,8 +486,9 @@ class BookingService extends BaseService
                             $cancellationDate = date('Y-m-d H:i:s');
                             Order::where('id', '=', $orderId)->update(['order_status' => 3, 'cancellation_date' => $cancellationDate]);
                             BookedPackage::where('order_id', '=', $orderId)->update(['booking_status' => 3, 'cancellation_date' => $cancellationDate]);
+                            
                             // Adding job to queue for processing to the mail will be send via the queue
-                            $job = (new SendOrderEmail($orderDetails,  SendOrderEmail::CANCEL_ORDER))->delay(60);
+                            $job = (new SendOrderEmail($bookingDetails,  SendOrderEmail::CANCEL_ORDER))->delay(10);
                             $this->dispatch($job);                            
                             
                         } else {
