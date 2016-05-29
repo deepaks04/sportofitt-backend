@@ -18,38 +18,36 @@
             </header>
             <div class="row">
                 <div class="col-md-3 col-sm-3">
-                    <!--<aside id="sidebar">-->
-                        <!--<ul class="navigation-sidebar list-unstyled">-->
-                            <!--<li class="active">-->
-                                <!--<a href="#">-->
-                                    <!--<i class="fa fa-folder"></i>-->
-                                    <!--<span>All Items</span>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<a href="#">-->
-                                    <!--<i class="fa fa-check"></i>-->
-                                    <!--<span>Approved</span>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<a href="#">-->
-                                    <!--<i class="fa fa-clock-o"></i>-->
-                                    <!--<span>In Queue</span>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                            <!--<li>-->
-                                <!--<a href="#">-->
-                                    <!--<i class="fa fa-eye-slash"></i>-->
-                                    <!--<span>Hidden</span>-->
-                                <!--</a>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</aside>-->
+                    <aside id="sidebar">
+                        <ul class="navigation-sidebar list-unstyled">
+                            <li ng-class="{'active':!vm.searchFilter.booking_status}">
+                                <a ng-click="vm.searchFilter.booking_status=''">
+                                    <i class="fa fa-folder"></i>
+                                    <span>All Items</span>
+                                </a>
+                            </li>
+                            <li ng-class="{'active':vm.searchFilter.booking_status == '1'}">
+                                <a ng-click="vm.searchFilter.booking_status='1'">
+                                    <i class="fa fa-check"></i>
+                                    <span>Approved</span>
+                                </a>
+                            </li>
+
+                            <li ng-class="{'active':vm.searchFilter.booking_status == '3'}">
+                                <a ng-click="vm.searchFilter.booking_status='3'">
+                                    <i class="fa fa-close"></i>
+                                    <span>Cancelled</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
                 </div>
                 <div class="col-md-9 col-sm-9">
                     <section id="items">
-                        <div class="item list admin-view" ng-repeat="booking in vm.myBookings">
+                        <div class="item list admin-view" ng-if="!vm.myBookings">
+                            No booking found!
+                            </div>
+                        <div class="item list admin-view" ng-repeat="booking in vm.myBookings | filter:vm.searchFilter:strict" ng-if="vm.myBookings">
                             <div class="image">
                                 <!--<div class="quick-view" data-toggle="modal" data-target="#modal-bar"><i class="fa fa-eye"></i><span>Quick View</span></div>-->
                                 <a href>
@@ -94,7 +92,7 @@
                             </div>
                             <div class="description">
                                 <ul class="list-unstyled actions">
-                                    <li><a href><i class="fa fa-pencil"></i></a></li>
+                                    <!--<li><a href><i class="fa fa-pencil"></i></a></li>-->
                                     <!--<li><a href class="hide-item"><i class="fa fa-eye"></i></a></li>-->
                                     <li ng-if="booking.bookingDetails[0].is_editable"><a href ng-click="vm.cancelBooking(booking)"><i class="fa fa-trash"></i></a></li>
                                     <li ng-if="!booking.bookingDetails[0].is_editable"><a href ng-click="vm.cancelBooking(booking)" title="Can not delete order passed date!"><i class="fa fa-info"></i></a></li>
