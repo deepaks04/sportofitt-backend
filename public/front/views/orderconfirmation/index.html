@@ -42,7 +42,7 @@
             </div>
             
         </section>
-<form  data-ng-submit="vm.checkout();">
+<form  data-ng-submit="vm.checkout();" novalidate>
     <section class="container-fullw bg-white" >
             <div class="container">
 
@@ -57,56 +57,52 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        First Name {{vm.user.first_name}}
-                                    </label>
-                                    <input type="text" name="firstName" data-ng-model="user.first_name" class="form-control" placeholder="Enter your First Name" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.first_name,'has-success':!vm.errors.first_name}">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" class="form-control" name="first_name" data-ng-model="vm.user.first_name" required>
+                                    <span class="error text-small " ng-if="vm.errors.first_name">{{vm.errors.first_name}}</span>
+                                </div><!-- /.form-group -->
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        Last Name
-                                    </label>
-                                    <input type="text" name="lastName" data-ng-model="vm.user.last_name"  class="form-control" placeholder="Enter your Last Name" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.last_name,'has-success':!vm.errors.last_name}">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" class="form-control" name="last_name" data-ng-model="vm.user.last_name" required>
+                                    <span class="error text-small " ng-if="vm.errors.last_name">{{vm.errors.last_name}}</span>
+                                </div><!-- /.form-group -->
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        Email
-                                    </label>
-                                    <input type="text" name="email" data-ng-model="vm.user.email"  class="form-control" placeholder="Enter your Email" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.email,'has-success':!vm.errors.email}">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control"  name="email" data-ng-model="vm.user.email" required>
+                                    <span class="error text-small" ng-if="vm.errors.email">{{vm.errors.email}}</span>
+                                </div><!-- /.form-group -->
+
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        Phone number
-                                    </label>
-                                    <input type="text" restrict="reject" mask="(999) 999-9999" clean="true" name="mobile" data-ng-model="vm.user.phone_no"  class="form-control" placeholder="Enter your Phone number" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.phone_no,'has-success':!vm.errors.phone_no}">
+                                    <label for="phone_no">Mobile Number:</label>
+                                    <input type="text" class="form-control"  name="phone_no" data-ng-model="vm.user.phone_no" required>
+                                    <span class="error text-small" ng-if="vm.errors.phone_no">{{vm.errors.phone_no}}</span>
+                                </div><!-- /.form-group -->
                             </div>
                         </div>
                         <div class="row" ng-if="!isAuthenticated">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>
-                                        Password
-                                    </label>
-                                    <input type="text" name="password" data-ng-model="vm.user.password"  class="form-control" placeholder="Enter your Password" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.password,'has-success':!vm.errors.password}">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" name="password" data-ng-model="vm.user.password" required>
+                                    <span class="error text-small " ng-if="vm.errors.password">{{vm.errors.password}}</span>
+                                </div><!-- /.form-group -->
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="control-label">
-                                        Confirm Password
-                                    </label>
-                                    <input type="text"  name="confirm_password" data-ng-model="vm.user.confirm_password"  class="form-control" placeholder="Conform Password" required>
-                                </div>
+                                <div class="form-group" ng-class="{'has-error':vm.errors.password_confirmation,'has-success':!vm.errors.password_confirmation}">
+                                    <label for="form-register-confirm-password">Confirm Password:</label>
+                                    <input type="password" class="form-control" id="form-register-confirm-password" data-ng-model="vm.user.password_confirmation"
+                                           name="password_confirmation" required>
+                                    <span class="error text-small " ng-if="vm.errors.password_confirmation">{{vm.errors.password_confirmation}}</span>
+                                </div><!-- /.form-group -->
                             </div>
                         </div>
                         <!--<div class="row">-->
