@@ -2,10 +2,10 @@
 
 (function() {
 
-    app.factory('userService', ['$q', '$timeout', '$http', '$cacheFactory', userService]);
+    app.factory('userService', ['$q', '$timeout', '$http', '$cacheFactory','config', userService]);
 
 
-    function userService($q,$timeout,$http,$cacheFactory){
+    function userService($q,$timeout,$http,$cacheFactory,config){
 
 
 return {
@@ -23,7 +23,7 @@ return {
 function getVendorProfile(){
 	 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/my-profile'
+                url: config.backend + 'vendor/my-profile'
             })
             .then(sendResponseData)
             .catch(sendGetUserError)
@@ -43,7 +43,7 @@ function getVendorProfile(){
 function getVendorImages(facilityId){
   return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/images',
+                url: config.backend + 'vendor/images',
                 data:{'facility':facilityId}
             })
             .then(sendResponseData)
@@ -58,7 +58,7 @@ function sendGetImagesError(response) {
 function deleteVendorImage(imageId){
 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/images/'+imageId
+                url: config.backend + 'vendor/images/'+imageId
             })
             .then(sendResponseData)
             .catch(sendDeleteImagesError)
@@ -73,7 +73,7 @@ function sendDeleteImagesError(response) {
 
             return $http({
                 method: 'GET',
-                url: 'api/v1/user/areas',
+                url: config.backend + 'user/areas',
                  cache: true
             })
             .then(sendResponseData)
@@ -89,7 +89,7 @@ function sendDeleteImagesError(response) {
 function getBillingInfo(){
 	 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/billing-info',
+                url: config.backend + 'vendor/billing-info',
                  cache: true
             })
             .then(sendResponseData)
@@ -105,7 +105,7 @@ function getBillingInfo(){
         function getBankDetails(){
 	 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/bank-info',
+                url: config.backend + 'vendor/bank-info',
                  cache: true
             })
             .then(sendResponseData)
@@ -127,7 +127,7 @@ function getBillingInfo(){
           		for(var key in userInfo)
           			fd.append(key, userInfo[key]);
           		fd.append("_method","PUT");
-          return		$http.post('api/v1/vendor/my-profile', fd, {
+          return		$http.post(config.backend + 'vendor/my-profile', fd, {
           			transformRequest: angular.indentity,
           			headers: { 'Content-Type': undefined }
           		});
@@ -140,7 +140,7 @@ function getBillingInfo(){
           		for(var key in billingInfo)
           			fd.append(key, billingInfo[key]);
           		fd.append("_method","PUT");
-          return		$http.post('api/v1/vendor/billing-info', fd, {
+          return		$http.post(config.backend + 'vendor/billing-info', fd, {
           			transformRequest: angular.indentity,
           			headers: { 'Content-Type': undefined }
           		});
@@ -153,7 +153,7 @@ function getBillingInfo(){
           		for(var key in bankInfo)
           			fd.append(key, bankInfo[key]);
           		fd.append("_method","PUT");
-          return		$http.post('api/v1/vendor/bank-info', fd, {
+          return		$http.post(config.backend + 'vendor/bank-info', fd, {
           			transformRequest: angular.indentity,
           			headers: { 'Content-Type': undefined }
           		});

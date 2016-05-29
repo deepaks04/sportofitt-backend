@@ -15,18 +15,26 @@ angular.module('sportofittApp')
 
     this.register = function(newUser){
       return $http.post(this.url+'sign-up',newUser);
-    }
+    },
       this.confirmUser = function(token){
           return $http.get(this.url+'confirmation/'+token);
-      }
+      },
       this.getAuthenticatedUser = function(){
           return $http.post(this.url+"authenticated-user").then(function(user){
               delete user.data.data.access_token;
               $cookies.putObject('loggedUser',user.data.data);
               return user.data;
           });
-      }
-
+      },
+      this.forgetPassword = function (credentials) {
+          return $http.post(this.url + 'password/email', credentials);
+      },
+      this.getResetPassword = function (credentials) {
+          return $http.get(this.url + 'password/reset/' + credentials);
+      },
+      this.resetPassword = function (credentials) {
+          return $http.post(this.url + 'password/reset', credentials);
+      },
       this.login = function(email,password){
           var loginOptions = {
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}

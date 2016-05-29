@@ -85,7 +85,10 @@
 
                                     <div>Booking Time : {{booking.bookingDetails[0].booking_date}} {{booking.bookingDetails[0].start_time}} to {{booking.bookingDetails[0].end_time}}</div>
                                     <div>Payment Mode : {{booking.payment_mode}}</div>
-                                    <div>Total Amount : {{booking.booking_amount}}</div>
+                                    <div>Total Amount : <span class="price">
+                                        <i class="fa fa-inr"></i>{{booking.booking_amount}}
+                                    </span>
+                                    </div>
                                     <!--<div class="rating" data-rating="4"></div>-->
                                 </div>
                             </div>

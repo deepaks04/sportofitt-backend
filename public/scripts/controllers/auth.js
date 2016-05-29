@@ -15,6 +15,8 @@
 
         $rootScope.user = {};
 
+        vm.disableSubmit = false;
+
         vm.isMainLogin = false;
         vm.login = function () {
             //var loginOptions = {
@@ -47,6 +49,8 @@
             //}).catch(function (errors) {
             //    toastr.error(errors.data.message.error);
             //});
+
+            vm.disableSubmit = true;
             Auth.login(vm.email,vm.password).then(function(){
                 // If login is successful, redirect to the users state
                 //toastr.success(errors.data.message.success);
@@ -64,13 +68,34 @@
 
             }).catch(function (errors) {
                     toastr.error(errors.data.message.error);
+                vm.disableSubmit = false;
                 });
         }
 
         //if($auth.isAuthenticated()){
         //    $state.go('app.home', {});
         //}
+        vm.requestNewPassword = function(form) {
+            vm.disableSubmit = true;
+            vm.errors = {};
+            var passwordResponse = Auth.forgetPassword(form);
+            passwordResponse.then(function (response) {
+               toastr.success(response.data.message);
+                $state.go("app.login");
+            });
+            passwordResponse.catch(function (response, status) {
 
+                vm.disableSubmit = false;
+                vm.errors = {};
+                if (response.status === 422) {
+                    angular.forEach(response.data, function (errors, field) {
+                        vm.errors[field] = errors.join(', ');
+                    });
+                } else {
+                    vm.errors['email'] = response.data.message;
+                }
+            });
+        }
     }
 
     module.controller("AuthCtrl", authCtrl);

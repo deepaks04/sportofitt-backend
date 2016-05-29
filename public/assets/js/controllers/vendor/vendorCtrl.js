@@ -216,7 +216,6 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
         // console.info('onSuccessItem', fileItem, response, status, headers);
         // };
         uploaderImages.onErrorItem = function (fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
             SweetAlert.swal("somethings going wrong", response.message, "error");
             return;
         };
@@ -225,12 +224,9 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
         // console.info('onCancelItem', fileItem, response, status, headers);
         // };
         uploaderImages.onCompleteItem = function (fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
             $scope.getVendorImages();
         };
-        uploaderImages.onCompleteAll = function () {
-            console.info('onCompleteAll');
-        };
+
 
         $scope.getVendorImages = function () {
             userService.getVendorImages().then(function (images) {
@@ -246,8 +242,7 @@ app.controller('ProfileCtrl', ["$rootScope", "$scope", "$timeout", "flowFactory"
             userService.deleteVendorImage(imageId).then(function (images) {
                 $scope.getVendorImages();
             }).catch(function (response) {
-                console.log(response);
-                $scope.images = {};
+               $scope.images = {};
             });
         }
         $scope.getVendorImages();

@@ -23,9 +23,7 @@ angular.module('sportofittApp')
             searchService.getFacilityById(vm.facilityId).then(function (response) {
                 vm.facility = response.data.data;
                 angular.forEach(vm.facility.packages, function(value, key){
-                    console.log(JSON.stringify(value)+" "+key);
-                    value.discounted_price = value.actual_price - (value.actual_price*value.discount/100);
-                    console.log(JSON.stringify(value)+" "+key);
+                    value.discounted_amount = value.actual_price - (value.actual_price*value.discount/100);
                 });
                 if(vm.facility) {
                     itemDetailMap(vm.facility.vendor.longitude, vm.facility.vendor.latitude);
@@ -155,8 +153,15 @@ angular.module('sportofittApp')
         }
 
         vm.addLocalBooking = function (booking, singleSession) {
-             booking.package_type_id = (singleSession) ? 0 : booking.package_type_id;
-            bookingService.saveLocalBooking(booking);
+            var newBooking = angular.copy(booking);
+              if(singleSession) {
+                  newBooking.package_type_id = 0;
+                      //newBooking.slotforView = $filter('filter')( vm.facilitySlots,newBooking.selectedSlot)[0];
+              }else{
+                  newBooking.vendor = vm.facility.vendor;
+                  newBooking.date = new Date();
+              }
+            bookingService.saveLocalBooking(newBooking);
             $state.go('app.orderconformation', {});
         }
 
