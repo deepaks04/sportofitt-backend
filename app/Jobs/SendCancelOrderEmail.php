@@ -11,6 +11,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Mail;
 use Config;
+use App\Order;
 
 class SendCancelOrderEmail extends Job implements SelfHandling, ShouldQueue
 {
@@ -58,10 +59,25 @@ class SendCancelOrderEmail extends Job implements SelfHandling, ShouldQueue
             $templateName = 'emails.ordercancel';
             $adminTemplate = 'emails.admin.ordercancelnotification';
             $orderRef = $this->order;
-
+            
+            $vendorDetails = Order::select('users.fname as vendorFname','users.lname as vendorLname','users.email as vendorEmail')
+                    ->join('booked_packages','booked_packages.order_id','=','orders.id')
+                    ->join('vendors','vendors.id','=','booked_packages.vendor_id')
+                    ->join('users','users.id','=','vendors.user_id')
+                    ->where('orders.order_id','=',$this->order['orderNumber'])
+                    ->first();
             Mail::queue($templateName, $params, function($message) use($orderRef, $log, $subject) {
                 $message->to($orderRef['email'], $orderRef['fname'])->subject($subject);
                 $log->addError(PHP_EOL . ' Email Sent' . $orderRef['email'] . PHP_EOL);
+            });
+            
+            $vendorParams = $params;
+            $params['vendorName'] = ucfirst($vendorDetails->vendorFname) . " " . ucfirst($vendorDetails->vendorLname);
+            $vendorParams['fname'] = ucfirst($vendorDetails->vendorFname);
+            $vendorParams['email'] = $vendorDetails->vendorEmail;
+            Mail::queue('emails.vendor.ordercancelnotification', $params, function($message) use($vendorParams, $log, $subject) {
+                $message->to($vendorParams['email'], $vendorParams['fname'])->subject($subject);
+                $log->addError(PHP_EOL . ' Email Sent ' . $vendorParams['email'] . PHP_EOL);
             });
 
             $adminEmailDetails = Config::get('mail.from');

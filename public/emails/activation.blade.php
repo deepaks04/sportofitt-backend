@@ -6,7 +6,7 @@
     <body>
 
 
-        <p>Welcome to Sportofit! {{$fname}} {{$lname}}, You are almost there.
+        <p>Welcome to Sportofitt! {{$fname}} {{$lname}}, You are almost there.
             Just click the link below to confirm your email address.</p>
         <p></p>
         <a href='{{ URL::to("api/v1/user/confirm/$remember_token") }}'> <span

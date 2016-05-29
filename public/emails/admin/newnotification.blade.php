@@ -20,7 +20,7 @@
             </table>
         </div>
         <p>
-            Stay Fit,<br> The team at Sportofit
+            Stay Fit,<br> The team at Sportofitt
         </p>
         <p>Thank you</p>
 

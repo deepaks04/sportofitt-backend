@@ -8,7 +8,7 @@
         <p>{{$fname}} {{$lname}} has cancelled his/her booking {{$orderId}}.</p>
         <p><i>Note: Cancellation &amp; refund policy are applicable as mentioned by Venue providers.</i></p>
         <p>
-            Stay Fit,<br> The team at Sportofit
+            Stay Fit,<br> The team at Sportofitt
         </p>        
         <p>Thank you</p>
     </body>

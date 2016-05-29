@@ -230,7 +230,7 @@ class BookingService extends BaseService
                     }
                     
                     $bookingObj->name = $bookingData['name'];
-                    $bookingObj->booked_by_vendor = $bookingData['vendor_id'];
+                    $bookingObj->vendor_id = $bookingData['vendor_id'];
                     $bookingObj->description = $bookingData['description'];
                     $bookingObj->order_id = $this->orderObj->id;
                     if ($bookingData['is_peak']) {

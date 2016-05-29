@@ -1026,7 +1026,7 @@ class SessionPackageController extends Controller
                 $bookingObj->name = !empty($request->title)?$request->title:"";
                 $bookingObj->description = "Booked By Vendor";
                 $bookingObj->booking_status = 1;
-                $bookingObj->booked_by_vendor = Auth::user()->id;
+                $bookingObj->vendor_id = Auth::user()->id;
                 $bookingObj->created_at = date('Y-m-d H:i:s');
                 if ($bookingObj->save() && !empty($bookingObj->id)) {
                     $bookingTimming = new BookedTiming();
