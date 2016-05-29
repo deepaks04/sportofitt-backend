@@ -408,6 +408,7 @@ class BookingService extends BaseService
     {
         $minutes = array();
         $endMinutes = explode(":", $end);
+        $endTime = (float)str_replace(":",".",$end);
         $carbonEndDate = Carbon::create(date('Y'), date('m'), date('d'), $endMinutes[0], $endMinutes[1], 0);
 
         $startMinutes = explode(":", $start);
@@ -415,6 +416,12 @@ class BookingService extends BaseService
         while ($carbonStartDate->lt($carbonEndDate)) {
             $startTime = date("H:i", strtotime($carbonStartDate->__toString()));
             $newInstance = $carbonStartDate->addMinutes($duration);
+            $newEndTime = (float)date("H.i", strtotime($newInstance->__toString()));
+            if($newEndTime > $endTime) {
+                $carbonStartDate = $newInstance;
+                continue;
+            }
+            
             $openingTime = $startTime . "-" . date("H:i", strtotime($newInstance->__toString()));
             $minutes[$openingTime] = date("h:i A", strtotime("1970-01-01 ".$startTime.":00"))."-".date("h:i A", strtotime($newInstance->__toString()));
             $carbonStartDate = $newInstance;
