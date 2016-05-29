@@ -105,6 +105,7 @@ use AuthenticatesAndRegistersUsers,
             $user->lname = $data['last_name'];
             $user->email = $data['email'];
             $user->password = bcrypt($data['password']);
+            $user->is_active = !empty($data['is_active']) ? 1 : 0;
             $user->status_id = $activeStatus->id;
             $user->role_id = $role->id;
             $user->remember_token = $remember_token;
@@ -116,10 +117,12 @@ use AuthenticatesAndRegistersUsers,
             $customer->phone_no = $data['phone_no'];
             $customer->save();
             
-            // Adding job to queue for processing to the mail will be send via the queue
-            $job = (new SendWelcomeEmail($user))->delay(60);
-            $this->dispatch($job);
-
+            if(!$data['is_active']) {
+                // Adding job to queue for processing to the mail will be send via the queue
+                $job = (new SendWelcomeEmail($user))->delay(60);
+                $this->dispatch($job);
+           }
+           
             return $user;
         } catch (Exception $exception) {
             APIResponse::handleException($exception);
