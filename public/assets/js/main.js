@@ -12,7 +12,7 @@ app.run(['$rootScope', '$state', '$stateParams', '$cookies',
         // GLOBAL APP SCOPE
         // set below basic information
         $rootScope.app = {
-            name: 'SPORTOFIT', // name of your project
+            name: 'SPORTOFITT', // name of your project
             author: 'Aquanta Consulting Services LLP', // author's name or company name
             description: 'Book GYM', // brief description
             version: '2.0', // current version
