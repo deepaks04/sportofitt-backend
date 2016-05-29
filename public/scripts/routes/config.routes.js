@@ -43,7 +43,7 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
 
         }
     }).state('app.reset-password', {
-        url: "reset-password/:resetTokan",
+        url: "reset-password/:token",
         views: {
             'body@app': {
                 templateUrl: "front/views/login/reset-password.html",

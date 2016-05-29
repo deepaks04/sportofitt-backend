@@ -17,6 +17,15 @@
 
         vm.disableSubmit = false;
 
+        if($state.params.token){
+            Auth.getResetPassword($state.params.token).then(function (response) {
+                vm.resetModel = response.data.data;
+                //console.log($scope.myModel.data);
+            }).catch(function (response) {
+                vm.resetModel = {};
+            });
+        }
+
         vm.isMainLogin = false;
         vm.login = function () {
             //var loginOptions = {
@@ -89,6 +98,30 @@
                 vm.errors = {};
                 if (response.status === 422) {
                     angular.forEach(response.data, function (errors, field) {
+                        vm.errors[field] = errors.join(', ');
+                    });
+                } else {
+                    vm.errors['email'] = response.data.message;
+                }
+            });
+        }
+
+        vm.resetNewPassword = function (form) {
+            $scope.disableSubmit = true;
+            vm.errors = {};
+            var passwordResponse = Auth.resetPassword(form);
+            //console.log(form);
+            passwordResponse.then(function (response) {
+                toastr.success(response.data.message);
+                $state.go("app.login");
+            });
+            passwordResponse.catch(function (response, status) {
+                //console.log(data);
+                $scope.disableSubmit = false;
+                vm.errors = {};
+                if (response.status === 422) {
+                    angular.forEach(response.data, function (errors, field) {
+
                         vm.errors[field] = errors.join(', ');
                     });
                 } else {
