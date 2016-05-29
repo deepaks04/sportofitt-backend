@@ -117,7 +117,7 @@ use AuthenticatesAndRegistersUsers,
             $customer->phone_no = $data['phone_no'];
             $customer->save();
             
-            if(!$data['is_active']) {
+            if(!$user->is_actives) {
                 // Adding job to queue for processing to the mail will be send via the queue
                 $job = (new SendWelcomeEmail($user))->delay(60);
                 $this->dispatch($job);
