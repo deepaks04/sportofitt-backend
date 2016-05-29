@@ -25,7 +25,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
         // APPLICATION ROUTES
         // -----------------------------------
         // For any unmatched url, redirect to /app/dashboard
-        //$urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/");
         //
         $stateProvider
                 //vendor routes
@@ -80,6 +80,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$controllerProvider', '$com
                 label: 'Venue Booking'
             },
             resolve: loadSequence('moment', 'mwl.calendar')
+        }).state('partner-agreement', {
+            url: '/partner-agreement',
+            templateUrl: "assets/views/vendor/term-conditions.html",
+            data: {
+                noLogin: !0
+            }
         }).state('login', {
             url: '/',
             template: '<div ui-view class="fade-in-right-big smooth"></div>',

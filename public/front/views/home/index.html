@@ -9,109 +9,115 @@
     <!--Page Content-->
     <div id="page-content">
         <section class="hero-image search-filter-middle height-500">
-                    <div class="inner">
-                        <div class="container">
-                            <h1>Search for your favorite sport</h1>
-                            <div class="search-bar horizontal">
-                                <form class="main-search border-less-inputs background-dark" role="form" method="post" data-ng-submit="vm.setCategory()">
-                                        
-                                        <!-- /.form-group -->
-<!--                                        <div class="form-group">
-                                <select data-ng-model="vm.categoryFilter" ng-options="category.name as category.name for category in vm.subCategories">
-<option value="">Select Category</option>
-                                </select>                            
+            <div class="inner">
+                <div class="container">
+                    <h1>Your destination for Sporting, Adventure Sports, Fitness Venues and Coaching</h1>
+                    <div class="search-bar horizontal">
+                        <form class="main-search border-less-inputs background-dark" role="form" method="post"
+                              data-ng-submit="vm.setCategory()">
 
-                                        </div>-->
-                                        <div class="form-group wide">
+                            <!-- /.form-group -->
+                            <!--                                        <div class="form-group">
+                                                            <select data-ng-model="vm.categoryFilter" ng-options="category.name as category.name for category in vm.subCategories">
+                            <option value="">Select Category</option>
+                                                            </select>
 
-                                        <ui-select ng-model="vm.categoryFilter" theme="bootstrap">
-            <ui-select-match placeholder="Select or search a sports category in the list...">{{$select.selected.name}}</ui-select-match>
-            <ui-select-choices repeat="category in vm.subCategories | propsFilter: {name: $select.search}" position="down">
-              <div ng-bind-html="category.name | highlight: $select.search"></div>
-            </ui-select-choices>
-                                        </ui-select></div>
-                                        <!-- /.form-group -->
-                                        
-                                        <!-- /.form-group -->
-                                                                                <div class="form-group margin-left-15">
+                                                                    </div>-->
+                            <div class="form-group wide">
 
-                                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                        </div>
-                                        <!-- /.form-group -->
-                                    
-                                </form>
-                                <!-- /.main-search -->
+                                <ui-select ng-model="vm.categoryFilter" theme="bootstrap">
+                                    <ui-select-match placeholder="Select or search a sports category in the list...">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="category in vm.subCategories | propsFilter: {name: $select.search}"
+                                            position="down">
+                                        <div ng-bind-html="category.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
-                            <!-- /.search-bar -->
-                        </div>
-                    </div>
-                    <div class="background">
-                        <img src="front/images/home_background.jpg" alt="Welcome to Sportofitt" style="opacity: 0.7">
-                    </div>
-                </section>
-        <!-- Map Canvas-->
-<!--        <div class="map-canvas list-width-30">
-             Map 
-            <div class="map">
-                <div class="toggle-navigation">
-                    <div class="icon">
-                        <div class="line"></div>
-                        <div class="line"></div>
-                        <div class="line"></div>
-                    </div>
-                </div>
-                
-                /.toggle-navigation
-                <div id="map" class="has-parallax"></div>
-                /#map
-                <div class="search-bar horizontal">
-                    <form class="main-search border-less-inputs" data-ng-submit="vm.setFilters(vm.filter)" role="form" method="post">
-                        <div class="input-row">
-                            <div class="form-group">
-                                <select data-ng-model="vm.filter.category" ng-options="category.name as category.name for category in vm.subCategories">
-<option value="">Select Category</option>
-                                </select>                            </div>
-                             /.form-group 
-                            <div class="form-group">
-                                <select data-ng-model="vm.filter.type" ng-options="type for type in vm.types">
-                                    <option value="">Select Type</option>
-                                </select>
-                            </div>
-                             /.form-group 
-                            <div class="form-group">
-                  <select data-ng-model="vm.filter.area" ng-change="vm.setLangLat(vm.filter.area)" ng-options="area as area.name for area in vm.areas">
-                      <option value="">Select Area</option>
-                  </select>
-                            </div>
-                             /.form-group 
-                            <div class="form-group">
+                            <!-- /.form-group -->
+
+                            <!-- /.form-group -->
+                            <div class="form-group margin-left-15">
+
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                             </div>
-                             /.form-group 
-                        </div>
-                         /.input-row 
-                    </form>
-                     /.main-search 
-                </div>
-                 /.search-bar 
-            </div>
-             end Map 
-            Items List
-            <div class="items-list">
-                <div class="inner">
-                    <header>
-                        <h3>Results</h3>
-                    </header>
-                    <ul class="results list">
+                            <!-- /.form-group -->
 
-                    </ul>
+                        </form>
+                        <!-- /.main-search -->
+                    </div>
+                    <!-- /.search-bar -->
                 </div>
-                results
             </div>
-            end Items List
-        </div>-->
+            <div class="background">
+                <img src="front/images/home_background.jpg" alt="Welcome to Sportofitt" style="opacity: 0.7">
+            </div>
+        </section>
+        <!-- Map Canvas-->
+        <!--        <div class="map-canvas list-width-30">
+                     Map
+                    <div class="map">
+                        <div class="toggle-navigation">
+                            <div class="icon">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+
+                        /.toggle-navigation
+                        <div id="map" class="has-parallax"></div>
+                        /#map
+                        <div class="search-bar horizontal">
+                            <form class="main-search border-less-inputs" data-ng-submit="vm.setFilters(vm.filter)" role="form" method="post">
+                                <div class="input-row">
+                                    <div class="form-group">
+                                        <select data-ng-model="vm.filter.category" ng-options="category.name as category.name for category in vm.subCategories">
+        <option value="">Select Category</option>
+                                        </select>                            </div>
+                                     /.form-group
+                                    <div class="form-group">
+                                        <select data-ng-model="vm.filter.type" ng-options="type for type in vm.types">
+                                            <option value="">Select Type</option>
+                                        </select>
+                                    </div>
+                                     /.form-group
+                                    <div class="form-group">
+                          <select data-ng-model="vm.filter.area" ng-change="vm.setLangLat(vm.filter.area)" ng-options="area as area.name for area in vm.areas">
+                              <option value="">Select Area</option>
+                          </select>
+                                    </div>
+                                     /.form-group
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                    </div>
+                                     /.form-group
+                                </div>
+                                 /.input-row
+                            </form>
+                             /.main-search
+                        </div>
+                         /.search-bar
+                    </div>
+                     end Map
+                    Items List
+                    <div class="items-list">
+                        <div class="inner">
+                            <header>
+                                <h3>Results</h3>
+                            </header>
+                            <ul class="results list">
+
+                            </ul>
+                        </div>
+                        results
+                    </div>
+                    end Items List
+                </div>-->
         <!-- end Map Canvas-->
-            </div>
     </div>
-    <!-- end Page Content-->
+</div>
+<!-- end Page Content-->
 
