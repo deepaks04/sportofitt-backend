@@ -158,6 +158,8 @@ angular.module('sportofittApp')
                   newBooking.package_type_id = 0;
                       //newBooking.slotforView = $filter('filter')( vm.facilitySlots,newBooking.selectedSlot)[0];
               }else{
+                  newBooking.package_id = booking.id,
+                      newBooking.id = vm.facility.id,
                   newBooking.vendor = vm.facility.vendor;
                   newBooking.date = new Date();
               }

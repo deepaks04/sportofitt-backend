@@ -52,7 +52,7 @@
                                 <input type="password" class="form-control" id="form-sign-in-password" data-ng-model="vm.password" name="form-sign-in-password" required>
                             </div><!-- /.form-group -->
                             <div class="form-group clearfix">
-                                <button type="submit" class="btn pull-right btn-default" id="account-submit">Sign In</button>
+                                <button ng-disabled="vm.disableSubmit" type="submit" class="btn pull-right btn-default" id="account-submit">Sign In</button>
                                 <div class="margin-top-10 links cl-effect-17">
                                     <a ui-sref="app.forget-password" >Forgot Password?</a>
                                 </div>
