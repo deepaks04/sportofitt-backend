@@ -12,7 +12,7 @@ use Monolog\Handler\StreamHandler;
 use Mail;
 use Config;
 
-class SendOrderEmail extends Job implements SelfHandling, ShouldQueue
+class SendCancelOrderEmail extends Job implements SelfHandling, ShouldQueue
 {
 
     use InteractsWithQueue,

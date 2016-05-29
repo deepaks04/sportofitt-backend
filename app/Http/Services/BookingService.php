@@ -488,7 +488,7 @@ class BookingService extends BaseService
                             BookedPackage::where('order_id', '=', $orderId)->update(['booking_status' => 3, 'cancellation_date' => $cancellationDate]);
                             
                             // Adding job to queue for processing to the mail will be send via the queue
-                            $job = (new SendOrderEmail($bookingDetails,  SendOrderEmail::CANCEL_ORDER))->delay(10);
+                            $job = (new SendCancelOrderEmail($bookingDetails))->delay(10);
                             $this->dispatch($job);                            
                             
                         } else {
