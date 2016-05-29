@@ -62,6 +62,10 @@ angular.module('sportofittApp')
               }
             };
 
+            vm.getArea = function(area_id){
+                return $filter('filter')(vm.areas,{id:area_id})[0].name
+            };
+
             vm.setFilters = function (newfilter) {
                 var filter = angular.copy(newfilter);
                 angular.forEach(filter, function (value, key) {
@@ -73,16 +77,16 @@ angular.module('sportofittApp')
                 createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
             }
             
-        vm.setFilters = function (newfilter) {
-            var filter = angular.copy(newfilter);
-            angular.forEach(filter, function (value, key) {
-                if (!value || key == 'area') {
-                    delete filter[key];
-                }
-            });
-            vm.mapData['data'] = $filter('filter')(vm.masterData.data, filter, true);
-            createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
-        }
+        //vm.setFilters = function (newfilter) {
+        //    var filter = angular.copy(newfilter);
+        //    angular.forEach(filter, function (value, key) {
+        //        if (!value || key == 'area') {
+        //            delete filter[key];
+        //        }
+        //    });
+        //    vm.mapData['data'] = $filter('filter')(vm.masterData.data, filter, true);
+        //    createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
+        //}
 
         function createHomepageGoogleMap(_latitude, _longitude, json) {
             gMap();

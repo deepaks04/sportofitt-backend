@@ -70,31 +70,38 @@
                                     <div class="col-md-3 col-sm-4" ng-repeat="item in vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ">
                                         <div class="item">
                                             <div class="image">
-                                                <!--<div class="quick-view"><i class="fa fa-eye"></i><span>Quick View</span></div>-->
+                                                <div class="quick-view"><i class="fa fa-eye"></i><span>Quick View</span></div>
                                                 <a href="item-detail.html">
-<!--                                                    <div class="overlay">
+                                                    <div class="overlay">
                                                         <div class="inner">
                                                             <div class="content">
                                                                 <h4>Description</h4>
-                                                                <p>{{item.description}}</p>
+                                                                <p>{{item.description || 'No Description' }}</p>
                                                             </div>
                                                         </div>
-                                                    </div>-->
+                                                    </div>
                                                     
                                                     
-                                                    <img src="assets/img/items/1.jpg" alt="">
+                                                    <img ng-src="{{item.gallery[0]}}" alt="">
                                                 </a>
                                             </div>
                                             <div class="wrapper">
                                                 <a ng-href="#/venue/{{item.facilityId}}"><h3>{{item.facilityName}}</h3></a>
                                                 <figure>{{item.location}}</figure>
-                                                <div class="price"><i class="fa fa-inr"></i>{{item.peak_hour_price}}</div>
-                                                <div class="info">
-                                                <div class="type">
-                                                    <span>{{item.description}}</span>
+                                                <div class="price pull-left">
+                                                    <span ><i class="fa fa-inr"></i>{{item.peak_hour_price}}</span>
                                                 </div>
+                                                <div class="type"> <span>{{item.category}}</span></div>
+                                                <div class="clear-fix"></div>
+                                                <div class="info">
+                                                <div class="type pull-left">
+                                                    <span>{{item.type}}</span>
+                                                </div>
+                                                    <div class="type pull-right">
+                                                        <span>{{vm.getArea(item.area_id)}}</span>
+                                                    </div>
                                             </div>
-                                                
+
                                             </div>
                                         </div>
                                         <!-- /.item-->
