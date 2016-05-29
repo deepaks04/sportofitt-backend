@@ -187,7 +187,7 @@
                                 <span class="text-bold">Order Total</span>
                             </div>
                             <div class="col-sm-2">
-                                <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.discounted_price}}</span>
+                                <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.actual_price - vm.LocalBookings.discounted_price}}</span>
                             </div>
                         </div>
                         <hr/>
@@ -237,7 +237,7 @@
                                         <span class="text-large">{{vm.LocalBookings.name}}</span>
                                     </div>
                                     <div class="col-md-4">
-                                        <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.discounted_price}}</span>
+                                        <span class="text-large"><i class="fa fa-inr"></i> {{vm.LocalBookings.actual_price - vm.LocalBookings.discounted_price}}</span>
                                     </div>
                                 </div>
 
@@ -256,7 +256,7 @@
                                         <span class="text-large"><strong>Order Subtotal</strong></span>
                                     </div>
                                     <div class="col-md-4">
-                                        <span class="text-large"><strong><i class="fa fa-inr"></i> {{vm.LocalBookings.discounted_price}}</strong></span>
+                                        <span class="text-large"><strong><i class="fa fa-inr"></i> {{ vm.LocalBookings.actual_price - vm.LocalBookings.discounted_price}}</strong></span>
                                     </div>
                                 </div>
 

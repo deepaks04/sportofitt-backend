@@ -21,7 +21,7 @@ angular.module('sportofittApp')
                 if (vm.LocalBookings.package_type_id == 0) {
                     vm.LocalBookings.booking_amount = (vm.LocalBookings.is_peak) ? vm.LocalBookings.peak_hour_price : vm.LocalBookings.off_peak_hour_price
                     vm.LocalBookings.discount = 0;
-                    vm.LocalBookings.discounted_amount = vm.LocalBookings.discounted_price = vm.LocalBookings.booking_amount;
+                    vm.LocalBookings.discounted_amount = vm.LocalBookings.discounted_price = 0;
                 } else {
                     vm.LocalBookings.booking_amount = vm.LocalBookings.actual_price;
                     vm.LocalBookings.discount = vm.LocalBookings.discount;
