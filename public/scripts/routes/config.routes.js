@@ -32,6 +32,26 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
             }
 
         }
+    }).state('app.forget-password', {
+        url: "forget-password",
+        views: {
+            'body@app': {
+                templateUrl: "front/views/login/forget-password.html",
+                controller: 'AuthCtrl',
+                controllerAs: 'vm'
+            }
+
+        }
+    }).state('app.reset-password', {
+        url: "reset-password/:resetTokan",
+        views: {
+            'body@app': {
+                templateUrl: "front/views/login/reset-password.html",
+                controller: 'AuthCtrl',
+                controllerAs: 'vm'
+            }
+
+        }
     }).state('app.confirmation', {
         url: "confirmation/:token",
         views: {

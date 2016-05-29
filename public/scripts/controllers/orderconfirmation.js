@@ -21,13 +21,12 @@ angular.module('sportofittApp')
                 if (vm.LocalBookings.package_type_id == 0) {
                     vm.LocalBookings.booking_amount = (vm.LocalBookings.is_peak) ? vm.LocalBookings.peak_hour_price : vm.LocalBookings.off_peak_hour_price
                     vm.LocalBookings.discount = 0;
-                    vm.LocalBookings.discounted_amount = 0;
+                    vm.LocalBookings.discounted_amount =  vm.LocalBookings.discounted_price = vm.LocalBookings.booking_amount;
                 } else {
                     vm.LocalBookings.booking_amount = vm.LocalBookings.actual_price;
                     vm.LocalBookings.discount = vm.LocalBookings.discount;
-                    vm.LocalBookings.discounted_amount = (vm.LocalBookings.actual_price * vm.LocalBookings.discount / 100);
+                    vm.LocalBookings.discounted_amount = vm.LocalBookings.discounted_price = (vm.LocalBookings.actual_price * vm.LocalBookings.discount / 100);
                 }
-                console.log(vm.LocalBookings);
             }
 
             vm.user = angular.copy($rootScope.user);
@@ -68,10 +67,11 @@ angular.module('sportofittApp')
                     "facilityId": vm.LocalBookings.id,
                     "package_type_id": vm.LocalBookings.package_type_id,
                     "qty": vm.LocalBookings.qty,
+                    "vendor_id" : vm.LocalBookings.vendor.id
 
                 }],
                 "payment_mode": vm.LocalBookings.payment_mode,
-                "order_total": vm.LocalBookings.booking_amount,
+                "order_total": vm.LocalBookings.booking_amount - vm.LocalBookings.discounted_amount,
 
             };
             bookingService.checkout(booking).then(function (response) {

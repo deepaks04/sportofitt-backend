@@ -15,4 +15,7 @@ angular.module("sportofit", [
 	'ncy-angular-breadcrumb',
 	'duScroll',
 	'pascalprecht.translate'
-]);
+]).constant('config', {
+	'backend' : "api/v1/",
+	'version' : "1.0"
+});

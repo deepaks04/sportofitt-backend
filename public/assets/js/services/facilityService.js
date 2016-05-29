@@ -2,10 +2,10 @@
 
 (function () {
 
-    app.factory('facilityService', ['$q', '$timeout', '$http', '$cacheFactory', dataService]);
+    app.factory('facilityService', ['$q', '$timeout', '$http', '$cacheFactory','config', dataService]);
 
 
-    function dataService($q, $timeout, $http, $cacheFactory) {
+    function dataService($q, $timeout, $http, $cacheFactory,config) {
 
         return {
             getRootCategory: getRootCategory,
@@ -41,13 +41,13 @@
                 date: eventStartsAt,
                 is_peak: peakHourSelectedValue
             };
-            return $http.post('api/v1/index/facility/available-slots',data);
+            return $http.post(config.backend + 'index/facility/available-slots',data);
         }
         
         function getDuration() {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/duration',
+                url: config.backend + 'vendor/duration',
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -57,7 +57,7 @@
         function getDays() {
             return $http({
                 method: 'GET',
-                url: 'api/v1/user/day-master',
+                url: config.backend +  'user/day-master',
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -72,7 +72,7 @@
         function getSessionsByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/sessions-data/' + facilityId,
+                url: config.backend + 'vendor/sessions-data/' + facilityId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -82,7 +82,7 @@
         function getOpeningTimesByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/opening-time/' + facilityId,
+                url: config.backend + 'vendor/opening-time/' + facilityId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -94,7 +94,7 @@
         function getPackagesByFacilityId(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/package/' + facilityId,
+                url: config.backend + 'vendor/package/' + facilityId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -104,7 +104,7 @@
         function blockUnblockFacility(facilityId, options) {
             return $http({
                 method: 'PUT',
-                url: 'api/v1/vendor/facility/update-status/' + facilityId,
+                url: config.backend + 'vendor/facility/update-status/' + facilityId,
                 data : options
             });
         }
@@ -112,7 +112,7 @@
         function getAllFacilities() {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/facility',
+                url: config.backend + 'vendor/facility',
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -122,7 +122,7 @@
         function getRootCategory() {
             return $http({
                 method: 'GET',
-                url: 'api/v1/user/get-root-category',
+                url: config.backend + 'user/get-root-category',
                 cache: true
             })
                 .then(sendResponseData)
@@ -162,7 +162,7 @@
 
         function getFacilityById(facilityId) {
 
-            return $http.get('api/v1/vendor/facility/' + facilityId)
+            return $http.get(config.backend + 'vendor/facility/' + facilityId)
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
 
@@ -172,7 +172,7 @@
         function getFacilityImages(facilityId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/getimages/' + facilityId,
+                url: config.backend + 'vendor/getimages/' + facilityId,
             })
                     .then(sendResponseData)
                     .catch(sendGetImagesError)
@@ -187,7 +187,7 @@
 function deleteFacilityImage(imageId){
 return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/images/'+imageId
+                url: config.backend + 'vendor/images/'+imageId
             })
             .then(sendResponseData)
             .catch(sendDeleteImagesError)
@@ -200,14 +200,14 @@ function sendDeleteImagesError(response) {
         }        
 
         function getFacilityDetailsById(facilityId) {
-            return $http.get('api/v1/vendor/facility-detail/' + facilityId).then(sendResponseData)
+            return $http.get('vendor/facility-detail/' + facilityId).then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
 
         function updateFacility(facility) {
             return $http({
                 method: 'PUT',
-                url: 'api/v1/vendor/facility/' + facility.id,
+                url:config.backend +  'vendor/facility/' + facility.id,
                 data: facility
             });
         }
@@ -219,7 +219,7 @@ function sendDeleteImagesError(response) {
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            return $http.post('api/v1/vendor/facility', fd, {
+            return $http.post(config.backend + 'vendor/facility', fd, {
                 transformRequest: angular.indentity,
                 headers: {'Content-Type': undefined}
             });
@@ -249,9 +249,9 @@ function sendDeleteImagesError(response) {
                 data.end = data.end.getHours() + ":" + ("0" + data.end.getMinutes()).slice(-2);
 
             }
-//            var url = (data.id) ? 'api/v1/vendor/opening-time/' + data.id : 'api/v1/vendor/opening-time';
+//            var url = (data.id) ? 'vendor/opening-time/' + data.id : 'vendor/opening-time';
 
-            var url = 'api/v1/vendor/opening-time';
+            var url = config.backend + 'vendor/opening-time';
 
 
             var fd = new FormData();
@@ -273,7 +273,7 @@ function sendDeleteImagesError(response) {
         function removeOpeningTime(timeId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/delete-opening-time/' + timeId,
+                url: config.backend + 'vendor/delete-opening-time/' + timeId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -285,7 +285,7 @@ function sendDeleteImagesError(response) {
             var fd = new FormData();
             for (var key in data)
                 fd.append(key, data[key]);
-            var url = 'api/v1/vendor/multiple-sessions';
+            var url = config.backend + 'vendor/multiple-sessions';
             if (data.id !== "") {
                 url += "/" + data.id;
                 fd.append("_method", "PUT");
@@ -299,7 +299,7 @@ function sendDeleteImagesError(response) {
         function removeSession(sessionId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/multiple-sessions/' + sessionId,
+                url: config.backend + 'vendor/multiple-sessions/' + sessionId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -312,7 +312,7 @@ function sendDeleteImagesError(response) {
             for (var key in data)
                 fd.append(key, data[key]);
 
-            var url = 'api/v1/vendor/package';
+            var url = config.backend + 'vendor/package';
             if (data.id !== "") {
                 url += "/" + data.id;
                 fd.append("_method", "PUT");
@@ -327,7 +327,7 @@ function sendDeleteImagesError(response) {
         function removePackage(packageId) {
             return $http({
                 method: 'GET',
-                url: 'api/v1/vendor/delete-package/' + packageId,
+                url: config.backend + 'vendor/delete-package/' + packageId,
                 // transformResponse: transformGetFacilities,
                 // cache: true
             })
@@ -344,26 +344,26 @@ function sendDeleteImagesError(response) {
             console.log('blocking session with :' + JSON.stringify(data));
 
             if (data.id) {
-                return $http.put('api/v1/vendor/calendar-book/' + data.id, data);
+                return $http.put(config.backend + 'vendor/calendar-book/' + data.id, data);
             } else {
-                return $http.post('api/v1/vendor/calendar-book', data);
+                return $http.post(config.backend + 'vendor/calendar-book', data);
             }
         }
 
         function getBlockedSessionsByFacilityId(facilityId, startDate,calenderView) {
-            //return $http.get('api/v1/vendor/calendar-block/' + facilityId + "/" + startDate + "/" + calenderView)
+            //return $http.get(config.backend + 'vendor/calendar-block/' + facilityId + "/" + startDate + "/" + calenderView)
             //    .then(sendResponseData)
             //    .catch(sendGetFaclityError);
            return getBlockedSessions(facilityId,startDate,calenderView);
         }
 
         function getBlockedSessions(facilityId,startDate,calenderView) {
-            return $http.get('api/v1/vendor/get-calendar-block/' + startDate + '/' + calenderView + "/" + facilityId )
+            return $http.get(config.backend + 'vendor/get-calendar-block/' + startDate + '/' + calenderView + "/" + facilityId )
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }
         function removeBlockedSession(sessionId){
-            return $http.get('api/v1/vendor/calendar-block/' + sessionId)
+            return $http.get(config.backend + 'vendor/calendar-block/' + sessionId)
                 .then(sendResponseData)
                 .catch(sendGetFaclityError);
         }

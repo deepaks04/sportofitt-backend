@@ -101,12 +101,10 @@ app.controller('forgetPasswordCtrl', [
                 $scope.disableSubmit = true;
                 $scope.errors = {};
                 var passwordResponse = Login.forgetPassword(form);
-                console.log(form);
-                passwordResponse.then(function (response) {
+                 passwordResponse.then(function (response) {
                     SweetAlert.swal("Password reset done!", response.data.message,
                             "success");
                     $state.go("login.signin");
-                    console.log(response);
                 });
                 passwordResponse.catch(function (response, status) {
 
