@@ -1,0 +1,121 @@
+<div id="page-canvas">
+            <!--Off Canvas Navigation-->
+            <nav class="off-canvas-navigation">
+                <header>Navigation</header>
+                <div class="main-navigation navigation-off-canvas"></div>
+            </nav>
+            <!--end Off Canvas Navigation-->
+
+            <!--Sub Header-->
+            <section class="sub-header">
+                <div class="search-bar horizontal collapse" id="redefine-search-form"></div>
+                <!-- /.search-bar -->
+                <div class="breadcrumb-wrapper">
+                    <div class="container">
+                        <div class="redefine-search">
+                            <a href="#redefine-search-form" class="inner" data-toggle="collapse" aria-expanded="false" aria-controls="redefine-search-form">
+                                <span class="icon"></span>
+                                <span>Redefine Search</span>
+                            </a>
+                        </div>
+                        <ol class="breadcrumb">
+                            <li><a href="index-directory.html"><i class="fa fa-home"></i></a></li>
+                            <li><a href="#">Page</a></li>
+                            <li class="active">{{vm.categorySelected}}</li>
+                        </ol>
+                        <!-- /.breadcrumb-->
+                    </div>
+                    <!-- /.container-->
+                </div>
+                <!-- /.breadcrumb-wrapper-->
+            </section>
+            <!--end Sub Header-->
+
+            <!--Page Content-->
+            <div id="page-content">
+                <section class="container">
+                    <div class="">
+                        <!--Content-->
+                        <div class="">
+                            <header>
+                                <h1 class="page-title">{{vm.categorySelected}}</h1>
+                            </header>
+                            <figure class="filter clearfix">
+                                <div class="buttons pull-left">
+                                    <form class="form-inline">
+                                        <aside class="sorting">
+                                        <span>Sorting</span>
+                                        <div class="form-group">
+                                            <select class="framed" data-ng-model="vm.filter.type" ng-options="type for type in vm.types" >
+                                                <option value="">Type</option>
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="framed" data-ng-model="vm.filter.area" ng-options="area as area.name for area in vm.areas ">
+                                                <option value="">Select Area</option>
+                                                
+                                            </select>
+                                        </div>
+                                        <!-- /.form-group -->
+                                    </aside>
+                                    </form>
+                                </div>
+                                
+                            </figure>
+
+                            <!--Listing Grid-->
+                            <section class="block equal-height">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-4" ng-repeat="item in vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ">
+                                        <div class="item">
+                                            <div class="image">
+                                                <!--<div class="quick-view"><i class="fa fa-eye"></i><span>Quick View</span></div>-->
+                                                <a href="item-detail.html">
+<!--                                                    <div class="overlay">
+                                                        <div class="inner">
+                                                            <div class="content">
+                                                                <h4>Description</h4>
+                                                                <p>{{item.description}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>-->
+                                                    
+                                                    
+                                                    <img src="assets/img/items/1.jpg" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="wrapper">
+                                                <a ng-href="#/venue/{{item.facilityId}}"><h3>{{item.facilityName}}</h3></a>
+                                                <figure>{{item.location}}</figure>
+                                                <div class="price"><i class="fa fa-inr"></i>{{item.peak_hour_price}}</div>
+                                                <div class="info">
+                                                <div class="type">
+                                                    <span>{{item.description}}</span>
+                                                </div>
+                                            </div>
+                                                
+                                            </div>
+                                        </div>
+                                        <!-- /.item-->
+                                    </div>
+                                    <div class="col-md-3 col-sm-4">
+                                        <h2 ng-if="(vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ).length == 0">No Search Results</h2>
+                                    </div>
+                                    
+                                    
+                                    <!--/.col-sm-4-->
+                                    
+                                </div>
+                                <!--/.row-->
+                            </section>
+                            <!--end Listing Grid-->
+                           
+                            
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+            <!-- end Page Content-->
+        </div>
