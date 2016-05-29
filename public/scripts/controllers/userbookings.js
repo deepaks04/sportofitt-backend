@@ -22,7 +22,7 @@ angular.module('sportofittApp')
       
       vm.cancelBooking = function(booking){
           if(!booking.bookingDetails[0].is_editable){
-              SweetAlert.swal("Can not cancel!", "Order passed date!", "error");
+              SweetAlert.swal(" ", "Your order is already cancelled!", "error");
               return
           }
 
