@@ -4,8 +4,8 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <p>Hello There!,</p>
-        <p>{{$fname}} {{$lname}} has made booking. </p>
+        <p>Hello {{$vendorName}}!,</p>
+        <p>{{$fname}} {{$lname}} has made booking. </p> 
         <p>Booking id: {{$orderNumber}} Booking Date {{$bookingDate}} @if($packageType == 2) &amp; time: {{$bookingTime}} @endif </p>
         <p>{{$venueName}} - {{$subCategoryName}}</p>
         <p>{{$address}} - {{$pincode}}</p>

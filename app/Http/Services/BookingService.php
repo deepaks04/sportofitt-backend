@@ -47,7 +47,7 @@ class BookingService extends BaseService
     public function getUsersBooking()
     {
         try {
-            $fields = array('orders.id as oid', 'orders.order_id', 'order_total', 'payment_status', 'payment_mode', 'orders.created_at',
+            $fields = array('orders.id as oid','orders.order_status', 'orders.order_id', 'order_total', 'payment_status', 'payment_mode', 'orders.created_at',
                 'booked_packages.id as bookingId', 'booked_packages.package_type', 'booked_packages.name', 'booked_packages.description',
                 'booked_packages.no_of_month', 'booked_packages.booking_amount', 'booked_packages.discount', 'booked_packages.final_amount',
                 'booked_packages.no_of_peak', 'booked_packages.no_of_offpeak', 'booked_packages.booking_status');
@@ -211,16 +211,27 @@ class BookingService extends BaseService
     public function processBooking()
     {
         try {
-
             if (!empty($this->orderObj->id) && !empty($this->bookingData)) {
                 foreach ($this->bookingData as $bookingData) {
                     $bookingObj = new BookedPackage();
                     $bookingObj->package_type = $bookingData['package_type_id'];
+                    if($bookingObj->package_type == 1) {
+                        $package = \App\SessionPackage::find($bookingData['package_id']);
+                        $packaegeOtherInfo = $package->ChildPackage;
+                        $bookingData['no_of_month'] = $packaegeOtherInfo->month;
+                        $bookingObj->no_of_month = $packaegeOtherInfo->month;
+                        $bookingObj->booking_amount = $packaegeOtherInfo->actual_price;
+                        $bookingObj->discount = !empty($packaegeOtherInfo->discount) ? $packaegeOtherInfo->discount : 0;
+                        $bookingObj->final_amount = !empty($bookingObj->discount) ? ($packaegeOtherInfo->actual_price - ($packaegeOtherInfo->actual_price * ($bookingObj->discount / 100)))  : $bookingObj->actual_price;
+                    } else {
+                        $bookingObj->booking_amount = $bookingData['booking_amount'];
+                        $bookingObj->discount = !empty($bookingData['discount']) ? $bookingData['discount'] : 0;
+                        $bookingObj->final_amount = !empty($bookingObj['discounted_amount']) ? $bookingObj['discounted_amount'] : $bookingObj->booking_amount;
+                    }
+                    
                     $bookingObj->name = $bookingData['name'];
+                    $bookingObj->booked_by_vendor = $bookingData['vendor_id'];
                     $bookingObj->description = $bookingData['description'];
-                    $bookingObj->booking_amount = $bookingData['booking_amount'];
-                    $bookingObj->discount = !empty($bookingData['discount']) ? $bookingData['discount'] : 0;
-                    $bookingObj->final_amount = !empty($bookingObj['discounted_amount']) ? $bookingObj['discounted_amount'] : $bookingObj->booking_amount;
                     $bookingObj->order_id = $this->orderObj->id;
                     if ($bookingData['is_peak']) {
                         $bookingObj->no_of_peak = (isset($bookingData['qty'])) ? $bookingData['qty'] : 0;
@@ -260,15 +271,17 @@ class BookingService extends BaseService
                 $bookingTimming = new BookedTiming();
                 $bookingTimming->booking_id = $booking->id;
                 $bookingTimming->facility_id = $bookingData['facilityId'];
-                $bookingTimming->is_peak = ($bookingData['is_peak']) ? 1 : 0;
+                if($bookingData['package_type_id'] == 2) {
+                    $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
+                    $slotTime = explode("-", $bookingData['selectedSlot']);
+                    if (!empty($slotTime)) {
+                        $bookingTimming->start_time = $slotTime[0];
+                        $bookingTimming->end_time = $slotTime[1];
+                    }
+                } 
+                
                 $bookingTimming->booking_date = date("Y-m-d H:i:s", strtotime($bookingData['selectedDate']));
-                $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
-                $slotTime = explode("-", $bookingData['selectedSlot']);
-                if (!empty($slotTime)) {
-                    $bookingTimming->start_time = $slotTime[0];
-                    $bookingTimming->end_time = $slotTime[1];
-                }
-
+                $bookingTimming->is_peak = ($bookingData['is_peak']) ? 1 : 0;
                 $bookingTimming->created_at = date('Y-m-d H:i:s');
                 $bookingTimming->save();
             }
@@ -342,7 +355,7 @@ class BookingService extends BaseService
                 }
             }
         }
-
+        
         return $bookingTiming;
     }
 
@@ -399,10 +412,10 @@ class BookingService extends BaseService
         $startMinutes = explode(":", $start);
         $carbonStartDate = Carbon::create(date('Y'), date('m'), date('d'), $startMinutes[0], $startMinutes[1], 0);
         while ($carbonStartDate->lt($carbonEndDate)) {
-            $startMinutes = date("H:s", strtotime($carbonStartDate->__toString()));
+            $startTime = date("H:i", strtotime($carbonStartDate->__toString()));
             $newInstance = $carbonStartDate->addMinutes($duration);
-            $openingTime = $startMinutes . "-" . date("H:s", strtotime($newInstance->__toString()));
-            $minutes[$openingTime] = date("h:s A", strtotime("1970-01-01 ".$startMinutes.":00"))."-".date("h:s A", strtotime($newInstance->__toString()));
+            $openingTime = $startTime . "-" . date("H:i", strtotime($newInstance->__toString()));
+            $minutes[$openingTime] = date("h:i A", strtotime("1970-01-01 ".$startTime.":00"))."-".date("h:i A", strtotime($newInstance->__toString()));
             $carbonStartDate = $newInstance;
         }
 
