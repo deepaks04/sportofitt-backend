@@ -8,7 +8,7 @@
  * Controller of the sportofittApp
  */
 angular.module('sportofittApp')
-    .controller('OrderConfirmationCtrl', function (Auth, bookingService, $scope, $state, $rootScope, toastr) {
+    .controller('OrderConfirmationCtrl', function (Auth, bookingService, $auth,$scope, $state, $rootScope, toastr) {
         var vm = this;
         var LocalBookings;
         vm.LocalBookings = {};
@@ -56,61 +56,70 @@ angular.module('sportofittApp')
         vm.checkout = function () {
 
             vm.disableSubmit = true;
-            vm.user.is_active = 1;
-            var auth = Auth.register(vm.user);
-            auth.success(function (response) {
-                toastr.success(response.message.success);
-                Auth.login(vm.user.email, vm.user.password).then(function () {
-                    // If login is successful, redirect to the users state
-                    //toastr.success(errors.data.message.success);
+            if($rootScope.isAuthenticated ){
+                vm.bookOrder();
+            }else {
+                vm.user.is_active = 1;
+                var auth = Auth.register(vm.user);
+                auth.success(function (response) {
+                    Auth.login(vm.user.email, vm.user.password).then(function () {
+                        // If login is successful, redirect to the users state
+                        //toastr.success(errors.data.message.success);
 
-                    Auth.getAuthenticatedUser().then(function (user) {
-                        $rootScope.user = user.data;
-                        $rootScope.isAuthenticated = $auth.isAuthenticated();
+                        Auth.getAuthenticatedUser().then(function (user) {
+                            $rootScope.user = user.data;
+                            $rootScope.isAuthenticated = $auth.isAuthenticated();
 
-                        var booking = {
-                            booking_data: [{
-                                "is_peak": vm.LocalBookings.is_peak,
-                                "selectedDate": vm.LocalBookings.date,
-                                "name": vm.LocalBookings.name,
-                                "description": vm.LocalBookings.description,
-                                "booking_amount": vm.LocalBookings.booking_amount,
-                                "discount": vm.LocalBookings.discount,
-                                "discounted_amount": vm.LocalBookings.discounted_amount,
-                                "selectedSlot": vm.LocalBookings.selectedSlot,
-                                "facilityId": vm.LocalBookings.id,
-                                "package_id": vm.LocalBookings.package_id,
-                                "package_type_id": vm.LocalBookings.package_type_id,
-                                "qty": vm.LocalBookings.qty,
-                                "vendor_id": vm.LocalBookings.vendor.id
-
-                            }],
-                            "payment_mode": vm.LocalBookings.payment_mode,
-                            "order_total": vm.LocalBookings.booking_amount - vm.LocalBookings.discounted_amount,
-
-                        };
-                        bookingService.checkout(booking).then(function (response) {
-                            vm.LocalBookings = {};
-                            toastr.success("Order placed successfully!");
-                            $state.go('app.mybookings');
-
+                            vm.bookOrder();
                         });
+
+                    }).catch(function (errors) {
+                        toastr.error(errors.data.message.error);
+                        vm.disableSubmit = false;
                     });
 
-                }).catch(function (errors) {
-                    toastr.error(errors.data.message.error);
+                });
+                auth.error(function (data, status) {
                     vm.disableSubmit = false;
-                });
+                    vm.errors = {};
+                    angular.forEach(data, function (errors, field) {
 
-            });
-            auth.error(function (data, status) {
+                        vm.errors[field] = errors.join(', ');
+                    });
+                });
+            }
+        };
+
+        vm.bookOrder = function(){
+            var booking = {
+                booking_data: [{
+                    "is_peak": vm.LocalBookings.is_peak,
+                    "selectedDate": vm.LocalBookings.date,
+                    "name": vm.LocalBookings.name,
+                    "description": vm.LocalBookings.description,
+                    "booking_amount": vm.LocalBookings.booking_amount,
+                    "discount": vm.LocalBookings.discount,
+                    "discounted_amount": vm.LocalBookings.discounted_amount,
+                    "selectedSlot": vm.LocalBookings.selectedSlot,
+                    "facilityId": vm.LocalBookings.id,
+                    "package_id": vm.LocalBookings.package_id,
+                    "package_type_id": vm.LocalBookings.package_type_id,
+                    "qty": vm.LocalBookings.qty,
+                    "vendor_id": vm.LocalBookings.vendor.id
+
+                }],
+                "payment_mode": vm.LocalBookings.payment_mode,
+                "order_total": vm.LocalBookings.booking_amount - vm.LocalBookings.discounted_amount,
+
+            };
+            bookingService.checkout(booking).then(function (response) {
+                vm.LocalBookings = {};
+                toastr.success("Order placed successfully!");
+                $state.go('app.mybookings');
+
+            }).catch(function (errors) {
+                toastr.error(errors.data.message.error);
                 vm.disableSubmit = false;
-                vm.errors = {};
-                angular.forEach(data, function (errors, field) {
-
-                    vm.errors[field] = errors.join(', ');
-                });
             });
-
-        }
+        };
     });
