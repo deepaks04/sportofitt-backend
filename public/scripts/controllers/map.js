@@ -34,8 +34,28 @@ angular.module('sportofittApp')
             })
 
             searchService.search().then(function (response) {
+                if(!vm.categorySelected)
+                    vm.visibleItemsArray = response.data.data;
                 response.data.data.forEach(function(element, index, array){
-                    
+                    if(element.category == vm.categorySelected){
+                        if(element.description == "null")
+                            element.description = "";
+                        vm.visibleItemsArray.push(element);
+                    }
+                        
+                });
+                if(vm.visibleItemsArray.length == 0)
+                    vm.noSearchResults = true;
+            }).catch(function (errors) {
+                toastr.error(errors);
+            })
+            
+            vm.changeCategoryFilter = function(){
+                vm.visibleItemsArray = [];
+                searchService.search().then(function (response) {
+                if(!vm.categorySelected)
+                    vm.visibleItemsArray = response.data.data;
+                response.data.data.forEach(function(element, index, array){
                     if(element.category == vm.categorySelected){
                         if(element.description == "null")
                             element.description = "";
@@ -43,11 +63,13 @@ angular.module('sportofittApp')
                     }
                         
                 })
-                console.log(vm.visibleItemsArray);
-//               
+                if(vm.visibleItemsArray.length == 0)
+                    vm.noSearchResults = true;
             }).catch(function (errors) {
                 toastr.error(errors);
             })
+            
+            };
 
             vm.setLangLat = function(area){
               if(area) {

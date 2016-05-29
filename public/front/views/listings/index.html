@@ -46,6 +46,12 @@
                                         <aside class="sorting">
                                         <span>Sorting</span>
                                         <div class="form-group">
+                                            <select class="framed" data-ng-model="vm.categorySelected" ng-options="category.name as category.name for category in vm.subCategories" ng-change="vm.changeCategoryFilter()">
+                                                <option value="">Category</option>
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <select class="framed" data-ng-model="vm.filter.type" ng-options="type for type in vm.types" >
                                                 <option value="">Type</option>
                                                
@@ -100,7 +106,8 @@
                                         <!-- /.item-->
                                     </div>
                                     <div class="col-md-3 col-sm-4">
-                                        <h2 ng-if="(vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ).length == 0">No Search Results</h2>
+                                        <h2 ng-show="vm.noSearchResults">No Search Results</h2>
+                                        <h2 ng-if="(vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ).length == 0 && vm.filter.type!=null && vm.filter.area!=null">No Search Results</h2>
                                     </div>
                                     
                                     
