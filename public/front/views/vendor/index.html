@@ -107,11 +107,10 @@
                                     </article>
                                     <!-- /.block -->
                                     <article class="block">
-                                        <div class="panel panel-transparent">
-                                            <div class="panel-heading">
-                                                <h4 class="panel-title">Sessions/Packages</h4>
-                                            </div>
-                                            <div class="panel-body">
+                                        <header>
+                                                <h2 class="panel-title">Sessions/Packages</h2>
+                                        </header>
+                                            
                                                 <v-accordion class="vAccordion--default" control="secondAccordionControl">
                                                     <v-pane  expanded="$first">
                                                         <v-pane-header>
@@ -128,7 +127,7 @@
                                                                 <h4>Select Date</h4>
                                                                 <form data-ng-submit="vm.addLocalBooking(vm.filter, true)">
                                                                 <div style="display:inline-block; min-height:200px;">
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-6 padding-left-0">
                                                                         <p class="input-group"  ng-click="vm.openDatePicker()">
                                                                             <input required type="text" class="form-control bg-white" min-date="vm.minDate" readonly
                                                                                    datepicker-popup="fullDate" ng-model="vm.filter.date"
@@ -224,12 +223,10 @@
                                                     </v-pane>
                                                 </v-accordion>
 
-                                            </div>
-                                        </div>
                                     </article>
                                 </section>
                                 <!--Review Form-->
-                                <section id="write-review">
+<!--                                <section id="write-review">
                                     <header>
                                         <h2>Write a Review</h2>
                                     </header>
@@ -240,21 +237,21 @@
                                                     <label for="form-review-name">Name</label>
                                                     <input type="text" class="form-control" id="form-review-name" name="form-review-name" required="">
                                                 </div>
-                                                <!-- /.form-group -->
+                                                 /.form-group 
                                                 <div class="form-group">
                                                     <label for="form-review-email">Email</label>
                                                     <input type="email" class="form-control" id="form-review-email" name="form-review-email" required="">
                                                 </div>
-                                                <!-- /.form-group -->
+                                                 /.form-group 
                                                 <div class="form-group">
                                                     <label for="form-review-message">Message</label>
                                                     <textarea class="form-control" id="form-review-message" name="form-review-message"  rows="3" required=""></textarea>
                                                 </div>
-                                                <!-- /.form-group -->
+                                                 /.form-group 
                                                 <div class="form-group">
                                                     <button type="submit" class="btn btn-default">Submit Review</button>
                                                 </div>
-                                                <!-- /.form-group -->
+                                                 /.form-group 
                                             </div>
                                             <div class="col-md-4">
                                                 <aside class="user-rating">
@@ -268,8 +265,8 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <!-- /.main-search -->
-                                </section>
+                                     /.main-search 
+                                </section>-->
                                 <!--end Review Form-->
                             </div>
                             <!-- /.col-md-8-->
