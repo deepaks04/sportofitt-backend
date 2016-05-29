@@ -65,7 +65,7 @@ class FileHelper
      * 
      * @var dimensions for user profile images. 
      */
-    public $user = array('small' => array('267X267'));
+    public $user = array('small' => array('262X196'));
     public $ticker = array('small' => array('555X415'));
     protected static $userDirs = array('image', 'audio', 'video', 'thumbnail');
 
