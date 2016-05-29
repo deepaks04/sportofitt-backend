@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use App\Order;
 use App\BookedPackage;
 use App\BookedTiming;
-use App\Jobs\SendOrderEmail;
+use App\Jobs\SendCancelOrderEmail;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use URL;
 use App\Http\Services\BaseService;
