@@ -8,7 +8,7 @@
  * Service in the sportofittApp.
  */
 angular.module('sportofittApp')
-  .service('searchService', function ($http,myConfig) {
+  .service('searchService', function ($http,myConfig, $cookies) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     this.url = myConfig.backend + 'index/';
 
@@ -35,4 +35,13 @@ angular.module('sportofittApp')
       this.getArea = function(){
           return $http.get(myConfig.backend + "user/areas");
       }
+      
+      this.setCategorySelected = function(category){
+          $cookies.put('category',category);
+          return this.category;
+      };
+      
+      this.getCategorySelected = function(){
+          return $cookies.get('category');
+      };
   });

@@ -8,53 +8,71 @@
  * Controller of the sportofittApp
  */
 angular.module('sportofittApp')
-    .controller('MapCtrl', function (searchService, toastr, $filter) {
-        var mapStyles = [{"featureType": "road", "elementType": "labels", "stylers": [{"visibility": "simplified"}, {"lightness": 20}]}, {"featureType": "administrative.land_parcel", "elementType": "all", "stylers": [{"visibility": "off"}]}, {"featureType": "landscape.man_made", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "transit", "elementType": "all", "stylers": [{"saturation": -100}, {"visibility": "on"}, {"lightness": 10}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.highway", "elementType": "labels", "stylers": [{"visibility": "simplified"}]}, {"featureType": "poi", "elementType": "labels", "stylers": [{"visibility": "off"}]}, {"featureType": "road.arterial", "elementType": "labels", "stylers": [{"visibility": "on"}, {"lightness": 50}]}, {"featureType": "water", "elementType": "all", "stylers": [{"hue": "#a1cdfc"}, {"saturation": 30}, {"lightness": 49}]}, {"featureType": "road.highway", "elementType": "geometry", "stylers": [{"hue": "#f49935"}]}, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"hue": "#fad959"}]}, {featureType: 'road.highway', elementType: 'all', stylers: [{hue: '#dddbd7'}, {saturation: -92}, {lightness: 60}, {visibility: 'on'}]}, {featureType: 'landscape.natural', elementType: 'all', stylers: [{hue: '#c8c6c3'}, {saturation: -71}, {lightness: -18}, {visibility: 'on'}]}, {featureType: 'poi', elementType: 'all', stylers: [{hue: '#d9d5cd'}, {saturation: -70}, {lightness: 20}, {visibility: 'on'}]}];
-        var vm = this;
-        vm.latitude = 18.5074;
-        vm.longitude = 73.8077;
+        .controller('MapCtrl', function (searchService, toastr, $filter, $scope) {
+            var mapStyles = [{"featureType": "road", "elementType": "labels", "stylers": [{"visibility": "simplified"}, {"lightness": 20}]}, {"featureType": "administrative.land_parcel", "elementType": "all", "stylers": [{"visibility": "off"}]}, {"featureType": "landscape.man_made", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "transit", "elementType": "all", "stylers": [{"saturation": -100}, {"visibility": "on"}, {"lightness": 10}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.local", "elementType": "all", "stylers": [{"visibility": "on"}]}, {"featureType": "road.highway", "elementType": "labels", "stylers": [{"visibility": "simplified"}]}, {"featureType": "poi", "elementType": "labels", "stylers": [{"visibility": "off"}]}, {"featureType": "road.arterial", "elementType": "labels", "stylers": [{"visibility": "on"}, {"lightness": 50}]}, {"featureType": "water", "elementType": "all", "stylers": [{"hue": "#a1cdfc"}, {"saturation": 30}, {"lightness": 49}]}, {"featureType": "road.highway", "elementType": "geometry", "stylers": [{"hue": "#f49935"}]}, {"featureType": "road.arterial", "elementType": "geometry", "stylers": [{"hue": "#fad959"}]}, {featureType: 'road.highway', elementType: 'all', stylers: [{hue: '#dddbd7'}, {saturation: -92}, {lightness: 60}, {visibility: 'on'}]}, {featureType: 'landscape.natural', elementType: 'all', stylers: [{hue: '#c8c6c3'}, {saturation: -71}, {lightness: -18}, {visibility: 'on'}]}, {featureType: 'poi', elementType: 'all', stylers: [{hue: '#d9d5cd'}, {saturation: -70}, {lightness: 20}, {visibility: 'on'}]}];
+            var vm = this;
+            vm.latitude = 18.5074;
+            vm.longitude = 73.8077;
 
-        vm.filter = {area_id:14};
-        vm.types = ['Venue', 'Coaching'];
+            vm.filter = {};
+            vm.types = ['Venue', 'Coaching'];
+            vm.visibleItemsArray = []; 
 
+            vm.categorySelected = searchService.getCategorySelected();
+            // Load JSON data and create Google Maps
 
-        // Load JSON data and create Google Maps
+            searchService.getCategories().then(function (response) {
+                vm.subCategories = response.data.category;
+            }).catch(function (errors) {
+                toastr.error(errors);
+            })
 
-        searchService.getCategories().then(function (response) {
-            vm.subCategories = response.data.category;
-        }).catch(function (errors) {
-            toastr.error(errors);
-        })
+            searchService.getArea().then(function (response) {
+                vm.areas = response.data.area;
+            }).catch(function (errors) {
+                toastr.error(errors);
+            })
 
-        searchService.getArea().then(function (response) {
-            vm.areas = response.data.area;
-            vm.filter.area = vm.areas[13];
-        }).catch(function (errors) {
-            toastr.error(errors);
-        })
+            searchService.search().then(function (response) {
+                response.data.data.forEach(function(element, index, array){
+                    
+                    if(element.category == vm.categorySelected){
+                        if(element.description == "null")
+                            element.description = "";
+                        vm.visibleItemsArray.push(element);
+                    }
+                        
+                })
+                console.log(vm.visibleItemsArray);
+//               
+            }).catch(function (errors) {
+                toastr.error(errors);
+            })
 
-        searchService.search().then(function (response) {
-            vm.masterData = response.data;
-            vm.mapData = angular.copy(vm.masterData);
-            vm.setFilters(vm.filter);
-            //createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
-        }).catch(function (errors) {
-            toastr.error(errors);
-        })
+            vm.setLangLat = function(area){
+              if(area) {
+                  vm.latitude = area.latitude;
+                  vm.longitude = area.longitude;
+                  vm.filter.area_id = area.id;
+              }else{
 
-        vm.setLangLat = function(area){
-            if(area) {
-                vm.latitude = area.latitude;
-                vm.longitude = area.longitude;
-                vm.filter.area_id = area.id;
-            }else{
+                  vm.latitude = 18.5073551;
+                  vm.longitude = 73.7871018;
+                  vm.filter.area_id = 14;
+              }
+            };
 
-                vm.latitude = 18.5073551;
-                vm.longitude = 73.7871018;
-                vm.filter.area_id = 14;
+            vm.setFilters = function (newfilter) {
+                var filter = angular.copy(newfilter);
+                angular.forEach(filter, function (value, key) {
+                    if (!value || key == 'area') {
+                        delete filter[key];
+                    }
+                });
+                vm.mapData['data'] = $filter('filter')(vm.masterData.data, filter, true);
+                createHomepageGoogleMap(vm.latitude, vm.longitude, vm.mapData);
             }
-        };
-
+            
         vm.setFilters = function (newfilter) {
             var filter = angular.copy(newfilter);
             angular.forEach(filter, function (value, key) {

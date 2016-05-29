@@ -22,8 +22,9 @@ angular
       'cfp.loadingBar',
       'ncy-angular-breadcrumb',
       'duScroll',
-      'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config','vAccordion','slick','ngMask','oitozero.ngSweetAlert'
-  ]).config(function(toastrConfig,$authProvider,myConfig,localStorageServiceProvider) {
+      'pascalprecht.translate', 'satellizer', 'toastr','sportofittApp.config','vAccordion','slick','ngMask','oitozero.ngSweetAlert','ui.select'
+  ]).config(function(toastrConfig,$authProvider,myConfig,localStorageServiceProvider,uiSelectConfig) {
+      uiSelectConfig.theme = 'bootstrap';
       angular.extend(toastrConfig, {
             autoDismiss: false,
             containerId: 'toast-container',
