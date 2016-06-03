@@ -73,7 +73,7 @@
                             <!--Listing Grid-->
                             <section class="block equal-height">
                                 <div class="row">
-                                    <div class="col-md-3 col-sm-4" ng-repeat="item in vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ">
+                                    <div class="col-md-3 col-sm-4 thumbnails" ng-repeat="item in vm.visibleItemsArray | filter: (!!vm.filter.type || undefined ) && {type: vm.filter.type } | filter: {area_id: vm.filter.area.id} ">
                                         <div class="item">
                                             <div class="image">
                                                 <div class="quick-view"><i class="fa fa-eye"></i><span>Quick View</span></div>
