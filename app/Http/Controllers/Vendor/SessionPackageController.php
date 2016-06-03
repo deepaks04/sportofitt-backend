@@ -215,7 +215,7 @@ class SessionPackageController extends Controller
             $timeDifference = round(abs($timeDifference) / 60, 2);
             $start = date('H:i:s', $start);
             $end = date('H:i:s', $end);
-
+            $end = ($end == '00:00:00')?'23:59:59':$end;
             /* Check First Duration is Available Or Not */
             $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->first();
             if ($checkFacilityInformation != null && $checkFacilityInformation->duration != null) {
@@ -233,6 +233,7 @@ class SessionPackageController extends Controller
                         'package_type_id' => $packageType->id
                     ))->first()->toArray();
                     $childData = Input::only('is_peak', 'start', 'end', 'day');
+                    $childData['end'] = $end;
                     $childData['session_package_id'] = $session['id'];
                     $childData['available_facility_id'] = $request->available_facility_id;
                     $sameTimeExists = DB::select(DB::raw("SELECT count(*) as cnt FROM opening_hours 
@@ -291,12 +292,14 @@ class SessionPackageController extends Controller
             $timeDifference = round(abs($timeDifference) / 60, 2);
             $start = date('H:i:s', $start);
             $end = date('H:i:s', $end);
+            $end = ($end === '00:00:00')?'23:59:59':$end;
             /* Check First Duration is Available Or Not */
             $checkFacilityInformation = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->first();
             if ($checkFacilityInformation != null && $checkFacilityInformation->duration != null) {
                 $checkFacilityInformation = $checkFacilityInformation->toArray();
                 if ($timeDifference >= $checkFacilityInformation['duration']) { // If time Difference Matched
                     $childData = Input::only('is_peak', 'start', 'end', 'day');
+                    $childData['end'] = $end;
                     $childData['available_facility_id'] = $request->available_facility_id;
                     $packageType = PackageType::where('slug', '=', 'session')->first();
                     $sessionParentData = SessionPackage::where('available_facility_id', '=', $request->available_facility_id)->where('package_type_id', '=', $packageType->id)->first()->toArray();
@@ -821,8 +824,12 @@ class SessionPackageController extends Controller
             
             $data = null;
             $bookingData = array();
-            $sql = \App\BookedTiming::join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
-                                     ->where('booked_packages.booking_status','=',\DB::raw(1));
+            $sql = \App\BookedTiming::select('booked_timings.*','booked_packages.*','users.fname','users.lname')
+                                      ->join("booked_packages","booked_timings.booking_id",'=','booked_packages.id')
+                                      ->leftJoin("orders","orders.id",'=','booked_packages.order_id')
+                                      ->leftJoin("users","orders.user_id",'=','users.id')
+                                     ->where('booked_packages.booking_status','=',\DB::raw(1))
+                                     ->where('booked_packages.package_type','=',\DB::raw(0));
             switch ($sort) {
                 case 'month':
                     $month = date("m",strtotime($selectedDate));
@@ -835,7 +842,8 @@ class SessionPackageController extends Controller
                                 if (!empty($data->count() > 0)) {
                                     $temp = array();
                                     $time = $data->start_time . "-" . $data->end_time;
-                                    $temp['title'] = !empty($data->name) ? $data->name : $time;
+                                    $title = !empty($data->fname) ? $data->fname . " " . $data->lname :  $data->name;
+                                    $temp['title'] = $title." ".$time;
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = $data->booking_date . " " . $data->start_time;
@@ -854,13 +862,14 @@ class SessionPackageController extends Controller
                     foreach($facilities as $facility) {
                         $records = $sql->where('facility_id','=',$facility->id)
                                 ->where(\DB::raw('WEEK("' . $selectedDate . '")'), '=', $week)
-                                ->get();
+                                ->get();                      
                         if(!empty($records)) {
                             foreach ($records as $data) {
                                 if (!empty($data->count() > 0)) {
                                     $time = date("H:i A",strtotime($data->booking_date . " " . $data->start_time)) ."-". date("H:i A",strtotime($data->booking_date . " " . $data->end_time));
                                     $temp = array();
-                                    $temp['title'] = !empty($data->name) ? $data->name . $time : $time ;
+                                    $title = !empty($data->fname) ? $data->fname . " " . $data->lname :  $data->name;
+                                    $temp['title'] = $title." ".$time;
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = date("Y-m-d H:i:s",strtotime($data->booking_date . " " . $data->start_time));
@@ -884,7 +893,8 @@ class SessionPackageController extends Controller
                             foreach ($records as $data) {
                                 if (!empty($data->count() > 0)) {
                                     $temp = array();
-                                    $temp['title'] = !empty($data->name) ? $data->name ."(" . $data->start_time . "-" . $data->end_time . ")" : "Blocked (" . $data->start_time . "-" . $data->end_time . ")";
+                                    $title = !empty($data->fname) ? $data->fname . " " . $data->lname :  $data->name;
+                                    $temp['title'] = $title;
                                     $temp['available_facility_id'] = $data->facility_id;
                                     $temp['peak'] = $data->is_peak;
                                     $temp['startsAt'] = $data->booking_date . " " . $data->start_time;

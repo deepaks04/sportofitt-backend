@@ -147,8 +147,6 @@ class BookingService extends BaseService
                 $this->orderObj = $this->makeOrder();
                 if (!empty($this->orderObj->id)) {
                     if($this->processBooking()) {
-                        $job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
-                        $this->dispatch($job);
                         return true;
                     }
                 }
@@ -251,6 +249,9 @@ class BookingService extends BaseService
                     }
                 }
 
+                //$job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
+                //$this->dispatch($job);
+
                 return 1;
             }
         } catch (\Exception $exception) {
@@ -272,6 +273,7 @@ class BookingService extends BaseService
                 $bookingTimming = new BookedTiming();
                 $bookingTimming->booking_id = $booking->id;
                 $bookingTimming->facility_id = $bookingData['facilityId'];
+                $bookingTimming->booking_date = date("Y-m-d H:i:s", strtotime($bookingData['selectedDate']));
                 if($bookingData['package_type_id'] == 0) {
                     $bookingTimming->booking_day = date('N', strtotime($bookingTimming->booking_date));
                     $slotTime = explode("-", $bookingData['selectedSlot']);
@@ -281,7 +283,6 @@ class BookingService extends BaseService
                     }
                 } 
                 
-                $bookingTimming->booking_date = date("Y-m-d H:i:s", strtotime($bookingData['selectedDate']));
                 $bookingTimming->is_peak = ($bookingData['is_peak']) ? 1 : 0;
                 $bookingTimming->created_at = date('Y-m-d H:i:s');
                 $bookingTimming->save();
@@ -457,7 +458,9 @@ class BookingService extends BaseService
                         ->where('booked_timings.booking_date', '=', date('Y-m-d',strtotime($date)))
                         ->where('booked_timings.facility_id', '=', $facilityId)
                         ->where('booked_timings.is_peak', '=', $isPeak)
+                        ->where('booked_packages.package_type', '=', \DB::raw(0))
                         ->get();
+                        
                 return $isBooked->count();
             }
         } catch (\Exception $exception) {
