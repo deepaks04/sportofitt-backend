@@ -95,6 +95,10 @@ app.controller('facilityListCtrl', ["$scope", "$filter", "$modal", "$log", "ngTa
             //  $scope.facilityData = facilityData.facility;
             if (facilityData.facility) {
                 $scope.facilityData = Object.keys(facilityData.facility).map(function (key) {
+                    if(facilityData.facility[key].is_venue === 1)
+                        facilityData.facility[key].type = "Venue";
+                    else
+                        facilityData.facility[key].type= "Coaching";
                     return facilityData.facility[key];
                 });
                 $scope.tableParams = new ngTableParams({
