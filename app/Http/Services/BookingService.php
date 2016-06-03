@@ -249,8 +249,8 @@ class BookingService extends BaseService
                     }
                 }
 
-                //$job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
-                //$this->dispatch($job);
+                $job = (new SendNewOrderEmail($this->orderObj->id))->delay(10);
+                $this->dispatch($job);
 
                 return 1;
             }
