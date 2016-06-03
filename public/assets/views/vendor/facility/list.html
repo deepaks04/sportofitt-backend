@@ -105,7 +105,7 @@
                             <td style="width:15%">Months</td>
                             <td style="width:15%">Actual Price</td>
                             <td style="width:15%">Pick Package</td>
-                            <td style="width:15%">Discount</td>
+                            <td style="width:15%">Discount(%)</td>
                             <td style="width:50%">Description</td>
 
                             <td style="width:25%">Action</td>
@@ -142,10 +142,10 @@
                                              class="help-block">{{errors.is_peak}}</label></span>
                             </td>
                             <td>
-        <span e-name="discount" e-form="rowform" editable-range="package.discount" e-min="0" e-max="100" e-step="5"
-              e-style="width:75%">
-        {{ package.discount }}
+                            <span e-name="discount" e-form="rowform" editable-text="package.discount">
+        {{ package.discount  }}
         </span>
+        
                                  <span class="has-error" ng-if="rowform.$dirty && errors.discount"><label
                                          class="help-block">{{errors.discount}}</label></span>
                             </td>
