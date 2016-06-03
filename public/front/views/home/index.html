@@ -31,7 +31,7 @@
                                     </ui-select-match>
                                     <ui-select-choices
                                             repeat="category in vm.subCategories | propsFilter: {name: $select.search}"
-                                            position="down">
+                                            position="auto">
                                         <div ng-bind-html="category.name | highlight: $select.search"></div>
                                     </ui-select-choices>
                                 </ui-select>
