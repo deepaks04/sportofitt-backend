@@ -31,7 +31,7 @@ angular.module('sportofittApp')
 
                 vm.filter = angular.copy(vm.facility);
                 vm.filter.is_peak = true,
-                    vm.filter.date= $filter('date')(new Date(), 'EEEE, MMMM d, yyyy');
+                    vm.filter.date= $filter('date')(new Date(), 'EEE, MMMM d, yyyy');
 
                 vm.getAvailableSlots();
             }).catch(function (response) {
