@@ -41,11 +41,7 @@ angular.module('sportofittApp')
             vm.today();
 
             vm.dateOptions = {
-                //dateDisabled: disabled,
-                formatYear: 'yy',
-                maxDate: new Date(2020, 5, 22),
-                minDate: new Date(),
-                startingDay: 1
+               
             };
 
             vm.minDate = new Date();
@@ -69,8 +65,14 @@ angular.module('sportofittApp')
 
         vm.datepickerOpened = false;
 
-        vm.openDatePicker = function () {
+        vm.openDatePicker = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
             vm.datepickerOpened = !vm.datepickerOpened;
+        }
+        
+        vm.hey = function(){
+            console.log('hey');
         }
 
         vm.setSlotFilter = function (slot) {

@@ -122,23 +122,25 @@
                                                             <div>
                                                                 <h4>Select Date</h4>
                                                                 <form data-ng-submit="vm.addLocalBooking(vm.filter, true)">
-                                                                <div style="display:inline-block; min-height:200px;">
-                                                                    <div class="col-md-6 padding-left-0">
-                                                                        <p class="input-group"  ng-click="vm.openDatePicker()">
+                                                                    <div class="row padding-left-0">
+                                                                    <div class="col-md-6">
+                                                                        <div class="input-group" ng-click="vm.openDatePicker($event)">
                                                                             <input required type="text" class="form-control bg-white" min-date="vm.minDate" readonly
-                                                                                   datepicker-popup="fullDate" ng-model="vm.filter.date"
-                                                                                   is-open="vm.datepickerOpened" ng-change="vm.resetSlots()"  close-text="Close"  />
+                                                                                   datepicker-popup="EEE, MMMM dd,yyyy" ng-model="vm.filter.date" datepicker-options="vm.dateOptions"
+                                                                                   is-open="vm.datepickerOpened" ng-change="vm.resetSlots()" datepicker-append-to-body=true close-text="Close"  />
 
-                                                                            <span class="input-group-btn">
+                                                                            <span class="input-group-btn" >
                                                                                 <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-calendar" ></i></button>
                                                                             </span>
-                                                                        </p>
+                                                                        </div>
 
                                                                     </div>
                                                                     <div class="col-md-6"> <a ng-click="vm.getAvailableSlots()" class="btn btn-default">Get Available Slots</a></div>
-
-                                                                </div>
-                                                                <header><h2>Choose Session ({{vm.days[vm.selectedDay]}})</h2></header>
+    
+                                                                    </div>
+                                                                    
+                                                                
+                                                                <h2 class="margin-top-10">Choose Session ({{vm.days[vm.selectedDay]}})</h2>
                                                                 <div ng-if="vm.facilitySlots !== []">
                                                                     <div class="form-inline">
                                                                         <select required class="form-control" required data-ng-model="vm.filter.selectedSlot" ng-options="key as value for (key , value) in vm.facilitySlots">
