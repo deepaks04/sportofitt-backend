@@ -18,7 +18,6 @@
                                     <div class="col-md-3 col-sm-4 thumbnails" ng-repeat="item in vm.visibleItemsArray" ng-if="vm.visibleItemsArray">
                                         <div class="item">
                                             <div class="image">
-                                                <div class="quick-view"><i class="fa fa-eye"></i><span>Quick View</span></div>
                                                 <a ng-href="#/venue/{{item.facilityId}}">
                                                     <!--<div class="overlay">-->
                                                         <!--<div class="inner">-->
@@ -30,7 +29,7 @@
                                                     <!--</div>-->
 
 
-                                                    <img ng-src="{{item.gallery[0]}}" alt="">
+                                                    <img class="img-responsive" ng-src="{{item.gallery[0]}}" alt="">
                                                 </a>
                                             </div>
                                             <div class="wrapper">
