@@ -92,49 +92,54 @@ class Vendor extends Model
      */
     public function searchVendors($latitude = null, $longitude = null, $areaId = null, $category = null, $isVenue = null, $offset = 0, $limit = 10)
     {
-        $sql = "vendors.id AS id,vendors.user_id,rt.name as category,vendors.business_name AS title,
+        try {
+            $sql = "vendors.id AS id,vendors.user_id,rt.name as category,vendors.business_name AS title,
             vendors.address AS location,vendors.latitude,vendors.longitude,
             af.is_venue as type,vendors.description,vendors.postcode,vendors.area_id,
-            u.fname AS firstName,u.lname AS lastName,u.profile_picture,
+            u.fname AS firstName,u.lname AS lastName,u.profile_picture,ar.name as areaName,
             af.id as facilityId,af.name as facilityName,af.peak_hour_price,af.image as facilityImage,af.is_featured AS featured";
-        if (null != $latitude && null != $longitude) {
-            $sql .= ", ( 3959 * acos( cos( radians($latitude) ) 
+            if (null != $latitude && null != $longitude) {
+                $sql .= ", ( 3959 * acos( cos( radians($latitude) ) 
         * cos( radians( latitude ) ) 
         * cos( radians( longitude ) - radians($longitude)) + sin( radians($latitude) ) 
         * sin( radians( latitude  ) ) ) ) AS distance";
-        }
+            }
 
-        $query = self::select(\DB::raw($sql))
-                ->join('users AS u', 'vendors.user_id', '=', 'u.id')
-                ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
-                ->join('sub_categories AS rt', 'rt.id', '=', 'af.sub_category_id')
-                // ->where('vendors.is_processed', '=', \DB::raw(1))
-                ->where('af.is_active', '=', \DB::raw(1));
-        if (null != $areaId) {
-            $query->where('vendors.area_id', '=', $areaId);
-        }
+            $query = self::select(\DB::raw($sql))
+                    ->join('users AS u', 'vendors.user_id', '=', 'u.id')
+                    ->join('available_facilities AS af', 'vendors.id', '=', 'af.vendor_id')
+                    ->join('areas AS ar', 'ar.id', '=', 'af.area_id')
+                    ->join('sub_categories AS rt', 'rt.id', '=', 'af.sub_category_id')
+                    // ->where('vendors.is_processed', '=', \DB::raw(1))
+                    ->where('af.is_active', '=', \DB::raw(1));
+            if (null != $areaId) {
+                $query->where('vendors.area_id', '=', $areaId);
+            }
 
-        if (null != $category) {
-            $query->where('af.sub_category_id', '=', $category);
-        }
+            if (null != $category) {
+                $query->where('af.sub_category_id', '=', $category);
+            }
 
-        if (null != $isVenue) {
-            $query->where('af.is_venue', '=', $isVenue);
-        }
+            if (null != $isVenue) {
+                $query->where('af.is_venue', '=', $isVenue);
+            }
 
-        if (null != $latitude && null != $longitude) {
-            $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
-                    ->orderBy('distance', 'ASC');
-        } else {
-            $query->orderBy('vendors.id', 'DESC');
-        }
+            if (null != $latitude && null != $longitude) {
+                $query->having("distance", "<=", Config::get('constants.distanceInMiles'))
+                        ->orderBy('distance', 'ASC');
+            } else {
+                $query->orderBy('vendors.id', 'DESC');
+            }
 
-        $result = $query->get();
-        if (!empty($result) && $result->count() > 0) {
-            return $result;
-        }
+            $result = $query->get();
+            if (!empty($result) && $result->count() > 0) {
+                return $result;
+            }
 
-        return array();
+            return array();
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage(), $ex->getCode());
+        }
     }
 
     /**
