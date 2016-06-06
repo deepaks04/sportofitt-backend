@@ -34,11 +34,14 @@
                                             </div>
                                             <div class="wrapper">
                                                 <a ng-href="#/venue/{{item.facilityId}}"><h3>{{item.facilityName}}</h3></a>
-                                                <figure>{{item.location}}</figure>
-                                                <div class="price pull-left">
+                                                <figure style="height: 30px">{{item.location}}</figure>
+                                                <div class="row">
+                                                    <div class="price pull-left">
                                                     <span ><i class="fa fa-inr"></i>{{item.peak_hour_price}}</span>
                                                 </div>
-                                                <div class="type"> <span>{{item.category}}</span></div>
+                                                <div class="type pull-right margin-top-10"> <span>{{item.category}}</span></div>
+                                                </div>
+                                                
                                                 <div class="clear-fix"></div>
                                                 <div class="info">
                                                 <div class="type pull-left">
