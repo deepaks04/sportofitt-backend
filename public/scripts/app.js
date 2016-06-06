@@ -46,5 +46,4 @@ angular
 }).run(function ($rootScope,$auth,$cookies) {
       $rootScope.isAuthenticated = $auth.isAuthenticated();
       $rootScope.user = $cookies.getObject("loggedUser");
-      console.log($rootScope.user);
 });

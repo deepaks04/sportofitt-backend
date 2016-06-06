@@ -24,6 +24,11 @@ angular.module('sportofittApp').config(function ($stateProvider, $urlRouterProvi
         }
     }).state('app.listings', {
         url: "listings",
+        params: {
+            category: '',
+            area : '',
+            type : ''
+        },
         views: {
             'body@app': {
                 templateUrl: "front/views/listings/index.html",

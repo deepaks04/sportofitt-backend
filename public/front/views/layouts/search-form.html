@@ -1,0 +1,56 @@
+<!--Sub Header-->
+<section class="sub-header" ng-init="vm.showForm=false">
+    <div class="search-bar horizontal" data-ng-show="vm.showForm == true" >
+        <div class="content">
+            <div class="container">
+                <form class="main-search" role="form" data-ng-submit="vm.getData(vm.filter)">
+                    <div class="input-row">
+                        <div class="form-group">
+                            <select class="form-control" data-ng-model="vm.filter.category" ng-options="category.name as category.name for category in vm.subCategories">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div><!-- /.form-group -->
+                        <div class="form-group">
+                            <select class="form-control" data-ng-model="vm.filter.type" ng-options="type for type in vm.types" >
+                                <option value="">All Types</option>
+                            </select>
+                        </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <select class="form-control" data-ng-model="vm.filter.area" ng-options="area as area.name for area in vm.areas ">
+                                <option value="">All Areas</option>
+                            </select>
+                        </div>
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                </form>
+                <!-- /.main-search -->
+            </div>
+            <!-- /.container -->
+        </div>
+    </div>
+    <!-- /.search-bar -->
+    <div class="breadcrumb-wrapper">
+        <div class="container">
+            <div class="redefine-search">
+                <a data-ng-click="vm.showForm = !vm.showForm" class="inner" data-toggle="collapse" aria-expanded="false" aria-controls="redefine-search-form">
+                    <span class="icon"></span>
+                    <span>Redefine Search</span>
+                </a>
+            </div>
+            <ol class="breadcrumb">
+                <li></li>
+                <!--<li><a href="index-directory.html"><i class="fa fa-home"></i></a></li>-->
+                <!--<li><a href="#">Page</a></li>-->
+                <!--<li class="active">{{vm.categorySelected}}</li>-->
+            </ol>
+            <!-- /.breadcrumb-->
+        </div>
+        <!-- /.container-->
+    </div>
+    <!-- /.breadcrumb-wrapper-->
+</section>
