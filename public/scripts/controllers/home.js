@@ -18,8 +18,7 @@ angular.module('sportofittApp')
             });
             
             vm.setCategory = function () {
-                searchService.setCategorySelected(vm.categoryFilter.name);
-                $state.go('app.listings');
+                $state.go('app.listings',{category:vm.categoryFilter.name});
             };
             
         })
