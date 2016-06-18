@@ -1,228 +1,192 @@
 'use strict';
 
-/**
- * @ngdoc service
- * @name angularBootstrapCalendarApp.calendarHelper
- * @description
- * # calendarHelper
- * Service in the angularBootstrapCalendarApp.
- */
-angular.module('mwl.calendar')
-  .service('calendarHelper', function calendarHelper($filter, moment) {
+var angular = require('angular');
 
-    var self = this;
+angular
+  .module('mwl.calendar')
+  .factory('calendarHelper', function(dateFilter, moment, calendarConfig) {
 
-    function isISOWeekBasedOnLocale() {
-      return moment().startOf('week').day() === 1;
+    function formatDate(date, format) {
+      if (calendarConfig.dateFormatter === 'angular') {
+        return dateFilter(moment(date).toDate(), format);
+      } else if (calendarConfig.dateFormatter === 'moment') {
+        return moment(date).format(format);
+      }
     }
 
-    function isISOWeek(userValue) {
-      //If a manual override has been set in the directive, use that
-      if (angular.isDefined(userValue)) return userValue;
-      //Otherwise fallback to the locale
-      return isISOWeekBasedOnLocale();
+    function adjustEndDateFromStartDiff(oldStart, newStart, oldEnd) {
+      if (!oldEnd) {
+        return oldEnd;
+      }
+      var diffInSeconds = moment(newStart).diff(moment(oldStart));
+      return moment(oldEnd).add(diffInSeconds);
     }
 
-    this.getMonthNames = function(short) {
+    function eventIsInPeriod(event, periodStart, periodEnd) {
 
-      var format = short ? 'MMM' : 'MMMM';
+      var eventStart = moment(event.startsAt);
+      var eventEnd = moment(event.endsAt || event.startsAt);
+      periodStart = moment(periodStart);
+      periodEnd = moment(periodEnd);
 
-      var months = [];
-      for (var i = 0; i <= 11; i++) {
-        months.push($filter('date')(new Date(2014, i), format));
-      }
+      if (angular.isDefined(event.recursOn)) {
 
-      return months;
+        switch (event.recursOn) {
+          case 'year':
+            eventStart.set({
+              year: periodStart.year()
+            });
+            break;
 
-    };
+          case 'month':
+            eventStart.set({
+              year: periodStart.year(),
+              month: periodStart.month()
+            });
+            break;
 
-    this.getWeekDayNames = function(short, useISOWeek) {
-
-      var format = short ? 'EEE' : 'EEEE';
-
-      var weekdays = [];
-      var startDay = isISOWeek(useISOWeek) ? 22 : 21;
-      for (var i = 0; i <= 6; i++) {
-        weekdays.push($filter('date')(new Date(2014, 8, startDay + i), format));
-      }
-
-      return weekdays;
-
-    };
-
-    this.eventIsInPeriod = function(eventStart, eventEnd, periodStart, periodEnd) {
-
-      return (
-          moment(eventStart).isAfter(moment(periodStart)) &&
-          moment(eventStart).isBefore(moment(periodEnd))
-        ) || (
-          moment(eventEnd).isAfter(moment(periodStart)) &&
-          moment(eventEnd).isBefore(moment(periodEnd))
-        ) || (
-          moment(eventStart).isBefore(moment(periodStart)) &&
-          moment(eventEnd).isAfter(moment(periodEnd))
-        ) || (
-          moment(eventStart).isSame(moment(periodStart))
-        ) || (
-          moment(eventEnd).isSame(moment(periodEnd))
-      );
-
-    };
-
-    this.getYearView = function(events, currentDay) {
-
-      var grid = [];
-      var months = self.getMonthNames();
-
-      for (var i = 0; i < 3; i++) {
-        var row = [];
-        for (var j = 0; j < 4; j++) {
-          var monthIndex = 12 - months.length;
-          var startPeriod = new Date(moment(currentDay).format('YYYY'), monthIndex, 1);
-          var endPeriod = moment(startPeriod).add(1, 'month').subtract(1, 'second').toDate();
-
-          row.push({
-            label: months.shift(),
-            monthIndex: monthIndex,
-            isToday: moment(startPeriod).startOf('month').isSame(moment().startOf('month')),
-            events: events.filter(function(event) {
-              return self.eventIsInPeriod(event.starts_at, event.ends_at, startPeriod, endPeriod);
-            }),
-            date: moment(startPeriod).startOf('month')
-          });
+          default:
+            throw new Error('Invalid value (' + event.recursOn + ') given for recurs on. Can only be year, month or week.');
         }
-        grid.push(row);
+
+        eventEnd = adjustEndDateFromStartDiff(event.startsAt, eventStart, eventEnd);
+
       }
 
-      return grid;
+      return (eventStart.isAfter(periodStart) && eventStart.isBefore(periodEnd)) ||
+        (eventEnd.isAfter(periodStart) && eventEnd.isBefore(periodEnd)) ||
+        (eventStart.isBefore(periodStart) && eventEnd.isAfter(periodEnd)) ||
+        eventStart.isSame(periodStart) ||
+        eventEnd.isSame(periodEnd);
 
-    };
+    }
 
-    this.getMonthView = function(events, currentDay, useISOWeek) {
+    function filterEventsInPeriod(events, startPeriod, endPeriod) {
+      return events.filter(function(event) {
+        return eventIsInPeriod(event, startPeriod, endPeriod);
+      });
+    }
 
-      var dateOffset = isISOWeek(useISOWeek) ? 1 : 0;
+    function getEventsInPeriod(calendarDate, period, allEvents) {
+      var startPeriod = moment(calendarDate).startOf(period);
+      var endPeriod = moment(calendarDate).endOf(period);
+      return filterEventsInPeriod(allEvents, startPeriod, endPeriod);
+    }
 
-      function getWeekDayIndex() {
-        var day = startOfMonth.day() - dateOffset;
-        if (day < 0) day = 6;
-        return day;
+    function getBadgeTotal(events) {
+      return events.filter(function(event) {
+        return event.incrementsBadgeTotal !== false;
+      }).length;
+    }
+
+    function getWeekDayNames() {
+      var weekdays = [];
+      var count = 0;
+      while (count < 7) {
+        weekdays.push(formatDate(moment().weekday(count++), calendarConfig.dateFormats.weekDay));
       }
+      return weekdays;
+    }
+
+    function getYearView(events, currentDay, cellModifier) {
+
+      var view = [];
+      var eventsInPeriod = getEventsInPeriod(currentDay, 'year', events);
+      var month = moment(currentDay).startOf('year');
+      var count = 0;
+      while (count < 12) {
+        var startPeriod = month.clone();
+        var endPeriod = startPeriod.clone().endOf('month');
+        var periodEvents = filterEventsInPeriod(eventsInPeriod, startPeriod, endPeriod);
+        var cell = {
+          label: formatDate(startPeriod, calendarConfig.dateFormats.month),
+          isToday: startPeriod.isSame(moment().startOf('month')),
+          events: periodEvents,
+          date: startPeriod,
+          badgeTotal: getBadgeTotal(periodEvents)
+        };
+
+        cellModifier({calendarCell: cell});
+        view.push(cell);
+        month.add(1, 'month');
+        count++;
+      }
+
+      return view;
+
+    }
+
+    function getMonthView(events, currentDay, cellModifier) {
 
       var startOfMonth = moment(currentDay).startOf('month');
-      var numberOfDaysInMonth = moment(currentDay).endOf('month').date();
+      var day = startOfMonth.clone().startOf('week');
+      var endOfMonthView = moment(currentDay).endOf('month').endOf('week');
+      var eventsInPeriod;
+      if (calendarConfig.displayAllMonthEvents) {
+        eventsInPeriod = filterEventsInPeriod(events, day, endOfMonthView);
+      } else {
+        eventsInPeriod = filterEventsInPeriod(events, startOfMonth, startOfMonth.clone().endOf('month'));
+      }
+      var view = [];
+      var today = moment().startOf('day');
 
-      var grid = [];
-      var buildRow = new Array(7);
-      var eventsWithIds = events.map(function(event, index) {
-        event.$id = index;
-        return event;
-      });
+      while (day.isBefore(endOfMonthView)) {
 
-      for (var i = 1; i <= numberOfDaysInMonth; i++) {
-
-        if (i == 1) {
-          var weekdayIndex = getWeekDayIndex(startOfMonth);
-          var prefillMonth = startOfMonth.clone();
-          while (weekdayIndex > 0) {
-            weekdayIndex--;
-            prefillMonth = prefillMonth.subtract(1, 'day');
-            buildRow[weekdayIndex] = {
-              label: prefillMonth.date(),
-              date: prefillMonth.clone(),
-              inMonth: false,
-              events: []
-            };
-          }
+        var inMonth = day.month() === moment(currentDay).month();
+        var monthEvents = [];
+        if (inMonth || calendarConfig.displayAllMonthEvents) {
+          monthEvents = filterEventsInPeriod(eventsInPeriod, day, day.clone().endOf('day'));
         }
 
-        buildRow[getWeekDayIndex(startOfMonth)] = {
-          label: startOfMonth.date(),
-          inMonth: true,
-          isToday: moment().startOf('day').isSame(startOfMonth),
-          date: startOfMonth.clone(),
-          events: eventsWithIds.filter(function(event) {
-            return self.eventIsInPeriod(event.starts_at, event.ends_at, startOfMonth.clone().startOf('day'), startOfMonth.clone().endOf('day'));
-          })
+        var cell = {
+          label: day.date(),
+          date: day.clone(),
+          inMonth: inMonth,
+          isPast: today.isAfter(day),
+          isToday: today.isSame(day),
+          isFuture: today.isBefore(day),
+          isWeekend: [0, 6].indexOf(day.day()) > -1,
+          events: monthEvents,
+          badgeTotal: getBadgeTotal(monthEvents)
         };
 
-        if (i == numberOfDaysInMonth) {
-          var weekdayIndex = getWeekDayIndex(startOfMonth);
-          var postfillMonth = startOfMonth.clone();
-          while (weekdayIndex < 6) {
-            weekdayIndex++;
-            postfillMonth = postfillMonth.add(1, 'day');
-            buildRow[weekdayIndex] = {
-              label: postfillMonth.date(),
-              date: postfillMonth.clone(),
-              inMonth: false,
-              events: []
-            };
-          }
-        }
+        cellModifier({calendarCell: cell});
 
-        if (getWeekDayIndex(startOfMonth) === 6 || i == numberOfDaysInMonth) {
-          grid.push(buildRow);
-          buildRow = new Array(7);
-        }
+        view.push(cell);
 
-        startOfMonth = startOfMonth.add(1, 'day');
-
+        day.add(1, 'day');
       }
 
-      return grid;
+      return view;
 
-    };
+    }
 
-    this.getWeekView = function(events, currentDay, useISOWeek) {
+    function getWeekView(events, currentDay) {
 
-      var dateOffset = isISOWeek(useISOWeek) ? 1 : 0;
-      var columns = new Array(7);
-      var weekDays = self.getWeekDayNames(false, useISOWeek);
-      var currentWeekDayIndex = currentDay.getDay();
-      var beginningOfWeek, endOfWeek;
-
-      for (var i = currentWeekDayIndex; i >= 0; i--) {
-        var date = moment(currentDay).subtract(currentWeekDayIndex - i, 'days').add(dateOffset, 'day').toDate();
-        columns[i] = {
-          weekDay: weekDays[i],
-          day: $filter('date')(date, 'd'),
-          date: $filter('date')(date, 'd MMM'),
-          isToday: moment(date).startOf('day').isSame(moment().startOf('day'))
-        };
-        if (i == 0) {
-          beginningOfWeek = date;
-        } else if (i == 6) {
-          endOfWeek = date;
-        }
+      var startOfWeek = moment(currentDay).startOf('week');
+      var endOfWeek = moment(currentDay).endOf('week');
+      var dayCounter = startOfWeek.clone();
+      var days = [];
+      var today = moment().startOf('day');
+      while (days.length < 7) {
+        days.push({
+          weekDayLabel: formatDate(dayCounter, calendarConfig.dateFormats.weekDay),
+          date: dayCounter.clone(),
+          dayLabel: formatDate(dayCounter, calendarConfig.dateFormats.day),
+          isPast: dayCounter.isBefore(today),
+          isToday: dayCounter.isSame(today),
+          isFuture: dayCounter.isAfter(today),
+          isWeekend: [0, 6].indexOf(dayCounter.day()) > -1
+        });
+        dayCounter.add(1, 'day');
       }
 
-      for (var i = currentWeekDayIndex + 1; i < 7; i++) {
-        var date = moment(currentDay).add(i - currentWeekDayIndex, 'days').add(dateOffset, 'day').toDate();
-        columns[i] = {
-          weekDay: weekDays[i],
-          day: $filter('date')(date, 'd'),
-          date: $filter('date')(date, 'd MMM'),
-          isToday: moment(date).startOf('day').isSame(moment().startOf('day'))
-        };
-        if (i == 0) {
-          beginningOfWeek = date;
-        } else if (i == 6) {
-          endOfWeek = date;
-        }
-      }
+      var eventsSorted = filterEventsInPeriod(events, startOfWeek, endOfWeek).map(function(event) {
 
-      endOfWeek = moment(endOfWeek).endOf('day').toDate();
-      beginningOfWeek = moment(beginningOfWeek).startOf('day').toDate();
-
-      var eventsSorted = events.filter(function(event) {
-        return self.eventIsInPeriod(event.starts_at, event.ends_at, beginningOfWeek, endOfWeek);
-      }).map(function(event) {
-
-        var eventStart = moment(event.starts_at).startOf('day');
-        var eventEnd = moment(event.ends_at).startOf('day');
-        var weekViewStart = moment(beginningOfWeek).startOf('day');
+        var eventStart = moment(event.startsAt).startOf('day');
+        var eventEnd = moment(event.endsAt || event.startsAt).startOf('day');
+        var weekViewStart = moment(startOfWeek).startOf('day');
         var weekViewEnd = moment(endOfWeek).startOf('day');
-
         var offset, span;
 
         if (eventStart.isBefore(weekViewStart) || eventStart.isSame(weekViewStart)) {
@@ -243,37 +207,49 @@ angular.module('mwl.calendar')
 
         event.daySpan = span;
         event.dayOffset = offset;
+
         return event;
       });
 
-      return {columns: columns, events: eventsSorted};
+      return {days: days, events: eventsSorted};
 
-    };
+    }
 
-    this.getDayView = function(events, currentDay, dayStartHour, dayEndHour) {
+    function getDayView(events, currentDay, dayViewStart, dayViewEnd, dayViewSplit) {
 
+      var dayStartHour = moment(dayViewStart || '00:00', 'HH:mm').hours();
+      var dayEndHour = moment(dayViewEnd || '23:00', 'HH:mm').hours();
+      var hourHeight = (60 / dayViewSplit) * 30;
       var calendarStart = moment(currentDay).startOf('day').add(dayStartHour, 'hours');
       var calendarEnd = moment(currentDay).startOf('day').add(dayEndHour, 'hours');
-      var calendarHeight = (dayEndHour - dayStartHour + 1) * 60;
+      var calendarHeight = (dayEndHour - dayStartHour + 1) * hourHeight;
+      var hourHeightMultiplier = hourHeight / 60;
       var buckets = [];
+      var eventsInPeriod = filterEventsInPeriod(
+        events,
+        moment(currentDay).startOf('day').toDate(),
+        moment(currentDay).endOf('day').toDate()
+      );
 
-      return events.filter(function(event) {
-        return self.eventIsInPeriod(event.starts_at, event.ends_at, moment(currentDay).startOf('day').toDate(), moment(currentDay).endOf('day').toDate());
-      }).map(function(event) {
-        if (moment(event.starts_at).isBefore(calendarStart)) {
+      return eventsInPeriod.map(function(event) {
+        if (moment(event.startsAt).isBefore(calendarStart)) {
           event.top = 0;
         } else {
-          event.top = moment(event.starts_at).startOf('minute').diff(calendarStart.startOf('minute'), 'minutes') - 2;
+          event.top = (moment(event.startsAt).startOf('minute').diff(calendarStart.startOf('minute'), 'minutes') * hourHeightMultiplier) - 2;
         }
 
-        if (moment(event.ends_at).isAfter(calendarEnd)) {
+        if (moment(event.endsAt || event.startsAt).isAfter(calendarEnd)) {
           event.height = calendarHeight - event.top;
         } else {
-          var diffStart = event.starts_at;
-          if (moment(event.starts_at).isBefore(calendarStart)) {
+          var diffStart = event.startsAt;
+          if (moment(event.startsAt).isBefore(calendarStart)) {
             diffStart = calendarStart.toDate();
           }
-          event.height = moment(event.ends_at).diff(diffStart, 'minutes');
+          if (!event.endsAt) {
+            event.height = 30;
+          } else {
+            event.height = moment(event.endsAt || event.startsAt).diff(diffStart, 'minutes') * hourHeightMultiplier;
+          }
         }
 
         if (event.top - event.height > calendarHeight) {
@@ -292,7 +268,8 @@ angular.module('mwl.calendar')
           var canFitInThisBucket = true;
 
           bucket.forEach(function(bucketItem) {
-            if (self.eventIsInPeriod(event.starts_at, event.ends_at, bucketItem.starts_at, bucketItem.ends_at) || self.eventIsInPeriod(bucketItem.starts_at, bucketItem.ends_at, event.starts_at, event.ends_at)) {
+            if (eventIsInPeriod(event, bucketItem.startsAt, bucketItem.endsAt || bucketItem.startsAt) ||
+              eventIsInPeriod(bucketItem, event.startsAt, event.endsAt || event.startsAt)) {
               canFitInThisBucket = false;
             }
           });
@@ -314,37 +291,46 @@ angular.module('mwl.calendar')
 
       });
 
-    };
+    }
 
-    this.toggleEventBreakdown = function(view, rowIndex, cellIndex) {
-
-      var openEvents = [];
-
-      function closeAllOpenItems() {
-        view = view.map(function(row) {
-          row.isOpened = false;
-          return row.map(function(cell) {
-            cell.isOpened = false;
-            return cell;
-          });
+    function getWeekViewWithTimes(events, currentDay, dayViewStart, dayViewEnd, dayViewSplit) {
+      var weekView = getWeekView(events, currentDay);
+      var newEvents = [];
+      weekView.days.forEach(function(day) {
+        var dayEvents = weekView.events.filter(function(event) {
+          return moment(event.startsAt).startOf('day').isSame(moment(day.date).startOf('day'));
         });
-      }
+        var newDayEvents = getDayView(
+          dayEvents,
+          day.date,
+          dayViewStart,
+          dayViewEnd,
+          dayViewSplit
+        );
+        newEvents = newEvents.concat(newDayEvents);
+      });
+      weekView.events = newEvents;
+      return weekView;
+    }
 
-      if (view[rowIndex][cellIndex].events.length > 0) {
+    function getDayViewHeight(dayViewStart, dayViewEnd, dayViewSplit) {
+      var dayViewStartM = moment(dayViewStart || '00:00', 'HH:mm');
+      var dayViewEndM = moment(dayViewEnd || '23:00', 'HH:mm');
+      var hourHeight = (60 / dayViewSplit) * 30;
+      return ((dayViewEndM.diff(dayViewStartM, 'hours') + 1) * hourHeight) + 2;
+    }
 
-        var isCellOpened = view[rowIndex][cellIndex].isOpened;
-
-        closeAllOpenItems();
-
-        view[rowIndex][cellIndex].isOpened = !isCellOpened;
-        view[rowIndex].isOpened = !isCellOpened;
-        openEvents = view[rowIndex][cellIndex].events;
-      } else {
-        closeAllOpenItems();
-      }
-
-      return {view: view, openEvents: openEvents};
-
+    return {
+      getWeekDayNames: getWeekDayNames,
+      getYearView: getYearView,
+      getMonthView: getMonthView,
+      getWeekView: getWeekView,
+      getDayView: getDayView,
+      getWeekViewWithTimes: getWeekViewWithTimes,
+      getDayViewHeight: getDayViewHeight,
+      adjustEndDateFromStartDiff: adjustEndDateFromStartDiff,
+      formatDate: formatDate,
+      eventIsInPeriod: eventIsInPeriod //expose for testing only
     };
 
   });
